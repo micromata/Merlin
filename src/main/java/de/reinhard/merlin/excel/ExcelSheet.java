@@ -7,25 +7,21 @@ import org.apache.poi.ss.usermodel.*;
 
 import java.util.*;
 
-public class ExcelSheetReader {
-    private static final Logger log = Logger.getLogger(ExcelSheetReader.class);
+public class ExcelSheet {
+    private static final Logger log = Logger.getLogger(ExcelSheet.class);
 
     private Map<String, Integer> colMap = new HashMap<>();
-
     private List<String> headCells = new LinkedList<>();
-
-    private Sheet datatypeSheet;
-
+    private Sheet poiSheet;
     private Iterator<Row> rowIterator;
-
     private Row currentRow;
-
     private List<ColumnValidator> colValidators = new LinkedList<>();
+    boolean markErrors;
 
-    public ExcelSheetReader(Sheet datatypeSheet) {
-        log.info("Reading sheet '" + datatypeSheet.getSheetName() + "'");
-        this.datatypeSheet = datatypeSheet;
-        rowIterator = datatypeSheet.iterator();
+    public ExcelSheet(Sheet poiSheet) {
+        log.info("Reading sheet '" + poiSheet.getSheetName() + "'");
+        this.poiSheet = poiSheet;
+        rowIterator = poiSheet.iterator();
         readHeadRow();
     }
 
@@ -33,7 +29,7 @@ public class ExcelSheetReader {
      * @param validator
      * @return this for chaining.
      */
-    public ExcelSheetReader add(ColumnValidator validator) {
+    public ExcelSheet add(ColumnValidator validator) {
         if (getColValidator(validator.getColumnHeadname()) != null) {
             log.error("Oups, trying to add column validator '" + validator.getColumnHeadname() + "' twice. Ignoring duplicate validator.");
             return this;
@@ -85,10 +81,10 @@ public class ExcelSheetReader {
 
     private void readHeadRow() {
         if (!rowIterator.hasNext()) {
-            log.info("Sheet '" + datatypeSheet.getSheetName() + "' has now rows.");
+            log.info("Sheet '" + poiSheet.getSheetName() + "' has now rows.");
             return;
         }
-        log.info("Reading head row of sheet '" + datatypeSheet.getSheetName() + "'.");
+        log.info("Reading head row of sheet '" + poiSheet.getSheetName() + "'.");
         Row currentRow = rowIterator.next();
         int col = -1;
         for (Cell cell : currentRow) {
@@ -127,5 +123,21 @@ public class ExcelSheetReader {
             }
         }
         return null;
+    }
+
+    public String getSheetName() {
+        return poiSheet.getSheetName();
+    }
+
+    public boolean isMarkErrors() {
+        return markErrors;
+    }
+
+    /**
+     * @param markErrors If true, any validation errors in the Excel file will be marked and validation messages will be added to the workbook and saved.
+     */
+
+    public void setMarkErrors(boolean markErrors) {
+        this.markErrors = markErrors;
     }
 }
