@@ -60,5 +60,3 @@ public class ResultMessage {
         return status == ResultMessageStatus.ERROR;
     }
 }
-
-}
