@@ -27,7 +27,7 @@ public class ExcelWorkbook {
         try {
             excelFile = new FileInputStream(new File(excelFilename));
         } catch (FileNotFoundException ex) {
-            log.error("Couldn't open File '" + excelFilename + "': ", ex);
+            log.error("Couldn't open File '" + new File(excelFilename).getAbsolutePath() + "': ", ex);
             throw new RuntimeException(ex);
         }
         try {
@@ -42,6 +42,7 @@ public class ExcelWorkbook {
     }
 
     public ExcelSheet getSheet(String sheetName) {
+        initializeSheetList();
         if (sheetName == null) {
             log.error("Can't get sheet by name without given name. Name parameter is null.");
             return null;

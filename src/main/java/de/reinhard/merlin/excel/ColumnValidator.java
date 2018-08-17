@@ -12,16 +12,15 @@ import java.util.regex.PatternSyntaxException;
 
 public class ColumnValidator {
     /**
-     * Parameter: rowNumber, columnNumber, columnHeadname
+     * Parameter: rowNumber, ExcelColumnDef
      */
     public static final String MESSAGE_MISSING_REQUIRED_FIELD = ColumnValidator.class.getName() + ":MESSAGE_MISSING_REQUIRED_FIELD";
     /**
-     * Parameter: rowNumber, columnNumber, columnHeadname, cellValue
+     * Parameter: rowNumber, ExcelColumnDef, cellValue
      */
     public static final String MESSAGE_PATTERN_MISMATCH = ColumnValidator.class.getName() + ":MESSAGE_PATTERN_MISMATCH";
     private static final Logger log = Logger.getLogger(ColumnValidator.class);
-    private String columnHeadname;
-    private int columnNumber;
+    private ExcelColumnDef columnDef;
     private boolean required;
     private boolean unique;
     private String patternRegExp;
@@ -42,7 +41,7 @@ public class ColumnValidator {
             if (required) {
                 new ResultMessage(MESSAGE_MISSING_REQUIRED_FIELD, ResultMessageStatus.ERROR,
                         "Cell value not given but required for column '"
-                                + columnHeadname + "' in row no " + rowNumber + ".", rowNumber, columnNumber, columnHeadname);
+                                + columnDef.getColumnHeadname() + "' in row no " + rowNumber + ".", rowNumber, columnDef);
             }
             return null;
         }
@@ -51,10 +50,10 @@ public class ColumnValidator {
                 if (!cellValue.matches(patternRegExp)) {
                     new ResultMessage(MESSAGE_PATTERN_MISMATCH, ResultMessageStatus.ERROR,
                             "Cell value '" + cellValue + "' doesn't match required pattern '" + patternRegExp + " for column '"
-                                    + columnHeadname + "' in row no " + rowNumber + ".", rowNumber, columnNumber, columnHeadname, cellValue);
+                                    + columnDef.getColumnHeadname() + "' in row no " + rowNumber + ".", rowNumber, columnDef, cellValue);
                 }
             } catch (PatternSyntaxException ex) {
-                log.error("Pattern syntax error for regex for column '" + columnHeadname + "': '" + patternRegExp
+                log.error("Pattern syntax error for regex for column '" + columnDef.getColumnHeadname() + "': '" + patternRegExp
                         + "': " + ex.getMessage(), ex);
                 return null;
             }
@@ -63,37 +62,25 @@ public class ColumnValidator {
     }
 
     public String getColumnHeadname() {
-        return columnHeadname;
+        return columnDef.getColumnHeadname();
     }
 
-    public void setColumnHeadname(String columnHeadname) {
-        this.columnHeadname = columnHeadname;
-    }
-
-    /**
-     * @return Number of col: 1 (A), 2 (B), ...
-     */
-    public int getColumnNumber() {
-        return columnNumber;
-    }
-
-    /**
-     * @return Column number as Excel letter: A, B, ..., AA, AB, ...
-     */
-    public String getColumnNumberString() {
-        return CellReference.convertNumToColString(columnNumber);
-    }
-
-    public void setColumnNumber(int columnNumber) {
-        this.columnNumber = columnNumber;
+    public ExcelColumnDef getColumnDef() {
+        return columnDef;
     }
 
     public boolean isRequired() {
         return required;
     }
 
-    public void setRequired(boolean required) {
-        this.required = required;
+    /**
+     * Mark this column and are all its cell values as required.
+     *
+     * @return this for chaining.
+     */
+    public ColumnValidator setRequired() {
+        this.required = true;
+        return this;
     }
 
     public boolean isUnique() {
@@ -107,8 +94,14 @@ public class ColumnValidator {
         return columnHeadnameFound;
     }
 
-    public void setUnique(boolean unique) {
-        this.unique = unique;
+    /**
+     * All cell values must be unique, if given.
+     *
+     * @return this for chaining.
+     */
+    public ColumnValidator setUnique() {
+        this.unique = true;
+        return this;
     }
 
     public String getPatternRegExp() {
@@ -121,5 +114,9 @@ public class ColumnValidator {
      */
     public void setPatternRegExp(String patternRegExp) {
         this.patternRegExp = patternRegExp;
+    }
+
+    void setColumnDef(ExcelColumnDef columnDef) {
+        this.columnDef = columnDef;
     }
 }

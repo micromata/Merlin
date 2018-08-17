@@ -10,12 +10,10 @@ import java.util.*;
 public class ExcelSheet {
     private static final Logger log = Logger.getLogger(ExcelSheet.class);
 
-    private Map<String, Integer> colMap = new HashMap<>();
-    private List<String> headCells = new LinkedList<>();
+    private List<ExcelColumnDef> columnDefList = new LinkedList<>();
     private Sheet poiSheet;
     private Iterator<Row> rowIterator;
     private Row currentRow;
-    private List<ColumnValidator> colValidators = new LinkedList<>();
     boolean markErrors;
 
     public ExcelSheet(Sheet poiSheet) {
@@ -26,15 +24,38 @@ public class ExcelSheet {
     }
 
     /**
+     * @param columnHeadname
      * @param validator
      * @return this for chaining.
      */
-    public ExcelSheet add(ColumnValidator validator) {
-        if (getColValidator(validator.getColumnHeadname()) != null) {
-            log.error("Oups, trying to add column validator '" + validator.getColumnHeadname() + "' twice. Ignoring duplicate validator.");
+    public ExcelSheet set(String columnHeadname, ColumnValidator validator) {
+        ExcelColumnDef columnDef = getColumnDef(columnHeadname);
+        if(columnDef == null) {
+            log.error("Can't find column named '"  + columnHeadname + "'. Column validator ignored.");
+            if (isMarkErrors()) {
+                // TODO: Add message to excel head row (new column).
+            }
             return this;
         }
-        colValidators.add(validator);
+        columnDef.setColumnValidator(validator);
+        return this;
+    }
+
+    /**
+     * @param columnNumber
+     * @param validator
+     * @return this for chaining.
+     */
+    public ExcelSheet set(int columnNumber, ColumnValidator validator) {
+        ExcelColumnDef columnDef = getColumnDef(columnNumber);
+        if(columnDef == null) {
+            log.error("Can't get column number " + columnNumber + ". Column validator ignored.");
+            if (isMarkErrors()) {
+                // TODO: Add message to excel head row (new column).
+            }
+            return this;
+        }
+        columnDef.setColumnValidator(validator);
         return this;
     }
 
@@ -47,34 +68,53 @@ public class ExcelSheet {
     }
 
     public void readRow(Data data) {
-        for (String head : headCells) {
-            String val = getCell(head);
-            data.put(head, val);
+        for (ExcelColumnDef columnDef : columnDefList) {
+            Cell cell = currentRow.getCell(columnDef.getColumnNumber());
+            String value = null;
+            if (cell != null) {
+                value = cell.getStringCellValue();
+            }
+            data.put(columnDef.getColumnHeadname(), value);
         }
     }
 
     /**
-     * @param colhead
+     * @param columnHeadname
      * @return
      */
-    public String getCell(String colhead) {
-        Integer col = colMap.get(colhead);
-        if (col == null) {
-            col = colMap.get(colhead.toLowerCase());
-        }
-        if (col == null) {
-            log.warn("No entry named '" + colhead + "' found in sheet '" + currentRow.getSheet().getSheetName() + "'. Checked also '" + colhead.toLowerCase() + "'.");
+    public String getCell(String columnHeadname) {
+        ExcelColumnDef columnDef = getColumnDef(columnHeadname);
+        if (columnDef == null) {
+            log.warn("No entry named '" + columnHeadname + "' found in sheet '" + currentRow.getSheet().getSheetName() + "'. Checked also '" + columnHeadname.toLowerCase() + "'.");
             return null;
         }
-        Cell cell = currentRow.getCell(col);
+        Cell cell = currentRow.getCell(columnDef.getColumnNumber());
         String value = null;
         if (cell != null) {
             value = cell.getStringCellValue();
         }
-        ColumnValidator validator = getColValidator(colhead);
+        ColumnValidator validator = columnDef.getColumnValidator();
         boolean required = validator != null ? validator.isRequired() : false;
         if (required && (value == null || value.length() == 0)) {
-            log.error("Value of column '" + colhead + "' required but not given in row #" + currentRow.getRowNum() + ".");
+            log.error("Value of column '" + columnHeadname + "' required but not given in row #" + currentRow.getRowNum() + ".");
+        }
+        return value;
+    }
+
+    /**
+     * @param columnDef
+     * @return
+     */
+    public String getCell(ExcelColumnDef columnDef) {
+        Cell cell = currentRow.getCell(columnDef.getColumnNumber());
+        String value = null;
+        if (cell != null) {
+            value = cell.getStringCellValue();
+        }
+        ColumnValidator validator = columnDef.getColumnValidator();
+        boolean required = validator != null ? validator.isRequired() : false;
+        if (required && (value == null || value.length() == 0)) {
+            log.error("Value of column '" + columnDef.getColumnHeadname() + "' required but not given in row #" + currentRow.getRowNum() + ".");
         }
         return value;
     }
@@ -90,36 +130,35 @@ public class ExcelSheet {
         for (Cell cell : currentRow) {
             ++col;
             String val = cell.getStringCellValue();
-            headCells.add(StringUtils.defaultString(val));
+            columnDefList.add(new ExcelColumnDef(col, StringUtils.defaultString(val)));
             if (val == null || val.length() == 0) {
                 log.warn("Column head is empty for column " + col + " in 1st row.");
                 continue;
             }
             log.debug("Reading head column '" + val + "' in column " + col);
-            if (colMap.containsKey(val)) {
+            if (getColumnDef(val) != null) {
                 log.warn("Duplicate column head: '" + val + "' in col #" + col);
-                continue; // Don't overwrite.
             }
-            colMap.put(val, col);
-            String lowerVal = val.toLowerCase();
-            if (val.equals(lowerVal)) {
-                continue;
-            }
-            if (colMap.containsKey(lowerVal)) {
-                log.warn("Duplicate column head: '" + lowerVal + "' in col #" + col);
-                continue; // Don't overwrite.
-            }
-            colMap.put(val.toLowerCase(), col); // Store value also as to Lower;
         }
     }
 
-    public ColumnValidator getColValidator(String colHead) {
-        if (StringUtils.isEmpty(colHead)) {
+    public ExcelColumnDef getColumnDef(String columnHeadname) {
+        if (StringUtils.isEmpty(columnHeadname)) {
             return null;
         }
-        for (ColumnValidator validator : colValidators) {
-            if (colHead.equals(validator.getColumnHeadname())) {
-                return validator;
+        String lowerColumnHeadname = columnHeadname.toLowerCase();
+        for (ExcelColumnDef columnDef : columnDefList) {
+            if (lowerColumnHeadname.equals(columnDef.getColumnHeadname().toLowerCase())) {
+                return columnDef;
+            }
+        }
+        return null;
+    }
+
+    public ExcelColumnDef getColumnDef(int columnNumber) {
+        for (ExcelColumnDef columnDef : columnDefList) {
+            if (columnNumber == columnDef.getColumnNumber()) {
+                return columnDef;
             }
         }
         return null;
