@@ -10,22 +10,22 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.regex.PatternSyntaxException;
 
-public class ColValidator {
+public class ColumnValidator {
     /**
-     * Parameter: rowNumber, colNumber, colName
+     * Parameter: rowNumber, columnNumber, columnHeadname
      */
-    public static final String MESSAGE_MISSING_REQUIRED_FIELD = ColValidator.class.getName() + ":MESSAGE_MISSING_REQUIRED_FIELD";
+    public static final String MESSAGE_MISSING_REQUIRED_FIELD = ColumnValidator.class.getName() + ":MESSAGE_MISSING_REQUIRED_FIELD";
     /**
-     * Parameter: rowNumber, colNumber, colName, cellValue
+     * Parameter: rowNumber, columnNumber, columnHeadname, cellValue
      */
-    public static final String MESSAGE_PATTERN_MISMATCH = ColValidator.class.getName() + ":MESSAGE_PATTERN_MISMATCH";
-    private static final Logger log = Logger.getLogger(ColValidator.class);
-    private String colName;
-    private int colNumber;
+    public static final String MESSAGE_PATTERN_MISMATCH = ColumnValidator.class.getName() + ":MESSAGE_PATTERN_MISMATCH";
+    private static final Logger log = Logger.getLogger(ColumnValidator.class);
+    private String columnHeadname;
+    private int columnNumber;
     private boolean required;
     private boolean unique;
     private String patternRegExp;
-    private boolean colHeadFound;
+    private boolean columnHeadnameFound;
     // Used for unique constraint.
     private Set<String> entries = new TreeSet<>();
 
@@ -42,7 +42,7 @@ public class ColValidator {
             if (required) {
                 new ResultMessage(MESSAGE_MISSING_REQUIRED_FIELD, ResultMessageStatus.ERROR,
                         "Cell value not given but required for column '"
-                                + colName + "' in row no " + rowNumber + ".", rowNumber, colNumber, colName);
+                                + columnHeadname + "' in row no " + rowNumber + ".", rowNumber, columnNumber, columnHeadname);
             }
             return null;
         }
@@ -51,10 +51,10 @@ public class ColValidator {
                 if (!cellValue.matches(patternRegExp)) {
                     new ResultMessage(MESSAGE_PATTERN_MISMATCH, ResultMessageStatus.ERROR,
                             "Cell value '" + cellValue + "' doesn't match required pattern '" + patternRegExp + " for column '"
-                                    + colName + "' in row no " + rowNumber + ".", rowNumber, colNumber, colName, cellValue);
+                                    + columnHeadname + "' in row no " + rowNumber + ".", rowNumber, columnNumber, columnHeadname, cellValue);
                 }
             } catch (PatternSyntaxException ex) {
-                log.error("Pattern syntax error for regex for column '" + colName + "': '" + patternRegExp
+                log.error("Pattern syntax error for regex for column '" + columnHeadname + "': '" + patternRegExp
                         + "': " + ex.getMessage(), ex);
                 return null;
             }
@@ -62,30 +62,30 @@ public class ColValidator {
         return null;
     }
 
-    public String getColName() {
-        return colName;
+    public String getColumnHeadname() {
+        return columnHeadname;
     }
 
-    public void setColName(String colName) {
-        this.colName = colName;
+    public void setColumnHeadname(String columnHeadname) {
+        this.columnHeadname = columnHeadname;
     }
 
     /**
      * @return Number of col: 1 (A), 2 (B), ...
      */
-    public int getColNumber() {
-        return colNumber;
+    public int getColumnNumber() {
+        return columnNumber;
     }
 
     /**
      * @return Column number as Excel letter: A, B, ..., AA, AB, ...
      */
-    public String getColNumberString() {
-        return CellReference.convertNumToColString(colNumber);
+    public String getColumnNumberString() {
+        return CellReference.convertNumToColString(columnNumber);
     }
 
-    public void setColNumber(int colNumber) {
-        this.colNumber = colNumber;
+    public void setColumnNumber(int columnNumber) {
+        this.columnNumber = columnNumber;
     }
 
     public boolean isRequired() {
@@ -103,8 +103,8 @@ public class ColValidator {
     /**
      * @return true, if sheet parser found col with specified column header.
      */
-    public boolean isColHeadFound() {
-        return colHeadFound;
+    public boolean isColumnHeadnameFound() {
+        return columnHeadnameFound;
     }
 
     public void setUnique(boolean unique) {

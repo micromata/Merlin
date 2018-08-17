@@ -1,10 +1,15 @@
 package de.reinhard.merlin.excel;
 
 import org.apache.log4j.Logger;
-import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 public class ExcelReader {
     private static final Logger log = Logger.getLogger(ExcelReader.class);
@@ -20,9 +25,12 @@ public class ExcelReader {
             throw new RuntimeException(ex);
         }
         try {
-            workbook = new XSSFWorkbook(excelFile);
+            workbook = WorkbookFactory.create(excelFile);
         } catch (IOException ex) {
-            log.error("Couldn't open File '" + excelFilename + "': ", ex);
+            log.error("Couldn't open File '" + excelFilename + "': " + ex.getMessage(), ex);
+            throw new RuntimeException(ex);
+        } catch (InvalidFormatException ex) {
+            log.error("Unsupported file format '" + excelFilename + "': " + ex.getMessage(), ex);
             throw new RuntimeException(ex);
         }
     }

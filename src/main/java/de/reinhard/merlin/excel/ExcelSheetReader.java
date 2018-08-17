@@ -20,11 +20,26 @@ public class ExcelSheetReader {
 
     private Row currentRow;
 
+    private List<ColumnValidator> colValidators = new LinkedList<>();
+
     public ExcelSheetReader(Sheet datatypeSheet) {
         log.info("Reading sheet '" + datatypeSheet.getSheetName() + "'");
         this.datatypeSheet = datatypeSheet;
         rowIterator = datatypeSheet.iterator();
         readHeadRow();
+    }
+
+    /**
+     * @param validator
+     * @return this for chaining.
+     */
+    public ExcelSheetReader add(ColumnValidator validator) {
+        if (getColValidator(validator.getColumnHeadname()) != null) {
+            log.error("Oups, trying to add column validator '" + validator.getColumnHeadname() + "' twice. Ignoring duplicate validator.");
+            return this;
+        }
+        colValidators.add(validator);
+        return this;
     }
 
     public boolean hasNextRow() {
@@ -42,16 +57,11 @@ public class ExcelSheetReader {
         }
     }
 
-    public String getCell(String colhead) {
-        return getCell(colhead, false);
-    }
-
     /**
      * @param colhead
-     * @param required if true, then an error message will be logged, if value not given.
      * @return
      */
-    public String getCell(String colhead, boolean required) {
+    public String getCell(String colhead) {
         Integer col = colMap.get(colhead);
         if (col == null) {
             col = colMap.get(colhead.toLowerCase());
@@ -65,6 +75,8 @@ public class ExcelSheetReader {
         if (cell != null) {
             value = cell.getStringCellValue();
         }
+        ColumnValidator validator = getColValidator(colhead);
+        boolean required = validator != null ? validator.isRequired() : false;
         if (required && (value == null || value.length() == 0)) {
             log.error("Value of column '" + colhead + "' required but not given in row #" + currentRow.getRowNum() + ".");
         }
@@ -103,5 +115,17 @@ public class ExcelSheetReader {
             }
             colMap.put(val.toLowerCase(), col); // Store value also as to Lower;
         }
+    }
+
+    public ColumnValidator getColValidator(String colHead) {
+        if (StringUtils.isEmpty(colHead)) {
+            return null;
+        }
+        for (ColumnValidator validator : colValidators) {
+            if (colHead.equals(validator.getColumnHeadname())) {
+                return validator;
+            }
+        }
+        return null;
     }
 }
