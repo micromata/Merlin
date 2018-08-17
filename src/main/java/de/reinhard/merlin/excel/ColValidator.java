@@ -4,6 +4,7 @@ import de.reinhard.merlin.ResultMessage;
 import de.reinhard.merlin.ResultMessageStatus;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.apache.poi.ss.util.CellReference;
 
 import java.util.Set;
 import java.util.TreeSet;
@@ -27,13 +28,6 @@ public class ColValidator {
     private boolean colHeadFound;
     // Used for unique constraint.
     private Set<String> entries = new TreeSet<>();
-
-    /**
-     * @param colNumber Number of col: 1 (A), 2 (B), ...
-     */
-    public ColValidator(int colNumber) {
-        this.colNumber = colNumber;
-    }
 
     /**
      * Overwrite this for own validation.
@@ -76,8 +70,22 @@ public class ColValidator {
         this.colName = colName;
     }
 
+    /**
+     * @return Number of col: 1 (A), 2 (B), ...
+     */
     public int getColNumber() {
         return colNumber;
+    }
+
+    /**
+     * @return Column number as Excel letter: A, B, ..., AA, AB, ...
+     */
+    public String getColNumberString() {
+        return CellReference.convertNumToColString(colNumber);
+    }
+
+    public void setColNumber(int colNumber) {
+        this.colNumber = colNumber;
     }
 
     public boolean isRequired() {
