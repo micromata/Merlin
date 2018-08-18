@@ -6,11 +6,13 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.poi.ss.util.CellReference;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.regex.PatternSyntaxException;
 
-public class ColumnValidator {
+public class ColumnValidator implements ColumnListener {
     /**
      * Parameter: rowNumber, ExcelColumnDef
      */
@@ -19,6 +21,10 @@ public class ColumnValidator {
      * Parameter: rowNumber, ExcelColumnDef, cellValue
      */
     public static final String MESSAGE_PATTERN_MISMATCH = ColumnValidator.class.getName() + ":MESSAGE_PATTERN_MISMATCH";
+    /**
+     * Parameter: rowNumber, firstOccurrenceRowNumber, ExcelColumnDef, cellValue
+     */
+    public static final String MESSAGE_VALUE_NOT_UNIQUE = ColumnValidator.class.getName() + ":MESSAGE_VALUE_NOT_UNIQUE";
     private static final Logger log = Logger.getLogger(ColumnValidator.class);
     private ExcelColumnDef columnDef;
     private boolean required;
@@ -27,6 +33,7 @@ public class ColumnValidator {
     private boolean columnHeadnameFound;
     // Used for unique constraint.
     private Set<String> entries = new TreeSet<>();
+    private Map<String, Integer> cellValueMap;
 
     /**
      * Overwrite this for own validation.
@@ -39,7 +46,7 @@ public class ColumnValidator {
     public ResultMessage isValid(String cellValue, int rowNumber) {
         if (StringUtils.isEmpty(cellValue)) {
             if (required) {
-                new ResultMessage(MESSAGE_MISSING_REQUIRED_FIELD, ResultMessageStatus.ERROR,
+                return new ResultMessage(MESSAGE_MISSING_REQUIRED_FIELD, ResultMessageStatus.ERROR,
                         "Cell value not given but required for column '"
                                 + columnDef.getColumnHeadname() + "' in row no " + rowNumber + ".", rowNumber, columnDef);
             }
@@ -48,7 +55,7 @@ public class ColumnValidator {
         if (patternRegExp != null) {
             try {
                 if (!cellValue.matches(patternRegExp)) {
-                    new ResultMessage(MESSAGE_PATTERN_MISMATCH, ResultMessageStatus.ERROR,
+                    return new ResultMessage(MESSAGE_PATTERN_MISMATCH, ResultMessageStatus.ERROR,
                             "Cell value '" + cellValue + "' doesn't match required pattern '" + patternRegExp + " for column '"
                                     + columnDef.getColumnHeadname() + "' in row no " + rowNumber + ".", rowNumber, columnDef, cellValue);
                 }
@@ -57,6 +64,38 @@ public class ColumnValidator {
                         + "': " + ex.getMessage(), ex);
                 return null;
             }
+        }
+        Integer firstOccurrenceRowNumber = isUnique(cellValue, rowNumber);
+        if (firstOccurrenceRowNumber != null) {
+            return new ResultMessage(MESSAGE_VALUE_NOT_UNIQUE, ResultMessageStatus.ERROR,
+                    "Cell value '" + cellValue + "' isn't unique for column '"
+                            + columnDef.getColumnHeadname() + "' in row no " + rowNumber + ". It's already used in row number "
+                            + firstOccurrenceRowNumber + ".", rowNumber, firstOccurrenceRowNumber, columnDef, cellValue);
+        }
+        return null;
+    }
+
+    @Override
+    public void readStringCellValue(String cellValue, int rowNumber) {
+        isValid(cellValue, rowNumber);
+        if (isUnique(cellValue, rowNumber) == null) {
+            cellValueMap.put(cellValue, rowNumber);
+        }
+    }
+
+    private Integer isUnique(String cellValue, int rowNumber) {
+        if (!isUnique()) {
+            return null;
+        }
+        if (cellValueMap == null) {
+            cellValueMap = new HashMap<>();
+        }
+        Integer firstOccurrenceRowNumber = cellValueMap.get(cellValue);
+        if (firstOccurrenceRowNumber != null && firstOccurrenceRowNumber.intValue() != rowNumber) {
+            log.error("Cell in row " + rowNumber + " of column '" + columnDef.getColumnHeadname()
+                    + "' must be unique, but was already used in row " + firstOccurrenceRowNumber + ".");
+            // TODO: mark error
+            return firstOccurrenceRowNumber;
         }
         return null;
     }

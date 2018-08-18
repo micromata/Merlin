@@ -3,6 +3,9 @@ package de.reinhard.merlin.excel;
 import org.apache.log4j.Logger;
 import org.apache.poi.ss.util.CellReference;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class ExcelColumnDef {
     private static final Logger log = Logger.getLogger(ExcelColumnDef.class);
 
@@ -10,8 +13,9 @@ public class ExcelColumnDef {
     private String columnHeadname;
     private String columnNumberAsLetters;
     private ColumnValidator columnValidator;
+    private Map<String, ColumnListener> columnListenerMap = new HashMap<>();
 
-    public ExcelColumnDef(int columnNumber, String columnHeadname) {
+    ExcelColumnDef(int columnNumber, String columnHeadname) {
         this.columnNumber = columnNumber;
         this.columnNumberAsLetters = CellReference.convertNumToColString(columnNumber);
         this.columnHeadname = columnHeadname != null ? columnHeadname : columnNumberAsLetters;
@@ -46,5 +50,20 @@ public class ExcelColumnDef {
         }
         this.columnValidator = columnValidator;
         this.columnValidator.setColumnDef(this);
+    }
+
+    /**
+     *
+     * @param name
+     * @param listener
+     * @return this for chaining.
+     */
+    public ExcelColumnDef register(String name, ColumnListener listener) {
+        columnListenerMap.put(name, listener);
+        return this;
+    }
+
+    public ColumnListener getColumnListener(String name) {
+        return columnListenerMap.get(name);
     }
 }

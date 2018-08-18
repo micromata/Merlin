@@ -16,7 +16,7 @@ public class ExcelSheet {
     private Row currentRow;
     boolean markErrors;
 
-    public ExcelSheet(Sheet poiSheet) {
+    ExcelSheet(Sheet poiSheet) {
         log.info("Reading sheet '" + poiSheet.getSheetName() + "'");
         this.poiSheet = poiSheet;
         rowIterator = poiSheet.iterator();
@@ -30,8 +30,8 @@ public class ExcelSheet {
      */
     public ExcelSheet set(String columnHeadname, ColumnValidator validator) {
         ExcelColumnDef columnDef = getColumnDef(columnHeadname);
-        if(columnDef == null) {
-            log.error("Can't find column named '"  + columnHeadname + "'. Column validator ignored.");
+        if (columnDef == null) {
+            log.error("Can't find column named '" + columnHeadname + "'. Column validator ignored.");
             if (isMarkErrors()) {
                 // TODO: Add message to excel head row (new column).
             }
@@ -48,7 +48,7 @@ public class ExcelSheet {
      */
     public ExcelSheet set(int columnNumber, ColumnValidator validator) {
         ExcelColumnDef columnDef = getColumnDef(columnNumber);
-        if(columnDef == null) {
+        if (columnDef == null) {
             log.error("Can't get column number " + columnNumber + ". Column validator ignored.");
             if (isMarkErrors()) {
                 // TODO: Add message to excel head row (new column).
@@ -130,15 +130,15 @@ public class ExcelSheet {
         for (Cell cell : currentRow) {
             ++col;
             String val = cell.getStringCellValue();
-            columnDefList.add(new ExcelColumnDef(col, StringUtils.defaultString(val)));
-            if (val == null || val.length() == 0) {
-                log.warn("Column head is empty for column " + col + " in 1st row.");
-                continue;
-            }
             log.debug("Reading head column '" + val + "' in column " + col);
             if (getColumnDef(val) != null) {
                 log.warn("Duplicate column head: '" + val + "' in col #" + col);
             }
+            if (val == null || val.length() == 0) {
+                log.warn("Column head is empty for column " + col + " (" + col + ") in 1st row.");
+                continue;
+            }
+            columnDefList.add(new ExcelColumnDef(col, StringUtils.defaultString(val)));
         }
     }
 
