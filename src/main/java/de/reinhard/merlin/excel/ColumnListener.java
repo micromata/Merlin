@@ -5,6 +5,12 @@ import org.apache.poi.ss.usermodel.Cell;
 /**
  * A column listener assigned to a {@link ExcelColumnDef} listens to all read cell values.
  */
-public interface ColumnListener {
-    void readCell(Cell cell, int rowNumber);
+public abstract class ColumnListener {
+    protected ExcelColumnDef columnDef;
+
+    abstract void readCell(Cell cell, int rowNumber);
+
+    void setColumnDef(ExcelColumnDef columnDef) {
+        this.columnDef = columnDef;
+    }
 }

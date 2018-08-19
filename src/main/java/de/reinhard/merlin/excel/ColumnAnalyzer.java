@@ -5,7 +5,7 @@ import org.apache.poi.ss.usermodel.Cell;
 /**
  * Analyses all column values for some statistics.
  */
-public class ColumnStatistics implements ColumnListener {
+public class ColumnAnalyzer extends ColumnListener {
     private int maxLength = 0;
 
     public void readCell(Cell cell, int rowNumber) {
@@ -19,7 +19,7 @@ public class ColumnStatistics implements ColumnListener {
     }
 
     /**
-     * @return the length of the longest string value of all cells in the colum
+     * @return the length of the longest string value of all cells in the column.
      */
     public int getMaxLength() {
         return maxLength;

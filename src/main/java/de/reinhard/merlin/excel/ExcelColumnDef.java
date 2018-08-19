@@ -4,6 +4,8 @@ import org.apache.log4j.Logger;
 import org.apache.poi.ss.util.CellReference;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 public class ExcelColumnDef {
@@ -12,8 +14,7 @@ public class ExcelColumnDef {
     private int columnNumber;
     private String columnHeadname;
     private String columnNumberAsLetters;
-    private ColumnValidator columnValidator;
-    private Map<String, ColumnListener> columnListenerMap = new HashMap<>();
+    private List<ColumnListener> columnListeners;
 
     ExcelColumnDef(int columnNumber, String columnHeadname) {
         this.columnNumber = columnNumber;
@@ -39,31 +40,18 @@ public class ExcelColumnDef {
         return columnNumberAsLetters;
     }
 
-    public ColumnValidator getColumnValidator() {
-        return columnValidator;
+    public boolean hasColumnListeners() {
+        return columnListeners != null && columnListeners.size() > 0;
+    }
+    public List<ColumnListener> getColumnListeners() {
+        return columnListeners;
     }
 
-    public void setColumnValidator(ColumnValidator columnValidator) {
-        if (this.columnValidator != null) {
-            log.error("Oups, trying to add column validator to " + columnNumber + ". column '" + getColumnHeadname() + "' twice. Ignoring duplicate validator.");
-            return;
+    public void addColumnListener(ColumnListener columnListener) {
+        if (this.columnListeners == null) {
+            columnListeners = new LinkedList<>();
         }
-        this.columnValidator = columnValidator;
-        this.columnValidator.setColumnDef(this);
-    }
-
-    /**
-     *
-     * @param name
-     * @param listener
-     * @return this for chaining.
-     */
-    public ExcelColumnDef register(String name, ColumnListener listener) {
-        columnListenerMap.put(name, listener);
-        return this;
-    }
-
-    public ColumnListener getColumnListener(String name) {
-        return columnListenerMap.get(name);
+        columnListeners.add(columnListener);
+        columnListener.setColumnDef(this);
     }
 }

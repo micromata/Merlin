@@ -12,20 +12,23 @@ public class ConfigReader {
     private ExcelColumnDef valueColumnDef;
 
     public ConfigReader(ExcelSheet sheet, String propertyColumnHeadname, String valueColumnHeadname) {
-        this.sheet = sheet;
-        this.propertyColumnDef = sheet.getColumnDef(propertyColumnHeadname);
-        this.valueColumnDef = sheet.getColumnDef(valueColumnHeadname);
+        this(sheet, sheet.getColumnDef(propertyColumnHeadname), sheet.getColumnDef(valueColumnHeadname));
     }
 
     public ConfigReader(ExcelSheet sheet, int propertyColumnNumber, int valueColumnNumber) {
+        this(sheet, sheet.getColumnDef(propertyColumnNumber), sheet.getColumnDef(valueColumnNumber));
+    }
+
+    private ConfigReader(ExcelSheet sheet, ExcelColumnDef propertyColumnDef, ExcelColumnDef valueColumnDef) {
         this.sheet = sheet;
-        this.propertyColumnDef = sheet.getColumnDef(propertyColumnNumber);
-        this.valueColumnDef = sheet.getColumnDef(valueColumnNumber);
+        this.propertyColumnDef = propertyColumnDef;
+        this.valueColumnDef = valueColumnDef;
+        sheet.add(this.propertyColumnDef, new ColumnValidator().setUnique());
+        sheet.add(this.propertyColumnDef, new ColumnValidator());
+        sheet.analyze(true);
     }
 
     public PropertiesStorage readConfig(ExcelWorkbook excelReader) {
-        this.propertyColumnDef.setColumnValidator(new ColumnValidator().setRequired().setUnique());
-        this.valueColumnDef.setColumnValidator(new ColumnValidator());
         PropertiesStorage properties = new PropertiesStorage();
         int counter = 0;
         while (sheet.hasNextRow()) {

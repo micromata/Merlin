@@ -15,6 +15,7 @@ public class ExcelSheet {
     private Iterator<Row> rowIterator;
     private Row currentRow;
     private boolean markErrors;
+    private final static int firstDataRow = 1; // 1st row (0) is head row.
 
     ExcelSheet(Sheet poiSheet) {
         log.info("Reading sheet '" + poiSheet.getSheetName() + "'");
@@ -24,29 +25,57 @@ public class ExcelSheet {
     }
 
     /**
-     * @param columnHeadname
-     * @param validator
+     * Analyzes sheet.
+     * <p>
+     * Each cell will be analyzed by calling ColumnListener for each column with given
+     * ColumnListener. If no Analyzer is set for a columng, the column cells will not be analyzed.
+     *
+     * @param validate if true, then each cell of a column with a given ColumnValidator will be validated.
      * @return this for chaining.
      */
-    public ExcelSheet set(String columnHeadname, ColumnValidator validator) {
+    public ExcelSheet analyze(boolean validate) {
+        for (Row row : poiSheet) {
+            if (row.getRowNum() <= firstDataRow) {
+                continue;
+            }
+            for (ExcelColumnDef columnDef : columnDefList) {
+                if (!columnDef.hasColumnListeners()) {
+                    continue;
+                }
+                for(ColumnListener listener : columnDef.getColumnListeners()) {
+                    if (!(listener instanceof ColumnValidator) || validate) {
+                        Cell cell = row.getCell(columnDef.getColumnNumber());
+                        listener.readCell(cell, row.getRowNum());
+                    }
+                }
+            }
+        }
+        return this;
+    }
+
+    /**
+     * @param columnHeadname
+     * @param listener
+     * @return this for chaining.
+     */
+    public ExcelSheet add(String columnHeadname, ColumnListener listener) {
         ExcelColumnDef columnDef = getColumnDef(columnHeadname);
         if (columnDef == null) {
-            log.error("Can't find column named '" + columnHeadname + "'. Column validator ignored.");
+            log.error("Can't find column named '" + columnHeadname + "'. Column listener ignored.");
             if (isMarkErrors()) {
                 // TODO: Add message to excel head row (new column).
             }
             return this;
         }
-        columnDef.setColumnValidator(validator);
-        return this;
+        return add(columnDef, listener);
     }
 
     /**
      * @param columnNumber
-     * @param validator
+     * @param listener
      * @return this for chaining.
      */
-    public ExcelSheet set(int columnNumber, ColumnValidator validator) {
+    public ExcelSheet set(int columnNumber, ColumnValidator listener) {
         ExcelColumnDef columnDef = getColumnDef(columnNumber);
         if (columnDef == null) {
             log.error("Can't get column number " + columnNumber + ". Column validator ignored.");
@@ -55,7 +84,16 @@ public class ExcelSheet {
             }
             return this;
         }
-        columnDef.setColumnValidator(validator);
+        return add(columnDef, listener);
+    }
+
+    /**
+     * @param columnDef
+     * @param listener
+     * @return this for chaining.
+     */
+    public ExcelSheet add(ExcelColumnDef columnDef, ColumnListener listener) {
+        columnDef.addColumnListener(listener);
         return this;
     }
 
@@ -87,11 +125,6 @@ public class ExcelSheet {
         }
         Cell cell = currentRow.getCell(columnDef.getColumnNumber());
         String value = PoiHelper.getValueAsString(cell);
-        ColumnValidator validator = columnDef.getColumnValidator();
-        boolean required = validator != null ? validator.isRequired() : false;
-        if (required && (value == null || value.length() == 0)) {
-            log.error("Value of column '" + columnHeadname + "' required but not given in row #" + currentRow.getRowNum() + ".");
-        }
         return value;
     }
 
@@ -102,11 +135,6 @@ public class ExcelSheet {
     public String getCell(ExcelColumnDef columnDef) {
         Cell cell = currentRow.getCell(columnDef.getColumnNumber());
         String value = PoiHelper.getValueAsString(cell);
-        ColumnValidator validator = columnDef.getColumnValidator();
-        boolean required = validator != null ? validator.isRequired() : false;
-        if (required && (value == null || value.length() == 0)) {
-            log.error("Value of column '" + columnDef.getColumnHeadname() + "' required but not given in row #" + currentRow.getRowNum() + ".");
-        }
         return value;
     }
 

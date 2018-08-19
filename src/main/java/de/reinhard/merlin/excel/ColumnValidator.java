@@ -13,7 +13,7 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.regex.PatternSyntaxException;
 
-public class ColumnValidator implements ColumnListener {
+public class ColumnValidator extends ColumnListener {
     /**
      * Parameter: rowNumber, ExcelColumnDef
      */
@@ -27,7 +27,6 @@ public class ColumnValidator implements ColumnListener {
      */
     public static final String MESSAGE_VALUE_NOT_UNIQUE = ColumnValidator.class.getName() + ":MESSAGE_VALUE_NOT_UNIQUE";
     private static final Logger log = Logger.getLogger(ColumnValidator.class);
-    private ExcelColumnDef columnDef;
     private boolean required;
     private boolean unique;
     private String patternRegExp;
@@ -81,6 +80,9 @@ public class ColumnValidator implements ColumnListener {
         String cellValue = PoiHelper.getValueAsString(cell);
         isValid(cellValue, rowNumber);
         if (isUnique(cellValue, rowNumber) == null) {
+            if (cellValueMap == null) {
+                cellValueMap = new HashMap<>();
+            }
             cellValueMap.put(cellValue, rowNumber);
         }
     }
@@ -93,13 +95,7 @@ public class ColumnValidator implements ColumnListener {
             cellValueMap = new HashMap<>();
         }
         Integer firstOccurrenceRowNumber = cellValueMap.get(cellValue);
-        if (firstOccurrenceRowNumber != null && firstOccurrenceRowNumber != rowNumber) {
-            log.error("Cell in row " + rowNumber + " of column '" + columnDef.getColumnHeadname()
-                    + "' must be unique, but was already used in row " + firstOccurrenceRowNumber + ".");
-            // TODO: mark error
-            return firstOccurrenceRowNumber;
-        }
-        return null;
+        return firstOccurrenceRowNumber;
     }
 
     public String getColumnHeadname() {
@@ -155,9 +151,5 @@ public class ColumnValidator implements ColumnListener {
      */
     public void setPatternRegExp(String patternRegExp) {
         this.patternRegExp = patternRegExp;
-    }
-
-    void setColumnDef(ExcelColumnDef columnDef) {
-        this.columnDef = columnDef;
     }
 }
