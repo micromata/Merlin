@@ -4,6 +4,7 @@ import de.reinhard.merlin.ResultMessage;
 import de.reinhard.merlin.ResultMessageStatus;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.util.CellReference;
 
 import java.util.HashMap;
@@ -76,7 +77,8 @@ public class ColumnValidator implements ColumnListener {
     }
 
     @Override
-    public void readStringCellValue(String cellValue, int rowNumber) {
+    public void readCell(Cell cell, int rowNumber) {
+        String cellValue = PoiHelper.getValueAsString(cell);
         isValid(cellValue, rowNumber);
         if (isUnique(cellValue, rowNumber) == null) {
             cellValueMap.put(cellValue, rowNumber);
@@ -91,7 +93,7 @@ public class ColumnValidator implements ColumnListener {
             cellValueMap = new HashMap<>();
         }
         Integer firstOccurrenceRowNumber = cellValueMap.get(cellValue);
-        if (firstOccurrenceRowNumber != null && firstOccurrenceRowNumber.intValue() != rowNumber) {
+        if (firstOccurrenceRowNumber != null && firstOccurrenceRowNumber != rowNumber) {
             log.error("Cell in row " + rowNumber + " of column '" + columnDef.getColumnHeadname()
                     + "' must be unique, but was already used in row " + firstOccurrenceRowNumber + ".");
             // TODO: mark error

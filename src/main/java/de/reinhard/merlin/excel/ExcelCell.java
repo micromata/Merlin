@@ -15,7 +15,4 @@ public class ExcelCell {
         return columnDef;
     }
 
-    public String getStringCellValue() {
-        return poiCell.getStringCellValue();
-    }
 }

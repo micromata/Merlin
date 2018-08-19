@@ -1,12 +1,15 @@
 package de.reinhard.merlin.excel;
 
+import org.apache.poi.ss.usermodel.Cell;
+
 /**
  * Analyses all column values for some statistics.
  */
 public class ColumnStatistics implements ColumnListener {
     private int maxLength = 0;
 
-    public void readStringCellValue(String value, int rowNumber) {
+    public void readCell(Cell cell, int rowNumber) {
+        String value = PoiHelper.getValueAsString(cell);
         if (value == null) {
             return;
         }

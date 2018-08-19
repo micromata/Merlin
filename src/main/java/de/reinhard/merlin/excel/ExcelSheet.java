@@ -14,7 +14,7 @@ public class ExcelSheet {
     private Sheet poiSheet;
     private Iterator<Row> rowIterator;
     private Row currentRow;
-    boolean markErrors;
+    private boolean markErrors;
 
     ExcelSheet(Sheet poiSheet) {
         log.info("Reading sheet '" + poiSheet.getSheetName() + "'");
@@ -70,10 +70,7 @@ public class ExcelSheet {
     public void readRow(Data data) {
         for (ExcelColumnDef columnDef : columnDefList) {
             Cell cell = currentRow.getCell(columnDef.getColumnNumber());
-            String value = null;
-            if (cell != null) {
-                value = cell.getStringCellValue();
-            }
+            String value = PoiHelper.getValueAsString(cell);
             data.put(columnDef.getColumnHeadname(), value);
         }
     }
@@ -89,10 +86,7 @@ public class ExcelSheet {
             return null;
         }
         Cell cell = currentRow.getCell(columnDef.getColumnNumber());
-        String value = null;
-        if (cell != null) {
-            value = cell.getStringCellValue();
-        }
+        String value = PoiHelper.getValueAsString(cell);
         ColumnValidator validator = columnDef.getColumnValidator();
         boolean required = validator != null ? validator.isRequired() : false;
         if (required && (value == null || value.length() == 0)) {
@@ -107,10 +101,7 @@ public class ExcelSheet {
      */
     public String getCell(ExcelColumnDef columnDef) {
         Cell cell = currentRow.getCell(columnDef.getColumnNumber());
-        String value = null;
-        if (cell != null) {
-            value = cell.getStringCellValue();
-        }
+        String value = PoiHelper.getValueAsString(cell);
         ColumnValidator validator = columnDef.getColumnValidator();
         boolean required = validator != null ? validator.isRequired() : false;
         if (required && (value == null || value.length() == 0)) {
@@ -129,7 +120,7 @@ public class ExcelSheet {
         int col = -1;
         for (Cell cell : currentRow) {
             ++col;
-            String val = cell.getStringCellValue();
+            String val = PoiHelper.getValueAsString(cell);
             log.debug("Reading head column '" + val + "' in column " + col);
             if (getColumnDef(val) != null) {
                 log.warn("Duplicate column head: '" + val + "' in col #" + col);
