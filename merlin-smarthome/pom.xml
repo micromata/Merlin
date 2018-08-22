@@ -1,0 +1,50 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                             http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>de.reinhard</groupId>
+        <artifactId>merlin-parent</artifactId>
+        <version>1.0</version>
+        <relativePath>../merlin-parent</relativePath>
+    </parent>
+    <artifactId>merlin-smarthome</artifactId>
+    <packaging>jar</packaging>
+
+    <name>Merlin smarthome package (KNX, Openhab)</name>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <configuration>
+                        <testFailureIgnore>true</testFailureIgnore>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>de.reinhard</groupId>
+            <artifactId>merlin-core</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>de.reinhard</groupId>
+            <artifactId>merlin-velocity</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-log4j12 -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>1.7.25</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+</project>

@@ -1,0 +1,6 @@
+sitemap home label="Max-Planck-Str. 5" {
+  Frame label="Elemente" {
+    Switch item=FluterOst
+    Switch item=LichtTerrasseEG
+  }
+  Frame {
