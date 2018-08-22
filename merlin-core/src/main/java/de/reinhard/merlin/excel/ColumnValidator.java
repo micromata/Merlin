@@ -3,9 +3,10 @@ package de.reinhard.merlin.excel;
 import de.reinhard.merlin.ResultMessage;
 import de.reinhard.merlin.ResultMessageStatus;
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.util.CellReference;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,7 +27,7 @@ public class ColumnValidator extends ColumnListener {
      * Parameter: rowNumber, firstOccurrenceRowNumber, ExcelColumnDef, cellValue
      */
     public static final String MESSAGE_VALUE_NOT_UNIQUE = ColumnValidator.class.getName() + ":MESSAGE_VALUE_NOT_UNIQUE";
-    private static final Logger log = Logger.getLogger(ColumnValidator.class);
+    private Logger log = LoggerFactory.getLogger(ColumnValidator.class);
     private boolean required;
     private boolean unique;
     private String patternRegExp;

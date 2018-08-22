@@ -1,11 +1,12 @@
 package de.reinhard.merlin.excel;
 
 import org.apache.commons.lang.Validate;
-import org.apache.log4j.Logger;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -17,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 public class ExcelWorkbook {
-    private static final Logger log = Logger.getLogger(ExcelWorkbook.class);
+    private Logger log = LoggerFactory.getLogger(ExcelWorkbook.class);
 
     private Workbook workbook;
     private List<ExcelSheet> sheetList;

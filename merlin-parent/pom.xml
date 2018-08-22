@@ -11,8 +11,9 @@
     <name>Multi Chapter Merlin Parent Project</name>
 
     <modules>
-        <module>simple-weather</module>
-        <module>simple-webapp</module>
+        <module>../merlin-core</module>
+        <module>../merlin-velocity</module>
+        <module>../merlin-smarthome</module>
     </modules>
 
     <build>
@@ -31,5 +32,23 @@
     </build>
 
     <dependencies>
+        <!-- https://mvnrepository.com/artifact/commons-lang/commons-lang -->
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <version>2.6</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.6</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.25</version>
+        </dependency>
     </dependencies>
 </project>

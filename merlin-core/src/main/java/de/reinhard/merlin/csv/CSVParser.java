@@ -24,7 +24,8 @@
 package de.reinhard.merlin.csv;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -40,7 +41,7 @@ import java.util.Map;
  */
 public class CSVParser
 {
-  private static final Logger log = Logger.getLogger(CSVParser.class);
+  private Logger log = LoggerFactory.getLogger(CSVParser.class);
 
   private char csvSeparatorChar = CSVWriter.DEFAULT_CSV_SEPARATOR_CHAR;
 

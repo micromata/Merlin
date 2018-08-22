@@ -2,13 +2,14 @@ package de.reinhard.merlin.excel;
 
 import de.reinhard.merlin.data.Data;
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
 import org.apache.poi.ss.usermodel.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
 public class ExcelSheet {
-    private static final Logger log = Logger.getLogger(ExcelSheet.class);
+    private Logger log = LoggerFactory.getLogger(ExcelSheet.class);
 
     private List<ExcelColumnDef> columnDefList = new LinkedList<>();
     private Sheet poiSheet;

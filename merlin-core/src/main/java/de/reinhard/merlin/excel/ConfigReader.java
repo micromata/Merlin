@@ -2,10 +2,11 @@ package de.reinhard.merlin.excel;
 
 import de.reinhard.merlin.data.PropertiesStorage;
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ConfigReader {
-    private static final Logger log = Logger.getLogger(ConfigReader.class);
+    private Logger log = LoggerFactory.getLogger(ConfigReader.class);
 
     private ExcelSheet sheet;
     private ExcelColumnDef propertyColumnDef;

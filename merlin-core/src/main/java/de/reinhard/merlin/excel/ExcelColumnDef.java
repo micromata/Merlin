@@ -1,7 +1,8 @@
 package de.reinhard.merlin.excel;
 
-import org.apache.log4j.Logger;
 import org.apache.poi.ss.util.CellReference;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -9,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 public class ExcelColumnDef {
-    private static final Logger log = Logger.getLogger(ExcelColumnDef.class);
+    private Logger log = LoggerFactory.getLogger(ExcelColumnDef.class);
 
     private int columnNumber;
     private String columnHeadname;
