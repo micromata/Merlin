@@ -2,7 +2,6 @@ package de.reinhard.merlin.examples.openhab;
 
 import de.reinhard.merlin.excel.ConfigReader;
 import de.reinhard.merlin.excel.ExcelWorkbook;
-import org.apache.velocity.VelocityContext;
 
 import java.io.File;
 
