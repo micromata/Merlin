@@ -16,22 +16,24 @@ public class OpenHabConfigBuilder {
     private ExcelWorkbook excelWorkbook;
 
     public void run() {
-        File outDir = new File("out/examples/openhab-knx");
+        File outDir = new File("merlin-smarthome/out/examples/openhab-knx");
         File configDir = createDir(outDir, "config");
         File itemsDir = createDir(configDir, "items");
         File persistenceDir = createDir(configDir, "persistence");
         File sitemapsDir = createDir(configDir, "sitemaps");
         File thingsDir = createDir(configDir, "things");
-        excelWorkbook = new ExcelWorkbook("examples/openhab-knx/OpenHab-KNX-Definitions.xlsx");
+        excelWorkbook = new ExcelWorkbook("merlin-smarthome/examples/openhab-knx/OpenHab-KNX-Definitions.xlsx");
         new KnxThingsReader().readKNXThings(excelWorkbook);
-        new ConfigReader(excelWorkbook.getSheet("Config"), "Property", "Value");
+        new ConfigReader(excelWorkbook.getSheet("Config"), "Property", "Value")
+                .readConfig(excelWorkbook);
         VelocityContext context = new VelocityContext();
         context.put("data", DataStorage.getInstance());
-        VelocityHelper.merge("knx.things", thingsDir, context);
-        VelocityHelper.merge("knx.items", itemsDir, context);
-        VelocityHelper.merge("zoneminder.things", thingsDir, context);
-        VelocityHelper.merge("jdbc.persist", persistenceDir, context);
-        VelocityHelper.merge("home.sitemap", sitemapsDir, context);
+        File templateDir = new File("merlin-smarthome/examples/openhab-knx/");
+        VelocityHelper.merge(templateDir, "knx.things", thingsDir, context);
+        VelocityHelper.merge(templateDir, "knx.items", itemsDir, context);
+        VelocityHelper.merge(templateDir, "zoneminder.things", thingsDir, context);
+        VelocityHelper.merge(templateDir, "jdbc.persist", persistenceDir, context);
+        VelocityHelper.merge(templateDir, "home.sitemap", sitemapsDir, context);
     }
 
     private File createDir(File path, String dir) {

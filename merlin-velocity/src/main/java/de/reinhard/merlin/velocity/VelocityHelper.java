@@ -19,14 +19,14 @@ public class VelocityHelper {
         logger = LoggerFactory.getLogger(VelocityHelper.class);
     }
 
-    public static void merge(String filename, File outSubDir, VelocityContext context) {
+    public static void merge(File templateDir, String filename, File outSubDir, VelocityContext context) {
         Template template = null;
 
         VelocityEngine ve = new VelocityEngine();
         ve.setProperty(RuntimeConstants.RESOURCE_LOADER, "file");
-        ve.setProperty(RuntimeConstants.FILE_RESOURCE_LOADER_PATH, new File("data").getAbsolutePath());
+        ve.setProperty(RuntimeConstants.FILE_RESOURCE_LOADER_PATH, templateDir.getAbsolutePath());
 
-        File templateFile = new File("data", filename);
+        File templateFile = new File(filename);
         String templatePath = templateFile.getAbsolutePath();
         logger.info("Processing template file: " + templatePath);
         try {

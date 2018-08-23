@@ -1,5 +1,6 @@
 package de.reinhard.merlin.smarthome.examples.openhab_knx;
 
+import de.reinhard.merlin.excel.ColumnValidator;
 import de.reinhard.merlin.excel.ExcelSheet;
 import de.reinhard.merlin.excel.ExcelWorkbook;
 import de.reinhard.merlin.smarthome.examples.openhab_knx.data.DataStorage;
@@ -17,6 +18,8 @@ public class KnxThingsReader {
 
     public void readKNXThings(ExcelWorkbook excelReader) {
         ExcelSheet sheet = excelReader.getSheet(SHEET_NAME);
+        sheet.getColumnDef("Id").addColumnListener(new ColumnValidator().setUnique().setRequired());
+        sheet.getColumnDef("Device").addColumnListener(new ColumnValidator().setRequired());
         int counter = 0;
         while (sheet.hasNextRow()) {
             sheet.nextRow();
