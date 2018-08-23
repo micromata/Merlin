@@ -1,9 +1,12 @@
 package de.reinhard.merlin.excel;
 
+import de.reinhard.merlin.ResultMessage;
 import de.reinhard.merlin.data.PropertiesStorage;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
 
 public class ConfigReader {
     private Logger log = LoggerFactory.getLogger(ConfigReader.class);
@@ -11,6 +14,7 @@ public class ConfigReader {
     private ExcelSheet sheet;
     private ExcelColumnDef propertyColumnDef;
     private ExcelColumnDef valueColumnDef;
+    private PropertiesStorage propertiesStorage;
 
     public ConfigReader(ExcelSheet sheet, String propertyColumnHeadname, String valueColumnHeadname) {
         this(sheet, sheet.getColumnDef(propertyColumnHeadname), sheet.getColumnDef(valueColumnHeadname));
@@ -30,17 +34,25 @@ public class ConfigReader {
     }
 
     public PropertiesStorage readConfig(ExcelWorkbook excelReader) {
-        PropertiesStorage properties = new PropertiesStorage();
+        propertiesStorage = new PropertiesStorage();
         int counter = 0;
         while (sheet.hasNextRow()) {
             sheet.nextRow();
-            String property = sheet.getCell("Property");
-            String value = sheet.getCell("Value");
+            String property = sheet.getCell(propertyColumnDef);
+            String value = sheet.getCell(valueColumnDef);
             if (StringUtils.isNotEmpty(value)) {
                 log.info("Read config property '" + property + "'='" + value + "'");
-                properties.setConfig(property, value);
+                propertiesStorage.setConfig(property, value);
             }
         }
-        return properties;
+        return propertiesStorage;
+    }
+
+    public boolean hasValidationErrors() {
+        return sheet.hasValidationErrors();
+    }
+
+    public List<ResultMessage> getValidationErrors() {
+        return sheet.getValidationErrors();
     }
 }
