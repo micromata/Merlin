@@ -4,14 +4,10 @@ import de.reinhard.merlin.ResultMessage;
 import de.reinhard.merlin.ResultMessageStatus;
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.util.CellReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.regex.PatternSyntaxException;
 
 public class ColumnValidator extends ColumnListener {
@@ -35,6 +31,7 @@ public class ColumnValidator extends ColumnListener {
     // Used for unique constraint.
     private Set<String> entries = new TreeSet<>();
     private Map<String, Integer> cellValueMap;
+    private List<ResultMessage> validationErrors;
 
     /**
      * Overwrite this for own validation.
@@ -79,13 +76,28 @@ public class ColumnValidator extends ColumnListener {
     @Override
     public void readCell(Cell cell, int rowNumber) {
         String cellValue = PoiHelper.getValueAsString(cell);
-        isValid(cellValue, rowNumber);
+        ResultMessage resultMessage = isValid(cellValue, rowNumber);
+        if (resultMessage != null) {
+            log.debug("Validation error found: " + resultMessage.getMessage());
+            getValidationErrors().add(resultMessage);
+        }
         if (isUnique(cellValue, rowNumber) == null) {
             if (cellValueMap == null) {
                 cellValueMap = new HashMap<>();
             }
             cellValueMap.put(cellValue, rowNumber);
         }
+    }
+
+    public boolean hasValidationErrors() {
+        return validationErrors != null;
+    }
+
+    public List<ResultMessage> getValidationErrors() {
+        if (validationErrors == null) {
+            validationErrors = new LinkedList<>();
+        }
+        return validationErrors;
     }
 
     private Integer isUnique(String cellValue, int rowNumber) {

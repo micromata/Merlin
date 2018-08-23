@@ -1,5 +1,6 @@
 package de.reinhard.merlin.excel;
 
+import de.reinhard.merlin.ResultMessage;
 import de.reinhard.merlin.data.Data;
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.ss.usermodel.*;
@@ -43,7 +44,7 @@ public class ExcelSheet {
                 if (!columnDef.hasColumnListeners()) {
                     continue;
                 }
-                for(ColumnListener listener : columnDef.getColumnListeners()) {
+                for (ColumnListener listener : columnDef.getColumnListeners()) {
                     if (!(listener instanceof ColumnValidator) || validate) {
                         Cell cell = row.getCell(columnDef.getColumnNumber());
                         listener.readCell(cell, row.getRowNum());
@@ -192,10 +193,45 @@ public class ExcelSheet {
         return markErrors;
     }
 
+    public boolean hasValidationErrors() {
+        for (ExcelColumnDef columnDef : columnDefList) {
+            if (columnDef.hasColumnListeners() == false) {
+                continue;
+            }
+            for (ColumnListener columnListener : columnDef.getColumnListeners()) {
+                if (!(columnListener instanceof ColumnValidator)) {
+                    continue;
+                }
+                if (((ColumnValidator) columnListener).hasValidationErrors()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public List<ResultMessage> getValidationErrors() {
+        List<ResultMessage> validationErrors = new LinkedList<>();
+        for (ExcelColumnDef columnDef : columnDefList) {
+            if (columnDef.hasColumnListeners() == false) {
+                continue;
+            }
+            for (ColumnListener columnListener : columnDef.getColumnListeners()) {
+                if (!(columnListener instanceof ColumnValidator)) {
+                    continue;
+                }
+                ColumnValidator columnValidator =  (ColumnValidator) columnListener;
+                if (columnValidator.hasValidationErrors()) {
+                    validationErrors.addAll(columnValidator.getValidationErrors());
+                }
+            }
+        }
+        return validationErrors;
+    }
+
     /**
      * @param markErrors If true, any validation errors in the Excel file will be marked and validation messages will be added to the workbook and saved.
      */
-
     public void setMarkErrors(boolean markErrors) {
         this.markErrors = markErrors;
     }
