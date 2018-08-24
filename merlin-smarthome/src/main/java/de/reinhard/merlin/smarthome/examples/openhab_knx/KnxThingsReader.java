@@ -6,11 +6,8 @@ import de.reinhard.merlin.excel.ExcelSheet;
 import de.reinhard.merlin.excel.ExcelWorkbook;
 import de.reinhard.merlin.smarthome.examples.openhab_knx.data.DataStorage;
 import de.reinhard.merlin.smarthome.examples.openhab_knx.data.KnxThing;
-import org.apache.velocity.VelocityContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.File;
 
 public class KnxThingsReader {
     private Logger log = LoggerFactory.getLogger(KnxThingsReader.class);

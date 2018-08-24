@@ -1,16 +1,10 @@
 package de.reinhard.merlin.smarthome.examples.openhab_knx;
 
-import de.reinhard.merlin.excel.ConfigReader;
 import de.reinhard.merlin.excel.ExcelSheet;
 import de.reinhard.merlin.excel.ExcelWorkbook;
-import de.reinhard.merlin.smarthome.examples.openhab_knx.data.DataStorage;
 import de.reinhard.merlin.smarthome.examples.openhab_knx.data.ZoneminderThing;
-import de.reinhard.merlin.velocity.VelocityHelper;
-import org.apache.velocity.VelocityContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.File;
 
 public class ZoneminderThingsReader {
     private Logger log = LoggerFactory.getLogger(ZoneminderThingsReader.class);
