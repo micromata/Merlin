@@ -1,26 +1,23 @@
 package de.reinhard.merlin.excel;
 
+import de.reinhard.merlin.Definitions;
 import de.reinhard.merlin.ResultMessage;
 import de.reinhard.merlin.data.PropertiesStorage;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
 
 public class ExcelWorkbookTest {
-    private ExcelWorkbook excelWorkbook;
-
-    public ExcelWorkbookTest() {
-        File outDir = new File("merlin-core/out");
-        excelWorkbook = new ExcelWorkbook("examples/tests/Test.xlsx");
-    }
 
     @Test
     public void configReaderValidationTest() {
+        ExcelWorkbook excelWorkbook = new ExcelWorkbook(new File(Definitions.EXAMPLES_TEST_DIR, "Test.xlsx"));
         ConfigReader configReader = new ConfigReader(excelWorkbook.getSheet("Config"),
                 "Property", "Value");
         PropertiesStorage props = configReader.readConfig(excelWorkbook);
@@ -31,5 +28,17 @@ public class ExcelWorkbookTest {
                 validationErrors.get(0).getMessage());
         assertEquals("horst", props.getConfig("user"));
         assertEquals("Hamburg", props.getConfig("city"));
+    }
+
+    @Test
+    public void configReaderValidationExcelResponseTest() throws IOException {
+        ExcelWorkbook excelWorkbook = new ExcelWorkbook("examples/tests/Test.xlsx");
+        ConfigReader configReader = new ConfigReader(excelWorkbook.getSheet("Config"),
+                "Property", "Value")
+                .setMarkErrors(true);
+        PropertiesStorage props = configReader.readConfig(excelWorkbook);
+        assertTrue(configReader.hasValidationErrors());
+        File file = new File(Definitions.OUTPUT_DIR, "Test-result.xlsx");
+        excelWorkbook.getPOIWorkbook().write(new FileOutputStream(file));
     }
 }
