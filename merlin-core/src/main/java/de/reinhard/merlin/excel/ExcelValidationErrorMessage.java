@@ -2,6 +2,10 @@ package de.reinhard.merlin.excel;
 
 import de.reinhard.merlin.ResultMessage;
 import de.reinhard.merlin.ResultMessageStatus;
+import org.apache.commons.lang.ArrayUtils;
+
+import java.text.MessageFormat;
+import java.util.ResourceBundle;
 
 public class ExcelValidationErrorMessage extends ResultMessage {
     private ExcelSheet sheet;
@@ -10,13 +14,19 @@ public class ExcelValidationErrorMessage extends ResultMessage {
     private ExcelColumnDef columnDef;
     private Object cellValue;
 
-    public ExcelValidationErrorMessage(String messageId, ResultMessageStatus status, String message,
+    public ExcelValidationErrorMessage(String messageId, ResultMessageStatus status,
                                        Object... parameters) {
-        super(messageId, status, message, parameters);
+        super(messageId, status, parameters);
     }
 
     public Object getCellValue() {
         return cellValue;
+    }
+
+    @Override
+    public Object[] getParameters() {
+        return ArrayUtils.addAll(new Object[]{getSheetName(), columnDef.getColumnNumberAsLetters(),
+                columnDef.getColumnHeadname(), row + 1, getCellValue()}, super.getParameters());
     }
 
     /**
@@ -30,6 +40,10 @@ public class ExcelValidationErrorMessage extends ResultMessage {
 
     public ExcelSheet getSheet() {
         return sheet;
+    }
+
+    private String getSheetName() {
+        return sheet != null ? sheet.getSheetName() : "";
     }
 
     public ExcelValidationErrorMessage setSheet(ExcelSheet sheet) {

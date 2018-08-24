@@ -1,6 +1,8 @@
 package de.reinhard.merlin;
 
+import java.text.MessageFormat;
 import java.util.List;
+import java.util.ResourceBundle;
 
 /**
  * Used for validation messages etc. Supports own internationalization and defining of messages.
@@ -8,7 +10,6 @@ import java.util.List;
 public class ResultMessage {
     private String messageId;
     private Object[] parameters;
-    private String message;
     private ResultMessageStatus status;
 
     /**
@@ -18,10 +19,9 @@ public class ResultMessage {
         this.status = ResultMessageStatus.OK;
     }
 
-    public ResultMessage(String messageId, ResultMessageStatus status, String message, Object... parameters) {
+    public ResultMessage(String messageId, ResultMessageStatus status, Object... parameters) {
         this.messageId = messageId;
         this.status = status;
-        this.message = message;
         this.parameters = parameters;
     }
 
@@ -38,8 +38,13 @@ public class ResultMessage {
      * @return Non-localized message including parameters etc.
      */
     public String getMessage() {
-        return message;
+        return getMessage(I18n.getInstance().getResourceBundle());
     }
+
+    public String getMessage(ResourceBundle resourceBundle) {
+        return MessageFormat.format(resourceBundle.getString(messageId), getParameters());
+    }
+
 
     /**
      * @return parameters to display as part of the message.

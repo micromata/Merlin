@@ -14,15 +14,16 @@ public class ColumnValidator extends ColumnListener {
     /**
      * Parameter: rowNumber, ExcelColumnDef
      */
-    public static final String MESSAGE_MISSING_REQUIRED_FIELD = ColumnValidator.class.getName() + ":MESSAGE_MISSING_REQUIRED_FIELD";
+    public static final String MESSAGE_MISSING_REQUIRED_FIELD = "merlin.excel.validation_error.missing_required_field";
     /**
      * Parameter: rowNumber, ExcelColumnDef, cellValue
      */
-    public static final String MESSAGE_PATTERN_MISMATCH = ColumnValidator.class.getName() + ":MESSAGE_PATTERN_MISMATCH";
+    public static final String MESSAGE_PATTERN_MISMATCH = "merlin.excel.validation_error.pattern_mismatch";
     /**
      * Parameter: rowNumber, firstOccurrenceRowNumber, ExcelColumnDef, cellValue
      */
-    public static final String MESSAGE_VALUE_NOT_UNIQUE = ColumnValidator.class.getName() + ":MESSAGE_VALUE_NOT_UNIQUE";
+    public static final String MESSAGE_VALUE_NOT_UNIQUE = "merlin.excel.validation_error.value_not_unique";
+
     private Logger log = LoggerFactory.getLogger(ColumnValidator.class);
     private boolean required;
     private boolean unique;
@@ -44,18 +45,14 @@ public class ColumnValidator extends ColumnListener {
     public ExcelValidationErrorMessage isValid(String cellValue, int rowNumber) {
         if (StringUtils.isEmpty(cellValue)) {
             if (required) {
-                return createValidationError(MESSAGE_MISSING_REQUIRED_FIELD,
-                        "Cell value not given but required for column '"
-                                + columnDef.getColumnHeadname() + "' in row no " + rowNumber + ".", rowNumber, cellValue);
+                return createValidationErrorRequired(rowNumber);
             }
             return null;
         }
         if (patternRegExp != null) {
             try {
                 if (!cellValue.matches(patternRegExp)) {
-                    return createValidationError(MESSAGE_PATTERN_MISMATCH,
-                            "Cell value '" + cellValue + "' doesn't match required pattern '" + patternRegExp + " for column '"
-                                    + columnDef.getColumnHeadname() + "' in row no " + rowNumber + ".", rowNumber, cellValue);
+                    return createValidationErrorPatternMismatch(rowNumber, cellValue, patternRegExp);
                 }
             } catch (PatternSyntaxException ex) {
                 log.error("Pattern syntax error for regex for column '" + columnDef.getColumnHeadname() + "': '" + patternRegExp
@@ -65,10 +62,7 @@ public class ColumnValidator extends ColumnListener {
         }
         Integer firstOccurrenceRowNumber = isUnique(cellValue, rowNumber);
         if (firstOccurrenceRowNumber != null) {
-            return createValidationError(MESSAGE_VALUE_NOT_UNIQUE,
-                    "Cell value '" + cellValue + "' isn't unique for column '"
-                            + columnDef.getColumnHeadname() + "' in row no " + rowNumber + ". It's already used in row number "
-                            + firstOccurrenceRowNumber + ".", rowNumber, cellValue, firstOccurrenceRowNumber);
+            return createValidationErrorUnique(rowNumber, cellValue, firstOccurrenceRowNumber);
         }
         return null;
     }
@@ -166,8 +160,20 @@ public class ColumnValidator extends ColumnListener {
         this.patternRegExp = patternRegExp;
     }
 
-    private ExcelValidationErrorMessage createValidationError(String messageId, String message, int rowNumber, Object cellValue, Object... params) {
-        return new ExcelValidationErrorMessage(messageId, ResultMessageStatus.ERROR, message, rowNumber, columnDef, params)
+    ExcelValidationErrorMessage createValidationErrorRequired(int rowNumber) {
+        return createValidationError(MESSAGE_MISSING_REQUIRED_FIELD, rowNumber, "");
+    }
+
+    ExcelValidationErrorMessage createValidationErrorUnique(int rowNumber, Object cellValue, int firstOccurrenceRowNumber) {
+        return createValidationError(MESSAGE_VALUE_NOT_UNIQUE, rowNumber, cellValue, firstOccurrenceRowNumber + 1);
+    }
+
+    ExcelValidationErrorMessage createValidationErrorPatternMismatch(int rowNumber, Object cellValue, String patternRegExp) {
+        return createValidationError(MESSAGE_PATTERN_MISMATCH, rowNumber, cellValue, patternRegExp);
+    }
+
+    private ExcelValidationErrorMessage createValidationError(String messageId, int rowNumber, Object cellValue, Object... params) {
+        return new ExcelValidationErrorMessage(messageId, ResultMessageStatus.ERROR, params)
                 .setSheet(getSheet())
                 .setCellValue(cellValue)
                 .setColumnDef(getColumnDef())
