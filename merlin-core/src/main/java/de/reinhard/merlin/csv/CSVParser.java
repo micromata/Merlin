@@ -35,7 +35,6 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * TODO: Is part of projectforge-common-5.3. Simple csv parser
  * @author K.Reinhard@micromata.com
  * @author H.Spiewok@micromata.com (07/2005)
  */

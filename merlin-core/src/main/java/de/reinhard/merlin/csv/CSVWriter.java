@@ -30,7 +30,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * TODO: Is part of projectforge-common-5.3.
  * Helper class for writing comma separated values.
  * @author K.Reinhard@micromata.com
  * @author H.Spiewok@micromata.com (07/2005)

@@ -31,7 +31,7 @@ public class ColumnValidator extends ColumnListener {
     // Used for unique constraint.
     private Set<String> entries = new TreeSet<>();
     private Map<String, Integer> cellValueMap;
-    private List<ResultMessage> validationErrors;
+    private List<ExcelValidationErrorMessage> validationErrors;
 
     /**
      * Overwrite this for own validation.
@@ -41,21 +41,21 @@ public class ColumnValidator extends ColumnListener {
      * @param rowNumber Row number of cell value in given sheet.
      * @return null if valid, otherwise validation error message to display.
      */
-    public ResultMessage isValid(String cellValue, int rowNumber) {
+    public ExcelValidationErrorMessage isValid(String cellValue, int rowNumber) {
         if (StringUtils.isEmpty(cellValue)) {
             if (required) {
-                return new ResultMessage(MESSAGE_MISSING_REQUIRED_FIELD, ResultMessageStatus.ERROR,
+                return createValidationError(MESSAGE_MISSING_REQUIRED_FIELD,
                         "Cell value not given but required for column '"
-                                + columnDef.getColumnHeadname() + "' in row no " + rowNumber + ".", rowNumber, columnDef);
+                                + columnDef.getColumnHeadname() + "' in row no " + rowNumber + ".", rowNumber, cellValue);
             }
             return null;
         }
         if (patternRegExp != null) {
             try {
                 if (!cellValue.matches(patternRegExp)) {
-                    return new ResultMessage(MESSAGE_PATTERN_MISMATCH, ResultMessageStatus.ERROR,
+                    return createValidationError(MESSAGE_PATTERN_MISMATCH,
                             "Cell value '" + cellValue + "' doesn't match required pattern '" + patternRegExp + " for column '"
-                                    + columnDef.getColumnHeadname() + "' in row no " + rowNumber + ".", rowNumber, columnDef, cellValue);
+                                    + columnDef.getColumnHeadname() + "' in row no " + rowNumber + ".", rowNumber, cellValue);
                 }
             } catch (PatternSyntaxException ex) {
                 log.error("Pattern syntax error for regex for column '" + columnDef.getColumnHeadname() + "': '" + patternRegExp
@@ -65,10 +65,10 @@ public class ColumnValidator extends ColumnListener {
         }
         Integer firstOccurrenceRowNumber = isUnique(cellValue, rowNumber);
         if (firstOccurrenceRowNumber != null) {
-            return new ResultMessage(MESSAGE_VALUE_NOT_UNIQUE, ResultMessageStatus.ERROR,
+            return createValidationError(MESSAGE_VALUE_NOT_UNIQUE,
                     "Cell value '" + cellValue + "' isn't unique for column '"
                             + columnDef.getColumnHeadname() + "' in row no " + rowNumber + ". It's already used in row number "
-                            + firstOccurrenceRowNumber + ".", rowNumber, firstOccurrenceRowNumber, columnDef, cellValue);
+                            + firstOccurrenceRowNumber + ".", rowNumber, cellValue, firstOccurrenceRowNumber);
         }
         return null;
     }
@@ -76,7 +76,7 @@ public class ColumnValidator extends ColumnListener {
     @Override
     public void readCell(Cell cell, int rowNumber) {
         String cellValue = PoiHelper.getValueAsString(cell);
-        ResultMessage resultMessage = isValid(cellValue, rowNumber);
+        ExcelValidationErrorMessage resultMessage = isValid(cellValue, rowNumber);
         if (resultMessage != null) {
             log.debug("Validation error found: " + resultMessage.getMessage());
             getValidationErrors().add(resultMessage);
@@ -93,7 +93,7 @@ public class ColumnValidator extends ColumnListener {
         return validationErrors != null;
     }
 
-    public List<ResultMessage> getValidationErrors() {
+    public List<ExcelValidationErrorMessage> getValidationErrors() {
         if (validationErrors == null) {
             validationErrors = new LinkedList<>();
         }
@@ -164,5 +164,13 @@ public class ColumnValidator extends ColumnListener {
      */
     public void setPatternRegExp(String patternRegExp) {
         this.patternRegExp = patternRegExp;
+    }
+
+    private ExcelValidationErrorMessage createValidationError(String messageId, String message, int rowNumber, Object cellValue, Object... params) {
+        return new ExcelValidationErrorMessage(messageId, ResultMessageStatus.ERROR, message, rowNumber, columnDef, params)
+                .setSheet(getSheet())
+                .setCellValue(cellValue)
+                .setColumnDef(getColumnDef())
+                .setRow(rowNumber);
     }
 }

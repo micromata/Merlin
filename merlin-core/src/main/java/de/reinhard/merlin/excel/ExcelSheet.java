@@ -96,6 +96,7 @@ public class ExcelSheet {
      */
     public ExcelSheet add(ExcelColumnDef columnDef, ColumnListener listener) {
         columnDef.addColumnListener(listener);
+        listener.setSheet(this);
         return this;
     }
 
