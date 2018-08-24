@@ -1,6 +1,5 @@
 package de.reinhard.merlin.excel;
 
-import org.apache.commons.lang.Validate;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -12,10 +11,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 public class ExcelWorkbook {
     private Logger log = LoggerFactory.getLogger(ExcelWorkbook.class);
@@ -24,23 +21,28 @@ public class ExcelWorkbook {
     private List<ExcelSheet> sheetList;
 
     public ExcelWorkbook(String excelFilename) {
-        FileInputStream excelFile;
+        this(new File(excelFilename));
+    }
+
+    public ExcelWorkbook(File excelFile) {
+        FileInputStream inputStream;
         try {
-            excelFile = new FileInputStream(new File(excelFilename));
+            inputStream = new FileInputStream(excelFile);
         } catch (FileNotFoundException ex) {
-            log.error("Couldn't open File '" + new File(excelFilename).getAbsolutePath() + "': ", ex);
+            log.error("Couldn't open File '" + excelFile.getAbsolutePath() + "': ", ex);
             throw new RuntimeException(ex);
         }
         try {
-            workbook = WorkbookFactory.create(excelFile);
+            workbook = WorkbookFactory.create(inputStream);
         } catch (IOException ex) {
-            log.error("Couldn't open File '" + excelFilename + "': " + ex.getMessage(), ex);
+            log.error("Couldn't open File '" + excelFile.getAbsolutePath() + "': " + ex.getMessage(), ex);
             throw new RuntimeException(ex);
         } catch (InvalidFormatException ex) {
-            log.error("Unsupported file format '" + excelFilename + "': " + ex.getMessage(), ex);
+            log.error("Unsupported file format '" + excelFile.getAbsolutePath() + "': " + ex.getMessage(), ex);
             throw new RuntimeException(ex);
         }
     }
+
 
     public ExcelSheet getSheet(String sheetName) {
         initializeSheetList();
@@ -55,6 +57,10 @@ public class ExcelWorkbook {
         }
         log.warn("No sheet named '" + sheetName + "' found.");
         return null;
+    }
+
+    public Workbook getPOIWorkbook() {
+        return workbook;
     }
 
     private void initializeSheetList() {

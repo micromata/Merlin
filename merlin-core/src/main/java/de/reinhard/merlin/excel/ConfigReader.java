@@ -48,6 +48,15 @@ public class ConfigReader {
         return propertiesStorage;
     }
 
+    /**
+     * @param markErrors
+     * @return this for chaining.
+     */
+    public ConfigReader setMarkErrors(boolean markErrors) {
+        this.sheet.setMarkErrors(markErrors);
+        return this;
+    }
+
     public boolean hasValidationErrors() {
         return sheet.hasValidationErrors();
     }

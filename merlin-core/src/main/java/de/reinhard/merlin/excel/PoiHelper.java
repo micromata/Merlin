@@ -1,8 +1,6 @@
 package de.reinhard.merlin.excel;
 
 import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellType;
-import org.apache.poi.ss.usermodel.DataFormat;
 import org.apache.poi.ss.usermodel.DataFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
