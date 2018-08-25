@@ -1,12 +1,16 @@
 package de.reinhard.merlin.excel;
 
+import de.reinhard.merlin.I18n;
 import de.reinhard.merlin.ResultMessage;
 import de.reinhard.merlin.data.PropertiesStorage;
 import org.apache.commons.lang.StringUtils;
+import org.apache.poi.ss.usermodel.CellStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.ResourceBundle;
+import java.util.Set;
 
 public class ConfigReader {
     private Logger log = LoggerFactory.getLogger(ConfigReader.class);
@@ -38,8 +42,8 @@ public class ConfigReader {
         int counter = 0;
         while (sheet.hasNextRow()) {
             sheet.nextRow();
-            String property = sheet.getCell(propertyColumnDef);
-            String value = sheet.getCell(valueColumnDef);
+            String property = PoiHelper.getValueAsString(sheet.getCell(propertyColumnDef));
+            String value = PoiHelper.getValueAsString(sheet.getCell(valueColumnDef));
             if (StringUtils.isNotEmpty(value)) {
                 log.info("Read config property '" + property + "'='" + value + "'");
                 propertiesStorage.setConfig(property, value);
@@ -48,20 +52,7 @@ public class ConfigReader {
         return propertiesStorage;
     }
 
-    /**
-     * @param markErrors
-     * @return this for chaining.
-     */
-    public ConfigReader setMarkErrors(boolean markErrors) {
-        this.sheet.setMarkErrors(markErrors);
-        return this;
-    }
-
-    public boolean hasValidationErrors() {
-        return sheet.hasValidationErrors();
-    }
-
-    public List<ResultMessage> getValidationErrors() {
-        return sheet.getValidationErrors();
+    public ExcelSheet getSheet() {
+        return sheet;
     }
 }

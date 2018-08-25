@@ -1,9 +1,12 @@
 package de.reinhard.merlin.excel;
 
+import de.reinhard.merlin.I18n;
 import de.reinhard.merlin.ResultMessage;
+import de.reinhard.merlin.ResultMessageStatus;
 import de.reinhard.merlin.data.Data;
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.util.CellReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,13 +14,16 @@ import java.util.*;
 
 public class ExcelSheet {
     private Logger log = LoggerFactory.getLogger(ExcelSheet.class);
+    public static final String MESSAGE_MISSING_COLUMN_NUMBER = "merlin.excel.validation_error.missing_column_number";
+    public static final String MESSAGE_MISSING_COLUMN_BY_NAME = "merlin.excel.validation_error.missing_column_by_name";
 
     private List<ExcelColumnDef> columnDefList = new LinkedList<>();
     private Sheet poiSheet;
     private Iterator<Row> rowIterator;
     private Row currentRow;
-    private boolean markErrors;
     private final static int firstDataRow = 1; // 1st row (0) is head row.
+    private Set<ExcelValidationErrorMessage> validationErrors;
+    private boolean modified;
 
     ExcelSheet(Sheet poiSheet) {
         log.info("Reading sheet '" + poiSheet.getSheetName() + "'");
@@ -64,9 +70,7 @@ public class ExcelSheet {
         ExcelColumnDef columnDef = getColumnDef(columnHeadname);
         if (columnDef == null) {
             log.error("Can't find column named '" + columnHeadname + "'. Column listener ignored.");
-            if (isMarkErrors()) {
-                // TODO: Add message to excel head row (new column).
-            }
+            createValidationErrorMissingColumnByName(columnHeadname);
             return this;
         }
         return add(columnDef, listener);
@@ -81,9 +85,7 @@ public class ExcelSheet {
         ExcelColumnDef columnDef = getColumnDef(columnNumber);
         if (columnDef == null) {
             log.error("Can't get column number " + columnNumber + ". Column validator ignored.");
-            if (isMarkErrors()) {
-                // TODO: Add message to excel head row (new column).
-            }
+            createValidationErrorMissingColumnNumber(columnNumber);
             return this;
         }
         return add(columnDef, listener);
@@ -127,18 +129,24 @@ public class ExcelSheet {
             return null;
         }
         Cell cell = currentRow.getCell(columnDef.getColumnNumber());
-        String value = PoiHelper.getValueAsString(cell);
-        return value;
+        return PoiHelper.getValueAsString(cell);
     }
 
     /**
      * @param columnDef
+     * @return The cell of the specified column of the current row (uses internal interator).
+     */
+    public Cell getCell(ExcelColumnDef columnDef) {
+        return currentRow.getCell(columnDef.getColumnNumber());
+    }
+
+    /**
+     * @param row       Excel row number (starting with 0, POI row number).
+     * @param columnDef
      * @return
      */
-    public String getCell(ExcelColumnDef columnDef) {
-        Cell cell = currentRow.getCell(columnDef.getColumnNumber());
-        String value = PoiHelper.getValueAsString(cell);
-        return value;
+    public Cell getCell(int row, ExcelColumnDef columnDef) {
+        return poiSheet.getRow(row).getCell(columnDef.getColumnNumber());
     }
 
     private void readHeadRow() {
@@ -190,13 +198,16 @@ public class ExcelSheet {
         return poiSheet.getSheetName();
     }
 
-    public boolean isMarkErrors() {
-        return markErrors;
+    public int getSheetIndex() {
+        return poiSheet.getWorkbook().getSheetIndex(poiSheet);
     }
 
     public boolean hasValidationErrors() {
+        if (validationErrors != null && validationErrors.size() > 0) {
+            return true;
+        }
         for (ExcelColumnDef columnDef : columnDefList) {
-            if (columnDef.hasColumnListeners() == false) {
+            if (!columnDef.hasColumnListeners()) {
                 continue;
             }
             for (ColumnListener columnListener : columnDef.getColumnListeners()) {
@@ -211,29 +222,121 @@ public class ExcelSheet {
         return false;
     }
 
-    public List<ResultMessage> getValidationErrors() {
-        List<ResultMessage> validationErrors = new LinkedList<>();
+    /**
+     * @return All validation errors of this sheet including all validation errors of all registered {@link ColumnValidator}.
+     * An empty set will be returned if no validation error was found.
+     */
+    public Set<ExcelValidationErrorMessage> getAllValidationErrors() {
+        Set<ExcelValidationErrorMessage> allValidationErrors = new TreeSet<>();
+        if (validationErrors != null) {
+            allValidationErrors.addAll(validationErrors);
+        }
         for (ExcelColumnDef columnDef : columnDefList) {
-            if (columnDef.hasColumnListeners() == false) {
+            if (!columnDef.hasColumnListeners()) {
                 continue;
             }
             for (ColumnListener columnListener : columnDef.getColumnListeners()) {
                 if (!(columnListener instanceof ColumnValidator)) {
                     continue;
                 }
-                ColumnValidator columnValidator =  (ColumnValidator) columnListener;
+                ColumnValidator columnValidator = (ColumnValidator) columnListener;
                 if (columnValidator.hasValidationErrors()) {
-                    validationErrors.addAll(columnValidator.getValidationErrors());
+                    allValidationErrors.addAll(columnValidator.getValidationErrors());
                 }
             }
         }
-        return validationErrors;
+        return allValidationErrors;
     }
 
     /**
-     * @param markErrors If true, any validation errors in the Excel file will be marked and validation messages will be added to the workbook and saved.
+     * Marks and comments validation errors of cells of this sheet by mamipulating the Excel sheet.
+     * Refer {@link #isModified()} for checking if any modification was done.
+     * Please don't forget to call {@link #analyze(boolean)} first with parameter validate=true.
+     *
+     * @param appendValidationErrorsColumn If true, a new column with all validation errors will be appended.
+     * @param cellStyle                    If given, all cells with validation errors will styled.
+     * @return this for chaining.
      */
-    public void setMarkErrors(boolean markErrors) {
-        this.markErrors = markErrors;
+    public ExcelSheet markErrors(boolean appendValidationErrorsColumn, CellStyle cellStyle) {
+        return markErrors(I18n.getInstance().getResourceBundle(), appendValidationErrorsColumn, cellStyle);
+    }
+
+    /**
+     * Marks and comments validation errors of cells of this sheet by mamipulating the Excel sheet.
+     * Refer {@link #isModified()} for checking if any modification was done.
+     * Please don't forget to call {@link #analyze(boolean)} first with parameter validate=true.
+     *
+     * @param resourceBundle               For localizing messages.
+     * @param appendValidationErrorsColumn If true, a new column with all validation errors will be appended.
+     * @param cellStyle                    If given, all cells with validation errors will styled.
+     * @return this for chaining.
+     */
+    public ExcelSheet markErrors(ResourceBundle resourceBundle, boolean appendValidationErrorsColumn,
+                                 CellStyle cellStyle) {
+        int validationErrorColumn = poiSheet.getRow(0).getLastCellNum() + 1;
+        for (ExcelValidationErrorMessage validationError : getAllValidationErrors()) {
+            ExcelColumnDef columnDef = validationError.getColumnDef();
+            Row row = poiSheet.getRow(validationError.getRow());
+            if (appendValidationErrorsColumn) {
+                updateOrCreateCell(row, validationErrorColumn, validationError.getMessage(resourceBundle));
+                modified = true;
+            }
+            if (cellStyle != null && columnDef != null) {
+                Cell cell = row.getCell(columnDef.getColumnNumber());
+                if (cell != null) {
+                    // Cell validation error. Highlight cell.
+                    cell.setCellStyle(cellStyle);
+                    modified = true;
+                }
+            }
+        }
+        if (modified) {
+            // adjust column width to fit the content
+            poiSheet.autoSizeColumn(validationErrorColumn);
+        }
+        return this;
+    }
+
+    private void updateOrCreateCell(Row row, int colNumber, String value) {
+        Cell cell = row.getCell(colNumber);
+        if (cell == null) {
+            cell = row.createCell(colNumber, CellType.STRING);
+        }
+        String actValue = cell.getStringCellValue();
+        if (StringUtils.isBlank(actValue)) {
+            cell.setCellValue(value);
+        } else {
+            CellStyle cs = poiSheet.getWorkbook().createCellStyle();
+            cs.setWrapText(true);
+            cell.setCellStyle(cs);
+            //increase row height to accomodate one more line of text:
+            float actHeight = row.getHeightInPoints();
+            row.setHeightInPoints(actHeight + poiSheet.getDefaultRowHeightInPoints());
+            cell.setCellValue(actValue + "\n" + value);
+        }
+    }
+
+    /**
+     * @return true, if this sheet was modified (by calling {@link #markErrors()}.
+     */
+    public boolean isModified() {
+        return modified;
+    }
+
+    private void addValidationError(ExcelValidationErrorMessage message) {
+        if (validationErrors == null) {
+            validationErrors = new TreeSet<>();
+        }
+        validationErrors.add(message);
+    }
+
+    ExcelValidationErrorMessage createValidationErrorMissingColumnNumber(int columnNumber) {
+        return new ExcelValidationErrorMessage(MESSAGE_MISSING_COLUMN_NUMBER, ResultMessageStatus.ERROR)
+                .setSheet(this).setColumnDef(new ExcelColumnDef(columnNumber, ""));
+    }
+
+    ExcelValidationErrorMessage createValidationErrorMissingColumnByName(String columnName) {
+        return new ExcelValidationErrorMessage(MESSAGE_MISSING_COLUMN_BY_NAME, ResultMessageStatus.ERROR)
+                .setSheet(this).setColumnDef(new ExcelColumnDef(0, columnName));
     }
 }

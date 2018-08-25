@@ -2,6 +2,7 @@ package de.reinhard.merlin;
 
 import java.text.MessageFormat;
 import java.util.List;
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 /**
@@ -41,6 +42,10 @@ public class ResultMessage {
         return getMessage(I18n.getInstance().getResourceBundle());
     }
 
+    /**
+     * @param resourceBundle
+     * @return localized message.
+     */
     public String getMessage(ResourceBundle resourceBundle) {
         return MessageFormat.format(resourceBundle.getString(messageId), getParameters());
     }

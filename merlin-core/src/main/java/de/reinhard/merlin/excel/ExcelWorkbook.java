@@ -75,12 +75,12 @@ public class ExcelWorkbook {
     }
 
     /**
-     * @return true if any sheet of this workbook returns true: {@link ExcelSheet#isMarkErrors()}
+     * @return true if any sheet of this workbook returns true: {@link ExcelSheet#isModified()}
      */
-    public boolean isMarkErrors() {
+    public boolean isModified() {
         initializeSheetList();
         for (ExcelSheet sheet : sheetList) {
-            if (sheet.isMarkErrors()) {
+            if (sheet.isModified()) {
                 return true;
             }
         }

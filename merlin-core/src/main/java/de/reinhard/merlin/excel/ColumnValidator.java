@@ -12,15 +12,17 @@ import java.util.regex.PatternSyntaxException;
 
 public class ColumnValidator extends ColumnListener {
     /**
-     * Parameter: rowNumber, ExcelColumnDef
+     * Parameter: Sheet name, Column in letter format: (A, B, ..., AA, AB, ...), Column head name, Row number
      */
     public static final String MESSAGE_MISSING_REQUIRED_FIELD = "merlin.excel.validation_error.missing_required_field";
     /**
-     * Parameter: rowNumber, ExcelColumnDef, cellValue
+     * Parameter: Sheet name, Column in letter format: (A, B, ..., AA, AB, ...), Column head name, Row number,
+     * Cell value, pattern
      */
     public static final String MESSAGE_PATTERN_MISMATCH = "merlin.excel.validation_error.pattern_mismatch";
     /**
-     * Parameter: rowNumber, firstOccurrenceRowNumber, ExcelColumnDef, cellValue
+     * Parameter: Sheet name, Column in letter format: (A, B, ..., AA, AB, ...), Column head name, Row number,
+     * Cell value, row of first occurrence.
      */
     public static final String MESSAGE_VALUE_NOT_UNIQUE = "merlin.excel.validation_error.value_not_unique";
 
@@ -32,7 +34,7 @@ public class ColumnValidator extends ColumnListener {
     // Used for unique constraint.
     private Set<String> entries = new TreeSet<>();
     private Map<String, Integer> cellValueMap;
-    private List<ExcelValidationErrorMessage> validationErrors;
+    private Set<ExcelValidationErrorMessage> validationErrors;
 
     /**
      * Overwrite this for own validation.
@@ -87,9 +89,9 @@ public class ColumnValidator extends ColumnListener {
         return validationErrors != null;
     }
 
-    public List<ExcelValidationErrorMessage> getValidationErrors() {
+    public Set<ExcelValidationErrorMessage> getValidationErrors() {
         if (validationErrors == null) {
-            validationErrors = new LinkedList<>();
+            validationErrors = new TreeSet<>();
         }
         return validationErrors;
     }
@@ -101,8 +103,7 @@ public class ColumnValidator extends ColumnListener {
         if (cellValueMap == null) {
             cellValueMap = new HashMap<>();
         }
-        Integer firstOccurrenceRowNumber = cellValueMap.get(cellValue);
-        return firstOccurrenceRowNumber;
+        return cellValueMap.get(cellValue);
     }
 
     public String getColumnHeadname() {

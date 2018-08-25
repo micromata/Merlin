@@ -12,13 +12,11 @@ public class ExcelColumnDef {
 
     private int columnNumber;
     private String columnHeadname;
-    private String columnNumberAsLetters;
     private List<ColumnListener> columnListeners;
 
     ExcelColumnDef(int columnNumber, String columnHeadname) {
         this.columnNumber = columnNumber;
-        this.columnNumberAsLetters = CellReference.convertNumToColString(columnNumber);
-        this.columnHeadname = columnHeadname != null ? columnHeadname : columnNumberAsLetters;
+        this.columnHeadname = columnHeadname != null ? columnHeadname : CellReference.convertNumToColString(columnNumber);
     }
 
     public int getColumnNumber() {
@@ -36,7 +34,7 @@ public class ExcelColumnDef {
      * @return Column number as letters: A, B, ..., AA, AB, ...
      */
     public String getColumnNumberAsLetters() {
-        return columnNumberAsLetters;
+        return CellReference.convertNumToColString(columnNumber);
     }
 
     public boolean hasColumnListeners() {
