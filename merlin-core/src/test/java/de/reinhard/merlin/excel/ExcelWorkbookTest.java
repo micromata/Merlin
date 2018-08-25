@@ -4,6 +4,7 @@ import de.reinhard.merlin.Definitions;
 import de.reinhard.merlin.I18n;
 import de.reinhard.merlin.data.PropertiesStorage;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.PatternFormatting;
 import org.junit.jupiter.api.Test;
@@ -49,9 +50,7 @@ public class ExcelWorkbookTest {
                 "Property", "Value");
         PropertiesStorage props = configReader.readConfig(excelWorkbook);
         assertTrue(configReader.getSheet().hasValidationErrors());
-        CellStyle cellStyle = excelWorkbook.getPOIWorkbook().createCellStyle();
-        cellStyle.setFillBackgroundColor(IndexedColors.YELLOW.getIndex());
-        configReader.getSheet().markErrors(true, cellStyle);
+        configReader.getSheet().markErrors();
         File file = new File(Definitions.OUTPUT_DIR, "Test-result.xlsx");
         log.info("Writing modified Excel file: " + file.getAbsolutePath());
         excelWorkbook.getPOIWorkbook().write(new FileOutputStream(file));

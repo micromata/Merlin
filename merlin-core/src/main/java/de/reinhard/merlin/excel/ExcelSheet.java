@@ -1,12 +1,10 @@
 package de.reinhard.merlin.excel;
 
 import de.reinhard.merlin.I18n;
-import de.reinhard.merlin.ResultMessage;
 import de.reinhard.merlin.ResultMessageStatus;
 import de.reinhard.merlin.data.Data;
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.ss.util.CellReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,6 +22,8 @@ public class ExcelSheet {
     private final static int firstDataRow = 1; // 1st row (0) is head row.
     private Set<ExcelValidationErrorMessage> validationErrors;
     private boolean modified;
+    private CellStyle defaultValidationErrorMessageStyle;
+    private CellStyle defaultErrorCellStyle;
 
     ExcelSheet(Sheet poiSheet) {
         log.info("Reading sheet '" + poiSheet.getSheetName() + "'");
@@ -248,17 +248,12 @@ public class ExcelSheet {
         return allValidationErrors;
     }
 
-    /**
-     * Marks and comments validation errors of cells of this sheet by mamipulating the Excel sheet.
-     * Refer {@link #isModified()} for checking if any modification was done.
-     * Please don't forget to call {@link #analyze(boolean)} first with parameter validate=true.
-     *
-     * @param appendValidationErrorsColumn If true, a new column with all validation errors will be appended.
-     * @param cellStyle                    If given, all cells with validation errors will styled.
-     * @return this for chaining.
-     */
-    public ExcelSheet markErrors(boolean appendValidationErrorsColumn, CellStyle cellStyle) {
-        return markErrors(I18n.getInstance().getResourceBundle(), appendValidationErrorsColumn, cellStyle);
+    public ExcelSheet markErrors() {
+        return markErrors(getDefaultValidationErrorMessageStyle(), getDefaultErrorCellStyle());
+    }
+
+    public ExcelSheet markErrors(ResourceBundle resourceBundle) {
+        return markErrors(resourceBundle, getDefaultValidationErrorMessageStyle(), getDefaultErrorCellStyle());
     }
 
     /**
@@ -266,26 +261,42 @@ public class ExcelSheet {
      * Refer {@link #isModified()} for checking if any modification was done.
      * Please don't forget to call {@link #analyze(boolean)} first with parameter validate=true.
      *
-     * @param resourceBundle               For localizing messages.
-     * @param appendValidationErrorsColumn If true, a new column with all validation errors will be appended.
-     * @param cellStyle                    If given, all cells with validation errors will styled.
+     * @param errorMessagesCellStyle If not null, a new column with all validation errors will be appended with
+     *                               the given style.
+     * @param errorCellStyle              If given, all cells with validation errors will styled.
      * @return this for chaining.
      */
-    public ExcelSheet markErrors(ResourceBundle resourceBundle, boolean appendValidationErrorsColumn,
-                                 CellStyle cellStyle) {
-        int validationErrorColumn = poiSheet.getRow(0).getLastCellNum() + 1;
+    public ExcelSheet markErrors(CellStyle errorMessagesCellStyle, CellStyle errorCellStyle) {
+        return markErrors(I18n.getInstance().getResourceBundle(), errorMessagesCellStyle, errorCellStyle);
+    }
+
+    /**
+     * Marks and comments validation errors of cells of this sheet by mamipulating the Excel sheet.
+     * Refer {@link #isModified()} for checking if any modification was done.
+     * Please don't forget to call {@link #analyze(boolean)} first with parameter validate=true.
+     *
+     * @param resourceBundle         For localizing messages.
+     * @param errorMessagesCellStyle If not null, a new column with all validation errors will be appended with
+     *                               the given style.
+     * @param errorCellStyle              If given, all cells with validation errors will styled.
+     * @return this for chaining.
+     */
+    public ExcelSheet markErrors(ResourceBundle resourceBundle, CellStyle errorMessagesCellStyle,
+                                 CellStyle errorCellStyle) {
+        int validationErrorColumn = poiSheet.getRow(0).getLastCellNum();
         for (ExcelValidationErrorMessage validationError : getAllValidationErrors()) {
             ExcelColumnDef columnDef = validationError.getColumnDef();
             Row row = poiSheet.getRow(validationError.getRow());
-            if (appendValidationErrorsColumn) {
-                updateOrCreateCell(row, validationErrorColumn, validationError.getMessage(resourceBundle));
+            if (errorMessagesCellStyle != null) {
+                updateOrCreateCell(row, validationErrorColumn, validationError.getMessage(resourceBundle),
+                        errorMessagesCellStyle);
                 modified = true;
             }
-            if (cellStyle != null && columnDef != null) {
+            if (errorCellStyle != null && columnDef != null) {
                 Cell cell = row.getCell(columnDef.getColumnNumber());
                 if (cell != null) {
                     // Cell validation error. Highlight cell.
-                    cell.setCellStyle(cellStyle);
+                    cell.setCellStyle(errorCellStyle);
                     modified = true;
                 }
             }
@@ -297,10 +308,11 @@ public class ExcelSheet {
         return this;
     }
 
-    private void updateOrCreateCell(Row row, int colNumber, String value) {
+    private void updateOrCreateCell(Row row, int colNumber, String value, CellStyle cellStyle) {
         Cell cell = row.getCell(colNumber);
         if (cell == null) {
             cell = row.createCell(colNumber, CellType.STRING);
+            cell.setCellStyle(cellStyle);
         }
         String actValue = cell.getStringCellValue();
         if (StringUtils.isBlank(actValue)) {
@@ -338,5 +350,25 @@ public class ExcelSheet {
     ExcelValidationErrorMessage createValidationErrorMissingColumnByName(String columnName) {
         return new ExcelValidationErrorMessage(MESSAGE_MISSING_COLUMN_BY_NAME, ResultMessageStatus.ERROR)
                 .setSheet(this).setColumnDef(new ExcelColumnDef(0, columnName));
+    }
+
+    public CellStyle getDefaultValidationErrorMessageStyle() {
+        if (defaultValidationErrorMessageStyle == null) {
+            defaultValidationErrorMessageStyle = poiSheet.getWorkbook().createCellStyle();
+            final Font font = poiSheet.getWorkbook().createFont();
+            font.setFontName("Arial");
+            font.setColor(IndexedColors.RED.index);
+            defaultValidationErrorMessageStyle.setFont(font);
+        }
+        return defaultValidationErrorMessageStyle;
+    }
+
+    public CellStyle getDefaultErrorCellStyle() {
+        if (defaultErrorCellStyle == null) {
+            defaultErrorCellStyle = poiSheet.getWorkbook().createCellStyle();
+            defaultErrorCellStyle.setFillForegroundColor(IndexedColors.YELLOW.getIndex());
+            defaultErrorCellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        }
+        return defaultErrorCellStyle;
     }
 }
