@@ -9,6 +9,8 @@ import java.util.ResourceBundle;
  * Used for validation messages etc. Supports own internationalization and defining of messages.
  */
 public class ResultMessage {
+    public enum SUFFIX {KNOWN_ROW, KNOWN_CELL}
+
     private String messageId;
     private Object[] parameters;
     private ResultMessageStatus status;
@@ -47,9 +49,24 @@ public class ResultMessage {
      * @return localized message.
      */
     public String getMessage(ResourceBundle resourceBundle) {
-        return MessageFormat.format(resourceBundle.getString(messageId), getParameters());
+        return getMessage(resourceBundle, null);
     }
 
+    /**
+     * @param resourceBundle
+     * @return localized message.
+     */
+    public String getMessage(ResourceBundle resourceBundle, SUFFIX suffix) {
+        String msgId;
+        if (suffix == SUFFIX.KNOWN_ROW) {
+            msgId = messageId + ".known_row";
+        } else if (suffix == SUFFIX.KNOWN_CELL) {
+            msgId = messageId + ".known_cell";
+        } else {
+            msgId = messageId;
+        }
+        return MessageFormat.format(resourceBundle.getString(msgId), getParameters());
+    }
 
     /**
      * @return parameters to display as part of the message.

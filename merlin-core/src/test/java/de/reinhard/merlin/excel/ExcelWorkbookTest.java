@@ -50,7 +50,8 @@ public class ExcelWorkbookTest {
                 "Property", "Value");
         PropertiesStorage props = configReader.readConfig(excelWorkbook);
         assertTrue(configReader.getSheet().hasValidationErrors());
-        configReader.getSheet().markErrors();
+        ExcelResponseContext ctx = new ExcelResponseContext(excelWorkbook).setAddErrorColumn(true);
+        configReader.getSheet().markErrors(ctx);
         File file = new File(Definitions.OUTPUT_DIR, "Test-result.xlsx");
         log.info("Writing modified Excel file: " + file.getAbsolutePath());
         excelWorkbook.getPOIWorkbook().write(new FileOutputStream(file));
