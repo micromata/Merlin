@@ -12,7 +12,7 @@ public class ExcelColumnDef {
 
     private int columnNumber;
     private String columnHeadname;
-    private List<ColumnListener> columnListeners;
+    private List<ExcelColumnListener> columnListeners;
 
     ExcelColumnDef(int columnNumber, String columnHeadname) {
         this.columnNumber = columnNumber;
@@ -40,11 +40,11 @@ public class ExcelColumnDef {
     public boolean hasColumnListeners() {
         return columnListeners != null && columnListeners.size() > 0;
     }
-    public List<ColumnListener> getColumnListeners() {
+    public List<ExcelColumnListener> getColumnListeners() {
         return columnListeners;
     }
 
-    public void addColumnListener(ColumnListener columnListener) {
+    public void addColumnListener(ExcelColumnListener columnListener) {
         if (this.columnListeners == null) {
             columnListeners = new LinkedList<>();
         }

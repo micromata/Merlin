@@ -1,6 +1,5 @@
 package de.reinhard.merlin.excel;
 
-import de.reinhard.merlin.ResultMessage;
 import de.reinhard.merlin.ResultMessageStatus;
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
@@ -10,7 +9,7 @@ import org.slf4j.LoggerFactory;
 import java.util.*;
 import java.util.regex.PatternSyntaxException;
 
-public class ColumnValidator extends ColumnListener {
+public class ExcelColumnValidator extends ExcelColumnListener {
     /**
      * Parameter: Sheet name, Column in letter format: (A, B, ..., AA, AB, ...), Column head name, Row number
      */
@@ -26,7 +25,7 @@ public class ColumnValidator extends ColumnListener {
      */
     public static final String MESSAGE_VALUE_NOT_UNIQUE = "merlin.excel.validation_error.value_not_unique";
 
-    private Logger log = LoggerFactory.getLogger(ColumnValidator.class);
+    private Logger log = LoggerFactory.getLogger(ExcelColumnValidator.class);
     private boolean required;
     private boolean unique;
     private String patternRegExp;
@@ -123,7 +122,7 @@ public class ColumnValidator extends ColumnListener {
      *
      * @return this for chaining.
      */
-    public ColumnValidator setRequired() {
+    public ExcelColumnValidator setRequired() {
         this.required = true;
         return this;
     }
@@ -144,7 +143,7 @@ public class ColumnValidator extends ColumnListener {
      *
      * @return this for chaining.
      */
-    public ColumnValidator setUnique() {
+    public ExcelColumnValidator setUnique() {
         this.unique = true;
         return this;
     }

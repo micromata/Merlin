@@ -20,7 +20,7 @@ public class ZoneminderThingsReader {
             thing.setLabel(sheet.getCell("label"));
             thing.setId(sheet.getCell("id"));
             thing.setNumber(sheet.getCell("number"));
-            //DataStorage.getInstance().add(thing);
+            //DataStorage.getDefaultInstance().add(thing);
             counter++;
         }
         log.info("Number of read zoneminder monitors in sheet '" + SHEET_NAME + "': " + counter);

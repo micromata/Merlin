@@ -5,7 +5,7 @@ import org.apache.poi.ss.usermodel.Cell;
 /**
  * Analyses all column values for some statistics.
  */
-public class ColumnAnalyzer extends ColumnListener {
+public class ExcelColumnAnalyzer extends ExcelColumnListener {
     private int maxLength = 0;
 
     public void readCell(Cell cell, int rowNumber) {

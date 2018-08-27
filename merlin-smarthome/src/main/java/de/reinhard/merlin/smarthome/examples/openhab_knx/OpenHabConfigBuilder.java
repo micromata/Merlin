@@ -1,6 +1,6 @@
 package de.reinhard.merlin.smarthome.examples.openhab_knx;
 
-import de.reinhard.merlin.excel.ConfigReader;
+import de.reinhard.merlin.excel.ExcelConfigReader;
 import de.reinhard.merlin.excel.ExcelWorkbook;
 import de.reinhard.merlin.smarthome.examples.openhab_knx.data.DataStorage;
 import de.reinhard.merlin.velocity.VelocityHelper;
@@ -24,7 +24,7 @@ public class OpenHabConfigBuilder {
         File thingsDir = createDir(configDir, "things");
         excelWorkbook = new ExcelWorkbook("merlin-smarthome/examples/openhab-knx/OpenHab-KNX-Definitions.xlsx");
         new KnxThingsReader().readKNXThings(excelWorkbook);
-        new ConfigReader(excelWorkbook.getSheet("Config"), "Property", "Value")
+        new ExcelConfigReader(excelWorkbook.getSheet("Config"), "Property", "Value")
                 .readConfig(excelWorkbook);
         VelocityContext context = new VelocityContext();
         context.put("data", DataStorage.getInstance());

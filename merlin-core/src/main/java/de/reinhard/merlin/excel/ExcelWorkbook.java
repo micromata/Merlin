@@ -9,14 +9,18 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class ExcelWorkbook {
     private Logger log = LoggerFactory.getLogger(ExcelWorkbook.class);
 
     private Workbook workbook;
     private List<ExcelSheet> sheetList;
+    private Map<String, CellStyle> cellStyleMap = new HashMap<>();
+    private Map<String, Font> fontMap = new HashMap<>();
 
     public ExcelWorkbook(String excelFilename) {
         this(new File(excelFilename));
@@ -67,7 +71,7 @@ public class ExcelWorkbook {
         }
         sheetList = new LinkedList<>();
         for (Sheet poiSheet : workbook) {
-            ExcelSheet excelSheet = new ExcelSheet(poiSheet);
+            ExcelSheet excelSheet = new ExcelSheet(this, poiSheet);
             sheetList.add(excelSheet);
         }
     }
@@ -83,5 +87,33 @@ public class ExcelWorkbook {
             }
         }
         return false;
+    }
+
+    /**
+     * Please re-use cell styles due to limitations of Excel.
+     * @param id
+     * @return
+     */
+    public CellStyle createOrGetCellStyle(String id) {
+        CellStyle cellStyle = cellStyleMap.get(id);
+        if (cellStyle == null) {
+            cellStyle = workbook.createCellStyle();
+            cellStyleMap.put(id, cellStyle);
+        }
+        return cellStyle;
+    }
+
+    /**
+     * Please re-use cell styles due to limitations of Excel.
+     * @param id
+     * @return
+     */
+    public Font createOrGetFont(String id) {
+        Font font = fontMap.get(id);
+        if (font == null) {
+            font = workbook.createFont();
+            fontMap.put(id, font);
+        }
+        return font;
     }
 }

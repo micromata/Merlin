@@ -1,16 +1,12 @@
 package de.reinhard.merlin;
 
 import java.text.MessageFormat;
-import java.util.List;
-import java.util.Locale;
 import java.util.ResourceBundle;
 
 /**
  * Used for validation messages etc. Supports own internationalization and defining of messages.
  */
 public class ResultMessage {
-    public enum SUFFIX {KNOWN_ROW, KNOWN_CELL}
-
     private String messageId;
     private Object[] parameters;
     private ResultMessageStatus status;
@@ -38,41 +34,22 @@ public class ResultMessage {
     }
 
     /**
-     * @return Non-localized message including parameters etc.
+     * @return Message including parameters etc. localized with {@link I18n#getDefault()}.
      */
     public String getMessage() {
-        return getMessage(I18n.getInstance().getResourceBundle());
+        return getMessage(I18n.getDefault());
     }
 
-    /**
-     * @param resourceBundle
-     * @return localized message.
-     */
-    public String getMessage(ResourceBundle resourceBundle) {
-        return getMessage(resourceBundle, null);
-    }
-
-    /**
-     * @param resourceBundle
-     * @return localized message.
-     */
-    public String getMessage(ResourceBundle resourceBundle, SUFFIX suffix) {
-        String msgId;
-        if (suffix == SUFFIX.KNOWN_ROW) {
-            msgId = messageId + ".known_row";
-        } else if (suffix == SUFFIX.KNOWN_CELL) {
-            msgId = messageId + ".known_cell";
-        } else {
-            msgId = messageId;
-        }
-        return MessageFormat.format(resourceBundle.getString(msgId), getParameters());
-    }
-
-    /**
-     * @return parameters to display as part of the message.
-     */
     public Object[] getParameters() {
         return parameters;
+    }
+
+    /**
+     * @param i18n
+     * @return localized message.
+     */
+    public String getMessage(I18n i18n) {
+        return i18n.formatMessage(messageId, parameters);
     }
 
     public boolean isOK() {

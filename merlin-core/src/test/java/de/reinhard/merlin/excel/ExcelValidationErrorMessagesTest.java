@@ -14,30 +14,29 @@ public class ExcelValidationErrorMessagesTest {
 
     @Test
     public void validationErrorsTest() {
-        I18n i18n = I18n.getInstance();
-        i18n.setResourceBundle(ResourceBundle.getBundle("MessagesBundle", Locale.ROOT));
+        I18n i18n = I18n.setDefault(Locale.ROOT);
         ExcelWorkbook excelWorkbook = new ExcelWorkbook(new File(Definitions.EXAMPLES_TEST_DIR, "Test.xlsx"));
         ExcelSheet sheet = excelWorkbook.getSheet("Config");
-        ColumnValidator val1 = new ColumnValidator();
+        ExcelColumnValidator val1 = new ExcelColumnValidator();
         val1.setColumnDef(new ExcelColumnDef(0, "cell-head1"));
         val1.setSheet(sheet);
-        ColumnValidator val2 = new ColumnValidator();
+        ExcelColumnValidator val2 = new ExcelColumnValidator();
         val2.setColumnDef(new ExcelColumnDef(303, "cell-head2"));
         val2.setSheet(sheet);
-        assertEquals("Cell value not given but required in sheet 'Config' for column A:'cell-head1' in row #6.",
-                i18n.getMessage(val1.createValidationErrorRequired(5)));
-        assertEquals("Cell value not given but required in sheet 'Config' for column KR:'cell-head2' in row #1.",
-                i18n.getMessage(val2.createValidationErrorRequired(0)));
+        assertEquals("In sheet 'Config', column A:'cell-head1' and row #6: Cell value not given but required.",
+                val1.createValidationErrorRequired(5).getMessageWithAllDetails(i18n));
+        assertEquals("In sheet 'Config', column KR:'cell-head2' and row #1: Cell value not given but required.",
+                val2.createValidationErrorRequired(0).getMessageWithAllDetails(i18n));
 
-        assertEquals("Cell value 'cell-value' in sheet 'Config' for column KR:'cell-head2' in row #6 doesn't match required pattern 'yyyy-dd-mm'.",
-                i18n.getMessage(val2.createValidationErrorPatternMismatch(5, "cell-value", "yyyy-dd-mm")));
+        assertEquals("In sheet 'Config', column KR:'cell-head2' and row #6: Cell value 'cell-value' doesn't match required pattern 'yyyy-dd-mm'.",
+                val2.createValidationErrorPatternMismatch(5, "cell-value", "yyyy-dd-mm").getMessageWithAllDetails(i18n));
 
-        assertEquals("Cell value 'cell-value' in sheet 'Config' for column KR:'cell-head2' in row #6 isn't unique. It's already used in row #2.",
-                i18n.getMessage(val2.createValidationErrorUnique(5, "cell-value", 1)));
+        assertEquals("In sheet 'Config', column KR:'cell-head2' and row #6: Cell value 'cell-value' isn't unique. It's already used in row #2.",
+                val2.createValidationErrorUnique(5, "cell-value", 1).getMessageWithAllDetails(i18n));
 
-        assertEquals("Column 'cell-head' not found in sheet 'Config'.",
-                i18n.getMessage(sheet.createValidationErrorMissingColumnByName("cell-head")));
-        assertEquals("Column 'KR' not found in sheet 'Config'.",
-                i18n.getMessage(sheet.createValidationErrorMissingColumnNumber(303)));
+        assertEquals("In sheet 'Config': Column named 'cell-head' not found.",
+                sheet.createValidationErrorMissingColumnByName("cell-head").getMessageWithSheetName(i18n));
+        assertEquals("In sheet 'Config': Column KR not given.",
+                sheet.createValidationErrorMissingColumnNumber(303).getMessageWithSheetName(i18n));
     }
 }

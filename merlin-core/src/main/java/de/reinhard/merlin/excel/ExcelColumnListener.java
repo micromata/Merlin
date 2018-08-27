@@ -5,7 +5,7 @@ import org.apache.poi.ss.usermodel.Cell;
 /**
  * A column listener assigned to a {@link ExcelColumnDef} listens to all read cell values.
  */
-public abstract class ColumnListener {
+public abstract class ExcelColumnListener {
     protected ExcelColumnDef columnDef;
     protected ExcelSheet sheet;
 
@@ -21,7 +21,7 @@ public abstract class ColumnListener {
 
     void setSheet(ExcelSheet sheet) {
         if (this.sheet != null && sheet != this.sheet) {
-            throw new IllegalArgumentException("Cant't add Columnlistener to different sheets. Please don't re-use same instance of ColumnListener.");
+            throw new IllegalArgumentException("Cant't add Columnlistener to different sheets. Please don't re-use same instance of ExcelColumnListener.");
         }
         this.sheet = sheet;
     }
