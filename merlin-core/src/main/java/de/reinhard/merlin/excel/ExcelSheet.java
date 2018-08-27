@@ -287,25 +287,26 @@ public class ExcelSheet {
             Row row = poiSheet.getRow(validationError.getRow());
             if (excelWriterContext.isAddErrorColumn()) {
                 excelWriterContext.getErrorMessageWriter().updateOrCreateCell(excelWriterContext, this,
-                        validationErrorColumn, row,  validationError);
+                        validationErrorColumn, row, validationError);
                 modified = true;
             }
             if (columnDef != null) {
                 Cell cell = row.getCell(columnDef.getColumnNumber());
-                if (cell != null) {
-                    if (excelWriterContext.isHighlightErrorCells()) {
-                        // Cell validation error. Highlight cell.
-                        excelWriterContext.getCellHighlighter().highlightErrorCell(cell, excelWriterContext, this,
-                                columnDef, row);
-                        cell.setCellStyle(excelWriterContext.getErrorHighlightCellStyle());
-                        modified = true;
-                    }
-                    if (excelWriterContext.isAddCellComments()) {
-                        // Cell validation error. Add error message as comment.
-                        excelWriterContext.getCommentWriter().setCellComment(cell, excelWriterContext, this,
-                                columnDef, row, validationError.getMessage(i18n));
-                        modified = true;
-                    }
+                if (cell == null) {
+                    cell = row.createCell(columnDef.getColumnNumber(), CellType.STRING);
+                }
+                if (excelWriterContext.isHighlightErrorCells()) {
+                    // Cell validation error. Highlight cell.
+                    excelWriterContext.getCellHighlighter().highlightErrorCell(cell, excelWriterContext, this,
+                            columnDef, row);
+                    cell.setCellStyle(excelWriterContext.getErrorHighlightCellStyle());
+                    modified = true;
+                }
+                if (excelWriterContext.isAddCellComments()) {
+                    // Cell validation error. Add error message as comment.
+                    excelWriterContext.getCommentWriter().setCellComment(cell, excelWriterContext, this,
+                            columnDef, row, validationError.getMessage(i18n));
+                    modified = true;
                 }
             }
         }

@@ -7,12 +7,12 @@ import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 
 public class ExcelValidationErrorMessageWriter {
-    public void updateOrCreateCell(ExcelWriterContext context, ExcelSheet sheet, int errorMessagesColumnNUmber,
+    public void updateOrCreateCell(ExcelWriterContext context, ExcelSheet sheet, int errorMessagesColumnNumber,
                                    Row row, ExcelValidationErrorMessage validationError) {
 
-        Cell cell = row.getCell(errorMessagesColumnNUmber);
+        Cell cell = row.getCell(errorMessagesColumnNumber);
         if (cell == null) {
-            cell = row.createCell(errorMessagesColumnNUmber, CellType.STRING);
+            cell = row.createCell(errorMessagesColumnNumber, CellType.STRING);
             cell.setCellStyle(context.getErrorColumnCellStyle());
         }
         String actValue = cell.getStringCellValue();
