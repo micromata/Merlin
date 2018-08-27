@@ -16,7 +16,7 @@ public class ExcelValidationErrorMessageWriter {
             cell.setCellStyle(context.getErrorColumnCellStyle());
         }
         String actValue = cell.getStringCellValue();
-        String message = validationError.getMessage(context.getI18n());
+        String message = validationError.getMessageWithColumn(context.getI18n());
         if (StringUtils.isBlank(actValue)) {
             cell.setCellValue(message);
         } else {

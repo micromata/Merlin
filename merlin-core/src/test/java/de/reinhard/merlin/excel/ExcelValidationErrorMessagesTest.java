@@ -33,6 +33,10 @@ public class ExcelValidationErrorMessagesTest {
 
         assertEquals("In sheet 'Config', column KR:'cell-head2' and row #6: Cell value 'cell-value' isn't unique. It's already used in row #2.",
                 val2.createValidationErrorUnique(5, "cell-value", 1).getMessageWithAllDetails(i18n));
+        assertEquals("In column KR:'cell-head2': Cell value 'cell-value' isn't unique. It's already used in row #2.",
+                val2.createValidationErrorUnique(5, "cell-value", 1).getMessageWithColumn(i18n));
+        assertEquals("Cell value 'cell-value' isn't unique. It's already used in row #2.",
+                val2.createValidationErrorUnique(5, "cell-value", 1).getMessage(i18n));
 
         assertEquals("In sheet 'Config': Column named 'cell-head' not found.",
                 sheet.createValidationErrorMissingColumnByName("cell-head").getMessageWithSheetName(i18n));

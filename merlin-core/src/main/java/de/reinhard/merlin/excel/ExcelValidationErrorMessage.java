@@ -28,6 +28,39 @@ public class ExcelValidationErrorMessage extends ResultMessage implements Compar
      * @return Message including sheet name, column and row.
      */
     public String getMessageWithAllDetails(I18n i18n) {
+        // 0 - sheet name, 1 - column number as letters, 2 - column name, 3 - row number, 4 - message.
+        return i18n.formatMessage("merlin.excel.validation_error.display_all",
+                getSheetName(),
+                columnDef != null ? columnDef.getColumnNumberAsLetters() : "",
+                columnDef != null ? columnDef.getColumnHeadname() : "",
+                row + 1,
+                getMessage(i18n));
+    }
+
+    /**
+     * @param i18n
+     * @return Message including sheet name, column and row.
+     */
+    public String getMessageWithSheetName(I18n i18n) {
+        // 0 - sheet name, 1 - message.
+        return i18n.formatMessage("merlin.excel.validation_error.display_sheet",
+                getSheetName(),
+                getMessage(i18n));
+    }
+
+    /**
+     * @param i18n
+     * @return Message including column number/name.
+     */
+    public String getMessageWithColumn(I18n i18n) {
+        // 0 - sheet name, 1 - message.
+        return i18n.formatMessage("merlin.excel.validation_error.display_column",
+                columnDef != null ? columnDef.getColumnNumberAsLetters() : "",
+                columnDef != null ? columnDef.getColumnHeadname() : "",
+                getMessage(i18n));
+    }
+
+    public String getMessage(I18n i18n) {
         Object[] params;
         if (cellValue != null) {
             if (getParameters() != null) {
@@ -38,36 +71,16 @@ public class ExcelValidationErrorMessage extends ResultMessage implements Compar
         } else {
             params = getParameters();
         }
-        String message;
         if (params != null && params.length > 0) {
-            message = i18n.formatMessage(getMessageId(), params);
+            return i18n.formatMessage(getMessageId(), params);
         } else {
-            message = i18n.getMessage(getMessageId());
+            return i18n.getMessage(getMessageId());
         }
-        // 0 - sheet name, 1 - column number as letters, 2 - column name, 3 - row number, 4 - message.
-        return i18n.formatMessage("merlin.excel.validation_error.display_all",
-                getSheetName(),
-                columnDef != null ? columnDef.getColumnNumberAsLetters() : "",
-                columnDef != null ? columnDef.getColumnHeadname() : "",
-                row + 1,
-                message);
     }
 
-    /**
-     * @param i18n
-     * @return Message including sheet name, column and row.
-     */
-    public String getMessageWithSheetName(I18n i18n) {
-        String message;
-        if (getParameters() != null && getParameters().length > 0) {
-            message = i18n.formatMessage(getMessageId(), getParameters());
-        } else {
-            message = i18n.getMessage(getMessageId());
-        }
-        // 0 - sheet name, 1 - message.
-        return i18n.formatMessage("merlin.excel.validation_error.display_sheet",
-                getSheetName(),
-                message);
+    @Override
+    public String getMessage() {
+        return getMessage(I18n.getDefault());
     }
 
     /**
