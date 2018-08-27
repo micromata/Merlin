@@ -96,6 +96,7 @@ public class ExcelWriterContext {
             font.setFontName("Arial");
             font.setColor(IndexedColors.RED.index);
             errorColumnCellStyle.setFont(font);
+            errorColumnCellStyle.setWrapText(true);
         }
         return errorColumnCellStyle;
     }

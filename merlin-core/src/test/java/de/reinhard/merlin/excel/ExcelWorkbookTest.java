@@ -18,6 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ExcelWorkbookTest {
     private Logger log = LoggerFactory.getLogger(ExcelWorkbookTest.class);
+
     static {
         I18n.setDefault(Locale.ROOT);
     }
@@ -39,7 +40,7 @@ public class ExcelWorkbookTest {
     }
 
     @Test
-    public void configReaderValidationExcelResponseTest() throws IOException {
+    public void validationExcelResponseTest() throws IOException {
         ExcelWorkbook excelWorkbook = new ExcelWorkbook("examples/tests/Test.xlsx");
         ExcelConfigReader configReader = new ExcelConfigReader(excelWorkbook.getSheet("Config"),
                 "Property", "Value");
@@ -47,6 +48,12 @@ public class ExcelWorkbookTest {
         assertTrue(configReader.getSheet().hasValidationErrors());
         ExcelWriterContext ctx = new ExcelWriterContext(I18n.getDefault(), excelWorkbook).setAddErrorColumn(true);
         configReader.getSheet().markErrors(ctx);
+
+        ExcelSheet sheet = excelWorkbook.getSheet("Validator-Test");
+        sheet.add("Name", new ExcelColumnValidator().setUnique());
+        sheet.add("E-Mail", new ExcelColumnValidator().setRequired());
+        sheet.markErrors(ctx);
+
         File file = new File(Definitions.OUTPUT_DIR, "Test-result.xlsx");
         log.info("Writing modified Excel file: " + file.getAbsolutePath());
         excelWorkbook.getPOIWorkbook().write(new FileOutputStream(file));

@@ -280,6 +280,7 @@ public class ExcelSheet {
      * @return this for chaining.
      */
     public ExcelSheet markErrors(I18n i18n, ExcelWriterContext excelWriterContext) {
+        analyze(true);
         int validationErrorColumn = poiSheet.getRow(0).getLastCellNum();
         for (ExcelValidationErrorMessage validationError : getAllValidationErrors()) {
             ExcelColumnDef columnDef = validationError.getColumnDef();
