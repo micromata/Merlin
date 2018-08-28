@@ -37,7 +37,7 @@ public class ExcelWorkbookTest {
 
     @Test
     public void validationExcelResponseTest() throws IOException {
-        //validationexcelResponseTest(I18n.getDefault(), "");
+        validationexcelResponseTest(I18n.getDefault(), "");
         validationexcelResponseTest(I18n.setDefault(Locale.GERMAN), "_de");
     }
 
@@ -52,10 +52,18 @@ public class ExcelWorkbookTest {
 
         ExcelSheet sheet = excelWorkbook.getSheet("Validator-Test");
         sheet.registerColumn("Name", new ExcelColumnValidator().setUnique());
-        sheet.registerColumn("E-Mail", new ExcelColumnValidator().setRequired());
         sheet.registerColumn("Birthday", new ExcelColumnDateValidator());
         sheet.registerColumn("City", new ExcelColumnValidator());
-        sheet.registerColumn("E-Mail", new ExcelColumnPatternValidator().setEMailPattern());
+        sheet.registerColumn("E-Mail", new ExcelColumnPatternValidator().setEMailPattern().setRequired());
+        sheet.registerColumn("Country", new ExcelColumnValidator());
+        sheet.markErrors(ctx);
+
+        sheet = excelWorkbook.getSheet("Validator-Mass-Test");
+        sheet.registerColumn("Name", new ExcelColumnValidator().setRequired());
+        sheet.registerColumn("Birthday", new ExcelColumnDateValidator());
+        sheet.registerColumn("City", new ExcelColumnValidator());
+        sheet.registerColumn("E-Mail", new ExcelColumnPatternValidator().setEMailPattern().setRequired().setUnique());
+        sheet.registerColumn("Number", new ExcelColumnValidator().setUnique());
         sheet.markErrors(ctx);
 
         File file = new File(Definitions.OUTPUT_DIR, "Test-result" + fileSuffix + ".xlsx");

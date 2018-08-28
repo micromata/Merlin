@@ -19,7 +19,8 @@ public class ExcelSheet {
     private List<ExcelColumnDef> columnDefList = new LinkedList<>();
     private Sheet poiSheet;
     private ExcelWorkbook workbook;
-    private int firstDataRow = -1; // 1st row (0) is head row.
+    private Row headRow = null;
+    private int validationErrorColumn = -1;
     private Set<ExcelValidationErrorMessage> validationErrors;
     private boolean modified;
 
@@ -40,9 +41,26 @@ public class ExcelSheet {
      */
     public ExcelSheet analyze(boolean validate) {
         findAndReadHeadRow();
-        for (Row row : poiSheet) {
-            if (row.getRowNum() <= firstDataRow) {
-                continue;
+        if (validate) {
+            // Detect missing columns:
+            for (ExcelColumnDef columnDef : columnDefList) {
+                if (!columnDef.hasColumnListeners()) {
+                    continue;
+                }
+                for (ExcelColumnListener listener : columnDef.getColumnListeners()) {
+                    if (listener instanceof ExcelColumnValidator) {
+                        if (columnDef.getColumnNumber() < 0) {
+                            addValidationError(createValidationErrorMissingColumnByName(columnDef.getColumnHeadname()));
+                        }
+                    }
+                }
+            }
+        }
+        Iterator<Row> it = getDataRowIterator();
+        while (it.hasNext()) {
+            Row row = it.next();
+            if (row.getLastCellNum() > validationErrorColumn) {
+                validationErrorColumn = row.getLastCellNum();
             }
             for (ExcelColumnDef columnDef : columnDefList) {
                 if (!columnDef.hasColumnListeners() || columnDef.getColumnNumber() < 0) {
@@ -85,7 +103,6 @@ public class ExcelSheet {
             columnDef = new ExcelColumnDef(columnHead);
             columnDefList.add(columnDef);
         }
-        // TODO:    addValidationError(createValidationErrorMissingColumnByName(columnHead));
         return registerColumn(columnDef, listener);
     }
 
@@ -106,12 +123,10 @@ public class ExcelSheet {
     public Iterator<Row> getDataRowIterator() {
         findAndReadHeadRow();
         Iterator<Row> it = poiSheet.rowIterator();
-        for (int i = 0; i < firstDataRow; i++) {
-            if (it.hasNext() == false) {
-                log.info("Excel sheet '" + getSheetName() + "' has now data rows.");
-                return it;
+        while(it.hasNext()) {
+            if (it.next().equals(headRow)) {
+                break;
             }
-            it.next();
         }
         return it;
     }
@@ -167,20 +182,22 @@ public class ExcelSheet {
     }
 
     private void findAndReadHeadRow() {
-        if (firstDataRow >= 0) {
+        if (headRow != null) {
             return; // head row already read.
         }
         log.info("Reading head row of sheet '" + poiSheet.getSheetName() + "'.");
         int numberOfFoundHeadColumns = 0;
         Iterator<Row> rowIterator = poiSheet.rowIterator();
         Row current = null;
-        for (int i = 1; i <= 10; i++) { // Detect head row, check Row 0-9 for column heads.
+        for (int i = 0; i < 10; i++) { // Detect head row, check Row 0-9 for column heads.
             if (!rowIterator.hasNext()) {
-                firstDataRow = -1;
                 break;
             }
             log.info("Parsing row #" + i + " of sheet '" + poiSheet.getSheetName() + "'.");
             current = rowIterator.next();
+            if (current.getLastCellNum() > validationErrorColumn) {
+                validationErrorColumn = current.getLastCellNum();
+            }
             int col = -1;
             for (Cell cell : current) {
                 ++col;
@@ -188,33 +205,30 @@ public class ExcelSheet {
                 log.debug("Reading cell '" + val + "' in column " + col);
                 if (getColumnDef(val) != null) {
                     log.debug("Head column found: '" + val + "' in col #" + col);
-                    firstDataRow = i;
+                    headRow = current;
                     break;
                 }
             }
-            if (firstDataRow >= 0) {
+            if (headRow != null) {
                 break;
             }
         }
-        if (firstDataRow < 0 || current == null) {
+        if (headRow == null || current == null) {
             log.info("No head row found in sheet '" + getSheetName() + "'.");
-            firstDataRow = 0;
             return;
         }
-        if (firstDataRow > 0) {
-            // Now read all columns for assigning column numbers to column definitions.
-            int col = -1;
-            for (Cell cell : current) {
-                ++col;
-                String val = PoiHelper.getValueAsString(cell);
-                log.debug("Reading head column '" + val + "' in column " + col);
-                ExcelColumnDef columnDef = getColumnDef(val);
-                if (columnDef != null) {
-                    log.debug("Head column found: '" + val + "' in col #" + col);
-                    columnDef.setColumnNumber(col);
-                } else {
-                    log.debug("Head column not registered: '" + val + "'.");
-                }
+        // Now read all columns for assigning column numbers to column definitions.
+        int col = -1;
+        for (Cell cell : current) {
+            ++col;
+            String val = PoiHelper.getValueAsString(cell);
+            log.debug("Reading head column '" + val + "' in column " + col);
+            ExcelColumnDef columnDef = getColumnDef(val);
+            if (columnDef != null) {
+                log.debug("Head column found: '" + val + "' in col #" + col);
+                columnDef.setColumnNumber(col);
+            } else {
+                log.debug("Head column not registered: '" + val + "'.");
             }
         }
     }
@@ -326,7 +340,6 @@ public class ExcelSheet {
      */
     public ExcelSheet markErrors(I18n i18n, ExcelWriterContext excelWriterContext) {
         analyze(true);
-        int validationErrorColumn = poiSheet.getRow(0).getLastCellNum();
         for (ExcelValidationErrorMessage validationError : getAllValidationErrors()) {
             ExcelColumnDef columnDef = validationError.getColumnDef();
             Row row = poiSheet.getRow(validationError.getRow());
@@ -384,7 +397,7 @@ public class ExcelSheet {
 
     ExcelValidationErrorMessage createValidationErrorMissingColumnByName(String columnName) {
         return new ExcelValidationErrorMessage(MESSAGE_MISSING_COLUMN_BY_NAME, ResultMessageStatus.ERROR, columnName)
-                .setSheet(this);
+                .setSheet(this).setRow(headRow.getRowNum());
     }
 
     public Sheet getPoiSheet() {
