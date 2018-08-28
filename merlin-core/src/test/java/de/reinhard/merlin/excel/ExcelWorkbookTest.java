@@ -29,7 +29,7 @@ public class ExcelWorkbookTest {
         assertTrue(configReader.getSheet().hasValidationErrors());
         Set<ExcelValidationErrorMessage> validationErrors = configReader.getSheet().getAllValidationErrors();
         assertEquals(1, validationErrors.size());
-        assertEquals("In sheet 'Config', column A:'Property' and row #5: Cell value 'user' isn't unique. It's already used in row #3.",
+        assertEquals("In sheet 'Config', column A:'Property' and row #5: Cell value isn't unique. It's already used in row #3: 'user'.",
                 validationErrors.iterator().next().getMessageWithAllDetails(i18n));
         assertEquals("horst", props.getConfig("user"));
         assertEquals("Hamburg", props.getConfig("city"));
@@ -51,19 +51,21 @@ public class ExcelWorkbookTest {
         configReader.getSheet().markErrors(ctx);
 
         ExcelSheet sheet = excelWorkbook.getSheet("Validator-Test");
+        sheet.registerColumn("Name", new ExcelColumnValidator().setRequired());
+        sheet.registerColumn("Surname", new ExcelColumnValidator().setRequired());
+        sheet.registerColumn("Birthday", new ExcelColumnDateValidator());
+        sheet.registerColumn("City", new ExcelColumnValidator());
+        sheet.registerColumn("E-Mail", new ExcelColumnPatternValidator().setEMailPattern().setRequired().setUnique());
+        sheet.registerColumn("Number", new ExcelColumnValidator().setUnique());
+        sheet.registerColumn("Country", new ExcelColumnValidator());
+        sheet.markErrors(ctx);
+
+        sheet = excelWorkbook.getSheet("Validator-Mass-Test");
         sheet.registerColumn("Name", new ExcelColumnValidator().setUnique());
         sheet.registerColumn("Birthday", new ExcelColumnDateValidator());
         sheet.registerColumn("City", new ExcelColumnValidator());
         sheet.registerColumn("E-Mail", new ExcelColumnPatternValidator().setEMailPattern().setRequired());
         sheet.registerColumn("Country", new ExcelColumnValidator());
-        sheet.markErrors(ctx);
-
-        sheet = excelWorkbook.getSheet("Validator-Mass-Test");
-        sheet.registerColumn("Name", new ExcelColumnValidator().setRequired());
-        sheet.registerColumn("Birthday", new ExcelColumnDateValidator());
-        sheet.registerColumn("City", new ExcelColumnValidator());
-        sheet.registerColumn("E-Mail", new ExcelColumnPatternValidator().setEMailPattern().setRequired().setUnique());
-        sheet.registerColumn("Number", new ExcelColumnValidator().setUnique());
         sheet.markErrors(ctx);
 
         File file = new File(Definitions.OUTPUT_DIR, "Test-result" + fileSuffix + ".xlsx");

@@ -30,19 +30,19 @@ public class ExcelValidationErrorMessagesTest {
         assertEquals("In sheet 'Config', column KR:'cell-head2' and row #1: Cell value not given but required.",
                 val2.createValidationErrorRequired(0).getMessageWithAllDetails(i18n));
 
-        assertEquals("In sheet 'Config', column KR:'cell-head3' and row #6: Cell value 'cell-value' doesn't match required pattern 'yyyy-dd-mm'.",
+        assertEquals("In sheet 'Config', column KR:'cell-head3' and row #6: Cell value doesn't match required pattern: 'cell-value' - 'yyyy-dd-mm'.",
                 val3.createValidationErrorPatternMismatch(5, "cell-value", "yyyy-dd-mm").getMessageWithAllDetails(i18n));
 
-        assertEquals("In sheet 'Config', column KR:'cell-head2' and row #6: Cell value 'cell-value' isn't unique. It's already used in row #2.",
+        assertEquals("In sheet 'Config', column KR:'cell-head2' and row #6: Cell value isn't unique. It's already used in row #2: 'cell-value'.",
                 val2.createValidationErrorUnique(5, "cell-value", 1).getMessageWithAllDetails(i18n));
-        assertEquals("In column KR:'cell-head2': Cell value 'cell-value' isn't unique. It's already used in row #2.",
+        assertEquals("In column KR:'cell-head2': Cell value isn't unique. It's already used in row #2: 'cell-value'.",
                 val2.createValidationErrorUnique(5, "cell-value", 1).getMessageWithColumn(i18n));
-        assertEquals("Cell value 'cell-value' isn't unique. It's already used in row #2.",
+        assertEquals("Cell value isn't unique. It's already used in row #2: 'cell-value'.",
                 val2.createValidationErrorUnique(5, "cell-value", 1).getMessage(i18n));
 
-        assertEquals("In sheet 'Config': Column named 'cell-head' not found.",
+        assertEquals("In sheet 'Config': Named column not found: 'cell-head'.",
                 sheet.createValidationErrorMissingColumnByName("cell-head").getMessageWithSheetName(i18n));
-        assertEquals("In sheet 'Config': Column KR not given.",
+        assertEquals("In sheet 'Config': Column not given: KR.",
                 sheet.createValidationErrorMissingColumnNumber(303).getMessageWithSheetName(i18n));
     }
 }

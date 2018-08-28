@@ -123,7 +123,7 @@ public class ExcelSheet {
     public Iterator<Row> getDataRowIterator() {
         findAndReadHeadRow();
         Iterator<Row> it = poiSheet.rowIterator();
-        while(it.hasNext()) {
+        while (it.hasNext()) {
             if (it.next().equals(headRow)) {
                 break;
             }
@@ -397,7 +397,7 @@ public class ExcelSheet {
 
     ExcelValidationErrorMessage createValidationErrorMissingColumnByName(String columnName) {
         return new ExcelValidationErrorMessage(MESSAGE_MISSING_COLUMN_BY_NAME, ResultMessageStatus.ERROR, columnName)
-                .setSheet(this).setRow(headRow.getRowNum());
+                .setSheet(this).setRow(headRow != null ? headRow.getRowNum() : 0);
     }
 
     public Sheet getPoiSheet() {
