@@ -30,7 +30,7 @@ public class ExcelValidationErrorMessagesTest {
         assertEquals("In sheet 'Config', column KR:'cell-head2' and row #1: Cell value not given but required.",
                 val2.createValidationErrorRequired(0).getMessageWithAllDetails(i18n));
 
-        assertEquals("In sheet 'Config', column KR:'cell-head2' and row #6: Cell value 'cell-value' doesn't match required pattern 'yyyy-dd-mm'.",
+        assertEquals("In sheet 'Config', column KR:'cell-head3' and row #6: Cell value 'cell-value' doesn't match required pattern 'yyyy-dd-mm'.",
                 val3.createValidationErrorPatternMismatch(5, "cell-value", "yyyy-dd-mm").getMessageWithAllDetails(i18n));
 
         assertEquals("In sheet 'Config', column KR:'cell-head2' and row #6: Cell value 'cell-value' isn't unique. It's already used in row #2.",

@@ -51,11 +51,11 @@ public class ExcelWorkbookTest {
         configReader.getSheet().markErrors(ctx);
 
         ExcelSheet sheet = excelWorkbook.getSheet("Validator-Test");
-        sheet.add("Name", new ExcelColumnValidator().setUnique());
-        sheet.add("E-Mail", new ExcelColumnValidator().setRequired());
-        sheet.add("Birthday", new ExcelColumnDateValidator());
-        sheet.add("City", new ExcelColumnValidator());
-        sheet.add("E-Mail", new ExcelColumnPatternValidator().setEMailPattern());
+        sheet.registerColumn("Name", new ExcelColumnValidator().setUnique());
+        sheet.registerColumn("E-Mail", new ExcelColumnValidator().setRequired());
+        sheet.registerColumn("Birthday", new ExcelColumnDateValidator());
+        sheet.registerColumn("City", new ExcelColumnValidator());
+        sheet.registerColumn("E-Mail", new ExcelColumnPatternValidator().setEMailPattern());
         sheet.markErrors(ctx);
 
         File file = new File(Definitions.OUTPUT_DIR, "Test-result" + fileSuffix + ".xlsx");

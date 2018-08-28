@@ -10,9 +10,13 @@ import java.util.List;
 public class ExcelColumnDef {
     private Logger log = LoggerFactory.getLogger(ExcelColumnDef.class);
 
-    private int columnNumber;
+    private int columnNumber = -1;
     private String columnHeadname;
     private List<ExcelColumnListener> columnListeners;
+
+    ExcelColumnDef(String columnHeadname) {
+        this.columnHeadname = columnHeadname != null ? columnHeadname : CellReference.convertNumToColString(columnNumber);
+    }
 
     ExcelColumnDef(int columnNumber, String columnHeadname) {
         this.columnNumber = columnNumber;
@@ -21,6 +25,10 @@ public class ExcelColumnDef {
 
     public int getColumnNumber() {
         return columnNumber;
+    }
+
+    void setColumnNumber(int columnNumber) {
+        this.columnNumber = columnNumber;
     }
 
     /**

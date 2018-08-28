@@ -1,7 +1,6 @@
 package de.reinhard.merlin.excel;
 
 import de.reinhard.merlin.I18n;
-import de.reinhard.merlin.ResultMessage;
 import de.reinhard.merlin.ResultMessageStatus;
 import de.reinhard.merlin.data.Data;
 import org.apache.commons.lang.StringUtils;
@@ -20,9 +19,7 @@ public class ExcelSheet {
     private List<ExcelColumnDef> columnDefList = new LinkedList<>();
     private Sheet poiSheet;
     private ExcelWorkbook workbook;
-    private Iterator<Row> rowIterator;
-    private Row currentRow;
-    private final static int firstDataRow = 1; // 1st row (0) is head row.
+    private int firstDataRow = -1; // 1st row (0) is head row.
     private Set<ExcelValidationErrorMessage> validationErrors;
     private boolean modified;
 
@@ -30,8 +27,6 @@ public class ExcelSheet {
         log.info("Reading sheet '" + poiSheet.getSheetName() + "'");
         this.workbook = workbook;
         this.poiSheet = poiSheet;
-        rowIterator = poiSheet.iterator();
-        readHeadRow();
     }
 
     /**
@@ -44,12 +39,13 @@ public class ExcelSheet {
      * @return this for chaining.
      */
     public ExcelSheet analyze(boolean validate) {
+        findAndReadHeadRow();
         for (Row row : poiSheet) {
             if (row.getRowNum() <= firstDataRow) {
                 continue;
             }
             for (ExcelColumnDef columnDef : columnDefList) {
-                if (!columnDef.hasColumnListeners()) {
+                if (!columnDef.hasColumnListeners() || columnDef.getColumnNumber() < 0) {
                     continue;
                 }
                 for (ExcelColumnListener listener : columnDef.getColumnListeners()) {
@@ -64,33 +60,33 @@ public class ExcelSheet {
     }
 
     /**
-     * @param columnHeadname
-     * @param listener
+     * @param columnHeads
      * @return this for chaining.
      */
-    public ExcelSheet add(String columnHeadname, ExcelColumnListener listener) {
-        ExcelColumnDef columnDef = getColumnDef(columnHeadname);
-        if (columnDef == null) {
-            log.error("Can't find column named '" + columnHeadname + "'. Column listener ignored.");
-            addValidationError(createValidationErrorMissingColumnByName(columnHeadname));
-            return this;
+    public ExcelSheet registerColumns(String... columnHeads) {
+        for (String columnHead : columnHeads) {
+            if (getColumnDef(columnHead) != null) {
+                log.error("Don't register column heads twice: '" + columnHead + "'.");
+                continue;
+            }
+            columnDefList.add(new ExcelColumnDef(columnHead));
         }
-        return add(columnDef, listener);
+        return this;
     }
 
     /**
-     * @param columnNumber
+     * @param columnHead
      * @param listener
      * @return this for chaining.
      */
-    public ExcelSheet set(int columnNumber, ExcelColumnValidator listener) {
-        ExcelColumnDef columnDef = getColumnDef(columnNumber);
+    public ExcelSheet registerColumn(String columnHead, ExcelColumnListener listener) {
+        ExcelColumnDef columnDef = getColumnDef(columnHead);
         if (columnDef == null) {
-            log.error("Can't get column number " + columnNumber + ". Column validator ignored.");
-            createValidationErrorMissingColumnNumber(columnNumber);
-            return this;
+            columnDef = new ExcelColumnDef(columnHead);
+            columnDefList.add(columnDef);
         }
-        return add(columnDef, listener);
+        // TODO:    addValidationError(createValidationErrorMissingColumnByName(columnHead));
+        return registerColumn(columnDef, listener);
     }
 
     /**
@@ -98,48 +94,66 @@ public class ExcelSheet {
      * @param listener
      * @return this for chaining.
      */
-    public ExcelSheet add(ExcelColumnDef columnDef, ExcelColumnListener listener) {
+    public ExcelSheet registerColumn(ExcelColumnDef columnDef, ExcelColumnListener listener) {
         columnDef.addColumnListener(listener);
         listener.setSheet(this);
         return this;
     }
 
-    public boolean hasNextRow() {
-        return rowIterator.hasNext();
+    /**
+     * @return Iterator for rows. Iterator starts with data row (head row + 1).
+     */
+    public Iterator<Row> getDataRowIterator() {
+        findAndReadHeadRow();
+        Iterator<Row> it = poiSheet.rowIterator();
+        for (int i = 0; i < firstDataRow; i++) {
+            if (it.hasNext() == false) {
+                log.info("Excel sheet '" + getSheetName() + "' has now data rows.");
+                return it;
+            }
+            it.next();
+        }
+        return it;
     }
 
-    public void nextRow() {
-        currentRow = rowIterator.next();
-    }
-
-    public void readRow(Data data) {
+    public void readRow(Row row, Data data) {
+        findAndReadHeadRow();
         for (ExcelColumnDef columnDef : columnDefList) {
-            Cell cell = currentRow.getCell(columnDef.getColumnNumber());
+            Cell cell = row.getCell(columnDef.getColumnNumber());
             String value = PoiHelper.getValueAsString(cell);
             data.put(columnDef.getColumnHeadname(), value);
         }
     }
 
     /**
+     * @param row
      * @param columnHeadname
      * @return
      */
-    public String getCell(String columnHeadname) {
+    public String getCell(Row row, String columnHeadname) {
+        findAndReadHeadRow();
         ExcelColumnDef columnDef = getColumnDef(columnHeadname);
         if (columnDef == null) {
-            log.warn("No entry named '" + columnHeadname + "' found in sheet '" + currentRow.getSheet().getSheetName() + "'. Checked also '" + columnHeadname.toLowerCase() + "'.");
+            log.warn("No entry named '" + columnHeadname + "' found in sheet '" + row.getSheet().getSheetName()
+                    + "'. Checked also '" + columnHeadname.toLowerCase() + "'.");
             return null;
         }
-        Cell cell = currentRow.getCell(columnDef.getColumnNumber());
+        Cell cell = row.getCell(columnDef.getColumnNumber());
         return PoiHelper.getValueAsString(cell);
     }
 
     /**
+     * @param row
      * @param columnDef
      * @return The cell of the specified column of the current row (uses internal interator).
      */
-    public Cell getCell(ExcelColumnDef columnDef) {
-        return currentRow.getCell(columnDef.getColumnNumber());
+    public Cell getCell(Row row, ExcelColumnDef columnDef) {
+        findAndReadHeadRow();
+        if (columnDef.getColumnNumber() < 0) {
+            log.debug("Column '" + columnDef.getColumnHeadname() + "' not found in sheet '" + getSheetName() + "': can't read cell.");
+            return null;
+        }
+        return row.getCell(columnDef.getColumnNumber());
     }
 
     /**
@@ -148,29 +162,60 @@ public class ExcelSheet {
      * @return
      */
     public Cell getCell(int row, ExcelColumnDef columnDef) {
+        findAndReadHeadRow();
         return poiSheet.getRow(row).getCell(columnDef.getColumnNumber());
     }
 
-    private void readHeadRow() {
-        if (!rowIterator.hasNext()) {
-            log.info("Sheet '" + poiSheet.getSheetName() + "' has now rows.");
-            return;
+    private void findAndReadHeadRow() {
+        if (firstDataRow >= 0) {
+            return; // head row already read.
         }
         log.info("Reading head row of sheet '" + poiSheet.getSheetName() + "'.");
-        Row currentRow = rowIterator.next();
-        int col = -1;
-        for (Cell cell : currentRow) {
-            ++col;
-            String val = PoiHelper.getValueAsString(cell);
-            log.debug("Reading head column '" + val + "' in column " + col);
-            if (getColumnDef(val) != null) {
-                log.warn("Duplicate column head: '" + val + "' in col #" + col);
+        int numberOfFoundHeadColumns = 0;
+        Iterator<Row> rowIterator = poiSheet.rowIterator();
+        Row current = null;
+        for (int i = 1; i <= 10; i++) { // Detect head row, check Row 0-9 for column heads.
+            if (!rowIterator.hasNext()) {
+                firstDataRow = -1;
+                break;
             }
-            if (val == null || val.length() == 0) {
-                log.warn("Column head is empty for column " + col + " (" + col + ") in 1st row.");
-                continue;
+            log.info("Parsing row #" + i + " of sheet '" + poiSheet.getSheetName() + "'.");
+            current = rowIterator.next();
+            int col = -1;
+            for (Cell cell : current) {
+                ++col;
+                String val = PoiHelper.getValueAsString(cell);
+                log.debug("Reading cell '" + val + "' in column " + col);
+                if (getColumnDef(val) != null) {
+                    log.debug("Head column found: '" + val + "' in col #" + col);
+                    firstDataRow = i;
+                    break;
+                }
             }
-            columnDefList.add(new ExcelColumnDef(col, StringUtils.defaultString(val)));
+            if (firstDataRow >= 0) {
+                break;
+            }
+        }
+        if (firstDataRow < 0 || current == null) {
+            log.info("No head row found in sheet '" + getSheetName() + "'.");
+            firstDataRow = 0;
+            return;
+        }
+        if (firstDataRow > 0) {
+            // Now read all columns for assigning column numbers to column definitions.
+            int col = -1;
+            for (Cell cell : current) {
+                ++col;
+                String val = PoiHelper.getValueAsString(cell);
+                log.debug("Reading head column '" + val + "' in column " + col);
+                ExcelColumnDef columnDef = getColumnDef(val);
+                if (columnDef != null) {
+                    log.debug("Head column found: '" + val + "' in col #" + col);
+                    columnDef.setColumnNumber(col);
+                } else {
+                    log.debug("Head column not registered: '" + val + "'.");
+                }
+            }
         }
     }
 
