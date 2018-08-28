@@ -7,6 +7,7 @@ public class ExcelWriterContext {
     private boolean addCellComments = true;
     private boolean addErrorColumn;
     private boolean highlightErrorCells = true;
+    private boolean highlightColumnHeadCells = true;
     private boolean addErrorSheet;
     private CellStyle errorHighlightCellStyle;
     private CellStyle errorColumnCellStyle;
@@ -17,6 +18,7 @@ public class ExcelWriterContext {
     private ExcelValidationErrorCellHighlighter cellHighlighter;
     private ExcelValidationErrorCommentWriter commentWriter;
     private ExcelValidationErrorMessageWriter errorMessageWriter;
+    private ExcelValidationErrorColumnHeadCellHighlighter columnHeadCellHighlighter;
 
 
     public ExcelWriterContext(I18n i18n, ExcelWorkbook workbook) {
@@ -76,6 +78,14 @@ public class ExcelWriterContext {
         this.highlightErrorCells = highlightErrorCells;
     }
 
+    public boolean isHighlightColumnHeadCells() {
+        return highlightColumnHeadCells;
+    }
+
+    public void setHighlightColumnHeadCells(boolean highlightColumnHeadCells) {
+        this.highlightColumnHeadCells = highlightColumnHeadCells;
+    }
+
     public CellStyle getErrorHighlightCellStyle() {
         if (errorHighlightCellStyle == null) {
             errorHighlightCellStyle = workbook.createOrGetCellStyle("error-highlight-cell-style");
@@ -119,6 +129,17 @@ public class ExcelWriterContext {
      */
     public void setCellHighlighter(ExcelValidationErrorCellHighlighter cellHighlighter) {
         this.cellHighlighter = cellHighlighter;
+    }
+
+    public ExcelValidationErrorColumnHeadCellHighlighter getColumnHeadCellHighlighter() {
+        if (columnHeadCellHighlighter == null) {
+            columnHeadCellHighlighter = new ExcelValidationErrorColumnHeadCellHighlighter();
+        }
+        return columnHeadCellHighlighter;
+    }
+
+    public void setColumnHeadCellHighlighter(ExcelValidationErrorColumnHeadCellHighlighter columnHeadCellHighlighter) {
+        this.columnHeadCellHighlighter = columnHeadCellHighlighter;
     }
 
     public ExcelValidationErrorCommentWriter getCommentWriter() {

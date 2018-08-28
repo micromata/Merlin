@@ -340,6 +340,7 @@ public class ExcelSheet {
      */
     public ExcelSheet markErrors(I18n i18n, ExcelWriterContext excelWriterContext) {
         analyze(true);
+        Set<ExcelColumnDef> highlightedColumnHeads = new HashSet<>();
         for (ExcelValidationErrorMessage validationError : getAllValidationErrors()) {
             ExcelColumnDef columnDef = validationError.getColumnDef();
             Row row = poiSheet.getRow(validationError.getRow());
@@ -357,8 +358,17 @@ public class ExcelSheet {
                     // Cell validation error. Highlight cell.
                     excelWriterContext.getCellHighlighter().highlightErrorCell(cell, excelWriterContext, this,
                             columnDef, row);
-                    cell.setCellStyle(excelWriterContext.getErrorHighlightCellStyle());
                     modified = true;
+                }
+                if (excelWriterContext.isHighlightColumnHeadCells()) {
+                    if (headRow != null && !highlightedColumnHeads.contains(columnDef)) {
+                        highlightedColumnHeads.add(columnDef); // Don't highlight column heads twice.
+                        // Cell validation error. Highlight column head cell.
+                        Cell headCell = headRow.getCell(columnDef.getColumnNumber());
+                        excelWriterContext.getColumnHeadCellHighlighter().highlightColumnHeadCell(headCell, excelWriterContext, this,
+                                columnDef, headRow);
+                        modified = true;
+                    }
                 }
                 if (excelWriterContext.isAddCellComments()) {
                     // Cell validation error. Add error message as comment.
