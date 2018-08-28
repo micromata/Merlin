@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 
 class PoiHelper {
     private static Logger log = LoggerFactory.getLogger(PoiHelper.class);
+
     static String getValueAsString(Cell cell) {
         if (cell == null) {
             return "";
@@ -31,6 +32,19 @@ class PoiHelper {
                 log.warn("Unsupported Excel cell type: " + cell.getCellTypeEnum());
                 return getValueAsString(cell);
         }
+    }
+
+    static boolean isEmpty(Cell cell) {
+        if (cell == null) {
+            return true;
+        }
+        if (cell.getCellTypeEnum() == CellType.BLANK) {
+            return true;
+        }
+        if (cell.getCellTypeEnum() == CellType.STRING && cell.getStringCellValue().trim().isEmpty()) {
+            return true;
+        }
+        return false;
     }
 
     static void setComment(Cell cell, String message) {

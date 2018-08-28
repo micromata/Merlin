@@ -41,20 +41,28 @@ public class ExcelWorkbookTest {
 
     @Test
     public void validationExcelResponseTest() throws IOException {
+        //validationexcelResponseTest(I18n.getDefault(), "");
+        validationexcelResponseTest(I18n.setDefault(Locale.GERMAN), "_de");
+    }
+
+    private void validationexcelResponseTest(I18n i18n, String fileSuffix) throws IOException {
         ExcelWorkbook excelWorkbook = new ExcelWorkbook("examples/tests/Test.xlsx");
         ExcelConfigReader configReader = new ExcelConfigReader(excelWorkbook.getSheet("Config"),
                 "Property", "Value");
         PropertiesStorage props = configReader.readConfig(excelWorkbook);
         assertTrue(configReader.getSheet().hasValidationErrors());
-        ExcelWriterContext ctx = new ExcelWriterContext(I18n.getDefault(), excelWorkbook).setAddErrorColumn(true);
+        ExcelWriterContext ctx = new ExcelWriterContext(i18n, excelWorkbook).setAddErrorColumn(true);
         configReader.getSheet().markErrors(ctx);
 
         ExcelSheet sheet = excelWorkbook.getSheet("Validator-Test");
         sheet.add("Name", new ExcelColumnValidator().setUnique());
         sheet.add("E-Mail", new ExcelColumnValidator().setRequired());
+        sheet.add("Birthday", new ExcelColumnDateValidator());
+        sheet.add("City", new ExcelColumnValidator());
+        sheet.add("E-Mail", new ExcelColumnPatternValidator().setEMailPattern());
         sheet.markErrors(ctx);
 
-        File file = new File(Definitions.OUTPUT_DIR, "Test-result.xlsx");
+        File file = new File(Definitions.OUTPUT_DIR, "Test-result" + fileSuffix + ".xlsx");
         log.info("Writing modified Excel file: " + file.getAbsolutePath());
         excelWorkbook.getPOIWorkbook().write(new FileOutputStream(file));
     }

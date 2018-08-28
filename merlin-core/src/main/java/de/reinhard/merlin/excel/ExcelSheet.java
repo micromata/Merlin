@@ -72,7 +72,7 @@ public class ExcelSheet {
         ExcelColumnDef columnDef = getColumnDef(columnHeadname);
         if (columnDef == null) {
             log.error("Can't find column named '" + columnHeadname + "'. Column listener ignored.");
-            createValidationErrorMissingColumnByName(columnHeadname);
+            addValidationError(createValidationErrorMissingColumnByName(columnHeadname));
             return this;
         }
         return add(columnDef, listener);

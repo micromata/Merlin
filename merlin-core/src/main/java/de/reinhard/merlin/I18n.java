@@ -42,7 +42,8 @@ public class I18n {
      * Uses the default message bundle "MessagesBundle" of class path with systems default locale.
      */
     public I18n() {
-        this.resourceBundle = ResourceBundle.getBundle("MessagesBundle");
+        ResourceBundle.Control utf8Control = new UTF8ResourceBundleControl();
+        this.resourceBundle = ResourceBundle.getBundle("MessagesBundle", utf8Control);
     }
 
     public I18n(ResourceBundle resourceBundle) {
@@ -50,7 +51,8 @@ public class I18n {
     }
 
     public I18n(Locale locale) {
-        this.resourceBundle = ResourceBundle.getBundle("MessagesBundle", locale);
+        ResourceBundle.Control utf8Control = new UTF8ResourceBundleControl();
+        this.resourceBundle = ResourceBundle.getBundle("MessagesBundle", locale, utf8Control);
     }
 
     /**
@@ -63,7 +65,7 @@ public class I18n {
 
     /**
      * @param messageId
-     * @param params Message parameter to replace in message.
+     * @param params    Message parameter to replace in message.
      * @return localized message.
      * @see MessageFormat#format(String, Object...)
      */

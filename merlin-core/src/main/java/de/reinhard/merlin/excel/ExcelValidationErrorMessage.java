@@ -54,10 +54,15 @@ public class ExcelValidationErrorMessage extends ResultMessage implements Compar
      */
     public String getMessageWithColumn(I18n i18n) {
         // 0 - sheet name, 1 - message.
-        return i18n.formatMessage("merlin.excel.validation_error.display_column",
-                columnDef != null ? columnDef.getColumnNumberAsLetters() : "",
-                columnDef != null ? columnDef.getColumnHeadname() : "",
-                getMessage(i18n));
+        if (columnDef != null) {
+            return i18n.formatMessage("merlin.excel.validation_error.display_column",
+                    columnDef.getColumnNumberAsLetters(),
+                    columnDef.getColumnHeadname(),
+                    getMessage(i18n));
+        } else {
+            // Column not given. So can't display column.
+            return getMessage(i18n);
+        }
     }
 
     public String getMessage(I18n i18n) {

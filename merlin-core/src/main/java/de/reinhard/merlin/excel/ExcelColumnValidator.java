@@ -1,24 +1,22 @@
 package de.reinhard.merlin.excel;
 
+import de.reinhard.merlin.I18n;
 import de.reinhard.merlin.ResultMessageStatus;
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
-import java.util.regex.PatternSyntaxException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class ExcelColumnValidator extends ExcelColumnListener {
     /**
      * Parameter: Sheet name, Column in letter format: (A, B, ..., AA, AB, ...), Column head name, Row number
      */
     public static final String MESSAGE_MISSING_REQUIRED_FIELD = "merlin.excel.validation_error.missing_required_field";
-    /**
-     * Parameter: Sheet name, Column in letter format: (A, B, ..., AA, AB, ...), Column head name, Row number,
-     * Cell value, pattern
-     */
-    public static final String MESSAGE_PATTERN_MISMATCH = "merlin.excel.validation_error.pattern_mismatch";
     /**
      * Parameter: Sheet name, Column in letter format: (A, B, ..., AA, AB, ...), Column head name, Row number,
      * Cell value, row of first occurrence.
@@ -28,7 +26,6 @@ public class ExcelColumnValidator extends ExcelColumnListener {
     private Logger log = LoggerFactory.getLogger(ExcelColumnValidator.class);
     private boolean required;
     private boolean unique;
-    private String patternRegExp;
     private boolean columnHeadnameFound;
     // Used for unique constraint.
     private Set<String> entries = new TreeSet<>();
@@ -37,30 +34,20 @@ public class ExcelColumnValidator extends ExcelColumnListener {
 
     /**
      * Overwrite this for own validation.
-     * Checks required and pattern match if {@link #patternRegExp} is given, otherwise returns null.
+     * Checks required and unique if configured, otherwise returns null.
      *
-     * @param cellValue
+     * @param cell
      * @param rowNumber Row number of cell value in given sheet.
      * @return null if valid, otherwise validation error message to display.
      */
-    public ExcelValidationErrorMessage isValid(String cellValue, int rowNumber) {
-        if (StringUtils.isEmpty(cellValue)) {
+    public ExcelValidationErrorMessage isValid(Cell cell, int rowNumber) {
+        if (PoiHelper.isEmpty(cell)) {
             if (required) {
                 return createValidationErrorRequired(rowNumber);
             }
             return null;
         }
-        if (patternRegExp != null) {
-            try {
-                if (!cellValue.matches(patternRegExp)) {
-                    return createValidationErrorPatternMismatch(rowNumber, cellValue, patternRegExp);
-                }
-            } catch (PatternSyntaxException ex) {
-                log.error("Pattern syntax error for regex for column '" + columnDef.getColumnHeadname() + "': '" + patternRegExp
-                        + "': " + ex.getMessage(), ex);
-                return null;
-            }
-        }
+        String cellValue = PoiHelper.getValueAsString(cell);
         Integer firstOccurrenceRowNumber = isUnique(cellValue, rowNumber);
         if (firstOccurrenceRowNumber != null) {
             return createValidationErrorUnique(rowNumber, cellValue, firstOccurrenceRowNumber);
@@ -70,12 +57,14 @@ public class ExcelColumnValidator extends ExcelColumnListener {
 
     @Override
     public void readCell(Cell cell, int rowNumber) {
-        String cellValue = PoiHelper.getValueAsString(cell);
-        ExcelValidationErrorMessage resultMessage = isValid(cellValue, rowNumber);
+        ExcelValidationErrorMessage resultMessage = isValid(cell, rowNumber);
         if (resultMessage != null) {
-            log.debug("Validation error found: " + resultMessage.getMessage());
+            if (log.isDebugEnabled()) {
+                log.debug("Validation error found: " + resultMessage.getMessageWithAllDetails(I18n.getDefault()));
+            }
             getValidationErrors().add(resultMessage);
         }
+        String cellValue = PoiHelper.getValueAsString(cell);
         if (isUnique(cellValue, rowNumber) == null) {
             if (cellValueMap == null) {
                 cellValueMap = new HashMap<>();
@@ -148,18 +137,6 @@ public class ExcelColumnValidator extends ExcelColumnListener {
         return this;
     }
 
-    public String getPatternRegExp() {
-        return patternRegExp;
-    }
-
-    /**
-     * @param patternRegExp String patternRegExp to validate. If null, no patternRegExp match will be validated.
-     * @see String#matches(String)
-     */
-    public void setPatternRegExp(String patternRegExp) {
-        this.patternRegExp = patternRegExp;
-    }
-
     ExcelValidationErrorMessage createValidationErrorRequired(int rowNumber) {
         return createValidationError(MESSAGE_MISSING_REQUIRED_FIELD, rowNumber, "");
     }
@@ -168,11 +145,7 @@ public class ExcelColumnValidator extends ExcelColumnListener {
         return createValidationError(MESSAGE_VALUE_NOT_UNIQUE, rowNumber, cellValue, firstOccurrenceRowNumber + 1);
     }
 
-    ExcelValidationErrorMessage createValidationErrorPatternMismatch(int rowNumber, Object cellValue, String patternRegExp) {
-        return createValidationError(MESSAGE_PATTERN_MISMATCH, rowNumber, cellValue, patternRegExp);
-    }
-
-    private ExcelValidationErrorMessage createValidationError(String messageId, int rowNumber, Object cellValue, Object... params) {
+    protected ExcelValidationErrorMessage createValidationError(String messageId, int rowNumber, Object cellValue, Object... params) {
         return new ExcelValidationErrorMessage(messageId, ResultMessageStatus.ERROR, params)
                 .setSheet(getSheet())
                 .setCellValue(cellValue)
