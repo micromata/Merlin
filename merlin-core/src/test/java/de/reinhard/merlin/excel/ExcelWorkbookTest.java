@@ -19,13 +19,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class ExcelWorkbookTest {
     private Logger log = LoggerFactory.getLogger(ExcelWorkbookTest.class);
 
-    static {
-        I18n.setDefault(Locale.ROOT);
-    }
-
     @Test
     public void configReaderValidationTest() {
-        I18n i18n = I18n.getDefault();
+        I18n i18n = I18n.setDefault(Locale.ROOT);
         ExcelWorkbook excelWorkbook = new ExcelWorkbook(new File(Definitions.EXAMPLES_TEST_DIR, "Test.xlsx"));
         ExcelConfigReader configReader = new ExcelConfigReader(excelWorkbook.getSheet("Config"),
                 "Property", "Value");

@@ -59,9 +59,9 @@ class PoiHelper {
         // When the comment box is visible, have it show in a 1x3 space
         ClientAnchor anchor = factory.createClientAnchor();
         anchor.setCol1(cell.getColumnIndex());
-        anchor.setCol2(cell.getColumnIndex() + 2);
+        anchor.setCol2(cell.getColumnIndex() + 5);
         anchor.setRow1(cell.getRowIndex());
-        anchor.setRow2(cell.getRowIndex() + 2);
+        anchor.setRow2(cell.getRowIndex() + 5);
         // Create the comment and set the text+author
         Comment comment = drawing.createCellComment(anchor);
         RichTextString str = factory.createRichTextString(message);

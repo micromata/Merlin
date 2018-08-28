@@ -49,7 +49,7 @@ public class ExcelColumnValidator extends ExcelColumnListener {
         }
         String cellValue = PoiHelper.getValueAsString(cell);
         Integer firstOccurrenceRowNumber = isUnique(cellValue, rowNumber);
-        if (firstOccurrenceRowNumber != null) {
+        if (firstOccurrenceRowNumber != null && firstOccurrenceRowNumber != rowNumber) {
             return createValidationErrorUnique(rowNumber, cellValue, firstOccurrenceRowNumber);
         }
         return null;
