@@ -37,6 +37,7 @@ public class ExcelWorkbookTest {
 
     @Test
     public void validationExcelResponseTest() throws IOException {
+        I18n i18n = I18n.setDefault(Locale.ROOT);
         validationexcelResponseTest(I18n.getDefault(), "");
         validationexcelResponseTest(I18n.setDefault(Locale.GERMAN), "_de");
     }
@@ -66,6 +67,16 @@ public class ExcelWorkbookTest {
         sheet.registerColumn("City", new ExcelColumnValidator());
         sheet.registerColumn("E-Mail", new ExcelColumnPatternValidator().setEMailPattern().setRequired());
         sheet.registerColumn("Country", new ExcelColumnValidator());
+        sheet.markErrors(ctx);
+
+        sheet = excelWorkbook.getSheet("Empty-sheet");
+        sheet.registerColumn("Name", new ExcelColumnValidator().setUnique());
+        sheet.registerColumn("E-Mail", new ExcelColumnPatternValidator().setEMailPattern().setRequired());
+        sheet.markErrors(ctx);
+
+        sheet = excelWorkbook.getSheet("Empty-sheet2");
+        sheet.registerColumn("Name", new ExcelColumnValidator().setUnique());
+        sheet.registerColumn("E-Mail", new ExcelColumnPatternValidator().setEMailPattern().setRequired());
         sheet.markErrors(ctx);
 
         File file = new File(Definitions.OUTPUT_DIR, "Test-result" + fileSuffix + ".xlsx");

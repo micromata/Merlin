@@ -8,7 +8,10 @@ import org.apache.poi.ss.usermodel.Row;
 public class ExcelValidationErrorMessageWriter {
     public void updateOrCreateCell(ExcelWriterContext context, ExcelSheet sheet, int errorMessagesColumnNumber,
                                    Row row, ExcelValidationErrorMessage validationError) {
-
+        if (row == null) {
+            // Should only occur in empty sheets.
+            return;
+        }
         Cell cell = row.getCell(errorMessagesColumnNumber);
         if (cell == null) {
             cell = row.createCell(errorMessagesColumnNumber, CellType.STRING);
