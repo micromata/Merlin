@@ -402,7 +402,7 @@ public class ExcelSheet {
     ExcelValidationErrorMessage createValidationErrorMissingColumnNumber(int columnNumber) {
         return new ExcelValidationErrorMessage(MESSAGE_MISSING_COLUMN_NUMBER, ResultMessageStatus.ERROR,
                 CellReference.convertNumToColString(columnNumber))
-                .setSheet(this);
+                .setSheet(this).setRow(headRow != null ? headRow.getRowNum() : 0);
     }
 
     ExcelValidationErrorMessage createValidationErrorMissingColumnByName(String columnName) {
@@ -416,5 +416,10 @@ public class ExcelSheet {
 
     public ExcelWorkbook getExcelWorkbook() {
         return workbook;
+    }
+
+    public Row getHeadRow() {
+        findAndReadHeadRow();
+        return headRow;
     }
 }
