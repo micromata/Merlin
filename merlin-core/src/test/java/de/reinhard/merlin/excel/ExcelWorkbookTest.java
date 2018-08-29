@@ -69,6 +69,14 @@ public class ExcelWorkbookTest {
         sheet.registerColumn("Country", new ExcelColumnValidator());
         sheet.markErrors(ctx);
 
+        sheet = excelWorkbook.getSheet("Clean-Test");
+        sheet.registerColumn("Name", new ExcelColumnValidator().setUnique());
+        sheet.registerColumn("Birthday", new ExcelColumnDateValidator());
+        sheet.registerColumn("City", new ExcelColumnValidator());
+        sheet.registerColumn("E-Mail", new ExcelColumnPatternValidator().setEMailPattern().setRequired());
+        sheet.registerColumn("Country", new ExcelColumnValidator());
+        sheet.markErrors(ctx);
+
         sheet = excelWorkbook.getSheet("Empty-sheet");
         sheet.registerColumn("Name", new ExcelColumnValidator().setUnique());
         sheet.registerColumn("E-Mail", new ExcelColumnPatternValidator().setEMailPattern().setRequired());

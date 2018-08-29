@@ -8,4 +8,8 @@ public class ExcelValidationErrorCellHighlighter {
     public void highlightErrorCell(Cell cell, ExcelWriterContext context, ExcelSheet sheet, ExcelColumnDef columnDef, Row row) {
         cell.setCellStyle(context.getErrorHighlightCellStyle());
     }
+
+    public void cleanErrorCell(Cell cell) {
+
+    }
 }

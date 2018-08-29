@@ -11,11 +11,13 @@ public class ExcelWriterContext {
     private boolean addErrorSheet;
     private CellStyle errorHighlightCellStyle;
     private CellStyle errorColumnCellStyle;
+    private CellStyle cleanCellStyle;
     private ExcelWorkbook workbook;
     private I18n i18n;
     private int maxErrorMessagesPerColumnPercent = 10;
     private int maxErrorMessagesPerColumn = 100;
     private ExcelValidationErrorCellHighlighter cellHighlighter;
+    private ExcelValidationErrorCellCleaner cellCleaner;
     private ExcelValidationErrorCommentWriter commentWriter;
     private ExcelValidationErrorMessageWriter errorMessageWriter;
     private ExcelValidationErrorColumnHeadCellHighlighter columnHeadCellHighlighter;
@@ -129,6 +131,17 @@ public class ExcelWriterContext {
      */
     public void setCellHighlighter(ExcelValidationErrorCellHighlighter cellHighlighter) {
         this.cellHighlighter = cellHighlighter;
+    }
+
+    public ExcelValidationErrorCellCleaner getCellCleaner() {
+        if (cellCleaner == null) {
+            cellCleaner = new ExcelValidationErrorCellCleaner();
+        }
+        return cellCleaner;
+    }
+
+    public void setCellCleaner(ExcelValidationErrorCellCleaner cellCleaner) {
+        this.cellCleaner = cellCleaner;
     }
 
     public ExcelValidationErrorColumnHeadCellHighlighter getColumnHeadCellHighlighter() {

@@ -20,7 +20,7 @@ public class ExcelSheet {
     private Sheet poiSheet;
     private ExcelWorkbook workbook;
     private Row headRow = null;
-    private int validationErrorColumn = -1;
+    private int columnWithValidationErrorMessages = -1;
     private Set<ExcelValidationErrorMessage> validationErrors;
     private boolean modified;
 
@@ -59,8 +59,8 @@ public class ExcelSheet {
         Iterator<Row> it = getDataRowIterator();
         while (it.hasNext()) {
             Row row = it.next();
-            if (row.getLastCellNum() > validationErrorColumn) {
-                validationErrorColumn = row.getLastCellNum();
+            if (row.getLastCellNum() > columnWithValidationErrorMessages) {
+                columnWithValidationErrorMessages = row.getLastCellNum();
             }
             for (ExcelColumnDef columnDef : columnDefList) {
                 if (!columnDef.hasColumnListeners() || columnDef.getColumnNumber() < 0) {
@@ -195,8 +195,8 @@ public class ExcelSheet {
             }
             log.info("Parsing row #" + i + " of sheet '" + poiSheet.getSheetName() + "'.");
             current = rowIterator.next();
-            if (current.getLastCellNum() > validationErrorColumn) {
-                validationErrorColumn = current.getLastCellNum();
+            if (current.getLastCellNum() > columnWithValidationErrorMessages) {
+                columnWithValidationErrorMessages = current.getLastCellNum();
             }
             int col = -1;
             for (Cell cell : current) {
@@ -339,6 +339,7 @@ public class ExcelSheet {
      * @return this for chaining.
      */
     public ExcelSheet markErrors(I18n i18n, ExcelWriterContext excelWriterContext) {
+        columnWithValidationErrorMessages = excelWriterContext.getCellCleaner().clean(this, excelWriterContext);
         analyze(true);
         Set<ExcelColumnDef> highlightedColumnHeads = new HashSet<>();
         for (ExcelValidationErrorMessage validationError : getAllValidationErrors()) {
@@ -346,7 +347,7 @@ public class ExcelSheet {
             Row row = poiSheet.getRow(validationError.getRow());
             if (excelWriterContext.isAddErrorColumn()) {
                 excelWriterContext.getErrorMessageWriter().updateOrCreateCell(excelWriterContext, this,
-                        validationErrorColumn, row, validationError);
+                        columnWithValidationErrorMessages, row, validationError);
                 modified = true;
             }
             if (columnDef != null) {
@@ -380,7 +381,7 @@ public class ExcelSheet {
         }
         if (modified) {
             // adjust column width to fit the content
-            poiSheet.autoSizeColumn(validationErrorColumn);
+            poiSheet.autoSizeColumn(columnWithValidationErrorMessages);
         }
         return this;
     }
