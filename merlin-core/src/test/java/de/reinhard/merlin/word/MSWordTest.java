@@ -24,6 +24,7 @@ public class MSWordTest {
         variables.put("Mitarbeiter", "Kai Reinhard");
         variables.put("Anrede", "Herr");
         variables.put("Datum", "1.1.2001");
+        variables.put("Wochenstunden", "30");
         MSWord document = new MSWord(new File(Definitions.EXAMPLES_TEST_DIR, "Vertrag.docx"));
         document.process(variables);
         XWPFDocument doc = document.getDocument();

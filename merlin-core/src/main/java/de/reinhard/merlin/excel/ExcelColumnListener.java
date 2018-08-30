@@ -3,7 +3,7 @@ package de.reinhard.merlin.excel;
 import org.apache.poi.ss.usermodel.Cell;
 
 /**
- * A column listener assigned to a {@link ExcelColumnDef} listens to all read cell values.
+ * A column listener assigned to a {@link ExcelColumnDef} listens to all run cell values.
  */
 public abstract class ExcelColumnListener {
     protected ExcelColumnDef columnDef;

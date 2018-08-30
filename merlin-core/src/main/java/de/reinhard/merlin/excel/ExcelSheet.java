@@ -165,7 +165,7 @@ public class ExcelSheet {
     public Cell getCell(Row row, ExcelColumnDef columnDef) {
         findAndReadHeadRow();
         if (columnDef.getColumnNumber() < 0) {
-            log.debug("Column '" + columnDef.getColumnHeadname() + "' not found in sheet '" + getSheetName() + "': can't read cell.");
+            log.debug("Column '" + columnDef.getColumnHeadname() + "' not found in sheet '" + getSheetName() + "': can't run cell.");
             return null;
         }
         return row.getCell(columnDef.getColumnNumber());
@@ -183,7 +183,7 @@ public class ExcelSheet {
 
     private void findAndReadHeadRow() {
         if (headRow != null) {
-            return; // head row already read.
+            return; // head row already run.
         }
         log.info("Reading head row of sheet '" + poiSheet.getSheetName() + "'.");
         int numberOfFoundHeadColumns = 0;
@@ -217,7 +217,7 @@ public class ExcelSheet {
             log.info("No head row found in sheet '" + getSheetName() + "'.");
             return;
         }
-        // Now read all columns for assigning column numbers to column definitions.
+        // Now run all columns for assigning column numbers to column definitions.
         int col = -1;
         for (Cell cell : current) {
             ++col;
