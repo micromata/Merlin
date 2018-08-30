@@ -35,12 +35,14 @@ public class RunsParser {
         }
         int paranoiaCounter = 0;
         do {
+            // loop until no further replacements are found.
             buildText(); // Rebuild text after every variable substitution.
-            replaceVariables();
+            //logDebugRuns("Runs at step " + paranoiaCounter + ": ");
             if (paranoiaCounter++ > 1000) {
                 throw new IllegalStateException("End-less loop protection!");
             }
         } while (replaceVariables());
+        //ogDebugRuns("Runs after step " + paranoiaCounter + ": ");
     }
 
     private boolean replaceVariables() {
@@ -57,29 +59,28 @@ public class RunsParser {
             Position endPos = getRunIdxAndPosition(end - 1);
             XWPFRun run = runs.get(startPos.runIndex);
             String text;
-            if (startPos.runPos == 0) {
-                text = value;
-            } else {
-                try {
-                    text = run.getText(0).substring(0, startPos.runPos - 1) + value;
-                } catch (Exception ex) {
-                    log.info("");
-                    text = "";
-                }
-            }
-            run.setText(text, 0);
-            for (int i = startPos.runIndex + 1; i < endPos.runIndex - 1; i++) {
-                runs.get(i).setText("", 0);
-            }
-            run = runs.get(endPos.runIndex);
-            log.debug("Run: " + run.getText(0) + ", runPos=" + endPos.runPos);
             text = run.getText(0);
-            if (text == null || text.length() >= endPos.runPos) {
-                run.setText("", 0);
-            } else {
-                log.debug("" + endPos.runPos);
-                run.setText(text.substring(endPos.runPos), 0);
+            StringBuilder sb = new StringBuilder();
+            sb.append(text.substring(0, startPos.runCharAt))
+                    .append(value);
+            if (startPos.runIndex == endPos.runIndex) { // Variable substitution in one signle run.
+                if (endPos.runCharAt < text.length()) {
+                    // Append the tail after ${var}:
+                    sb.append(text.substring(endPos.runCharAt + 1));
+                }
+                run.setText(sb.toString(), 0);
+                return true;
             }
+            run.setText(sb.toString(), 0);
+            for (int idx = startPos.runIndex + 1; idx < endPos.runIndex; idx++) {
+                // Processing runs in between.
+                runs.get(idx).setText("", 0);
+
+            }
+            // Processing last affected run:
+            run = runs.get(endPos.runIndex);
+            text = run.getText(0);
+            run.setText(text.substring(endPos.runCharAt + 1), 0);
             return true;
         }
         return false;
@@ -110,24 +111,34 @@ public class RunsParser {
                 continue;
             }
             runSizes[i] = text.length();
+            /*
             if (log.isDebugEnabled()) {
                 log.debug("Run[" + i + "]: " + text + ", length=" + runSizes[i]);
-            }
+            }*/
             sb.append(text);
         }
         text = sb.toString();
-        if (log.isDebugEnabled()) {
+        /*if (log.isDebugEnabled()) {
             log.debug(text);
-        }
+        }*/
     }
 
     class Position {
         Position(int runIndex, int runPos) {
             this.runIndex = runIndex;
-            this.runPos = runPos;
+            this.runCharAt = runPos;
         }
 
         int runIndex;
-        int runPos;
+        int runCharAt;
+    }
+
+    private void logDebugRuns(String prefix) {
+        int i = 0;
+        StringBuilder sb = new StringBuilder();
+        for (XWPFRun run : runs) {
+            sb.append(i++).append("=[").append(run.getText(0)).append("]");
+        }
+        log.debug(prefix + sb.toString());
     }
 }

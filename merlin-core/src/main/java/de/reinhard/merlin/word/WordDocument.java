@@ -10,15 +10,19 @@ import java.io.*;
 import java.util.List;
 import java.util.Map;
 
-public class MSWord {
-    private Logger log = LoggerFactory.getLogger(MSWord.class);
+public class WordDocument {
+    private Logger log = LoggerFactory.getLogger(WordDocument.class);
     XWPFDocument document;
 
-    public MSWord(String wordFilename) {
+    public WordDocument(XWPFDocument document) {
+        this.document = document;
+    }
+
+    public WordDocument(String wordFilename) {
         this(new File(wordFilename));
     }
 
-    public MSWord(File wordFile) {
+    public WordDocument(File wordFile) {
         FileInputStream inputStream;
         try {
             inputStream = new FileInputStream(wordFile);

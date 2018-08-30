@@ -1,14 +1,10 @@
 package de.reinhard.merlin.word;
 
-import de.reinhard.merlin.Definitions;
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -47,6 +43,6 @@ public class RunsParserTest {
         runsParser.buildText();
         RunsParser.Position position = runsParser.getRunIdxAndPosition(pos);
         assertEquals(runIdx, position.runIndex, "Run index.");
-        assertEquals(runIdxPos, position.runPos, "Run index position.");
+        assertEquals(runIdxPos, position.runCharAt, "Run index position.");
     }
 }
