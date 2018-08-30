@@ -6,8 +6,11 @@ import de.reinhard.merlin.excel.ExcelSheet;
 import de.reinhard.merlin.excel.ExcelWorkbook;
 import de.reinhard.merlin.smarthome.examples.openhab_knx.data.DataStorage;
 import de.reinhard.merlin.smarthome.examples.openhab_knx.data.KnxThing;
+import org.apache.poi.ss.usermodel.Row;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Iterator;
 
 public class KnxThingsReader {
     private Logger log = LoggerFactory.getLogger(KnxThingsReader.class);
@@ -20,7 +23,7 @@ public class KnxThingsReader {
         sheet.getColumnDef("Device").addColumnListener(new ExcelColumnValidator().setRequired());
         sheet.analyze(true);
         if (sheet.hasValidationErrors()) {
-            for(ResultMessage msg : sheet.getValidationErrors()) {
+            for(ResultMessage msg : sheet.getAllValidationErrors()) {
                 log.error(msg.getMessage());
             }
             log.error("*** Aborting processing of knx things due to validation errors (see above).");
@@ -28,10 +31,11 @@ public class KnxThingsReader {
         }
 
         int counter = 0;
-        while (sheet.hasNextRow()) {
-            sheet.nextRow();
+        Iterator<Row> it = sheet.getDataRowIterator();
+        while (it.hasNext()) {
+            Row row = it.next();
             KnxThing thing = new KnxThing();
-            sheet.readRow(thing);
+            sheet.readRow(row, thing);
             DataStorage.getInstance().add(thing);
             counter++;
         }

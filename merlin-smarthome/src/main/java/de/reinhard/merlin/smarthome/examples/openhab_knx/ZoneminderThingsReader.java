@@ -3,8 +3,11 @@ package de.reinhard.merlin.smarthome.examples.openhab_knx;
 import de.reinhard.merlin.excel.ExcelSheet;
 import de.reinhard.merlin.excel.ExcelWorkbook;
 import de.reinhard.merlin.smarthome.examples.openhab_knx.data.ZoneminderThing;
+import org.apache.poi.ss.usermodel.Row;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Iterator;
 
 public class ZoneminderThingsReader {
     private Logger log = LoggerFactory.getLogger(ZoneminderThingsReader.class);
@@ -14,12 +17,13 @@ public class ZoneminderThingsReader {
     public void readZoneminderThings(ExcelWorkbook excelWorkbook) {
         ExcelSheet sheet = excelWorkbook.getSheet(SHEET_NAME);
         int counter = 0;
-        while (sheet.hasNextRow()) {
-            sheet.nextRow();
+        Iterator<Row> it = sheet.getDataRowIterator();
+        while (it.hasNext()) {
+            Row row = it.next();
             ZoneminderThing thing = new ZoneminderThing();
-            thing.setLabel(sheet.getCell("label"));
-            thing.setId(sheet.getCell("id"));
-            thing.setNumber(sheet.getCell("number"));
+            thing.setLabel(sheet.getCell(row, "label"));
+            thing.setId(sheet.getCell(row, "id"));
+            thing.setNumber(sheet.getCell(row, "number"));
             //DataStorage.getDefaultInstance().add(thing);
             counter++;
         }
