@@ -48,8 +48,8 @@ public class WordDocumentTest {
 
         assertBeginIfPatternMatch(true, "{if var='value'} ...", "var", "=", "value");
         assertBeginIfPatternMatch(true, "ksfl {if var!='value'} ...", "var", "!=", "value");
-        assertBeginIfPatternMatch(true, "... {if _var5 != '23 value'} ...", "_var5", "!=", "23 value");
-        assertBeginIfPatternMatch(true, "{if  var != 'value 2839'  }", "var", "!=", "value 2839");
+        assertBeginIfPatternMatch(true, "... {if _var5 != ‚23 value'} ...", "_var5", "!=", "23 value");
+        assertBeginIfPatternMatch(true, "{if  var != „value 2839'  }", "var", "!=", "value 2839");
         assertBeginIfPatternMatch(false, "ksfl {ifvar != 'value'  } ...", "var", "!=", "value");
     }
 

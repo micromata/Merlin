@@ -19,7 +19,7 @@ public class RunsParser {
     // ${identifier}
     static Pattern variablePattern = Pattern.compile("\\$\\{\\s*(" + IDENTIFIER_REGEXP + ")\\s*\\}");
     // ${if identifier='value'}
-    static Pattern beginIfPattern = Pattern.compile("\\{if\\s+(" + IDENTIFIER_REGEXP + ")\\s*(!?=)\\s*'(.*)'\\s*\\}");
+    static Pattern beginIfPattern = Pattern.compile("\\{if\\s+(" + IDENTIFIER_REGEXP + ")\\s*(!?=)\\s*[\"'„‚](.*)[\"']\\s*\\}");
     static Pattern endIfPattern = Pattern.compile("\\{endif\\}");
     private int currentRunIdx;
     private int currentCharIdx;
