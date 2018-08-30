@@ -39,6 +39,7 @@ public class WordDocumentTest {
     public void regExpTest() {
         Map<String, String> variables = new HashMap<>();
         variables.put("var", "world");
+        variables.put("endlessLoop", "${endlessLoop}");
         WordDocument word = processDocument(variables);
         XWPFDocument doc = word.getDocument();
     }
@@ -68,6 +69,8 @@ public class WordDocumentTest {
                 new String[]{"${name}", "Hello world."});
         add(exptected, createParagraph(doc, "$", "{name}", "Hello ${var}."),
                 new String[]{"$", "{name}", "Hello world."});
+        add(exptected, createParagraph(doc, "Endless loop test: ${endlessLoop}."),
+                new String[]{"Endless loop test: _{endlessLoop}."});
         WordDocument word = new WordDocument(doc);
         word.process(variables);
         int no = 0;

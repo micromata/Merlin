@@ -53,6 +53,10 @@ public class RunsParser {
             if (value == null) {
                 continue; // Variable not found. Ignore this finding.
             }
+            if (variablePattern.matcher(value).matches()) {
+                // Avoids endless-loop if variable expression is replaced by variable expression.
+                value = value.replace("${", "_{") ;
+            }
             int start = matcher.start();
             int end = matcher.end();
             Position startPos = getRunIdxAndPosition(start);
