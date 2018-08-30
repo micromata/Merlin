@@ -1,5 +1,7 @@
 # Excel temporary files #
 ~$*.xlsx
+# Word temporary files #
+~$*.docx
 
 merlin-core/out/
 merlin-core/target/
