@@ -15,7 +15,12 @@ import java.util.regex.Pattern;
  */
 public class RunsParser {
     private Logger log = LoggerFactory.getLogger(RunsParser.class);
-    private static Pattern variablePattern = Pattern.compile("\\$\\{(\\w*)\\}");
+    private static final String IDENTIFIER_REGEXP = "[a-zA-Z_][a-zA-Z\\d_]*";
+    // ${identifier}
+    static Pattern variablePattern = Pattern.compile("\\$\\{\\s*(" + IDENTIFIER_REGEXP + ")\\s*\\}");
+    // ${if identifier='value'}
+    static Pattern beginIfPattern = Pattern.compile("\\{if\\s+(" + IDENTIFIER_REGEXP + ")\\s*(!?=)\\s*'(.*)'\\s*\\}");
+    static Pattern endIfPattern = Pattern.compile("\\{endif\\}");
     private int currentRunIdx;
     private int currentCharIdx;
     private int[] runSizes;
@@ -53,9 +58,9 @@ public class RunsParser {
             if (value == null) {
                 continue; // Variable not found. Ignore this finding.
             }
-            if (variablePattern.matcher(value).matches()) {
+            if (variablePattern.matcher(value).find()) {
                 // Avoids endless-loop if variable expression is replaced by variable expression.
-                value = value.replace("${", "_{") ;
+                value = value.replace("${", "_{");
             }
             int start = matcher.start();
             int end = matcher.end();

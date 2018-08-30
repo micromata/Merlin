@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -36,10 +37,42 @@ public class WordDocumentTest {
     }
 
     @Test
+    public void patternTest() {
+        assertVariablePatternMatch(true, "${var}");
+        assertVariablePatternMatch(true, "${ var  }");
+        assertVariablePatternMatch(true, "..   ${ var}..");
+        assertVariablePatternMatch(true, "${var2}");
+        assertVariablePatternMatch(true, "${_Var_3kl}");
+        assertVariablePatternMatch(false, "${3_Var_3kl}");
+        assertVariablePatternMatch(false, "$ { var  }");
+
+        assertBeginIfPatternMatch(true, "{if var='value'} ...", "var", "=", "value");
+        assertBeginIfPatternMatch(true, "ksfl {if var!='value'} ...", "var", "!=", "value");
+        assertBeginIfPatternMatch(true, "... {if _var5 != '23 value'} ...", "_var5", "!=", "23 value");
+        assertBeginIfPatternMatch(true, "{if  var != 'value 2839'  }", "var", "!=", "value 2839");
+        assertBeginIfPatternMatch(false, "ksfl {ifvar != 'value'  } ...", "var", "!=", "value");
+    }
+
+    private void assertBeginIfPatternMatch(boolean expected, String str, String var, String cmp, String value) {
+        Matcher matcher = RunsParser.beginIfPattern.matcher(str);
+        assertEquals(expected, matcher.find());
+        if (expected) {
+            assertEquals(var, matcher.group(1), "Variable.");
+            assertEquals(cmp, matcher.group(2), "Comparison.");
+            assertEquals(value, matcher.group(3), "Value.");
+        }
+    }
+
+    private void assertVariablePatternMatch(boolean expected, String str) {
+        Matcher matcher = RunsParser.variablePattern.matcher(str);
+        assertEquals(expected, matcher.find());
+    }
+
+    @Test
     public void regExpTest() {
         Map<String, String> variables = new HashMap<>();
         variables.put("var", "world");
-        variables.put("endlessLoop", "${endlessLoop}");
+        variables.put("endlessLoop", "... ${endlessLoop} ...");
         WordDocument word = processDocument(variables);
         XWPFDocument doc = word.getDocument();
     }
@@ -70,7 +103,7 @@ public class WordDocumentTest {
         add(exptected, createParagraph(doc, "$", "{name}", "Hello ${var}."),
                 new String[]{"$", "{name}", "Hello world."});
         add(exptected, createParagraph(doc, "Endless loop test: ${endlessLoop}."),
-                new String[]{"Endless loop test: _{endlessLoop}."});
+                new String[]{"Endless loop test: ... _{endlessLoop} ...."});
         WordDocument word = new WordDocument(doc);
         word.process(variables);
         int no = 0;
