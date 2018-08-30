@@ -13,8 +13,8 @@ import java.util.regex.Pattern;
  * Word devides text unpredicable in different runs. So the replacement of variables can't be easily done by processing
  * single runs.
  */
-public class RunsParser {
-    private Logger log = LoggerFactory.getLogger(RunsParser.class);
+public class RunsProcessor {
+    private Logger log = LoggerFactory.getLogger(RunsProcessor.class);
     private static final String IDENTIFIER_REGEXP = "[a-zA-Z_][a-zA-Z\\d_]*";
     // ${identifier}
     static Pattern variablePattern = Pattern.compile("\\$\\{\\s*(" + IDENTIFIER_REGEXP + ")\\s*\\}");
@@ -24,12 +24,11 @@ public class RunsParser {
     private int currentRunIdx;
     private int currentCharIdx;
     private int[] runSizes;
-    private String text;
     private Map<String, String> variables;
 
     private List<XWPFRun> runs;
 
-    public RunsParser(List<XWPFRun> runs, Map<String, String> variables) {
+    public RunsProcessor(List<XWPFRun> runs, Map<String, String> variables) {
         this.runs = runs;
         this.variables = variables;
     }
@@ -39,19 +38,24 @@ public class RunsParser {
             return;
         }
         int paranoiaCounter = 0;
+        String text;
         do {
             // loop until no further replacements are found.
-            buildText(); // Rebuild text after every variable substitution.
+            text = buildText(); // Rebuild text after every variable substitution.
             //logDebugRuns("Runs at step " + paranoiaCounter + ": ");
             if (paranoiaCounter++ > 1000) {
                 throw new IllegalStateException("End-less loop protection!");
             }
-        } while (replaceVariables());
+        } while (replaceVariables(text));
         //ogDebugRuns("Runs after step " + paranoiaCounter + ": ");
     }
 
-    private boolean replaceVariables() {
-        Matcher matcher = variablePattern.matcher(text);
+    /**
+     * @param runsText Whole text concatenated from all runs.
+     * @return
+     */
+    private boolean replaceVariables(String runsText) {
+        Matcher matcher = variablePattern.matcher(runsText);
         while (matcher.find()) {
             String group = matcher.group(1);
             String value = variables.get(group);
@@ -95,6 +99,16 @@ public class RunsParser {
         return false;
     }
 
+    public boolean processConditionals(boolean hidden) {
+        if (hidden) {
+      //      buildText();
+        //    Matcher beginIfMatcher = beginIfPattern.matcher(text);
+
+        } else {
+        }
+        return false;
+    }
+
     Position getRunIdxAndPosition(int pos) {
         int length = 0;
         int preLength = 0;
@@ -108,7 +122,10 @@ public class RunsParser {
         return new Position(-1, -1);
     }
 
-    void buildText() {
+    /**
+     * @return Whole text concatenated from all runs.
+     */
+    String buildText() {
         StringBuilder sb = new StringBuilder();
         runSizes = new int[runs.size()];
         int i = -1;
@@ -126,7 +143,7 @@ public class RunsParser {
             }*/
             sb.append(text);
         }
-        text = sb.toString();
+        return sb.toString();
         /*if (log.isDebugEnabled()) {
             log.debug(text);
         }*/

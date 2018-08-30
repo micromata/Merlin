@@ -46,11 +46,18 @@ public class WordDocument {
     }
 
     public void process(Map<String, String> variables) {
+        processConditionals(variables);
         replaceVariables(variables);
     }
 
     private void processConditionals(Map<String, String> variables) {
-
+        boolean hidden = false;
+        for (XWPFParagraph p : document.getParagraphs()) {
+            List<XWPFRun> runs = p.getRuns();
+            if (runs != null) {
+                processConditionals(runs, variables, hidden);
+            }
+        }
     }
 
     private void replaceVariables(Map<String, String> variables) {
@@ -72,7 +79,12 @@ public class WordDocument {
     }
 
     private void replace(List<XWPFRun> runs, Map<String, String> variables) {
-        RunsParser parser = new RunsParser(runs, variables);
+        RunsProcessor parser = new RunsProcessor(runs, variables);
         parser.run();
+    }
+
+    private boolean processConditionals(List<XWPFRun> runs, Map<String, String> variables, boolean hidden) {
+        RunsProcessor parser = new RunsProcessor(runs, variables);
+        return parser.processConditionals(hidden);
     }
 }

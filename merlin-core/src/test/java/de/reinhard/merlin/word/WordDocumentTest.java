@@ -1,10 +1,8 @@
 package de.reinhard.merlin.word;
 
 import de.reinhard.merlin.Definitions;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.poi.xwpf.usermodel.*;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.commons.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,7 +52,7 @@ public class WordDocumentTest {
     }
 
     private void assertBeginIfPatternMatch(boolean expected, String str, String var, String cmp, String value) {
-        Matcher matcher = RunsParser.beginIfPattern.matcher(str);
+        Matcher matcher = RunsProcessor.beginIfPattern.matcher(str);
         assertEquals(expected, matcher.find());
         if (expected) {
             assertEquals(var, matcher.group(1), "Variable.");
@@ -64,7 +62,7 @@ public class WordDocumentTest {
     }
 
     private void assertVariablePatternMatch(boolean expected, String str) {
-        Matcher matcher = RunsParser.variablePattern.matcher(str);
+        Matcher matcher = RunsProcessor.variablePattern.matcher(str);
         assertEquals(expected, matcher.find());
     }
 
