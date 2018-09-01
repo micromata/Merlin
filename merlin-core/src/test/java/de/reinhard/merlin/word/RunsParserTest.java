@@ -50,22 +50,24 @@ public class RunsParserTest {
 
     @Test
     public void regexpTest() {
-        assertMatcher("{if Arbeitszeit = „Teilzeit“}", "Arbeitszeit", "=", "Teilzeit");
+        assertMatcher("{if Arbeitszeit = „Teilzeit“}", "Arbeitszeit", "=", "Teilzeit" );
         assertMatcher("{if Arbeitszeit = ‚Teilzeit‘}", "Arbeitszeit", "=", "Teilzeit");
         assertMatcher("{if Arbeitszeit != ‚Vollzeit‘}", "Arbeitszeit", "!=", "Vollzeit");
         assertMatcher("{if Arbeitszeit in ‚Vollzeit‘}", "Arbeitszeit", "in", "Vollzeit");
         assertMatcher("{if Arbeitszeit !in ‚Vollzeit‘}", "Arbeitszeit", "!in", "Vollzeit");
+        assertMatcher("{if Arbeitszeit !in ‚Vollzeit\"}");
+        assertMatcher("{if name = „Horst's“}", "name", "=", "Horst's");
     }
 
     private void assertMatcher(String str, String... groups) {
         Matcher matcher = RunsProcessor.beginIfPattern.matcher(str);
-        assertEquals(groups != null ? true : false, matcher.find());
-        if (groups == null) {
+        assertEquals(groups.length > 0 ? true : false, matcher.find());
+        if (groups.length == 0 ) {
             return;
         }
         assertEquals(groups.length, matcher.groupCount(), "Number of regexp group count.");
         for (int i = 0; i < groups.length; i++) {
-            assertEquals(groups[i], matcher.group(i + 1));
+            assertEquals(groups[i], RunsProcessor.removeQuotations(matcher.group(i + 1)));
         }
 
     }

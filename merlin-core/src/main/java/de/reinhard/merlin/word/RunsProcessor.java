@@ -16,10 +16,12 @@ import java.util.regex.Pattern;
 public class RunsProcessor {
     private Logger log = LoggerFactory.getLogger(RunsProcessor.class);
     private static final String IDENTIFIER_REGEXP = "[a-zA-Z_][a-zA-Z\\d_]*";
+    private static final String QUOT_MARKS = "[^\"|^'„‚“‘]";
+    private static final String QUOTED_VALUE = "([\"„“][^\"“]*[\"“]|['‚‘][^'‘]*['‘])";
     // ${identifier}
     static Pattern variablePattern = Pattern.compile("\\$\\{\\s*(" + IDENTIFIER_REGEXP + ")\\s*\\}");
     // ${if identifier='value'}
-    static Pattern beginIfPattern = Pattern.compile("\\{if\\s+(" + IDENTIFIER_REGEXP + ")\\s*(!?=|!?in)\\s*[\"'„‚](.*)[\"“'‘]\\s*\\}");
+    static Pattern beginIfPattern = Pattern.compile("\\{if\\s+(" + IDENTIFIER_REGEXP + ")\\s*(!?=|!?in)\\s*" + QUOTED_VALUE + "\\s*\\}");
     static Pattern endIfPattern = Pattern.compile("\\{endif\\}");
     private int currentRunIdx;
     private int currentCharIdx;
@@ -166,5 +168,22 @@ public class RunsProcessor {
             sb.append(i++).append("=[").append(run.getText(0)).append("]");
         }
         log.debug(prefix + sb.toString());
+    }
+
+    static String removeQuotations(String str) {
+        if (str == null || str.length() == 0) {
+            return str;
+        }
+        int start = 0;
+        int end = str.length();
+        char c = str.charAt(0);
+        if (c == '"' || c == '\'' || c == '„' || c == '“' || c == '‚' || c == '‘') {
+            ++start;
+        }
+        c = str.charAt(end - 1);
+        if (c == '"' || c == '\'' || c == '„' || c == '“' || c == '‚' || c == '‘') {
+            --end;
+        }
+        return str.substring(start, end);
     }
 }
