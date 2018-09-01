@@ -61,19 +61,24 @@ public class WordDocument {
     }
 
     private void replaceVariables(Map<String, String> variables) {
-        for (XWPFParagraph p : document.getParagraphs()) {
-            List<XWPFRun> runs = p.getRuns();
-            if (runs != null) {
-                replace(runs, variables);
-            }
-        }
-        for (XWPFTable tbl : document.getTables()) {
-            for (XWPFTableRow row : tbl.getRows()) {
-                for (XWPFTableCell cell : row.getTableCells()) {
-                    for (XWPFParagraph p : cell.getParagraphs()) {
-                        replace(p.getRuns(), variables);
+        for (IBodyElement element : document.getBodyElements()) {
+            if (element instanceof XWPFParagraph) {
+                XWPFParagraph paragraph = (XWPFParagraph)element;
+                List<XWPFRun> runs = paragraph.getRuns();
+                if (runs != null) {
+                    replace(runs, variables);
+                }
+            } else if (element instanceof XWPFTable) {
+                XWPFTable table = (XWPFTable)element;
+                for (XWPFTableRow row : table.getRows()) {
+                    for (XWPFTableCell cell : row.getTableCells()) {
+                        for (XWPFParagraph p : cell.getParagraphs()) {
+                            replace(p.getRuns(), variables);
+                        }
                     }
                 }
+            } else {
+                log.warn("Unsupported body element: " + element);
             }
         }
     }

@@ -19,7 +19,7 @@ public class RunsProcessor {
     // ${identifier}
     static Pattern variablePattern = Pattern.compile("\\$\\{\\s*(" + IDENTIFIER_REGEXP + ")\\s*\\}");
     // ${if identifier='value'}
-    static Pattern beginIfPattern = Pattern.compile("\\{if\\s+(" + IDENTIFIER_REGEXP + ")\\s*(!?=)\\s*[\"'„‚](.*)[\"']\\s*\\}");
+    static Pattern beginIfPattern = Pattern.compile("\\{if\\s+(" + IDENTIFIER_REGEXP + ")\\s*(!?=|!?in)\\s*[\"'„‚](.*)[\"“'‘]\\s*\\}");
     static Pattern endIfPattern = Pattern.compile("\\{endif\\}");
     private int currentRunIdx;
     private int currentCharIdx;
@@ -101,8 +101,8 @@ public class RunsProcessor {
 
     public boolean processConditionals(boolean hidden) {
         if (hidden) {
-      //      buildText();
-        //    Matcher beginIfMatcher = beginIfPattern.matcher(text);
+            //      buildText();
+            //    Matcher beginIfMatcher = beginIfPattern.matcher(text);
 
         } else {
         }

@@ -9,8 +9,10 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -20,12 +22,12 @@ public class RunsParserTest {
     @Test
     public void readWordTest() throws Exception {
         Map<String, String> variables = new HashMap<>();
-        assertRunIdx(1,0,5, "12345", "${Hallo}");
-        assertRunIdx(0,2,2, "12345", "${Hallo}");
-        assertRunIdx(0,0,0, "$");
-        assertRunIdx(-1,-1,0, "");
-        assertRunIdx(0,0,0, "$", "{Mitarbeiter}");
-        assertRunIdx(1,12,13, "$", "{Mitarbeiter}");
+        assertRunIdx(1, 0, 5, "12345", "${Hallo}");
+        assertRunIdx(0, 2, 2, "12345", "${Hallo}");
+        assertRunIdx(0, 0, 0, "$");
+        assertRunIdx(-1, -1, 0, "");
+        assertRunIdx(0, 0, 0, "$", "{Mitarbeiter}");
+        assertRunIdx(1, 12, 13, "$", "{Mitarbeiter}");
     }
 
     private XWPFRun createRun(String text) {
@@ -44,5 +46,27 @@ public class RunsParserTest {
         RunsProcessor.Position position = runsParser.getRunIdxAndPosition(pos);
         assertEquals(runIdx, position.runIndex, "Run index.");
         assertEquals(runIdxPos, position.runCharAt, "Run index position.");
+    }
+
+    @Test
+    public void regexpTest() {
+        assertMatcher("{if Arbeitszeit = „Teilzeit“}", "Arbeitszeit", "=", "Teilzeit");
+        assertMatcher("{if Arbeitszeit = ‚Teilzeit‘}", "Arbeitszeit", "=", "Teilzeit");
+        assertMatcher("{if Arbeitszeit != ‚Vollzeit‘}", "Arbeitszeit", "!=", "Vollzeit");
+        assertMatcher("{if Arbeitszeit in ‚Vollzeit‘}", "Arbeitszeit", "in", "Vollzeit");
+        assertMatcher("{if Arbeitszeit !in ‚Vollzeit‘}", "Arbeitszeit", "!in", "Vollzeit");
+    }
+
+    private void assertMatcher(String str, String... groups) {
+        Matcher matcher = RunsProcessor.beginIfPattern.matcher(str);
+        assertEquals(groups != null ? true : false, matcher.find());
+        if (groups == null) {
+            return;
+        }
+        assertEquals(groups.length, matcher.groupCount(), "Number of regexp group count.");
+        for (int i = 0; i < groups.length; i++) {
+            assertEquals(groups[i], matcher.group(i + 1));
+        }
+
     }
 }
