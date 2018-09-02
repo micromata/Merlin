@@ -64,7 +64,7 @@ public class RunsProcessor {
             }
             startPos = replaceVariables(text, startPos);
         } while (startPos != null);
-        //ogDebugRuns("Runs after step " + paranoiaCounter + ": ");
+        //logDebugRuns("Runs after step " + paranoiaCounter + ": ");
     }
 
     /**
@@ -101,7 +101,8 @@ public class RunsProcessor {
                     sb.append(text.substring(endPos.runCharAt + 1));
                 }
                 run.setText(sb.toString(), 0);
-                return endPos;
+                // Continue with index after actual:
+                return new Position(endPos.runIndex, Integer.max(endPos.runCharAt, startPos.runCharAt + value.length()));
             }
             run.setText(sb.toString(), 0);
             for (int idx = startPos.runIndex + 1; idx < endPos.runIndex; idx++) {
