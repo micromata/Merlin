@@ -84,12 +84,13 @@ public class WordDocument {
     }
 
     private void replace(List<XWPFRun> runs, Map<String, String> variables) {
-        RunsProcessor parser = new RunsProcessor(runs, variables);
-        parser.run();
+        RunsProcessor processor = new RunsProcessor(runs);
+        processor.replace(variables);
     }
 
     private boolean processConditionals(List<XWPFRun> runs, Map<String, String> variables, boolean hidden) {
-        RunsProcessor parser = new RunsProcessor(runs, variables);
-        return parser.processConditionals(hidden);
+        RunsProcessor processor = new RunsProcessor(runs);
+        processor.replace(variables);
+        return processor.processConditionals(hidden);
     }
 }

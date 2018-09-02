@@ -52,7 +52,7 @@ public class WordDocumentTest {
     }
 
     private void assertBeginIfPatternMatch(boolean expected, String str, String var, String cmp, String value) {
-        Matcher matcher = RunsProcessor.beginIfPattern.matcher(str);
+        Matcher matcher = Conditional.beginIfPattern.matcher(str);
         assertEquals(expected, matcher.find());
         if (expected) {
             assertEquals(var, matcher.group(1), "Variable.");
@@ -62,7 +62,7 @@ public class WordDocumentTest {
     }
 
     private void assertVariablePatternMatch(boolean expected, String str) {
-        Matcher matcher = RunsProcessor.variablePattern.matcher(str);
+        Matcher matcher = RunsProcessor.defaultVariablePattern.matcher(str);
         assertEquals(expected, matcher.find());
     }
 

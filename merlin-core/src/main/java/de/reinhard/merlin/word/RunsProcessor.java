@@ -16,27 +16,24 @@ import java.util.regex.Pattern;
  */
 public class RunsProcessor {
     private static Logger log = LoggerFactory.getLogger(RunsProcessor.class);
-    private static final String IDENTIFIER_REGEXP = "[a-zA-Z_][a-zA-Z\\d_]*";
-    //private static final String QUOTED_VALUE = "([\"„“][^\"“]*[\"“]|['‚‘][^'‘]*['‘])";
-
-    // ${identifier}
-    static Pattern variablePattern = Pattern.compile("\\$\\{\\s*(" + IDENTIFIER_REGEXP + ")\\s*\\}");
-    // ${if identifier='value'}
-    static Pattern beginIfPattern = Pattern.compile("\\{if\\s+(" + IDENTIFIER_REGEXP + ")\\s*(!?=|!?in)\\s*(.*)\\s*\\}");
-    static Pattern endIfPattern = Pattern.compile("\\{endif\\}");
-    private int currentRunIdx;
-    private int currentCharIdx;
+    static final String IDENTIFIER_REGEXP = "[a-zA-Z_][a-zA-Z\\d_]*";
+    static final Pattern defaultVariablePattern = Pattern.compile("\\$\\{\\s*(" + IDENTIFIER_REGEXP + ")\\s*\\}");
     private int[] runSizes;
-    private Map<String, String> variables;
+    private Pattern variablePattern;
 
     private List<XWPFRun> runs;
 
-    public RunsProcessor(List<XWPFRun> runs, Map<String, String> variables) {
+    public RunsProcessor(List<XWPFRun> runs) {
         this.runs = runs;
-        this.variables = variables;
+        this.variablePattern = defaultVariablePattern;
     }
 
-    public void run() {
+    public RunsProcessor(List<XWPFRun> runs, Pattern variablePattern) {
+        this.runs = runs;
+        this.variablePattern = variablePattern;
+    }
+
+    public void replace(Map<String, ?> variables) {
         if (runs == null || runs.size() == 0) {
             return;
         }
@@ -50,7 +47,7 @@ public class RunsProcessor {
             if (paranoiaCounter++ > 1000) {
                 throw new IllegalStateException("End-less loop protection! " + "text = " + text);
             }
-            startPos = replaceVariables(text, startPos);
+            startPos = replace(text, startPos, variables);
         } while (startPos != null);
         //logDebugRuns("Runs after step " + paranoiaCounter + ": ");
     }
@@ -60,15 +57,16 @@ public class RunsProcessor {
      * @param lastPos  Position of last replaced region or null for starting.
      * @return
      */
-    private Position replaceVariables(String runsText, Position lastPos) {
+    private Position replace(String runsText, Position lastPos, Map<String, ?> variables) {
         Matcher matcher = variablePattern.matcher(runsText);
         //log.debug("Start pos: " + lastPos);
         while (matcher.find()) {
             String group = matcher.group(1);
-            String value = variables.get(group);
-            if (value == null) {
+            Object objectValue = variables.get(group);
+            if (objectValue == null) {
                 continue; // Variable not found. Ignore this finding.
             }
+            String value = objectValue.toString();
             int start = matcher.start();
             int end = matcher.end();
             Position startPos = getRunIdxAndPosition(start);

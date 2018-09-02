@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class Conditional {
     private static Logger log = LoggerFactory.getLogger(Conditional.class);
@@ -15,6 +16,10 @@ public class Conditional {
     private static final String VALUE_DOUBLE_START_QUOTS = "„\"";
     private static final String VALUE_DOUBLE_END_QUOTS = "“\"";
     private static final String VALUE_SEPARATOR_CHARS = ",;,:";
+
+    static Pattern beginIfPattern = Pattern.compile("\\{if\\s+(" + RunsProcessor.IDENTIFIER_REGEXP + ")\\s*(!?=|!?in)\\s*(.*)\\s*\\}");
+    static Pattern endIfPattern = Pattern.compile("\\{endif\\}");
+
 
 
     XWPFParagraph paragraph;
