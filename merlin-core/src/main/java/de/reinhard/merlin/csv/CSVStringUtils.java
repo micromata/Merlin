@@ -8,6 +8,7 @@ import java.util.List;
 
 public class CSVStringUtils {
     private static Logger log = LoggerFactory.getLogger(CSVStringUtils.class);
+
     private enum QuotationStyle {SINGLE, DOUBLE, NONE}
 
     ;
@@ -19,6 +20,10 @@ public class CSVStringUtils {
     private static final String VALUE_SEPARATOR_CHARS = ",;,:";
 
     public static String[] parseStringList(String str) {
+        return parseStringList(str, true);
+    }
+
+    public static String[] parseStringList(String str, boolean trim) {
         if (str == null || str.length() == 0) {
             return new String[0];
         }
@@ -68,7 +73,7 @@ public class CSVStringUtils {
             if (quotation == QuotationStyle.SINGLE && VALUE_SINGLE_END_QUOTS.indexOf(ch) >= 0 ||
                     quotation == QuotationStyle.DOUBLE && VALUE_DOUBLE_END_QUOTS.indexOf(ch) >= 0) {
                 // End of value reached.
-                params.add(value.toString());
+                add(params, value.toString(), trim);
                 value = null;
                 quotation = null;
                 separatorCharExpected = true;
@@ -84,7 +89,7 @@ public class CSVStringUtils {
                 break;
             }
             if (quotation == QuotationStyle.NONE && VALUE_SEPARATOR_CHARS.indexOf(ch) >= 0) {
-                params.add(value.toString());
+                add(params, value.toString(), trim);
                 value = null;
                 quotation = null;
                 separatorCharExpected = false;
@@ -93,10 +98,18 @@ public class CSVStringUtils {
             value.append(ch);
         }
         if (value != null) {
-            params.add(value.toString());
+            add(params, value.toString(), trim);
         }
         String[] result = new String[params.size()];
         params.toArray(result);
         return result;
+    }
+
+    private static void add(List<String> params, String value, boolean trim) {
+        if (trim) {
+            params.add(value.trim());
+        } else {
+            params.add(value);
+        }
     }
 }

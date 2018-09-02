@@ -13,6 +13,11 @@ public class Conditionals {
     private Logger log = LoggerFactory.getLogger(Conditionals.class);
     private SortedSet<Conditional> conditionals;
 
+    /**
+     * Parses all conditionals and build also a conditional tree.
+     *
+     * @param elements
+     */
     void read(List<IBodyElement> elements) {
         conditionals = new TreeSet<>();
         SortedSet<DocumentRange> allControls = new TreeSet<>();
@@ -58,6 +63,26 @@ public class Conditionals {
         }
     }
 
+    void process(List<IBodyElement> elements) {
+        int bodyElementCounter = 0;
+        for (IBodyElement element : elements) {
+            if (element instanceof XWPFParagraph) {
+                XWPFParagraph paragraph = (XWPFParagraph) element;
+                List<XWPFRun> runs = paragraph.getRuns();
+                if (runs != null) {
+                    process(runs, bodyElementCounter);
+                }
+            }
+            ++bodyElementCounter;
+        }
+    }
+
+    Conditional getConditional(DocumentPosition position) {
+        for (Conditional conditional : conditionals) {
+        }
+        return null;
+    }
+
     private void read(List<XWPFRun> runs, int bodyElementNumber, SortedSet<DocumentRange> allControls,
                       Map<DocumentRange, Conditional> conditionalMap) {
         RunsProcessor processor = new RunsProcessor(runs);
@@ -76,6 +101,12 @@ public class Conditionals {
             DocumentRange range = new DocumentRange(endifStart, endifEnd);
             allControls.add(range);
         }
+    }
+
+    private void process(List<XWPFRun> runs, int bodyElementNumber) {
+        RunsProcessor processor = new RunsProcessor(runs);
+        String text = processor.getText();
+
     }
 
     public SortedSet<Conditional> getConditionals() {

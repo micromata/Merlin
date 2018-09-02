@@ -7,6 +7,9 @@ import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -20,10 +23,13 @@ public class Conditional implements Comparable<Conditional> {
     private XWPFParagraph paragraph;
     private Conditional parent;
     private DocumentRange ifExpressionRange, endifExpressionRange; // range of the expression itselves.
-    private DocumentRange conditionalRange; // range between if- and endif-statement.
+    private DocumentRange range; // range between if- and endif-statement.
     private String variable;
     private String[] values;
     private ConditionalType type = ConditionalType.EQUAL;
+    private boolean trimValues = true;
+    private SortedSet<Conditional> childConditionals;
+
 
     Conditional(Matcher matcher, int bodyElementNumber, RunsProcessor processor) {
         variable = matcher.group(1);
@@ -37,9 +43,37 @@ public class Conditional implements Comparable<Conditional> {
                 type = ConditionalType.NOT_IN;
             }
         }
-        values = CSVStringUtils.parseStringList(matcher.group(3));
+        values = CSVStringUtils.parseStringList(matcher.group(3), trimValues);
         ifExpressionRange = new DocumentRange(processor.getRunIdxAndPosition(bodyElementNumber, matcher.start()),
                 processor.getRunIdxAndPosition(bodyElementNumber, matcher.end()));
+    }
+
+    boolean matches(Map<String, ?> variables) {
+        Object valueObject = variables.get(variable);
+        if (valueObject == null) {
+            return type.isIn(ConditionalType.NOT_EQUAL, ConditionalType.NOT_IN);
+        }
+        String value;
+        if (trimValues) {
+            value = valueObject.toString().trim();
+        } else {
+            value = valueObject.toString();
+        }
+        if (type.isIn(ConditionalType.EQUAL, ConditionalType.IN)) {
+            for (String definedValue : values) {
+                if (value.equals(definedValue)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        // tpye: not in:
+        for (String definedValue : values) {
+            if (value.equals(definedValue)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     void setEndif(DocumentRange endifExpressionRange) {
@@ -68,6 +102,14 @@ public class Conditional implements Comparable<Conditional> {
 
     public void setParent(Conditional parent) {
         this.parent = parent;
+        parent.addChild(this);
+    }
+
+    void addChild(Conditional child) {
+        if (childConditionals == null) {
+            childConditionals = new TreeSet<>();
+        }
+        childConditionals.add(child);
     }
 
     public DocumentRange getIfExpressionRange() {
@@ -76,6 +118,13 @@ public class Conditional implements Comparable<Conditional> {
 
     public DocumentRange getEndifExpressionRange() {
         return endifExpressionRange;
+    }
+
+    public DocumentRange getRange() {
+        if (range == null) {
+            range = new DocumentRange(ifExpressionRange.getStartPosition(), endifExpressionRange.getEndPosition());
+        }
+        return range;
     }
 
     @Override

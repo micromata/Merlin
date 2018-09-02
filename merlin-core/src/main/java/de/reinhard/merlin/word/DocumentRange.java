@@ -17,6 +17,15 @@ public class DocumentRange implements Comparable<DocumentRange> {
         }
     }
 
+    /**
+     * @param position
+     * @return true if the given position is covered (enclosed) by this range.
+     */
+    public boolean isIn(DocumentPosition position) {
+        return position.compareTo(startPosition) >= 0 &&
+                position.compareTo(endPosition) <= 0;
+    }
+
     @Override
     public String toString() {
         return "[range=[start=" + startPosition + ", end=" + endPosition + "]";
