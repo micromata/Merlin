@@ -26,7 +26,11 @@ public class WordDocumentTest {
         variables.put("Anrede", "Herr");
         variables.put("Datum", "1.1.2001");
         variables.put("Wochenstunden", "30");
+        variables.put("Arbeitszeit", "Vollzeit");
         WordDocument document = new WordDocument(new File(Definitions.EXAMPLES_TEST_DIR, "Vertrag.docx"));
+        Conditionals conditionals = new Conditionals(document);
+        conditionals.read();
+        conditionals.process(variables);
         document.process(variables);
         XWPFDocument doc = document.getDocument();
         File file = new File(Definitions.OUTPUT_DIR, "Vertrag.docx");

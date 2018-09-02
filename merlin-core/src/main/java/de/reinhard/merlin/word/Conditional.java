@@ -45,10 +45,18 @@ public class Conditional implements Comparable<Conditional> {
         }
         values = CSVStringUtils.parseStringList(matcher.group(3), trimValues);
         ifExpressionRange = new DocumentRange(processor.getRunIdxAndPosition(bodyElementNumber, matcher.start()),
-                processor.getRunIdxAndPosition(bodyElementNumber, matcher.end()));
+                processor.getRunIdxAndPosition(bodyElementNumber, matcher.end() - 1));
     }
 
+    /**
+     * Checks parents first.
+     * @param variables
+     * @return
+     */
     boolean matches(Map<String, ?> variables) {
+        if (parent != null && parent.matches(variables) == false) {
+            return false;
+        }
         Object valueObject = variables.get(variable);
         if (valueObject == null) {
             return type.isIn(ConditionalType.NOT_EQUAL, ConditionalType.NOT_IN);
@@ -110,6 +118,10 @@ public class Conditional implements Comparable<Conditional> {
             childConditionals = new TreeSet<>();
         }
         childConditionals.add(child);
+    }
+
+    public SortedSet<Conditional> getChildConditionals() {
+        return childConditionals;
     }
 
     public DocumentRange getIfExpressionRange() {

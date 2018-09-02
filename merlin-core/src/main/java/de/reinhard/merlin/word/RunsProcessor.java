@@ -71,9 +71,14 @@ public class RunsProcessor {
                 // startPos is not after last pos.
                 continue;
             }
-            return replaceText(startPos, getRunIdxAndPosition(-1,end - 1), value);
+            return replaceText(startPos, getRunIdxAndPosition(-1, end - 1), value);
         }
         return null;
+    }
+
+    DocumentPosition getEnd(int bodyElementNo) {
+        int lastRun = runs.size() - 1;
+        return new DocumentPosition(bodyElementNo, lastRun, runs.get(lastRun).getText(0).length() - 1);
     }
 
     /**
@@ -96,7 +101,8 @@ public class RunsProcessor {
             }
             setText(run, sb.toString());
             // Continue with index after actual:
-            return new DocumentPosition(-1, endPos.getRunIndex(), Integer.max(endPos.getRunCharAt(), startPos.getRunCharAt() + newValue.length()));
+            return new DocumentPosition(-1, endPos.getRunIndex(), Integer.max(endPos.getRunCharAt(),
+                    startPos.getRunCharAt() + newValue.length()));
         }
         setText(run, sb.toString());
         for (int idx = startPos.getRunIndex() + 1; idx < endPos.getRunIndex(); idx++) {
