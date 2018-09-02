@@ -6,7 +6,10 @@ import org.apache.poi.xwpf.usermodel.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -46,30 +49,21 @@ public class WordDocument {
     }
 
     public void process(Map<String, String> variables) {
-        processConditionals(variables);
+        Conditionals conditionals = new Conditionals();
+        conditionals.read(document.getBodyElements());
         replaceVariables(variables);
-    }
-
-    private void processConditionals(Map<String, String> variables) {
-        boolean hidden = false;
-        for (XWPFParagraph p : document.getParagraphs()) {
-            List<XWPFRun> runs = p.getRuns();
-            if (runs != null) {
-                processConditionals(runs, variables, hidden);
-            }
-        }
     }
 
     private void replaceVariables(Map<String, String> variables) {
         for (IBodyElement element : document.getBodyElements()) {
             if (element instanceof XWPFParagraph) {
-                XWPFParagraph paragraph = (XWPFParagraph)element;
+                XWPFParagraph paragraph = (XWPFParagraph) element;
                 List<XWPFRun> runs = paragraph.getRuns();
                 if (runs != null) {
                     replace(runs, variables);
                 }
             } else if (element instanceof XWPFTable) {
-                XWPFTable table = (XWPFTable)element;
+                XWPFTable table = (XWPFTable) element;
                 for (XWPFTableRow row : table.getRows()) {
                     for (XWPFTableCell cell : row.getTableCells()) {
                         for (XWPFParagraph p : cell.getParagraphs()) {
@@ -86,11 +80,5 @@ public class WordDocument {
     private void replace(List<XWPFRun> runs, Map<String, String> variables) {
         RunsProcessor processor = new RunsProcessor(runs);
         processor.replace(variables);
-    }
-
-    private boolean processConditionals(List<XWPFRun> runs, Map<String, String> variables, boolean hidden) {
-        RunsProcessor processor = new RunsProcessor(runs);
-        processor.replace(variables);
-        return processor.processConditionals(hidden);
     }
 }

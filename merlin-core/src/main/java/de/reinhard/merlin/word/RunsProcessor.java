@@ -115,16 +115,6 @@ public class RunsProcessor {
         runsText = null; // Force reconstructing of text.
     }
 
-    public boolean processConditionals(boolean hidden) {
-        if (hidden) {
-            //      getText();
-            //    Matcher beginIfMatcher = beginIfPattern.matcher(text);
-
-        } else {
-        }
-        return false;
-    }
-
     Position getRunIdxAndPosition(int pos) {
         int length = 0;
         int preLength = 0;

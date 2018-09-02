@@ -1,5 +1,6 @@
 package de.reinhard.merlin.word;
 
+import de.reinhard.merlin.csv.CSVStringUtils;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,20 +12,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ConditionalTest {
     private Logger log = LoggerFactory.getLogger(ConditionalTest.class);
-
-    @Test
-    public void parseStringList() {
-        assertArrayEquals(new String[0], Conditional.parseStringList(null));
-        assertArrayEquals(new String[0], Conditional.parseStringList(""));
-        assertArrayEquals(new String[]{"Berta"}, Conditional.parseStringList("Berta"));
-        assertArrayEquals(new String[]{"Berta"}, Conditional.parseStringList("„Berta“"));
-        assertArrayEquals(new String[]{"Berta", "Horst"}, Conditional.parseStringList("„Berta“, \"Horst\""));
-        assertArrayEquals(new String[]{"Berta", "Horst"}, Conditional.parseStringList("Berta, Horst"));
-        assertArrayEquals(new String[]{"Berta's", "Horst"}, Conditional.parseStringList("„Berta's“, „Horst"));
-        assertArrayEquals(new String[]{"A", "B", "", "D"}, Conditional.parseStringList("„A“, „B\", '', D"));
-        assertArrayEquals(new String[]{"A", "B", "", "D"}, Conditional.parseStringList("„A“, „B\"  '' D"));
-        assertArrayEquals(new String[]{"A', „B", "", "D"}, Conditional.parseStringList("„A', „B\"  '' D"));
-    }
 
     @Test
     public void regexpTest() {
@@ -46,7 +33,7 @@ public class ConditionalTest {
         assertEquals(3, matcher.groupCount(), "Number of regexp group count.");
         assertEquals(groups[0], matcher.group(1));
         assertEquals(groups[1], matcher.group(2));
-        String[] params = Conditional.parseStringList(matcher.group(3));
+        String[] params = CSVStringUtils.parseStringList(matcher.group(3));
         assertEquals(groups.length - 2, params.length, "Number of comma separated values.");
         for (int i = 2; i < groups.length; i++) {
             assertEquals(groups[i], params[i - 2]);
