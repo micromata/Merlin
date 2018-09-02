@@ -9,6 +9,7 @@ import java.util.Iterator;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class ConditionalsTest {
     private Logger log = LoggerFactory.getLogger(ConditionalsTest.class);
@@ -42,11 +43,15 @@ public class ConditionalsTest {
         conditionals.read(doc.getBodyElements());
         Iterator<Conditional> it = conditionals.getConditionals().iterator();
         Conditional cond = it.next();
+        Conditional parent = cond;
         test(cond, "var", ConditionalType.NOT_EQUAL, 1, 4, "test");
+        assertNull(cond.getParent());
         cond = it.next();
         test(cond, "fox", ConditionalType.EQUAL, 2, 3, "lazy");
+        assertEquals(parent, cond.getParent());
         cond = it.next();
         test(cond, "fox", ConditionalType.NOT_EQUAL, 3, 3, "lazy");
+        assertEquals(parent, cond.getParent());
     }
 
     private void test(Conditional conditional, String variable, ConditionalType type, int ifBodyElementNumber,
