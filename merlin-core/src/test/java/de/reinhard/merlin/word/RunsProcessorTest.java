@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -42,7 +43,11 @@ public class RunsProcessorTest {
         RunsProcessor runsParser = new RunsProcessor(runs);
         runsParser.getText();
         DocumentPosition position = runsParser.getRunIdxAndPosition(0, pos);
-        assertEquals(runIdx, position.getRunIndex(), "Run index.");
-        assertEquals(runIdxPos, position.getRunCharAt(), "Run index position.");
+        if (runIdx == -1) {
+            assertNull(position);
+        } else {
+            assertEquals(runIdx, position.getRunIndex(), "Run index.");
+            assertEquals(runIdxPos, position.getRunCharAt(), "Run index position.");
+        }
     }
 }

@@ -67,7 +67,7 @@ public class RunsProcessor {
             int start = matcher.start();
             int end = matcher.end();
             DocumentPosition startPos = getRunIdxAndPosition(-1, start);
-            if (startPos.compareTo(lastPos) <= 0) {
+            if (startPos == null || startPos.compareTo(lastPos) <= 0) {
                 // startPos is not after last pos.
                 continue;
             }
@@ -126,7 +126,7 @@ public class RunsProcessor {
             }
             preLength = length;
         }
-        return new DocumentPosition(-1,-1, -1);
+        return null;
     }
 
     /**

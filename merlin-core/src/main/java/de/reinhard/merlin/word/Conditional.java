@@ -42,9 +42,8 @@ public class Conditional implements Comparable<Conditional> {
                 processor.getRunIdxAndPosition(bodyElementNumber, matcher.end()));
     }
 
-    void setEndif(Matcher matcher, int endifBodyElementNumber, RunsProcessor processor) {
-        endifExpressionRange = new DocumentRange(processor.getRunIdxAndPosition(endifBodyElementNumber, matcher.start()),
-                processor.getRunIdxAndPosition(endifBodyElementNumber, matcher.end()));
+    void setEndif(DocumentRange endifExpressionRange) {
+        this.endifExpressionRange = endifExpressionRange;
     }
 
     boolean documentPartVisible() {
