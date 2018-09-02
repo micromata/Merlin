@@ -19,16 +19,13 @@ public class Conditional implements Comparable<Conditional> {
 
     private XWPFParagraph paragraph;
     private Conditional parent;
-    private int bodyElementNumber;
-    private DocumentPosition startIfExpression, endIfExpression; // The range of the if-statement expression (as to be removed from the doc).
-    private int endifBodyElementNumber = -1;
-    private DocumentPosition startEndif, endEndif; // The range of the endif expression (as to be removed from the doc).
+    private DocumentRange ifExpressionRange, endifExpressionRange; // range of the expression itselves.
+    private DocumentRange conditionalRange; // range between if- and endif-statement.
     private String variable;
     private String[] values;
     private ConditionalType type = ConditionalType.EQUAL;
 
     Conditional(Matcher matcher, int bodyElementNumber, RunsProcessor processor) {
-        this.bodyElementNumber = bodyElementNumber;
         variable = matcher.group(1);
         String str = matcher.group(2);
         if (str != null) {
@@ -41,14 +38,13 @@ public class Conditional implements Comparable<Conditional> {
             }
         }
         values = CSVStringUtils.parseStringList(matcher.group(3));
-        startIfExpression = processor.getRunIdxAndPosition(matcher.start());
-        endIfExpression = processor.getRunIdxAndPosition(matcher.end());
+        ifExpressionRange = new DocumentRange(processor.getRunIdxAndPosition(bodyElementNumber, matcher.start()),
+                processor.getRunIdxAndPosition(bodyElementNumber, matcher.end()));
     }
 
-    void setEndif(int endifBodyElementNumber, Matcher matcher, RunsProcessor processor) {
-        this.endifBodyElementNumber = endifBodyElementNumber;
-        startEndif = processor.getRunIdxAndPosition(matcher.start());
-        endEndif = processor.getRunIdxAndPosition(matcher.end());
+    void setEndif(Matcher matcher, int endifBodyElementNumber, RunsProcessor processor) {
+        endifExpressionRange = new DocumentRange(processor.getRunIdxAndPosition(endifBodyElementNumber, matcher.start()),
+                processor.getRunIdxAndPosition(endifBodyElementNumber, matcher.end()));
     }
 
     boolean documentPartVisible() {
@@ -67,26 +63,6 @@ public class Conditional implements Comparable<Conditional> {
         return values;
     }
 
-    public int getBodyElementNumber() {
-        return bodyElementNumber;
-    }
-
-    public DocumentPosition getStartIfExpression() {
-        return startIfExpression;
-    }
-
-    public DocumentPosition getEndIfExpression() {
-        return endIfExpression;
-    }
-
-    public int getEndifBodyElementNumber() {
-        return endifBodyElementNumber;
-    }
-
-    public DocumentPosition getEndEndif() {
-        return endEndif;
-    }
-
     public Conditional getParent() {
         return parent;
     }
@@ -95,11 +71,18 @@ public class Conditional implements Comparable<Conditional> {
         this.parent = parent;
     }
 
+    public DocumentRange getIfExpressionRange() {
+        return ifExpressionRange;
+    }
+
+    public DocumentRange getEndifExpressionRange() {
+        return endifExpressionRange;
+    }
+
     @Override
     public int compareTo(Conditional o) {
         return new CompareToBuilder()
-                .append(bodyElementNumber, o.bodyElementNumber)
-                .append(startIfExpression, o.startIfExpression).toComparison();
+                .append(ifExpressionRange.getStartPosition(), o.ifExpressionRange.getStartPosition()).toComparison();
     }
 
     @Override
@@ -108,10 +91,8 @@ public class Conditional implements Comparable<Conditional> {
                 .append("variable", variable)
                 .append("type", type)
                 .append("Values", values)
-                .append("if-no", bodyElementNumber)
-                .append("if-pos", startIfExpression)
-                .append("endif-no", bodyElementNumber)
-                .append("endif-pos", startIfExpression)
+                .append("if-pos", ifExpressionRange)
+                .append("endif-pos", endifExpressionRange)
                 .toString();
     }
 }

@@ -41,7 +41,7 @@ public class RunsProcessorTest {
         }
         RunsProcessor runsParser = new RunsProcessor(runs);
         runsParser.getText();
-        DocumentPosition position = runsParser.getRunIdxAndPosition(pos);
+        DocumentPosition position = runsParser.getRunIdxAndPosition(0, pos);
         assertEquals(runIdx, position.getRunIndex(), "Run index.");
         assertEquals(runIdxPos, position.getRunCharAt(), "Run index position.");
     }

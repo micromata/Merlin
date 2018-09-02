@@ -53,7 +53,7 @@ public class ConditionalsTest {
         assertEquals(variable, conditional.getVariable(), "Variable name.");
         assertEquals(type, conditional.getType(), "Conditional type");
         assertArrayEquals(values, conditional.getValues(), "Values");
-        assertEquals(ifParNumber, conditional.getBodyElementNumber(), "body-number of if-statement.");
-        assertEquals(endifParNumber, conditional.getEndifBodyElementNumber(), "body-number of endif-statement");
+        assertEquals(ifParNumber, conditional.getIfExpressionRange().getStartPosition().getBodyElementNumber(), "body-number of if-statement.");
+        assertEquals(endifParNumber, conditional.getEndifExpressionRange().getStartPosition().getBodyElementNumber(), "body-number of endif-statement");
     }
 }

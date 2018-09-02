@@ -14,10 +14,11 @@ import java.util.regex.Matcher;
 public class Conditionals {
     private Logger log = LoggerFactory.getLogger(Conditionals.class);
     private SortedSet<Conditional> conditionals;
-
+    private SortedSet<Conditional> endIfs; // Only for building the conditional tree.
 
     void read(List<IBodyElement> elements) {
         conditionals = new TreeSet<>();
+        endIfs = new TreeSet<>();
         int bodyElementCounter = 0;
         for (IBodyElement element : elements) {
             if (element instanceof XWPFParagraph) {
@@ -46,6 +47,10 @@ public class Conditionals {
             conditionals.add(conditional);
         }
         Matcher endMatcher = Conditional.endIfPattern.matcher(text);
+        while (endMatcher.find()) {
+            //Conditional endif = new Conditional(endMatcher, )
+        }
+        /*
         while (endMatcher.find()) {
             DocumentPosition endifPosition = processor.getRunIdxAndPosition(endMatcher.start());
             Conditional conditional = findMatchingConditional(bodyElementNumber, endifPosition);
@@ -94,7 +99,7 @@ public class Conditionals {
             }
             last = conditional;
         }
-        return last;
+        return last;*/
     }
 
     public SortedSet<Conditional> getConditionals() {

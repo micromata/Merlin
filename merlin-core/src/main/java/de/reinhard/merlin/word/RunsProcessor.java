@@ -66,12 +66,12 @@ public class RunsProcessor {
             String value = objectValue.toString();
             int start = matcher.start();
             int end = matcher.end();
-            DocumentPosition startPos = getRunIdxAndPosition(start);
+            DocumentPosition startPos = getRunIdxAndPosition(-1, start);
             if (startPos.compareTo(lastPos) <= 0) {
                 // startPos is not after last pos.
                 continue;
             }
-            return replaceText(startPos, getRunIdxAndPosition(end - 1), value);
+            return replaceText(startPos, getRunIdxAndPosition(-1,end - 1), value);
         }
         return null;
     }
@@ -116,13 +116,13 @@ public class RunsProcessor {
         runsText = null; // Force reconstructing of text.
     }
 
-    DocumentPosition getRunIdxAndPosition(int pos) {
+    DocumentPosition getRunIdxAndPosition(int bodyElementNumber, int pos) {
         int length = 0;
         int preLength = 0;
         for (int i = 0; i < runSizes.length; i++) {
             length += runSizes[i];
             if (pos < length) {
-                return new DocumentPosition(-1, i, pos - preLength);
+                return new DocumentPosition(bodyElementNumber, i, pos - preLength);
             }
             preLength = length;
         }
