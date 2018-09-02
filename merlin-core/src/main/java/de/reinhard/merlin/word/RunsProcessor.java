@@ -36,7 +36,7 @@ public class RunsProcessor {
         }
         int paranoiaCounter = 0;
         String runsText;
-        Position startPos = null;
+        DocumentPosition startPos = null;
         do {
             // loop until no further replacements will be found.
             runsText = getText(); // Rebuild text after every variable substitution.
@@ -54,7 +54,7 @@ public class RunsProcessor {
      * @param lastPos  Position of last replaced region or null for starting.
      * @return
      */
-    private Position replace(String runsText, Position lastPos, Map<String, ?> variables) {
+    private DocumentPosition replace(String runsText, DocumentPosition lastPos, Map<String, ?> variables) {
         Matcher matcher = variablePattern.matcher(runsText);
         //log.debug("Start pos: " + lastPos);
         while (matcher.find()) {
@@ -66,7 +66,7 @@ public class RunsProcessor {
             String value = objectValue.toString();
             int start = matcher.start();
             int end = matcher.end();
-            Position startPos = getRunIdxAndPosition(start);
+            DocumentPosition startPos = getRunIdxAndPosition(start);
             if (startPos.compareTo(lastPos) <= 0) {
                 // startPos is not after last pos.
                 continue;
@@ -82,32 +82,32 @@ public class RunsProcessor {
      * @param newValue
      * @return
      */
-    Position replaceText(Position startPos, Position endPos, String newValue) {
-        XWPFRun run = runs.get(startPos.runIndex);
+    DocumentPosition replaceText(DocumentPosition startPos, DocumentPosition endPos, String newValue) {
+        XWPFRun run = runs.get(startPos.getRunIndex());
         String text;
         text = run.getText(0);
         StringBuilder sb = new StringBuilder();
-        sb.append(text.substring(0, startPos.runCharAt))
+        sb.append(text.substring(0, startPos.getRunCharAt()))
                 .append(newValue);
-        if (startPos.runIndex == endPos.runIndex) { // Variable substitution in one signle run.
-            if (endPos.runCharAt < text.length()) {
+        if (startPos.getRunIndex() == endPos.getRunIndex()) { // Variable substitution in one signle run.
+            if (endPos.getRunCharAt() < text.length()) {
                 // Append the tail after ${var}:
-                sb.append(text.substring(endPos.runCharAt + 1));
+                sb.append(text.substring(endPos.getRunCharAt() + 1));
             }
             setText(run, sb.toString());
             // Continue with index after actual:
-            return new Position(endPos.runIndex, Integer.max(endPos.runCharAt, startPos.runCharAt + newValue.length()));
+            return new DocumentPosition(-1, endPos.getRunIndex(), Integer.max(endPos.getRunCharAt(), startPos.getRunCharAt() + newValue.length()));
         }
         setText(run, sb.toString());
-        for (int idx = startPos.runIndex + 1; idx < endPos.runIndex; idx++) {
+        for (int idx = startPos.getRunIndex() + 1; idx < endPos.getRunIndex(); idx++) {
             // Processing runs in between.
             setText(runs.get(idx), "");
 
         }
         // Processing last affected run:
-        run = runs.get(endPos.runIndex);
+        run = runs.get(endPos.getRunIndex());
         text = run.getText(0);
-        setText(run, text.substring(endPos.runCharAt + 1));
+        setText(run, text.substring(endPos.getRunCharAt() + 1));
         return endPos;
     }
 
@@ -116,17 +116,17 @@ public class RunsProcessor {
         runsText = null; // Force reconstructing of text.
     }
 
-    Position getRunIdxAndPosition(int pos) {
+    DocumentPosition getRunIdxAndPosition(int pos) {
         int length = 0;
         int preLength = 0;
         for (int i = 0; i < runSizes.length; i++) {
             length += runSizes[i];
             if (pos < length) {
-                return new Position(i, pos - preLength);
+                return new DocumentPosition(-1, i, pos - preLength);
             }
             preLength = length;
         }
-        return new Position(-1, -1);
+        return new DocumentPosition(-1,-1, -1);
     }
 
     /**
@@ -161,33 +161,6 @@ public class RunsProcessor {
 
     public void setVariablePattern(Pattern variablePattern) {
         this.variablePattern = variablePattern;
-    }
-
-    class Position implements Comparable<Position> {
-        Position(int runIndex, int runPos) {
-            this.runIndex = runIndex;
-            this.runCharAt = runPos;
-        }
-
-        @Override
-        public int compareTo(Position o) {
-            if (o == null) {
-                // this is greater than other (null).
-                return 1;
-            }
-            return new CompareToBuilder()
-                    .append(this.runIndex, o.runIndex)
-                    .append(this.runCharAt, o.runCharAt)
-                    .toComparison();
-        }
-
-        @Override
-        public String toString() {
-            return "[runs-idx=" + runIndex +", charAt=" + runCharAt + "]";
-        }
-
-        int runIndex;
-        int runCharAt;
     }
 
     private void logDebugRuns(String prefix) {

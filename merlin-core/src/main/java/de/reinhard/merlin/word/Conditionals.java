@@ -47,22 +47,48 @@ public class Conditionals {
         }
         Matcher endMatcher = Conditional.endIfPattern.matcher(text);
         while (endMatcher.find()) {
-            RunsProcessor.Position endifPosition = processor.getRunIdxAndPosition(endMatcher.start());
+            DocumentPosition endifPosition = processor.getRunIdxAndPosition(endMatcher.start());
             Conditional conditional = findMatchingConditional(bodyElementNumber, endifPosition);
-            conditional.setEndif(endMatcher, processor);
+            if (conditional == null) {
+                log.error("No conditional found for {endif} expression: " + processor.getText());
+                continue;
+            }
+            if (conditional.getEndEndif() != null) {
+                log.error("Multiple endif found for {endif} expression: " + processor.getText());
+                continue;
+            }
+            conditional.setEndif(bodyElementNumber, endMatcher, processor);
         }
-        //return processor.processConditionals(hidden);
+
+        // Detect hierarchy:
+        for (Conditional conditional : conditionals) {
+            Conditional parent = findMatchingConditional(conditional.getBodyElementNumber(), conditional.getStartIfExpression());
+            if (parent != null) {
+                if (parent == conditional) {
+                    log.error("Internal error, shouldn't occur. Found parent equals conditional itself.");
+                    continue;
+                }
+                conditional.setParent(parent);
+                if (log.isDebugEnabled()) {
+                    log.debug("Parent if-statement found for " + conditional + ": parent=" + parent);
+                }
+            }
+        }
     }
 
-    private Conditional findMatchingConditional(int bodyElementNumber, RunsProcessor.Position position) {
+    private Conditional findMatchingConditional(int bodyElementNumber, DocumentPosition position) {
         Conditional last = null;
         for (Conditional conditional : conditionals) {
             if (bodyElementNumber < conditional.getBodyElementNumber()) {
                 return last; // return last element, because current is after requested position.
             }
+            if (bodyElementNumber < conditional.getEndifBodyElementNumber()) {
+                // Endif already passed.
+                return last;
+            }
             if (bodyElementNumber == conditional.getBodyElementNumber()) {
                 // Check the position inside the bodyElement.
-                if (position.compareTo(conditional.getEndEndif()) < 0) {
+                if (position.compareTo(conditional.getEndIfExpression()) < 0) {
                     return last;
                 }
             }

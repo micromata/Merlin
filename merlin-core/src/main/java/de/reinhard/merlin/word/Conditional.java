@@ -20,9 +20,9 @@ public class Conditional implements Comparable<Conditional> {
     private XWPFParagraph paragraph;
     private Conditional parent;
     private int bodyElementNumber;
-    private RunsProcessor.Position startExpression, endExpression; // The range of the if-statement expression (as to be removed from the doc).
-    private int endifBodyElementNumber;
-    private RunsProcessor.Position startEndif, endEndif; // The range of the endif expression (as to be removed from the doc).
+    private DocumentPosition startIfExpression, endIfExpression; // The range of the if-statement expression (as to be removed from the doc).
+    private int endifBodyElementNumber = -1;
+    private DocumentPosition startEndif, endEndif; // The range of the endif expression (as to be removed from the doc).
     private String variable;
     private String[] values;
     private ConditionalType type = ConditionalType.EQUAL;
@@ -41,11 +41,12 @@ public class Conditional implements Comparable<Conditional> {
             }
         }
         values = CSVStringUtils.parseStringList(matcher.group(3));
-        startExpression = processor.getRunIdxAndPosition(matcher.start());
-        endExpression = processor.getRunIdxAndPosition(matcher.end());
+        startIfExpression = processor.getRunIdxAndPosition(matcher.start());
+        endIfExpression = processor.getRunIdxAndPosition(matcher.end());
     }
 
-    void setEndif(Matcher matcher, RunsProcessor processor) {
+    void setEndif(int endifBodyElementNumber, Matcher matcher, RunsProcessor processor) {
+        this.endifBodyElementNumber = endifBodyElementNumber;
         startEndif = processor.getRunIdxAndPosition(matcher.start());
         endEndif = processor.getRunIdxAndPosition(matcher.end());
     }
@@ -70,15 +71,35 @@ public class Conditional implements Comparable<Conditional> {
         return bodyElementNumber;
     }
 
-    public RunsProcessor.Position getEndEndif() {
+    public DocumentPosition getStartIfExpression() {
+        return startIfExpression;
+    }
+
+    public DocumentPosition getEndIfExpression() {
+        return endIfExpression;
+    }
+
+    public int getEndifBodyElementNumber() {
+        return endifBodyElementNumber;
+    }
+
+    public DocumentPosition getEndEndif() {
         return endEndif;
+    }
+
+    public Conditional getParent() {
+        return parent;
+    }
+
+    public void setParent(Conditional parent) {
+        this.parent = parent;
     }
 
     @Override
     public int compareTo(Conditional o) {
         return new CompareToBuilder()
                 .append(bodyElementNumber, o.bodyElementNumber)
-                .append(startExpression, o.startExpression).toComparison();
+                .append(startIfExpression, o.startIfExpression).toComparison();
     }
 
     @Override
@@ -88,9 +109,9 @@ public class Conditional implements Comparable<Conditional> {
                 .append("type", type)
                 .append("Values", values)
                 .append("if-no", bodyElementNumber)
-                .append("if-pos", startExpression)
+                .append("if-pos", startIfExpression)
                 .append("endif-no", bodyElementNumber)
-                .append("endif-pos", startExpression)
+                .append("endif-pos", startIfExpression)
                 .toString();
     }
 }
