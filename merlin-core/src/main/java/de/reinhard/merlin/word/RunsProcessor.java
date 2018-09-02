@@ -1,6 +1,7 @@
 package de.reinhard.merlin.word;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,37 +54,41 @@ public class RunsProcessor {
         }
         int paranoiaCounter = 0;
         String text;
+        Position startPos = null;
         do {
             // loop until no further replacements are found.
             text = buildText(); // Rebuild text after every variable substitution.
             //logDebugRuns("Runs at step " + paranoiaCounter + ": ");
             if (paranoiaCounter++ > 1000) {
-                throw new IllegalStateException("End-less loop protection!");
+                throw new IllegalStateException("End-less loop protection! " + "text = " + text);
             }
-        } while (replaceVariables(text));
+            startPos = replaceVariables(text, startPos);
+        } while (startPos != null);
         //ogDebugRuns("Runs after step " + paranoiaCounter + ": ");
     }
 
     /**
      * @param runsText Whole text concatenated from all runs.
+     * @param lastPos  Position of last replaced region or null for starting.
      * @return
      */
-    private boolean replaceVariables(String runsText) {
+    private Position replaceVariables(String runsText, Position lastPos) {
         Matcher matcher = variablePattern.matcher(runsText);
+        //log.debug("Start pos: " + lastPos);
         while (matcher.find()) {
             String group = matcher.group(1);
             String value = variables.get(group);
             if (value == null) {
                 continue; // Variable not found. Ignore this finding.
             }
-            if (variablePattern.matcher(value).find()) {
-                // Avoids endless-loop if variable expression is replaced by variable expression.
-                value = value.replace("${", "_{");
-            }
             int start = matcher.start();
             int end = matcher.end();
             Position startPos = getRunIdxAndPosition(start);
             Position endPos = getRunIdxAndPosition(end - 1);
+            if (startPos.compareTo(lastPos) <= 0) {
+                // startPos is not after last pos.
+                continue;
+            }
             XWPFRun run = runs.get(startPos.runIndex);
             String text;
             text = run.getText(0);
@@ -96,7 +101,7 @@ public class RunsProcessor {
                     sb.append(text.substring(endPos.runCharAt + 1));
                 }
                 run.setText(sb.toString(), 0);
-                return true;
+                return endPos;
             }
             run.setText(sb.toString(), 0);
             for (int idx = startPos.runIndex + 1; idx < endPos.runIndex; idx++) {
@@ -108,9 +113,9 @@ public class RunsProcessor {
             run = runs.get(endPos.runIndex);
             text = run.getText(0);
             run.setText(text.substring(endPos.runCharAt + 1), 0);
-            return true;
+            return endPos;
         }
-        return false;
+        return null;
     }
 
     public boolean processConditionals(boolean hidden) {
@@ -163,10 +168,27 @@ public class RunsProcessor {
         }*/
     }
 
-    class Position {
+    class Position implements Comparable<Position> {
         Position(int runIndex, int runPos) {
             this.runIndex = runIndex;
             this.runCharAt = runPos;
+        }
+
+        @Override
+        public int compareTo(Position o) {
+            if (o == null) {
+                // this is greater than other (null).
+                return 1;
+            }
+            return new CompareToBuilder()
+                    .append(this.runIndex, o.runIndex)
+                    .append(this.runCharAt, o.runCharAt)
+                    .toComparison();
+        }
+
+        @Override
+        public String toString() {
+            return "idx=" + runIndex + ", charAt=" + runIndex;
         }
 
         int runIndex;

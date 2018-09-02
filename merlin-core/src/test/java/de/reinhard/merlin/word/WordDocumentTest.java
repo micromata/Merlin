@@ -44,11 +44,11 @@ public class WordDocumentTest {
         assertVariablePatternMatch(false, "${3_Var_3kl}");
         assertVariablePatternMatch(false, "$ { var  }");
 
-        assertBeginIfPatternMatch(true, "{if var='value'} ...", "var", "=", "value");
-        assertBeginIfPatternMatch(true, "ksfl {if var!='value'} ...", "var", "!=", "value");
-        assertBeginIfPatternMatch(true, "... {if _var5 != ‚23 value'} ...", "_var5", "!=", "23 value");
-        assertBeginIfPatternMatch(true, "{if  var != „value 2839'  }", "var", "!=", "value 2839");
-        assertBeginIfPatternMatch(false, "ksfl {ifvar != 'value'  } ...", "var", "!=", "value");
+        assertBeginIfPatternMatch(true, "{if var='value'} ...", "var", "=", "'value'");
+        assertBeginIfPatternMatch(true, "ksfl {if var!='value'} ...", "var", "!=", "'value'");
+        assertBeginIfPatternMatch(true, "... {if _var5 != ‚23 value'} ...", "_var5", "!=", "‚23 value'");
+        assertBeginIfPatternMatch(true, "{if  var != „value 2839'  }", "var", "!=", "„value 2839'  ");
+        assertBeginIfPatternMatch(false, "ksfl {ifvar != 'value'  } ...", "var", "!=", "'value'  ");
     }
 
     private void assertBeginIfPatternMatch(boolean expected, String str, String var, String cmp, String value) {
@@ -101,7 +101,7 @@ public class WordDocumentTest {
         add(exptected, createParagraph(doc, "$", "{name}", "Hello ${var}."),
                 new String[]{"$", "{name}", "Hello world."});
         add(exptected, createParagraph(doc, "Endless loop test: ${endlessLoop}."),
-                new String[]{"Endless loop test: ... _{endlessLoop} ...."});
+                new String[]{"Endless loop test: ... ${endlessLoop} ...."});
         WordDocument word = new WordDocument(doc);
         word.process(variables);
         int no = 0;
