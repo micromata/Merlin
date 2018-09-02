@@ -2,6 +2,7 @@ package de.reinhard.merlin.word;
 
 import de.reinhard.merlin.csv.CSVStringUtils;
 import org.apache.commons.lang.builder.CompareToBuilder;
+import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +29,7 @@ public class Conditional implements Comparable<Conditional> {
 
     Conditional(Matcher matcher, int bodyElementNumber, RunsProcessor processor) {
         this.bodyElementNumber = bodyElementNumber;
-        String variable = matcher.group(1);
+        variable = matcher.group(1);
         String str = matcher.group(2);
         if (str != null) {
             if ("!=".equals(str)) {
@@ -44,6 +45,11 @@ public class Conditional implements Comparable<Conditional> {
         endExpression = processor.getRunIdxAndPosition(matcher.end());
     }
 
+    void setEndif(Matcher matcher, RunsProcessor processor) {
+        startEndif = processor.getRunIdxAndPosition(matcher.start());
+        endEndif = processor.getRunIdxAndPosition(matcher.end());
+    }
+
     boolean documentPartVisible() {
         return true;
     }
@@ -56,10 +62,31 @@ public class Conditional implements Comparable<Conditional> {
         return values;
     }
 
+    public int getBodyElementNumber() {
+        return bodyElementNumber;
+    }
+
+    public RunsProcessor.Position getEndEndif() {
+        return endEndif;
+    }
+
     @Override
     public int compareTo(Conditional o) {
         return new CompareToBuilder()
                 .append(bodyElementNumber, o.bodyElementNumber)
                 .append(startExpression, o.startExpression).toComparison();
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("variable", variable)
+                .append("type", type)
+                .append("Values", values)
+                .append("if-no", bodyElementNumber)
+                .append("if-pos", startExpression)
+                .append("endif-no", bodyElementNumber)
+                .append("endif-pos", startExpression)
+                .toString();
     }
 }

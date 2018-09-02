@@ -1,6 +1,7 @@
 package de.reinhard.merlin.word;
 
 import org.apache.commons.lang.builder.CompareToBuilder;
+import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -182,7 +183,7 @@ public class RunsProcessor {
 
         @Override
         public String toString() {
-            return "idx=" + runIndex + ", charAt=" + runIndex;
+            return "[runs-idx=" + runIndex +", charAt=" + runCharAt + "]";
         }
 
         int runIndex;
