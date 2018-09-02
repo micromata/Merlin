@@ -46,14 +46,15 @@ public class ConditionalsTest {
         cond = it.next();
         test(cond, "fox", ConditionalType.EQUAL, 2, 3, "lazy");
         cond = it.next();
-        test(cond, "fox", ConditionalType.NOT_EQUAL, 4, 4, "lazy");
+        test(cond, "fox", ConditionalType.NOT_EQUAL, 3, 3, "lazy");
     }
 
-    private void test(Conditional conditional, String variable, ConditionalType type, int ifParNumber, int endifParNumber, String... values) {
+    private void test(Conditional conditional, String variable, ConditionalType type, int ifBodyElementNumber,
+                      int endifBodyElementNumber, String... values) {
         assertEquals(variable, conditional.getVariable(), "Variable name.");
         assertEquals(type, conditional.getType(), "Conditional type");
         assertArrayEquals(values, conditional.getValues(), "Values");
-        assertEquals(ifParNumber, conditional.getIfExpressionRange().getStartPosition().getBodyElementNumber(), "body-number of if-statement.");
-        assertEquals(endifParNumber, conditional.getEndifExpressionRange().getStartPosition().getBodyElementNumber(), "body-number of endif-statement");
+        assertEquals(ifBodyElementNumber, conditional.getIfExpressionRange().getStartPosition().getBodyElementNumber(), "body-number of if-statement.");
+        assertEquals(endifBodyElementNumber, conditional.getEndifExpressionRange().getStartPosition().getBodyElementNumber(), "body-number of endif-statement");
     }
 }
