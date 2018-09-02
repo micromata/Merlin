@@ -41,7 +41,7 @@ public class RunsProcessor {
         String text;
         Position startPos = null;
         do {
-            // loop until no further replacements are found.
+            // loop until no further replacements will be found.
             text = buildText(); // Rebuild text after every variable substitution.
             //logDebugRuns("Runs at step " + paranoiaCounter + ": ");
             if (paranoiaCounter++ > 1000) {
@@ -75,36 +75,47 @@ public class RunsProcessor {
                 // startPos is not after last pos.
                 continue;
             }
-            XWPFRun run = runs.get(startPos.runIndex);
-            String text;
-            text = run.getText(0);
-            StringBuilder sb = new StringBuilder();
-            sb.append(text.substring(0, startPos.runCharAt))
-                    .append(value);
-            if (startPos.runIndex == endPos.runIndex) { // Variable substitution in one signle run.
-                if (endPos.runCharAt < text.length()) {
-                    // Append the tail after ${var}:
-                    sb.append(text.substring(endPos.runCharAt + 1));
-                }
-                run.setText(sb.toString(), 0);
-                // Continue with index after actual:
-                return new Position(endPos.runIndex, Integer.max(endPos.runCharAt, startPos.runCharAt + value.length()));
-            }
-            run.setText(sb.toString(), 0);
-            for (int idx = startPos.runIndex + 1; idx < endPos.runIndex; idx++) {
-                // Processing runs in between.
-                runs.get(idx).setText("", 0);
-
-            }
-            // Processing last affected run:
-            run = runs.get(endPos.runIndex);
-            text = run.getText(0);
-            run.setText(text.substring(endPos.runCharAt + 1), 0);
-            return endPos;
+            return replaceText(startPos, endPos, value);
         }
         return null;
     }
 
+    /**
+     *
+     * @param startPos
+     * @param endPos
+     * @param newValue
+     * @return
+     */
+     Position replaceText(Position startPos, Position endPos, String newValue) {
+        XWPFRun run = runs.get(startPos.runIndex);
+        String text;
+        text = run.getText(0);
+        StringBuilder sb = new StringBuilder();
+        sb.append(text.substring(0, startPos.runCharAt))
+                .append(newValue);
+        if (startPos.runIndex == endPos.runIndex) { // Variable substitution in one signle run.
+            if (endPos.runCharAt < text.length()) {
+                // Append the tail after ${var}:
+                sb.append(text.substring(endPos.runCharAt + 1));
+            }
+            run.setText(sb.toString(), 0);
+            // Continue with index after actual:
+            return new Position(endPos.runIndex, Integer.max(endPos.runCharAt, startPos.runCharAt + newValue.length()));
+        }
+        run.setText(sb.toString(), 0);
+        for (int idx = startPos.runIndex + 1; idx < endPos.runIndex; idx++) {
+            // Processing runs in between.
+            runs.get(idx).setText("", 0);
+
+        }
+        // Processing last affected run:
+        run = runs.get(endPos.runIndex);
+        text = run.getText(0);
+        run.setText(text.substring(endPos.runCharAt + 1), 0);
+        return endPos;
+
+    }
     public boolean processConditionals(boolean hidden) {
         if (hidden) {
             //      buildText();
@@ -143,16 +154,11 @@ public class RunsProcessor {
                 continue;
             }
             runSizes[i] = text.length();
-            /*
-            if (log.isDebugEnabled()) {
-                log.debug("Run[" + i + "]: " + text + ", length=" + runSizes[i]);
-            }*/
+            // if (log.isDebugEnabled()) { log.debug("Run[" + i + "]: " + text + ", length=" + runSizes[i]); }
             sb.append(text);
         }
         return sb.toString();
-        /*if (log.isDebugEnabled()) {
-            log.debug(text);
-        }*/
+        // if (log.isDebugEnabled()) { log.debug(text); }
     }
 
     class Position implements Comparable<Position> {
