@@ -20,6 +20,7 @@ public class RunsProcessor {
     static final Pattern defaultVariablePattern = Pattern.compile("\\$\\{\\s*(" + IDENTIFIER_REGEXP + ")\\s*\\}");
     private int[] runSizes;
     private Pattern variablePattern;
+    private String runsText;
 
     private List<XWPFRun> runs;
 
@@ -28,26 +29,21 @@ public class RunsProcessor {
         this.variablePattern = defaultVariablePattern;
     }
 
-    public RunsProcessor(List<XWPFRun> runs, Pattern variablePattern) {
-        this.runs = runs;
-        this.variablePattern = variablePattern;
-    }
-
     public void replace(Map<String, ?> variables) {
         if (runs == null || runs.size() == 0) {
             return;
         }
         int paranoiaCounter = 0;
-        String text;
+        String runsText;
         Position startPos = null;
         do {
             // loop until no further replacements will be found.
-            text = buildText(); // Rebuild text after every variable substitution.
+            runsText = getText(); // Rebuild text after every variable substitution.
             //logDebugRuns("Runs at step " + paranoiaCounter + ": ");
             if (paranoiaCounter++ > 1000) {
-                throw new IllegalStateException("End-less loop protection! " + "text = " + text);
+                throw new IllegalStateException("End-less loop protection! " + "text = " + runsText);
             }
-            startPos = replace(text, startPos, variables);
+            startPos = replace(runsText, startPos, variables);
         } while (startPos != null);
         //logDebugRuns("Runs after step " + paranoiaCounter + ": ");
     }
@@ -70,24 +66,22 @@ public class RunsProcessor {
             int start = matcher.start();
             int end = matcher.end();
             Position startPos = getRunIdxAndPosition(start);
-            Position endPos = getRunIdxAndPosition(end - 1);
             if (startPos.compareTo(lastPos) <= 0) {
                 // startPos is not after last pos.
                 continue;
             }
-            return replaceText(startPos, endPos, value);
+            return replaceText(startPos, getRunIdxAndPosition(end - 1), value);
         }
         return null;
     }
 
     /**
-     *
      * @param startPos
      * @param endPos
      * @param newValue
      * @return
      */
-     Position replaceText(Position startPos, Position endPos, String newValue) {
+    Position replaceText(Position startPos, Position endPos, String newValue) {
         XWPFRun run = runs.get(startPos.runIndex);
         String text;
         text = run.getText(0);
@@ -99,26 +93,31 @@ public class RunsProcessor {
                 // Append the tail after ${var}:
                 sb.append(text.substring(endPos.runCharAt + 1));
             }
-            run.setText(sb.toString(), 0);
+            setText(run, sb.toString());
             // Continue with index after actual:
             return new Position(endPos.runIndex, Integer.max(endPos.runCharAt, startPos.runCharAt + newValue.length()));
         }
-        run.setText(sb.toString(), 0);
+        setText(run, sb.toString());
         for (int idx = startPos.runIndex + 1; idx < endPos.runIndex; idx++) {
             // Processing runs in between.
-            runs.get(idx).setText("", 0);
+            setText(runs.get(idx), "");
 
         }
         // Processing last affected run:
         run = runs.get(endPos.runIndex);
         text = run.getText(0);
-        run.setText(text.substring(endPos.runCharAt + 1), 0);
+        setText(run, text.substring(endPos.runCharAt + 1));
         return endPos;
-
     }
+
+    private void setText(XWPFRun run, String text) {
+        run.setText(text, 0);
+        runsText = null; // Force reconstructing of text.
+    }
+
     public boolean processConditionals(boolean hidden) {
         if (hidden) {
-            //      buildText();
+            //      getText();
             //    Matcher beginIfMatcher = beginIfPattern.matcher(text);
 
         } else {
@@ -142,7 +141,10 @@ public class RunsProcessor {
     /**
      * @return Whole text concatenated from all runs.
      */
-    String buildText() {
+    public String getText() {
+        if (runsText != null) {
+            return runsText;
+        }
         StringBuilder sb = new StringBuilder();
         runSizes = new int[runs.size()];
         int i = -1;
@@ -157,8 +159,17 @@ public class RunsProcessor {
             // if (log.isDebugEnabled()) { log.debug("Run[" + i + "]: " + text + ", length=" + runSizes[i]); }
             sb.append(text);
         }
-        return sb.toString();
+        runsText = sb.toString();
+        return runsText;
         // if (log.isDebugEnabled()) { log.debug(text); }
+    }
+
+    public Pattern getVariablePattern() {
+        return variablePattern;
+    }
+
+    public void setVariablePattern(Pattern variablePattern) {
+        this.variablePattern = variablePattern;
     }
 
     class Position implements Comparable<Position> {

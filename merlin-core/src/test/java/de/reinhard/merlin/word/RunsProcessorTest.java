@@ -39,8 +39,8 @@ public class RunsProcessorTest {
         for (String str : runStrings) {
             runs.add(createRun(str));
         }
-        RunsProcessor runsParser = new RunsProcessor(runs, null);
-        runsParser.buildText();
+        RunsProcessor runsParser = new RunsProcessor(runs);
+        runsParser.getText();
         RunsProcessor.Position position = runsParser.getRunIdxAndPosition(pos);
         assertEquals(runIdx, position.runIndex, "Run index.");
         assertEquals(runIdxPos, position.runCharAt, "Run index position.");
