@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 public class Conditional implements Comparable<Conditional> {
     private static Logger log = LoggerFactory.getLogger(Conditional.class);
 
-    static Pattern beginIfPattern = Pattern.compile("\\{if\\s+(" + RunsProcessor.IDENTIFIER_REGEXP + ")\\s*(!?=|!?\\s*in)\\s*(.*)\\s*\\}");
+    static Pattern beginIfPattern = Pattern.compile("\\{if\\s+(" + RunsProcessor.IDENTIFIER_REGEXP + ")\\s*(!?=|!?\\s*in)\\s*([^\\}]*)\\s*\\}");
     static Pattern endIfPattern = Pattern.compile("\\{endif\\}");
 
 
@@ -56,6 +56,10 @@ public class Conditional implements Comparable<Conditional> {
 
     public String getVariable() {
         return variable;
+    }
+
+    public ConditionalType getType() {
+        return type;
     }
 
     public String[] getValues() {

@@ -15,12 +15,12 @@ public class ConditionalTest {
 
     @Test
     public void regexpTest() {
-        assertMatcher("{if Arbeitszeit = „Teilzeit“}", "Arbeitszeit", "=", "Teilzeit");
-        assertMatcher("{if Arbeitszeit = ‚Teilzeit‘}", "Arbeitszeit", "=", "Teilzeit");
-        assertMatcher("{if Arbeitszeit != ‚Vollzeit‘}", "Arbeitszeit", "!=", "Vollzeit");
-        assertMatcher("{if Arbeitszeit in ‚Vollzeit‘}", "Arbeitszeit", "in", "Vollzeit");
-        assertMatcher("{if Arbeitszeit !in ‚Vollzeit‘}", "Arbeitszeit", "!in", "Vollzeit");
-        assertMatcher("{if Arbeitszeit !in ‚Vollzeit\"}", "Arbeitszeit", "!in", "Vollzeit\"");
+        assertMatcher("{if Arbeitszeit = „Teilzeit“}...", "Arbeitszeit", "=", "Teilzeit");
+        assertMatcher("{if Arbeitszeit = ‚Teilzeit‘}...", "Arbeitszeit", "=", "Teilzeit");
+        assertMatcher("{if Arbeitszeit != ‚Vollzeit‘}...", "Arbeitszeit", "!=", "Vollzeit");
+        assertMatcher("{if Arbeitszeit in ‚Vollzeit‘}...", "Arbeitszeit", "in", "Vollzeit");
+        assertMatcher("{if Arbeitszeit !in ‚Vollzeit‘}...", "Arbeitszeit", "!in", "Vollzeit");
+        assertMatcher("{if Arbeitszeit !in ‚Vollzeit\"}...", "Arbeitszeit", "!in", "Vollzeit\"");
         assertMatcher("{if name = „Horst's“}", "name", "=", "Horst's");
     }
 
