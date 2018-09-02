@@ -10,9 +10,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ConditionalsTest {
     private Logger log = LoggerFactory.getLogger(ConditionalsTest.class);
@@ -39,8 +37,8 @@ public class ConditionalsTest {
         TestHelper.createParagraph(doc, "First paragraph"); // 0
         TestHelper.createParagraph(doc, "{if var != 'test'}Headline"); // 1
         TestHelper.createParagraph(doc, "Is the lazy fox really lazy? {if fox = 'lazy'} Yes, he is."); // 2
-        TestHelper.createParagraph(doc, "{endif}{if fox != 'lazy'} No, he isn't.{endif}"); // 3
-        TestHelper.createParagraph(doc, "Now, everybody knows the answer.{endif}"); // 4
+        TestHelper.createParagraph(doc, "{endif}", "{if fox != 'lazy'}", " No, he isn't.{endif}"); // 3
+        TestHelper.createParagraph(doc, "Now, everybody ", "knows the answer.{endif}"); // 4
         TestHelper.createParagraph(doc, "Enjoy your life.{if fox in 'red', 'wild'}"); // 5
         TestHelper.createParagraph(doc, "Enjoy your life."); // 5
         TestHelper.createParagraph(doc, "Enjoy your life.{endif}"); // 5
@@ -61,8 +59,21 @@ public class ConditionalsTest {
         variables.put("var", "not test");
         variables.put("fox", "lazy");
         conditionals.process(variables);
-        for (XWPFParagraph par:doc.getParagraphs()) {
-            log.debug(par.getText());
+        Iterator<XWPFParagraph> pit = doc.getParagraphs().iterator();
+        testRuns(pit.next(), "First paragraph");
+        testRuns(pit.next(), "Headline");
+        testRuns(pit.next(), "Is the lazy fox really lazy?  Yes, he is.");
+        testRuns(pit.next(), "Now, everybody ", "knows the answer.");
+        testRuns(pit.next(), "Enjoy your life.");
+        assertFalse(pit.hasNext());
+    }
+
+    private void testRuns(XWPFParagraph paragraph, String... runs) {
+        assertEquals(runs.length, paragraph.getRuns().size());
+        int i = 0;
+        for (String run:runs) {
+            assertEquals(run, paragraph.getRuns().get(i).getText(0));
+            i++;
         }
     }
 
