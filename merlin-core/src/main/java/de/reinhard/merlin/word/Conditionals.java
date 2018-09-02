@@ -103,18 +103,28 @@ public class Conditionals {
         for (int elementNo = fromNo; elementNo <= toNo; elementNo++) {
             IBodyElement element = bodyElementsMap.get(elementNo);
             if (element instanceof XWPFParagraph) {
+                XWPFParagraph paragraph = (XWPFParagraph)element;
                 if (elementNo == fromNo) {
                     RunsProcessor processor = new RunsProcessor(((XWPFParagraph) element).getRuns());
                     if (elementNo == toNo) {
                         processor.replaceText(removeRange.getStartPosition(), removeRange.getEndPosition(), "");
+                        if (processor.getText().length() == 0) {
+                            document.markParagraphToRemove(paragraph);
+                        }
                     } else {
                         processor.replaceText(removeRange.getStartPosition(), processor.getEnd(elementNo), "");
+                        if (processor.getText().length() == 0) {
+                            document.markParagraphToRemove(paragraph);
+                        }
                     }
                 } else if (elementNo == toNo) {
                     RunsProcessor processor = new RunsProcessor(((XWPFParagraph) element).getRuns());
                     processor.replaceText(new DocumentPosition(elementNo, 0, 0), removeRange.getEndPosition(), "");
+                    if (processor.getText().length() == 0) {
+                        document.markParagraphToRemove(paragraph);
+                    }
                 } else {
-                    document.markParagraphToRemove(((XWPFParagraph) element));
+                    document.markParagraphToRemove(paragraph);
                 }
             } else {
                 // Not yet supported.
