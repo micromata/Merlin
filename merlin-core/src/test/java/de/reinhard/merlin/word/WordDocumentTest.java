@@ -80,41 +80,41 @@ public class WordDocumentTest {
     private WordDocument processDocument(Map<String, String> variables) {
         XWPFDocument doc = new XWPFDocument();
         List<Entry> exptected = new LinkedList<>();
-        add(exptected, createParagraph(doc, "Hello ${var}."),
+        add(exptected, TestHelper.createParagraph(doc, "Hello ${var}."),
                 new String[]{"Hello world."});
-        add(exptected, createParagraph(doc, "Hello ${var}"),
+        add(exptected, TestHelper.createParagraph(doc, "Hello ${var}"),
                 new String[]{"Hello world"});
-        add(exptected, createParagraph(doc, "${var}"),
+        add(exptected, TestHelper.createParagraph(doc, "${var}"),
                 new String[]{"world"});
-        add(exptected, createParagraph(doc, "Hello ", "$", "{var}"),
+        add(exptected, TestHelper.createParagraph(doc, "Hello ", "$", "{var}"),
                 new String[]{"Hello ", "world", ""});
-        add(exptected, createParagraph(doc, ""),
+        add(exptected, TestHelper.createParagraph(doc, ""),
                 new String[]{""});
-        add(exptected, createParagraph(doc, "", null, "Hello ${", "var}"),
+        add(exptected, TestHelper.createParagraph(doc, "", null, "Hello ${", "var}"),
                 new String[]{"", null, "Hello world", ""});
-        add(exptected, createParagraph(doc, "", null, "Hello ", "$", "{", "v", "ar", "}", "test"),
+        add(exptected, TestHelper.createParagraph(doc, "", null, "Hello ", "$", "{", "v", "ar", "}", "test"),
                 new String[]{"", null, "Hello ", "world", "", "", "", "", "test"});
-        add(exptected, createParagraph(doc, "", null, "Hello ${", "var}. What about ${name}?"),
+        add(exptected, TestHelper.createParagraph(doc, "", null, "Hello ${", "var}. What about ${name}?"),
                 new String[]{"", null, "Hello world", ". What about ${name}?"});
-        add(exptected, createParagraph(doc, "Hello ${var}. What about $", "{name}?"),
+        add(exptected, TestHelper.createParagraph(doc, "Hello ${var}. What about $", "{name}?"),
                 new String[]{"Hello world. What about $", "{name}?"});
-        add(exptected, createParagraph(doc, "${name}", "Hello ${var}."),
+        add(exptected, TestHelper.createParagraph(doc, "${name}", "Hello ${var}."),
                 new String[]{"${name}", "Hello world."});
-        add(exptected, createParagraph(doc, "$", "{name}", "Hello ${var}."),
+        add(exptected, TestHelper.createParagraph(doc, "$", "{name}", "Hello ${var}."),
                 new String[]{"$", "{name}", "Hello world."});
-        add(exptected, createParagraph(doc, "Endless loop test: ${endlessLoop}."),
+        add(exptected, TestHelper.createParagraph(doc, "Endless loop test: ${endlessLoop}."),
                 new String[]{"Endless loop test: ${endlessLoop}."});
-        add(exptected, createParagraph(doc, "Endless loop test 2: ${endlessLoop2}."),
+        add(exptected, TestHelper.createParagraph(doc, "Endless loop test 2: ${endlessLoop2}."),
                 new String[]{"Endless loop test 2: ... ${endlessLoop} ...."});
-        add(exptected, createParagraph(doc, "Endless loop test 3: ${endlessLoop3}."),
+        add(exptected, TestHelper.createParagraph(doc, "Endless loop test 3: ${endlessLoop3}."),
                 new String[]{"Endless loop test 3: ....................................... ${endlessLoop} ...."});
-        add(exptected, createParagraph(doc, "Endless loop test 3: ${end", "lessLoop3}."),
+        add(exptected, TestHelper.createParagraph(doc, "Endless loop test 3: ${end", "lessLoop3}."),
                 new String[]{"Endless loop test 3: ....................................... ${endlessLoop} ...", "."});
         WordDocument word = new WordDocument(doc);
         word.process(variables);
         int no = 0;
         for (Entry entry : exptected) {
-            assertRuns(entry.par, no++, entry.expected);
+            TestHelper.assertRuns(entry.par, no++, entry.expected);
         }
         /*
         for (XWPFParagraph par : doc.getParagraphs()) {
@@ -123,25 +123,6 @@ public class WordDocumentTest {
                 log.debug(" Run: " + run.getText(0));}
         }*/
         return word;
-    }
-
-    private XWPFParagraph createParagraph(XWPFDocument document, String... runs) {
-        XWPFParagraph paragraph = document.createParagraph();
-        if (runs == null) {
-            return paragraph;
-        }
-        for (String run : runs) {
-            paragraph.createRun().setText(run);
-        }
-        return paragraph;
-    }
-
-    private void assertRuns(XWPFParagraph paragraph, int no, String... expected) {
-        List<XWPFRun> runs = paragraph.getRuns();
-        assertEquals(expected.length, runs.size(), "Number of runs for " + no + ": " + String.join("|", expected));
-        for (int i = 0; i < expected.length; i++) {
-            assertEquals(expected[i], runs.get(i).getText(0), "Run text for " + no + " " + String.join(",", expected));
-        }
     }
 
     private void add(List<Entry> list, XWPFParagraph par, String... expected) {

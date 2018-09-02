@@ -70,4 +70,8 @@ public class Conditionals {
         }
         return last;
     }
+
+    public SortedSet<Conditional> getConditionals() {
+        return conditionals;
+    }
 }
