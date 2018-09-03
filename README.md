@@ -9,8 +9,8 @@ Magic and customer-friendly Excel, Word and configuration acrobatics.
   * The user can fix the validation errors and re-upload the same Excel. Merlin will remove the validation errors, highlightings etc.
 * It's fully internationalized (all validation messages and hints will be localized). English and German is available.
 
-###Example
-* See folder __examples__: Test.xlsx is the original Excel file and Test-result*.xls are the result files containing the localized validation errors.
+### Example
+* See folder __examples__: Test.xlsx is the original Excel file ```Test.xlsx``` and ```Test-result*.xls``` are the result files containing the localized validation errors.
 
 ## Word templates (docx) 
 * Supports the replacement of variables (defined outside, e. g. in Excel or your program code).
