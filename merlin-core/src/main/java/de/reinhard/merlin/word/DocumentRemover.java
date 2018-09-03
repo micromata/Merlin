@@ -8,15 +8,15 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
-public class DocumentModifier {
-    private Logger log = LoggerFactory.getLogger(DocumentModifier.class);
+public class DocumentRemover {
+    private Logger log = LoggerFactory.getLogger(DocumentRemover.class);
 
-    private TreeSet<DocumentAction> modifiers = new TreeSet<>();
+    private TreeSet<DocumentRemoveEntry> modifiers = new TreeSet<>();
     private WordDocument document;
     private Map<Integer, IBodyElement> bodyElementsMap;
     private Set<Integer> paragraphsToRemove = new HashSet<>();
 
-    public DocumentModifier(WordDocument document) {
+    public DocumentRemover(WordDocument document) {
         this.document = document;
         int bodyElementCounter = 0;
         bodyElementsMap = new HashMap<>();
@@ -28,25 +28,17 @@ public class DocumentModifier {
     /**
      * @return this for chaining.
      */
-    public DocumentModifier action() {
-        Iterator<DocumentAction> it = modifiers.descendingIterator();
+    public DocumentRemover action() {
+        Iterator<DocumentRemoveEntry> it = modifiers.descendingIterator();
         while (it.hasNext()) {
-            DocumentAction action = it.next();
-            switch (action.getType()) {
-                case REMOVE:
-                    removeRange(action.getRange());
-                    break;
-                case REPLACE:
-                    break;
-                case INSERT:
-                    throw new UnsupportedOperationException("Action type " + action.getType() + " not yet implementd.");
-            }
+            DocumentRemoveEntry action = it.next();
+            removeRange(action.getRange());
         }
         return this;
     }
 
-    public void add(DocumentAction modifier) {
-        for (DocumentAction mod : modifiers) {
+    public void add(DocumentRemoveEntry modifier) {
+        for (DocumentRemoveEntry mod : modifiers) {
             if (mod.getRange().isIn(modifier.getRange().getStartPosition()) ||
                     mod.getRange().isIn(modifier.getRange().getEndPosition())) {
                 log.warn("Given modifier collidates with already existing range. Existing: " + mod + ", new: " + modifier);
@@ -67,31 +59,6 @@ public class DocumentModifier {
                 doc.removeBodyElement(i);
             }
         }
-    }
-
-    void markParagraphToRemove(XWPFParagraph paragraph) {
-        XWPFDocument doc = document.getDocument();
-        List<IBodyElement> elements = doc.getBodyElements();
-        for (int i = 0; i < elements.size(); i++) {
-            if (elements.get(i) == paragraph) {
-                paragraphsToRemove.add(i);
-                return;
-            }
-        }
-        log.error("Paragraph not found to remove: " + paragraph.getText());
-    }
-
-    private void replace(DocumentAction action) {
-        DocumentRange range = action.getRange();
-        if (range.getStartPosition().getBodyElementNumber() != range.getEndPosition().getBodyElementNumber()) {
-            throw new IllegalArgumentException("Can only replace text inside one paragraph (runs).");
-        }
-        IBodyElement element = bodyElementsMap.get(range.getStartPosition().getBodyElementNumber());
-        if (!(element instanceof XWPFParagraph)) {
-            throw new IllegalArgumentException("Replacement is only supported for paragraphs, not for " + element.getClass().toString());
-        }
-        RunsProcessor processor = new RunsProcessor(((XWPFParagraph) element).getRuns());
-        processor.replaceText(range.getStartPosition(), range.getEndPosition(), action.getNewText());
     }
 
     private void removeRange(DocumentRange removeRange) {

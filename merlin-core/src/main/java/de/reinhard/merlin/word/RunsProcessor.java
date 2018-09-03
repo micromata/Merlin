@@ -1,13 +1,13 @@
 package de.reinhard.merlin.word;
 
-import org.apache.commons.lang.builder.CompareToBuilder;
-import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -22,6 +22,7 @@ public class RunsProcessor {
     private int[] runSizes;
     private Pattern variablePattern;
     private String runsText;
+    private TreeSet<ReplaceEntry> replaceEntries;
 
     private List<XWPFRun> runs;
 
@@ -34,27 +35,8 @@ public class RunsProcessor {
         if (runs == null || runs.size() == 0) {
             return;
         }
-        int paranoiaCounter = 0;
-        String runsText;
-        DocumentPosition startPos = null;
-        do {
-            // loop until no further replacements will be found.
-            runsText = getText(); // Rebuild text after every variable substitution.
-            //logDebugRuns("Runs at step " + paranoiaCounter + ": ");
-            if (paranoiaCounter++ > 1000) {
-                throw new IllegalStateException("End-less loop protection! " + "text = " + runsText);
-            }
-            startPos = replace(runsText, startPos, variables);
-        } while (startPos != null);
-        //logDebugRuns("Runs after step " + paranoiaCounter + ": ");
-    }
-
-    /**
-     * @param runsText Whole text concatenated from all runs.
-     * @param lastPos  Position of last replaced region or null for starting.
-     * @return
-     */
-    private DocumentPosition replace(String runsText, DocumentPosition lastPos, Map<String, ?> variables) {
+        replaceEntries = new TreeSet<>();
+        String runsText = getText();
         Matcher matcher = variablePattern.matcher(runsText);
         //log.debug("Start pos: " + lastPos);
         while (matcher.find()) {
@@ -66,14 +48,14 @@ public class RunsProcessor {
             String value = objectValue.toString();
             int start = matcher.start();
             int end = matcher.end();
-            DocumentPosition startPos = getRunIdxAndPosition(-1, start);
-            if (startPos == null || startPos.compareTo(lastPos) <= 0) {
-                // startPos is not after last pos.
-                continue;
-            }
-            return replaceText(startPos, getRunIdxAndPosition(-1, end - 1), value);
+            replaceEntries.add(new ReplaceEntry(start, end, value));
         }
-        return null;
+        Iterator<ReplaceEntry> it = replaceEntries.descendingIterator();
+        while (it.hasNext()) {
+            ReplaceEntry entry = it.next();
+            DocumentPosition startPos = getRunIdxAndPosition(-1, entry.start);
+            replaceText(startPos, getRunIdxAndPosition(-1, entry.end - 1), entry.newText);
+        }
     }
 
     DocumentPosition getEnd(int bodyElementNo) {
@@ -87,7 +69,7 @@ public class RunsProcessor {
      * @param newValue
      * @return
      */
-    DocumentPosition replaceText(DocumentPosition startPos, DocumentPosition endPos, String newValue) {
+    void replaceText(DocumentPosition startPos, DocumentPosition endPos, String newValue) {
         XWPFRun run = runs.get(startPos.getRunIndex());
         String text;
         text = run.getText(0);
@@ -101,8 +83,7 @@ public class RunsProcessor {
             }
             setText(run, sb.toString());
             // Continue with index after actual:
-            return new DocumentPosition(-1, endPos.getRunIndex(), Integer.max(endPos.getRunCharAt(),
-                    startPos.getRunCharAt() + newValue.length()));
+            return;
         }
         setText(run, sb.toString());
         for (int idx = startPos.getRunIndex() + 1; idx < endPos.getRunIndex(); idx++) {
@@ -114,7 +95,6 @@ public class RunsProcessor {
         run = runs.get(endPos.getRunIndex());
         text = run.getText(0);
         setText(run, text.substring(endPos.getRunCharAt() + 1));
-        return endPos;
     }
 
     private void setText(XWPFRun run, String text) {
@@ -176,5 +156,27 @@ public class RunsProcessor {
             sb.append(i++).append("=[").append(run.getText(0)).append("]");
         }
         log.debug(prefix + sb.toString());
+    }
+
+    private class ReplaceEntry implements Comparable<ReplaceEntry> {
+        int start;
+        int end;
+        String newText;
+
+        ReplaceEntry(int start, int end, String newText) {
+            this.start = start;
+            this.end = end;
+            this.newText = newText;
+        }
+
+        @Override
+        public int compareTo(ReplaceEntry o) {
+            if (start == o.start) {
+                return 0;
+            } else if (start < o.start) {
+                return -1;
+            }
+            return 1;
+        }
     }
 }

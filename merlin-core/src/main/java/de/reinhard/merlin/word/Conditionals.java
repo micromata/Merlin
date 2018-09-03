@@ -13,11 +13,11 @@ public class Conditionals {
     private Logger log = LoggerFactory.getLogger(Conditionals.class);
     private SortedSet<Conditional> conditionals;
     WordDocument document;
-    DocumentModifier modifier;
+    DocumentRemover modifier;
 
     Conditionals(WordDocument document) {
         this.document = document;
-        modifier = new DocumentModifier(document);
+        modifier = new DocumentRemover(document);
     }
 
     /**
@@ -83,15 +83,15 @@ public class Conditionals {
     void process(Conditional conditional, Map<String, ?> variables) {
         if (conditional.matches(variables) == false) {
             // Remove all content covered by this conditional.
-            modifier.add(new DocumentAction(DocumentActionType.REMOVE, conditional.getRange()));
+            modifier.add(new DocumentRemoveEntry(conditional.getRange()));
         } else {
-            modifier.add(new DocumentAction(DocumentActionType.REMOVE, conditional.getEndifExpressionRange()));
+            modifier.add(new DocumentRemoveEntry(conditional.getEndifExpressionRange()));
             if (conditional.getChildConditionals() != null) {
                 for (Conditional child : conditional.getChildConditionals()) {
                     process(child, variables);
                 }
             }
-            modifier.add(new DocumentAction(DocumentActionType.REMOVE, conditional.getIfExpressionRange()));
+            modifier.add(new DocumentRemoveEntry(conditional.getIfExpressionRange()));
         }
     }
 
