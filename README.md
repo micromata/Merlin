@@ -63,3 +63,5 @@ This is an example implementation of using Excel as configuration tool. In Excel
 Via templates the different configuration files for OpenHab are automatically generated.
 
 Forget Copy&Paste and vi (in this context). Make your changes convenient in Excel and let do Merlin all the rest.
+
+Please refer examples/OpenHab-KNX-Definitions.xlsx for a first impression.
