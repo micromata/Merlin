@@ -37,7 +37,7 @@ public class ConditionalsTest {
         TestHelper.createParagraph(doc, "First paragraph"); // 0
         TestHelper.createParagraph(doc, "{if var != 'test'}Headline"); // 1
         TestHelper.createParagraph(doc, "Is the lazy fox really lazy? {if fox = 'lazy'} Yes, he is."); // 2
-        TestHelper.createParagraph(doc, "{endif}", "{if fox != 'lazy'}", " No, he isn't.{endif}"); // 3
+        TestHelper.createParagraph(doc, "{endif}{if fox != 'lazy'} No, he isn't.{endif}"); // 3
         TestHelper.createParagraph(doc, "Now, everybody ", "knows the answer.{endif}"); // 4
         TestHelper.createParagraph(doc, "Enjoy your life.{if fox in 'red', 'wild'}"); // 5
         TestHelper.createParagraph(doc, "Enjoy your life."); // 5

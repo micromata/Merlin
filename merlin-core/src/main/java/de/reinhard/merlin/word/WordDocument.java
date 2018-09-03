@@ -16,8 +16,6 @@ import java.util.Map;
 
 public class WordDocument {
     private Logger log = LoggerFactory.getLogger(WordDocument.class);
-    static final String MAGIC_MARK_TO_REMOVE = "{{REMOVE_THIS_XWPFParagraph}}";
-
     XWPFDocument document;
 
     public WordDocument(XWPFDocument document) {
@@ -78,34 +76,6 @@ public class WordDocument {
                 log.warn("Unsupported body element: " + element);
             }
         }
-    }
-
-    void markParagraphToRemove(XWPFParagraph paragraph) {
-        for (XWPFParagraph par : document.getParagraphs()) {
-            if (par == paragraph) {
-                List<XWPFRun> runs = par.getRuns();
-                if (runs != null && runs.size() > 0) {
-                    runs.get(0).setText(MAGIC_MARK_TO_REMOVE, 0);
-                }
-                return;
-            }
-        }
-        log.error("Paragraph not found to remove: " + paragraph.getText());
-    }
-
-    void removeMarkedParagraphs() {
-
-        List<XWPFParagraph> paragraphs =  document.getParagraphs();
-        for (int i = paragraphs.size() - 1; i >= 0; i--) {
-            XWPFParagraph par = paragraphs.get(i);
-            if (par.getRuns() == null || par.getRuns().size() == 0) {
-                continue;
-            }
-            if (MAGIC_MARK_TO_REMOVE.equals(par.getRuns().get(0).getText(0))) {
-                document.removeBodyElement(i);
-            }
-        }
-
     }
 
     private void replace(List<XWPFRun> runs, Map<String, String> variables) {

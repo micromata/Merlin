@@ -13,11 +13,11 @@ public class Conditionals {
     private Logger log = LoggerFactory.getLogger(Conditionals.class);
     private SortedSet<Conditional> conditionals;
     WordDocument document;
-
-    private Map<Integer, IBodyElement> bodyElementsMap;
+    DocumentModifier modifier;
 
     Conditionals(WordDocument document) {
         this.document = document;
+        modifier = new DocumentModifier(document);
     }
 
     /**
@@ -26,12 +26,10 @@ public class Conditionals {
     void read() {
         List<IBodyElement> elements = document.getDocument().getBodyElements();
         conditionals = new TreeSet<>();
-        bodyElementsMap = new HashMap<>();
         SortedSet<DocumentRange> allControls = new TreeSet<>();
         Map<DocumentRange, Conditional> conditionalMap = new HashMap<>();
         int bodyElementCounter = 0;
         for (IBodyElement element : elements) {
-            bodyElementsMap.put(bodyElementCounter, element);
             if (element instanceof XWPFParagraph) {
                 XWPFParagraph paragraph = (XWPFParagraph) element;
                 List<XWPFRun> runs = paragraph.getRuns();
@@ -79,58 +77,24 @@ public class Conditionals {
             }
             process(conditional, variables);
         }
-        document.removeMarkedParagraphs();
+        modifier.action().removeMarkedParagraphs();
     }
 
     void process(Conditional conditional, Map<String, ?> variables) {
         if (conditional.matches(variables) == false) {
             // Remove all content covered by this conditional.
-            removeRange(conditional.getRange());
+            modifier.add(new DocumentAction(DocumentActionType.REMOVE, conditional.getRange()));
         } else {
-            removeRange(conditional.getEndifExpressionRange());
+            modifier.add(new DocumentAction(DocumentActionType.REMOVE, conditional.getEndifExpressionRange()));
             if (conditional.getChildConditionals() != null) {
                 for (Conditional child : conditional.getChildConditionals()) {
                     process(child, variables);
                 }
             }
-            removeRange(conditional.getIfExpressionRange());
+            modifier.add(new DocumentAction(DocumentActionType.REMOVE, conditional.getIfExpressionRange()));
         }
     }
 
-    private void removeRange(DocumentRange removeRange) {
-        int fromNo = removeRange.getStartPosition().getBodyElementNumber();
-        int toNo = removeRange.getEndPosition().getBodyElementNumber();
-        for (int elementNo = fromNo; elementNo <= toNo; elementNo++) {
-            IBodyElement element = bodyElementsMap.get(elementNo);
-            if (element instanceof XWPFParagraph) {
-                XWPFParagraph paragraph = (XWPFParagraph)element;
-                if (elementNo == fromNo) {
-                    RunsProcessor processor = new RunsProcessor(((XWPFParagraph) element).getRuns());
-                    if (elementNo == toNo) {
-                        processor.replaceText(removeRange.getStartPosition(), removeRange.getEndPosition(), "");
-                        if (processor.getText().length() == 0) {
-                            document.markParagraphToRemove(paragraph);
-                        }
-                    } else {
-                        processor.replaceText(removeRange.getStartPosition(), processor.getEnd(elementNo), "");
-                        if (processor.getText().length() == 0) {
-                            document.markParagraphToRemove(paragraph);
-                        }
-                    }
-                } else if (elementNo == toNo) {
-                    RunsProcessor processor = new RunsProcessor(((XWPFParagraph) element).getRuns());
-                    processor.replaceText(new DocumentPosition(elementNo, 0, 0), removeRange.getEndPosition(), "");
-                    if (processor.getText().length() == 0) {
-                        document.markParagraphToRemove(paragraph);
-                    }
-                } else {
-                    document.markParagraphToRemove(paragraph);
-                }
-            } else {
-                // Not yet supported.
-            }
-        }
-    }
 
     private void read(List<XWPFRun> runs, int bodyElementNumber, SortedSet<DocumentRange> allControls,
                       Map<DocumentRange, Conditional> conditionalMap) {
