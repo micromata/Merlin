@@ -35,6 +35,7 @@ Examples for if-expressions:
 * variable!='value': Will be true, if the variable has __not__ the given value.
 * variable in "blue", "red", "yellow": Will be true, if the variable has one of the given values.
 * variable ! in "blue", "red", "yellow": Will be true, if the variable has none of the given values.
+* Cascading of if-statements is supported.
 
 ## Configuring and templating with Excel
  configuration including configuration also with Excel, CSV and user-friendly Excel-Upload
