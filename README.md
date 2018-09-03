@@ -56,3 +56,10 @@ using Merlin for own Word templates.
 ## Configuring and templating with Excel
 * configuration including configuration also with Excel, CSV and user-friendly Excel-Upload
 * Via template mechanism you can create config files from the excel files.
+
+## merlin-smarthome
+This is an example implementation of using Excel as configuration tool. In Excel all smart home items are defined.
+
+Via templates the different configuration files for OpenHab are automatically generated.
+
+Forget Copy&Paste and vi (in this context). Make your changes convenient in Excel and let do Merlin all the rest.
