@@ -19,8 +19,9 @@ public class KnxThingsReader {
 
     public void readKNXThings(ExcelWorkbook excelReader) {
         ExcelSheet sheet = excelReader.getSheet(SHEET_NAME);
-        sheet.getColumnDef("Id").addColumnListener(new ExcelColumnValidator().setUnique().setRequired());
-        sheet.getColumnDef("Device").addColumnListener(new ExcelColumnValidator().setRequired());
+        sheet.registerColumn("Id", new ExcelColumnValidator().setUnique().setRequired());
+        sheet.registerColumn("Device", new ExcelColumnValidator().setRequired());
+        sheet.registerColumns("Type", "Icon", "KNX-Channel-Type", "Sitemap-Frame", "Group", "ga", "Label", "Format", "Persistency");
         sheet.analyze(true);
         if (sheet.hasValidationErrors()) {
             for(ResultMessage msg : sheet.getAllValidationErrors()) {
