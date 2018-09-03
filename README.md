@@ -7,6 +7,10 @@ Magic and customer-friendly Excel, Word and configuration acrobatics.
   * Highlights the cell with validation errors and shows the validation error as comment.
   * Shows the validation errors of each cell of a row in a appended column.
   * The user can fix the validation errors and re-upload the same Excel. Merlin will remove the validation errors, highlightings etc.
+* It's fully internationalized (all validation messages and hints will be localized). English and German is available.
+
+###Example
+* See folder __examples__: Test.xlsx is the original Excel file and Test-result*.xls are the result files containing the localized validation errors.
 
 ## Word templates (docx) 
 * Supports the replacement of variables (defined outside, e. g. in Excel or your program code).
@@ -36,6 +40,9 @@ Examples for if-expressions:
 * variable in "blue", "red", "yellow": Will be true, if the variable has one of the given values.
 * variable ! in "blue", "red", "yellow": Will be true, if the variable has none of the given values.
 * Cascading of if-statements is supported.
+
+### Example
+See the examples folder with the template file ```Contract-template.docx``` and the result file after processed by Merlin ```Contract.docx```.
 
 ## Word templates and serial letters
 * Supports serial document function: Define your variables for a given Word template in Excel columns and
