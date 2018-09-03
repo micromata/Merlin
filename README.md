@@ -37,5 +37,15 @@ Examples for if-expressions:
 * variable ! in "blue", "red", "yellow": Will be true, if the variable has none of the given values.
 * Cascading of if-statements is supported.
 
+## Word templates and serial letters
+* Supports serial document function: Define your variables for a given Word template in Excel columns and
+Merlin will create a Word document for each row.
+This feature is under construction.
+
+## Merlin desktop app
+The Merlin desktop app is under construction. It will be a simple Desktop app for dummy users for
+using Merlin for own Word templates.
+
 ## Configuring and templating with Excel
- configuration including configuration also with Excel, CSV and user-friendly Excel-Upload
+* configuration including configuration also with Excel, CSV and user-friendly Excel-Upload
+* Via template mechanism you can create config files from the excel files.
