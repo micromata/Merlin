@@ -18,7 +18,7 @@ Magic and customer-friendly Excel, Word and configuration acrobatics.
 
 Example-template.docx
 > This is an example word content for __${user}__.
-> __{if fox = "lazy"}__ The _${color}_ fox is lazy.__{endif}__
+> __{if fox = "lazy"}__ The __${color}__ fox is lazy.__{endif}__
 > __{if color != "black"}__ The fox isn't black but he __{if fox = "lazy"}__ is __{endif}{if fox != "lazy"}__ isn't __{endif}__ lazy.
 > __{endif}__
 
