@@ -1,4 +1,4 @@
-# merlin
+# Merlin
 Magic and customer-friendly Excel, Word and configuration acrobatics.
 
 ## Excel validation (xls and xlsx)
