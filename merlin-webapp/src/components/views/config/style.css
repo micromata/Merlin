@@ -1,0 +1,23 @@
+div.config-form {
+    width: 100%;
+    display: block;
+    font-size: 0;
+    height: 34px;
+    margin: 5px 0;
+}
+
+div.config-form span.config-label, div.config-form span.config-value {
+    display: inline-block;
+    font-size: 16px;
+}
+
+div.config-form span.config-label {
+    width: 15%;
+    font-weight: 700;
+    vertical-align: top;
+}
+
+div.config-form span.config-value {
+    width: 85%;
+    min-height: 22px;
+}
