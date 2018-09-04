@@ -11,10 +11,9 @@ import java.util.*;
 public class DocumentRemover {
     private Logger log = LoggerFactory.getLogger(DocumentRemover.class);
 
-    private List<DocumentRange> modifiers = new ArrayList<>();
+    private List<DocumentRange> modifiers;
     private WordDocument document;
     private Map<Integer, IBodyElement> bodyElementsMap;
-    private Set<Integer> paragraphsToRemove = new HashSet<>();
 
     public DocumentRemover(WordDocument document) {
         this.document = document;
@@ -44,6 +43,7 @@ public class DocumentRemover {
         for (IBodyElement element : document.getDocument().getBodyElements()) {
             bodyElementsMap.put(bodyElementCounter++, element);
         }
+        modifiers = new ArrayList<>();
     }
 
     /**
