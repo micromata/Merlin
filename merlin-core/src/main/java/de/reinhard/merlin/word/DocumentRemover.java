@@ -11,7 +11,7 @@ import java.util.*;
 public class DocumentRemover {
     private Logger log = LoggerFactory.getLogger(DocumentRemover.class);
 
-    private TreeSet<DocumentRemoveEntry> modifiers = new TreeSet<>();
+    private List<DocumentRemoveEntry> modifiers = new ArrayList<>();
     private WordDocument document;
     private Map<Integer, IBodyElement> bodyElementsMap;
     private Set<Integer> paragraphsToRemove = new HashSet<>();
@@ -29,9 +29,8 @@ public class DocumentRemover {
      * @return this for chaining.
      */
     public DocumentRemover action() {
-        Iterator<DocumentRemoveEntry> it = modifiers.descendingIterator();
-        while (it.hasNext()) {
-            DocumentRemoveEntry action = it.next();
+        Collections.sort(modifiers, Collections.reverseOrder());
+        for (DocumentRemoveEntry action : modifiers) {
             removeRange(action.getRange());
         }
         return this;

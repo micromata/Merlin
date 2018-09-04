@@ -4,10 +4,10 @@ import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -22,7 +22,7 @@ public class RunsProcessor {
     private int[] runSizes;
     private Pattern variablePattern;
     private String runsText;
-    private TreeSet<ReplaceEntry> replaceEntries;
+    private List<ReplaceEntry> replaceEntries;
 
     private List<XWPFRun> runs;
 
@@ -35,7 +35,7 @@ public class RunsProcessor {
         if (runs == null || runs.size() == 0) {
             return;
         }
-        replaceEntries = new TreeSet<>();
+        replaceEntries = new ArrayList<>();
         String runsText = getText();
         Matcher matcher = variablePattern.matcher(runsText);
         //log.debug("Start pos: " + lastPos);
@@ -50,9 +50,8 @@ public class RunsProcessor {
             int end = matcher.end();
             replaceEntries.add(new ReplaceEntry(start, end, value));
         }
-        Iterator<ReplaceEntry> it = replaceEntries.descendingIterator();
-        while (it.hasNext()) {
-            ReplaceEntry entry = it.next();
+        Collections.sort(replaceEntries, Collections.reverseOrder());
+        for (ReplaceEntry entry : replaceEntries) {
             DocumentPosition startPos = getRunIdxAndPosition(-1, entry.start);
             replaceText(startPos, getRunIdxAndPosition(-1, entry.end - 1), entry.newText);
         }
