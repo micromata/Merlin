@@ -50,6 +50,7 @@ public class WordDocument {
     public void process(Map<String, String> variables) {
         Conditionals conditionals = new Conditionals(this);
         conditionals.read();
+        conditionals.process(variables);
         replaceVariables(variables);
     }
 

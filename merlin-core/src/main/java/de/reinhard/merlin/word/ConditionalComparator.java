@@ -10,7 +10,7 @@ import java.util.regex.Matcher;
 public class ConditionalComparator extends AbstractConditional {
 
     private static Logger log = LoggerFactory.getLogger(ConditionalComparator.class);
-    private final static double EPSILON = 0.0001;
+    final static double EPSILON = 0.00001;
 
     private double doubleValue;
 
@@ -56,7 +56,7 @@ public class ConditionalComparator extends AbstractConditional {
         }
         switch (type) {
             case LESS_EQUAL:
-                return greaterThan(variableValue, doubleValue) || equals(variableValue, doubleValue);
+                return greaterThan(doubleValue, variableValue) || equals(variableValue, doubleValue);
             case LESS:
                 return greaterThan(doubleValue, variableValue);
             case GREATER_EQUAL:
@@ -65,6 +65,10 @@ public class ConditionalComparator extends AbstractConditional {
                 return greaterThan(variableValue, doubleValue);
         }
         return false;
+    }
+
+    public double getDoubleValue() {
+        return doubleValue;
     }
 
     @Override
@@ -79,11 +83,11 @@ public class ConditionalComparator extends AbstractConditional {
                 .toString();
     }
 
-    private boolean greaterThan(double a, double b) {
+    static boolean greaterThan(double a, double b) {
         return a - b > EPSILON;
     }
 
-    private boolean equals(double a, double b) {
+    static boolean equals(double a, double b) {
         return a == b ? true : Math.abs(a - b) < EPSILON;
     }
 }

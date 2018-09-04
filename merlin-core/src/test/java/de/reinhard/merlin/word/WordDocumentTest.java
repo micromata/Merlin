@@ -29,9 +29,6 @@ public class WordDocumentTest {
         variables.put("Wochenstunden", "30");
         variables.put("Arbeitszeit", "Vollzeit");
         WordDocument document = new WordDocument(new File(Definitions.EXAMPLES_TEST_DIR, "Vertrag.docx"));
-        Conditionals conditionals = new Conditionals(document);
-        conditionals.read();
-        conditionals.process(variables);
         document.process(variables);
         XWPFDocument doc = document.getDocument();
         File file = new File(Definitions.OUTPUT_DIR, "Vertrag.docx");
@@ -78,11 +75,7 @@ public class WordDocumentTest {
         variables.put("endlessLoop", "${endlessLoop}");
         variables.put("endlessLoop2", "... ${endlessLoop} ...");
         variables.put("endlessLoop3", "....................................... ${endlessLoop} ...");
-        WordDocument word = processDocument(variables);
-        XWPFDocument doc = word.getDocument();
-    }
 
-    private WordDocument processDocument(Map<String, String> variables) {
         XWPFDocument doc = new XWPFDocument();
         List<Entry> exptected = new LinkedList<>();
         add(exptected, TestHelper.createParagraph(doc, "1: Hello ${var}."),
@@ -127,7 +120,43 @@ public class WordDocumentTest {
             for (XWPFRun run : par.getRuns()) {
                 log.debug(" Run: " + run.getText(0));}
         }*/
-        return word;
+    }
+
+    @Test
+    public void conditionalsTest() {
+        Map<String, String> variables = new HashMap<>();
+        variables.put("var", "world");
+        variables.put("counter", "42");
+        variables.put("endlessLoop2", "... ${endlessLoop} ...");
+        variables.put("endlessLoop3", "....................................... ${endlessLoop} ...");
+
+        XWPFDocument doc = new XWPFDocument();
+        List<Entry> exptected = new LinkedList<>();
+        add(exptected, TestHelper.createParagraph(doc, "1: Hello {if var = 'world'}Super world{endif}{if var != 'world'}${world}{endif}."),
+                new String[]{"1: Hello Super world."});
+        add(exptected, TestHelper.createParagraph(doc, "2: {if counter > 5}We have more than 5 elements: ${counter}{endif}"),
+                new String[]{"2: We have more than 5 elements: 42"});
+        add(exptected, TestHelper.createParagraph(doc, "3: {if counter > 5}Hello {if var = 'world'}Super world{endif}{if var != 'world'}${world}{endif}.{endif}"),
+                new String[]{"3: Hello Super world."});
+        add(exptected, TestHelper.createParagraph(doc, "4: {if counter <= 42}42 or less: ${counter}{endif}"),
+                new String[]{"4: 42 or less: 42"});
+        add(exptected, TestHelper.createParagraph(doc, "5: {if counter <= 41.99}---{endif}{if counter < 42}---{endif}{if counter > 42}---{endif}{if counter >= 42.1}---{endif}"),
+                new String[]{"5: "});
+        add(exptected, TestHelper.createParagraph(doc, "5: {if counter <= 42}${counter}<=42{endif}, {if counter < 42.5}${counter}<42.5{endif}, {if counter > 41.8}${counter}>41.8{endif}, {if counter >= 42}42>=42{endif}"
+                + ", {if counter = 42}${counter}=42{endif}"),
+                new String[]{"5: 42<=42, 42<42.5, 42>41.8, 42>=42, 42=42"});
+        WordDocument word = new WordDocument(doc);
+        word.process(variables);
+        int no = 0;
+        for (Entry entry : exptected) {
+            TestHelper.assertRuns(entry.par, no++, entry.expected);
+        }
+        /*
+        for (XWPFParagraph par : doc.getParagraphs()) {
+            log.debug("Paragraph: " + par.getText());
+            for (XWPFRun run : par.getRuns()) {
+                log.debug(" Run: " + run.getText(0));}
+        }*/
     }
 
     private void add(List<Entry> list, XWPFParagraph par, String... expected) {
