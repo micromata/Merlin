@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="273.0" prefWidth="361.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.reinhard.merlin.app.javafx.MainController">
+   <children>
+      <ImageView fitHeight="58.0" fitWidth="274.0" layoutX="74.0" layoutY="224.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@Micromata-logo.png" />
+         </image></ImageView>
+      <Button layoutX="157.0" layoutY="117.0" mnemonicParsing="false" onAction="#printOutput" scaleX="2.0" scaleY="2.0" text="Start" textAlignment="CENTER" />
+   </children>
+</Pane>
