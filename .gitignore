@@ -3,6 +3,7 @@
 # Word temporary files #
 ~$*.docx
 
+merlin-app/target
 merlin-core/out/
 merlin-core/target/
 merlin-smarthome/out/
