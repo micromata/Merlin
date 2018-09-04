@@ -1,7 +1,10 @@
 package de.reinhard.merlin.excel;
 
 import de.reinhard.merlin.I18n;
-import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.IndexedColors;
 
 public class ExcelWriterContext {
     private boolean addCellComments = true;

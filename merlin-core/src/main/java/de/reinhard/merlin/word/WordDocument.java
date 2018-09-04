@@ -10,7 +10,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 
 public class WordDocument {
@@ -58,16 +57,13 @@ public class WordDocument {
         for (IBodyElement element : document.getBodyElements()) {
             if (element instanceof XWPFParagraph) {
                 XWPFParagraph paragraph = (XWPFParagraph) element;
-                List<XWPFRun> runs = paragraph.getRuns();
-                if (runs != null) {
-                    replace(runs, variables);
-                }
+                new RunsProcessor(paragraph).replace(variables);
             } else if (element instanceof XWPFTable) {
                 XWPFTable table = (XWPFTable) element;
                 for (XWPFTableRow row : table.getRows()) {
                     for (XWPFTableCell cell : row.getTableCells()) {
                         for (XWPFParagraph p : cell.getParagraphs()) {
-                            replace(p.getRuns(), variables);
+                            new RunsProcessor(p).replace(variables);
                         }
                     }
                 }
@@ -75,10 +71,5 @@ public class WordDocument {
                 log.warn("Unsupported body element: " + element);
             }
         }
-    }
-
-    private void replace(List<XWPFRun> runs, Map<String, String> variables) {
-        RunsProcessor processor = new RunsProcessor(runs);
-        processor.replace(variables);
     }
 }

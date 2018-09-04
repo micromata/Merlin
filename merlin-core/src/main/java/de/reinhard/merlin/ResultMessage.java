@@ -1,8 +1,5 @@
 package de.reinhard.merlin;
 
-import java.text.MessageFormat;
-import java.util.ResourceBundle;
-
 /**
  * Used for validation messages etc. Supports own internationalization and defining of messages.
  */

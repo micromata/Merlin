@@ -2,7 +2,6 @@ package de.reinhard.merlin.word;
 
 import org.apache.poi.xwpf.usermodel.IBodyElement;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
-import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,8 +11,8 @@ import java.util.regex.Matcher;
 public class Conditionals {
     private Logger log = LoggerFactory.getLogger(Conditionals.class);
     private SortedSet<Conditional> conditionals;
-    WordDocument document;
-    DocumentRemover remover;
+    private WordDocument document;
+    private DocumentRemover remover;
 
     Conditionals(WordDocument document) {
         this.document = document;
@@ -32,10 +31,7 @@ public class Conditionals {
         for (IBodyElement element : elements) {
             if (element instanceof XWPFParagraph) {
                 XWPFParagraph paragraph = (XWPFParagraph) element;
-                List<XWPFRun> runs = paragraph.getRuns();
-                if (runs != null) {
-                    read(runs, bodyElementCounter, allControls, conditionalMap);
-                }
+                read(paragraph, bodyElementCounter, allControls, conditionalMap);
             }
             ++bodyElementCounter;
         }
@@ -96,9 +92,9 @@ public class Conditionals {
     }
 
 
-    private void read(List<XWPFRun> runs, int bodyElementNumber, SortedSet<DocumentRange> allControls,
+    private void read(XWPFParagraph paragraph, int bodyElementNumber, SortedSet<DocumentRange> allControls,
                       Map<DocumentRange, Conditional> conditionalMap) {
-        RunsProcessor processor = new RunsProcessor(runs);
+        RunsProcessor processor = new RunsProcessor(paragraph);
         String text = processor.getText();
         Matcher beginMatcher = Conditional.beginIfPattern.matcher(text);
         while (beginMatcher.find()) {
@@ -116,8 +112,8 @@ public class Conditionals {
         }
     }
 
-    private void process(List<XWPFRun> runs, int bodyElementNumber) {
-        RunsProcessor processor = new RunsProcessor(runs);
+    private void process(XWPFParagraph paragraph, int bodyElementNumber) {
+        RunsProcessor processor = new RunsProcessor(paragraph);
         String text = processor.getText();
 
     }

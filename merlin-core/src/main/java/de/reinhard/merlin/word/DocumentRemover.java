@@ -78,7 +78,7 @@ public class DocumentRemover {
             if (element instanceof XWPFParagraph) {
                 XWPFParagraph paragraph = (XWPFParagraph) element;
                 if (elementNo == fromNo) {
-                    RunsProcessor processor = new RunsProcessor(((XWPFParagraph) element).getRuns());
+                    RunsProcessor processor = new RunsProcessor(((XWPFParagraph) element));
                     if (elementNo == toNo) {
                         processor.replaceText(removeRange.getStartPosition(), removeRange.getEndPosition(), "");
                         if (processor.getText().length() == 0) {
@@ -91,7 +91,7 @@ public class DocumentRemover {
                         }
                     }
                 } else if (elementNo == toNo) {
-                    RunsProcessor processor = new RunsProcessor(((XWPFParagraph) element).getRuns());
+                    RunsProcessor processor = new RunsProcessor(((XWPFParagraph) element));
                     processor.replaceText(new DocumentPosition(elementNo, 0, 0), removeRange.getEndPosition(), "");
                     if (processor.getText().length() == 0) {
                         doc.removeBodyElement(elementNo);

@@ -1,5 +1,6 @@
 package de.reinhard.merlin.word;
 
+import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,12 +22,22 @@ public class RunsProcessor {
     static final Pattern defaultVariablePattern = Pattern.compile("\\$\\{\\s*(" + IDENTIFIER_REGEXP + ")\\s*\\}");
     private int[] runSizes;
     private Pattern variablePattern;
+    private XWPFParagraph paragraph;
     private String runsText;
     private List<ReplaceEntry> replaceEntries;
 
     private List<XWPFRun> runs;
 
-    public RunsProcessor(List<XWPFRun> runs) {
+    public RunsProcessor(XWPFParagraph paragraph) {
+        this(paragraph.getRuns());
+        this.paragraph = paragraph;
+    }
+
+    /**
+     * Only for test class.
+     * @param runs
+     */
+    RunsProcessor(List<XWPFRun> runs) {
         this.runs = runs;
         this.variablePattern = defaultVariablePattern;
     }
@@ -69,31 +80,44 @@ public class RunsProcessor {
      * @return
      */
     void replaceText(DocumentPosition startPos, DocumentPosition endPos, String newValue) {
-        XWPFRun run = runs.get(startPos.getRunIndex());
+        XWPFRun firstRun = runs.get(startPos.getRunIndex());
         String text;
-        text = run.getText(0);
+        text = firstRun.getText(0);
         StringBuilder sb = new StringBuilder();
-        sb.append(text.substring(0, startPos.getRunCharAt()))
-                .append(newValue);
+        sb.append(text.substring(0, startPos.getRunCharAt())).append(newValue);
         if (startPos.getRunIndex() == endPos.getRunIndex()) { // Variable substitution in one signle run.
-            if (endPos.getRunCharAt() < text.length()) {
+            if (endPos.getRunCharAt() + 1 < text.length()) {
                 // Append the tail after ${var}:
                 sb.append(text.substring(endPos.getRunCharAt() + 1));
             }
-            setText(run, sb.toString());
-            // Continue with index after actual:
+            setText(firstRun, sb.toString());
             return;
         }
-        setText(run, sb.toString());
-        for (int idx = startPos.getRunIndex() + 1; idx < endPos.getRunIndex(); idx++) {
-            // Processing runs in between.
-            setText(runs.get(idx), "");
+        // Setting text of first run:
+        setText(firstRun, sb.toString());
 
-        }
         // Processing last affected run:
-        run = runs.get(endPos.getRunIndex());
-        text = run.getText(0);
-        setText(run, text.substring(endPos.getRunCharAt() + 1));
+        XWPFRun lastRun = runs.get(endPos.getRunIndex());
+        text = lastRun.getText(0);
+        if (endPos.getRunCharAt() + 1 < text.length()) {
+            setText(lastRun, text.substring(endPos.getRunCharAt() + 1));
+        } else {
+            if (paragraph != null) {
+                paragraph.removeRun(endPos.getRunIndex());
+            } else {
+                setText(lastRun, "");
+            }
+        }
+
+        // Processing all runs between 1st and last run:
+        for (int idx = endPos.getRunIndex() - 1; idx > startPos.getRunIndex(); idx--) {
+            // Processing runs in between.
+            if (paragraph != null) {
+                paragraph.removeRun(idx);
+            } else {
+                setText(runs.get(idx), "");
+            }
+        }
     }
 
     private void setText(XWPFRun run, String text) {

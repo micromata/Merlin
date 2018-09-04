@@ -7,7 +7,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.regex.Matcher;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ConditionalTest {
