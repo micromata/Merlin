@@ -40,6 +40,7 @@ Examples for if-expressions:
 * variable in "blue", "red", "yellow": Will be true, if the variable has one of the given values.
 * variable ! in "blue", "red", "yellow": Will be true, if the variable has none of the given values.
 * Cascading of if-statements is supported.
+* variable < value, variable <= value, variable > value, variable >= value. Integers and doubles as values are supported.
 
 ### Example
 See the examples folder with the template file ```Contract-template.docx``` and the result file after processed by Merlin ```Contract.docx```.
