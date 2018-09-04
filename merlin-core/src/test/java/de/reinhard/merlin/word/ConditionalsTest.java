@@ -24,11 +24,11 @@ public class ConditionalsTest {
         Conditionals conditionals = new Conditionals(new WordDocument(doc));
         conditionals.read();
         assertEquals(2, conditionals.getConditionals().size());
-        Iterator<Conditional> it = conditionals.getConditionals().iterator();
-        Conditional cond = it.next();
+        Iterator<AbstractConditional> it = conditionals.getConditionals().iterator();
+        AbstractConditional cond = it.next();
         test(cond, "var", ConditionalType.EQUAL, 1, 1, "test");
         cond = it.next();
-        test(cond, "var", ConditionalType.EQUAL, 2, 2, "test", "blabla");
+        test(cond, "var", ConditionalType.NOT_IN, 2, 2, "test", "blabla");
     }
 
     @Test
@@ -44,9 +44,9 @@ public class ConditionalsTest {
         TestHelper.createParagraph(doc, "Enjoy your life.{endif}"); // 5
         Conditionals conditionals = new Conditionals(new WordDocument(doc));
         conditionals.read();
-        Iterator<Conditional> it = conditionals.getConditionals().iterator();
-        Conditional cond = it.next();
-        Conditional parent = cond;
+        Iterator<AbstractConditional> it = conditionals.getConditionals().iterator();
+        AbstractConditional cond = it.next();
+        AbstractConditional parent = cond;
         test(cond, "var", ConditionalType.NOT_EQUAL, 1, 4, "test");
         assertNull(cond.getParent());
         cond = it.next();
@@ -77,12 +77,12 @@ public class ConditionalsTest {
         }
     }
 
-    private void test(Conditional conditional, String variable, ConditionalType type, int ifBodyElementNumber,
+    private void test(AbstractConditional conditional, String variable, ConditionalType type, int ifBodyElementNumber,
                       int endifBodyElementNumber, String... values) {
         assertEquals(variable, conditional.getVariable(), "Variable name.");
-        assertEquals(type, conditional.getType(), "Conditional type");
-        assertArrayEquals(values, conditional.getValues(), "Values");
-        assertEquals(ifBodyElementNumber, conditional.getIfExpressionRange().getStartPosition().getBodyElementNumber(), "body-number of if-statement.");
-        assertEquals(endifBodyElementNumber, conditional.getEndifExpressionRange().getStartPosition().getBodyElementNumber(), "body-number of endif-statement");
+        assertEquals(type, conditional.getType(), "AbstractConditional type");
+        assertArrayEquals(values, ((ConditionalString)conditional).getValues(), "Values");
+        assertEquals(ifBodyElementNumber, conditional.getConditionalExpressionRange().getStartPosition().getBodyElementNumber(), "body-number of if-statement.");
+        assertEquals(endifBodyElementNumber, conditional.getEndConditionalExpressionRange().getStartPosition().getBodyElementNumber(), "body-number of endif-statement");
     }
 }

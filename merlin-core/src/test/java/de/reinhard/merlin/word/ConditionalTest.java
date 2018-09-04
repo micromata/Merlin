@@ -24,7 +24,7 @@ public class ConditionalTest {
     }
 
     private void assertMatcher(String str, String... groups) {
-        Matcher matcher = Conditional.beginIfPattern.matcher(str);
+        Matcher matcher = AbstractConditional.beginIfPattern.matcher(str);
         assertEquals(groups.length > 0 ? true : false, matcher.find());
         if (groups.length == 0) {
             return;

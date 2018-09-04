@@ -57,7 +57,7 @@ public class WordDocumentTest {
     }
 
     private void assertBeginIfPatternMatch(boolean expected, String str, String var, String cmp, String value) {
-        Matcher matcher = Conditional.beginIfPattern.matcher(str);
+        Matcher matcher = AbstractConditional.beginIfPattern.matcher(str);
         assertEquals(expected, matcher.find());
         if (expected) {
             assertEquals(var, matcher.group(1), "Variable.");
