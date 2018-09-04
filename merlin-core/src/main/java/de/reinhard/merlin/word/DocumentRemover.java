@@ -11,13 +11,34 @@ import java.util.*;
 public class DocumentRemover {
     private Logger log = LoggerFactory.getLogger(DocumentRemover.class);
 
-    private List<DocumentRemoveEntry> modifiers = new ArrayList<>();
+    private List<DocumentRange> modifiers = new ArrayList<>();
     private WordDocument document;
     private Map<Integer, IBodyElement> bodyElementsMap;
     private Set<Integer> paragraphsToRemove = new HashSet<>();
 
     public DocumentRemover(WordDocument document) {
         this.document = document;
+        init();
+    }
+
+    /**
+     * Removes all registered ranges.
+     * @return this for chaining.
+     */
+    public DocumentRemover action() {
+        init();
+        Collections.sort(modifiers, Collections.reverseOrder());
+        for (DocumentRange range : modifiers) {
+            removeRange(range);
+        }
+        return this;
+    }
+
+    private void init() {
+        if (bodyElementsMap != null) {
+            // Already initialized.
+            return;
+        }
         int bodyElementCounter = 0;
         bodyElementsMap = new HashMap<>();
         for (IBodyElement element : document.getDocument().getBodyElements()) {
@@ -26,44 +47,33 @@ public class DocumentRemover {
     }
 
     /**
-     * @return this for chaining.
+     * First register all ranges to remove. The ranges should be removed in reverse order (beginning from the end
+     * of the document to preserve the body element index for next ranges to remove.
+     *
+     * @param rangeToRemove
      */
-    public DocumentRemover action() {
-        Collections.sort(modifiers, Collections.reverseOrder());
-        for (DocumentRemoveEntry action : modifiers) {
-            removeRange(action.getRange());
-        }
-        return this;
-    }
-
-    public void add(DocumentRemoveEntry modifier) {
-        for (DocumentRemoveEntry mod : modifiers) {
-            if (mod.getRange().isIn(modifier.getRange().getStartPosition()) ||
-                    mod.getRange().isIn(modifier.getRange().getEndPosition())) {
-                log.warn("Given modifier collidates with already existing range. Existing: " + mod + ", new: " + modifier);
+    public void add(DocumentRange rangeToRemove) {
+        init();
+        for (DocumentRange mod : modifiers) {
+            if (mod.isIn(rangeToRemove.getStartPosition()) ||
+                    mod.isIn(rangeToRemove.getEndPosition())) {
+                log.warn("Given rangeToRemove collidates with already existing range. Existing: " + mod + ", new: " + rangeToRemove);
             }
         }
-        modifiers.add(modifier);
+        modifiers.add(rangeToRemove);
     }
 
-    void removeMarkedParagraphs() {
-        XWPFDocument doc = document.getDocument();
-        List<IBodyElement> elements = doc.getBodyElements();
-        for (int i = elements.size() - 1; i >= 0; i--) {
-            if (!(elements.get(i) instanceof XWPFParagraph)) {
-                continue;
-            }
-            XWPFParagraph par = (XWPFParagraph) elements.get(i);
-            if (paragraphsToRemove.contains(i)) {
-                doc.removeBodyElement(i);
-            }
-        }
-    }
 
+    /**
+     * Removes ranges in reverse order (starting from the end of the document). Paragraphs to remove will only be marked as to remove.
+     *
+     * @param removeRange
+     */
     private void removeRange(DocumentRange removeRange) {
         int fromNo = removeRange.getStartPosition().getBodyElementNumber();
         int toNo = removeRange.getEndPosition().getBodyElementNumber();
-        for (int elementNo = fromNo; elementNo <= toNo; elementNo++) {
+        XWPFDocument doc = document.getDocument();
+        for (int elementNo = toNo; elementNo >= fromNo; elementNo--) { // Reverse order to prevent removing of paragraphs and changing the body element index.
             IBodyElement element = bodyElementsMap.get(elementNo);
             if (element instanceof XWPFParagraph) {
                 XWPFParagraph paragraph = (XWPFParagraph) element;
@@ -72,25 +82,25 @@ public class DocumentRemover {
                     if (elementNo == toNo) {
                         processor.replaceText(removeRange.getStartPosition(), removeRange.getEndPosition(), "");
                         if (processor.getText().length() == 0) {
-                            paragraphsToRemove.add(elementNo);
+                            doc.removeBodyElement(elementNo);
                         }
                     } else {
                         processor.replaceText(removeRange.getStartPosition(), processor.getEnd(elementNo), "");
                         if (processor.getText().length() == 0) {
-                            paragraphsToRemove.add(elementNo);
+                            doc.removeBodyElement(elementNo);
                         }
                     }
                 } else if (elementNo == toNo) {
                     RunsProcessor processor = new RunsProcessor(((XWPFParagraph) element).getRuns());
                     processor.replaceText(new DocumentPosition(elementNo, 0, 0), removeRange.getEndPosition(), "");
                     if (processor.getText().length() == 0) {
-                        paragraphsToRemove.add(elementNo);
+                        doc.removeBodyElement(elementNo);
                     }
                 } else {
-                    paragraphsToRemove.add(elementNo);
+                    doc.removeBodyElement(elementNo);
                 }
             } else {
-                // Not yet supported.
+                doc.removeBodyElement(elementNo);
             }
         }
     }
