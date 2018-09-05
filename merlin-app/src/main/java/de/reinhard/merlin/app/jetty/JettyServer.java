@@ -1,8 +1,11 @@
 package de.reinhard.merlin.app.jetty;
 
 import de.reinhard.merlin.app.Configuration;
+import de.reinhard.merlin.app.rest.RestRegistry;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.eclipse.jetty.servlet.ServletHolder;
+import org.glassfish.jersey.servlet.ServletContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,10 +23,31 @@ public class JettyServer {
             return;
         }
         log.info("Starting web server on port " + port);
-        ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
+        ServletContextHandler context = new ServletContextHandler(ServletContextHandler.NO_SESSIONS);
         context.setContextPath("/");
         server = new Server(port);
         server.setHandler(context);
+/*
+        ResourceHandler resource_handler = new ResourceHandler();
+
+        // Configure the ResourceHandler. Setting the resource base indicates where the files should be served out of.
+        // In this example it is the current directory but it can be configured to anything that the jvm has access to.
+        resource_handler.setDirectoriesListed(false);
+        resource_handler.setWelcomeFiles(new String[]{"index.html"});
+        resource_handler.setResourceBase("classpath:/web");
+
+        // Add the ResourceHandler to the server.
+        HandlerList handlers = new HandlerList();
+        handlers.setHandlers(new Handler[]{resource_handler, new DefaultHandler()});
+        server.setHandler(handlers);
+        */
+        ServletHolder jerseyServlet = context.addServlet(ServletContainer.class, "/rest/*");
+        jerseyServlet.setInitOrder(1);
+        log.info("Rest services: " + RestRegistry.getInstance().getServiceList());
+        // Tells the Jersey Servlet which REST service/class to load.
+        jerseyServlet.setInitParameter("jersey.config.server.provider.packages",
+                "de.reinhard.merlin.app.rest");
+
         try {
             server.start();
         } catch (Exception ex) {
