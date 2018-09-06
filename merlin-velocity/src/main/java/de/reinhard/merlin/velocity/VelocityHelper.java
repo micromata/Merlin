@@ -1,6 +1,5 @@
 package de.reinhard.merlin.velocity;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
@@ -9,7 +8,9 @@ import org.apache.velocity.runtime.RuntimeConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
+import java.io.File;
+import java.io.PrintWriter;
+import java.io.Writer;
 
 public class VelocityHelper {
     private static Logger logger;
@@ -38,18 +39,12 @@ public class VelocityHelper {
 
         File out = new File(outSubDir, filename);
         String outPath = out.getAbsolutePath();
-        Writer fileWriter = null;
-        try {
-            try {
-                fileWriter = new PrintWriter(outPath);
-            } catch (FileNotFoundException ex) {
-                logger.error("Can't open file '" + outPath + "': " + ex.getMessage(), ex);
-                return;
-            }
+        try (Writer fileWriter = new PrintWriter(outPath)) {
             logger.info("Writing config file: " + outPath);
             template.merge(context, fileWriter);
-        } finally {
-            IOUtils.closeQuietly(fileWriter);
+        } catch (Exception ex) {
+            logger.error("Can't open file '" + outPath + "': " + ex.getMessage(), ex);
+            return;
         }
     }
 }
