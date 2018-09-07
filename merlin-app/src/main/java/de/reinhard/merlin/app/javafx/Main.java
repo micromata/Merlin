@@ -26,13 +26,19 @@ public class Main extends Application {
     }
 
     @Override
-    public void start(Stage stage) throws IOException {
+    public void start(Stage stage) {
         log.info("Starting Java FX application.");
         main = this;
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(Main.class.getResource("/Main.fxml"));
         ClassLoader cl = this.getClass().getClassLoader();
-        Parent root = (Pane) loader.load();
+        Parent root;
+        try {
+            root = (Pane) loader.load();
+        } catch (IOException ex) {
+            log.error(ex.getMessage(), ex);
+            return;
+        }
 
         Scene scene = new Scene(root);
 
