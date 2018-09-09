@@ -4,29 +4,29 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class VariableDefinition<T> {
-    private String variableName;
+    private String name;
     private String description;
     private boolean required;
     private boolean unique;
     private T standardValue;
     private T minimumValue;
     private T maximumValue;
-    private List<T> allowedValues;
+    private List<T> allowedValuesList;
 
     public VariableDefinition() {
 
     }
 
     public VariableDefinition(String variableName) {
-        this.variableName = variableName;
+        this.name = variableName;
     }
 
-    public String getVariableName() {
-        return variableName;
+    public String getName() {
+        return name;
     }
 
-    public void setVariableName(String variableName) {
-        this.variableName = variableName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public boolean isRequired() {
@@ -132,18 +132,25 @@ public class VariableDefinition<T> {
      *
      * @return allowed values if given.
      */
-    public List<T> getAllowedValues() {
-        return allowedValues;
+    public List<T> getAllowedValuesList() {
+        return allowedValuesList;
     }
 
-    public void setAllowedValues(List<T> allowedValues) {
-        this.allowedValues = allowedValues;
+    public void addAllowedValues(List<T> allowedValues) {
+        this.allowedValuesList = allowedValues;
     }
 
-    public void setAllowedValues(T... allowedValues) {
-        this.allowedValues = new LinkedList();
-        for (T val : allowedValues) {
-            this.allowedValues.add(val);
+    /**
+     * @param allowedValues
+     * @return this for chaining.
+     */
+    public VariableDefinition<T> addAllowedValues(T... allowedValues) {
+        if (this.allowedValuesList == null) {
+            this.allowedValuesList = new LinkedList();
         }
+        for (T val : allowedValues) {
+            this.allowedValuesList.add(val);
+        }
+        return this;
     }
 }

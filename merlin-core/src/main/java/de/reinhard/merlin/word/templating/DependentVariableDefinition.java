@@ -8,16 +8,30 @@ import java.util.Map;
  *
  * @param <T>
  */
-public class DependentVariable<T> {
+public class DependentVariableDefinition<T> {
+    private String name;
     private VariableDefinition<T> dependsOn;
     private Map<T, String> mapping;
+
+    /**
+     * @return Name of the variable to use via ${name} in the templats..
+     */
+    public String getName() {
+        return name;
+    }
+
+    public DependentVariableDefinition<T> setName(String name) {
+        this.name = name;
+        return this;
+    }
 
     public VariableDefinition getDependsOn() {
         return dependsOn;
     }
 
-    public void setDependsOn(VariableDefinition dependsOn) {
+    public DependentVariableDefinition<T> setDependsOn(VariableDefinition dependsOn) {
         this.dependsOn = dependsOn;
+        return this;
     }
 
     /**
@@ -31,8 +45,9 @@ public class DependentVariable<T> {
         this.mapping = mapping;
     }
 
-    public void addMapping(T masterValue, String value) {
+    public DependentVariableDefinition<T> addMapping(T masterValue, String value) {
         createAndGetMapping().put(masterValue, value);
+        return this;
     }
 
     private Map<T, String> createAndGetMapping() {

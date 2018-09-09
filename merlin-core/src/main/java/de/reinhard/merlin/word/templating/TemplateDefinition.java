@@ -8,15 +8,26 @@ import java.util.List;
 
 public class TemplateDefinition {
     private List<VariableDefinition> variableDefinitions = new LinkedList<>();
+    private List<DependentVariableDefinition> dependentVariableDefinitions = new LinkedList<>();
+    private String name;
+    private String description;
     private String filenamePattern;
 
     /**
-     *
-     * @param variableConfig
+     * @param variableDefinition
      * @return this for chaining.
      */
-    public TemplateDefinition add(VariableDefinition variableConfig) {
-        variableDefinitions.add(variableConfig);
+    public TemplateDefinition add(VariableDefinition variableDefinition) {
+        variableDefinitions.add(variableDefinition);
+        return this;
+    }
+
+    /**
+     * @param dependentVariableDefinition
+     * @return this for chaining.
+     */
+    public TemplateDefinition add(DependentVariableDefinition dependentVariableDefinition) {
+        dependentVariableDefinitions.add(dependentVariableDefinition);
         return this;
     }
 
@@ -27,12 +38,31 @@ public class TemplateDefinition {
 
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public TemplateDefinition setName(String name) {
+        this.name = name;
+        return this;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public TemplateDefinition setDescription(String description) {
+        this.description = description;
+        return this;
+    }
+
     public String getFilenamePattern() {
         return filenamePattern;
     }
 
-    public void setFilenamePattern(String filenamePattern) {
-        this.filenamePattern = filenamePattern;
+    public TemplateDefinition setFilenamePattern(String filenamePattern) {
+        this.filenamePattern = filenamePattern;        return this;
+
     }
 
     public List<VariableDefinition> getVariableDefinitions() {
@@ -41,5 +71,13 @@ public class TemplateDefinition {
 
     public void setVariableDefinitions(List<VariableDefinition> variableDefinitions) {
         this.variableDefinitions = variableDefinitions;
+    }
+
+    public List<DependentVariableDefinition> getDependentVariableDefinitions() {
+        return dependentVariableDefinitions;
+    }
+
+    public void setDependentVariableDefinitions(List<DependentVariableDefinition> dependentVariableDefinitions) {
+        this.dependentVariableDefinitions = dependentVariableDefinitions;
     }
 }
