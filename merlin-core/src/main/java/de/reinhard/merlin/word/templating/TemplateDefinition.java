@@ -2,6 +2,7 @@ package de.reinhard.merlin.word.templating;
 
 import de.reinhard.merlin.excel.ExcelSheet;
 import de.reinhard.merlin.excel.ExcelWorkbook;
+import org.apache.commons.lang.RandomStringUtils;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -9,9 +10,14 @@ import java.util.List;
 public class TemplateDefinition {
     private List<VariableDefinition> variableDefinitions = new LinkedList<>();
     private List<DependentVariableDefinition> dependentVariableDefinitions = new LinkedList<>();
+    private String id;
     private String name;
     private String description;
     private String filenamePattern;
+
+    public TemplateDefinition() {
+        this.id = RandomStringUtils.random(20, true, true);
+    }
 
     /**
      * @param variableDefinition
@@ -38,6 +44,15 @@ public class TemplateDefinition {
 
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public TemplateDefinition setId(String id) {
+        this.id = id;
+        return this;
+    }
+
     public String getName() {
         return name;
     }
@@ -61,7 +76,8 @@ public class TemplateDefinition {
     }
 
     public TemplateDefinition setFilenamePattern(String filenamePattern) {
-        this.filenamePattern = filenamePattern;        return this;
+        this.filenamePattern = filenamePattern;
+        return this;
 
     }
 
