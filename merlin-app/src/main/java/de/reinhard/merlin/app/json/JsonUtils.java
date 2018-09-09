@@ -25,7 +25,7 @@ public class JsonUtils {
         return writer.toString();
     }
 
-    public static Object fromJson(Class clazz, String json) {
+    public static <T> T fromJson(Class<T> clazz, String json) {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             return objectMapper.readValue(json, clazz);
