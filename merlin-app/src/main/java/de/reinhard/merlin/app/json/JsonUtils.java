@@ -1,5 +1,6 @@
 package de.reinhard.merlin.app.json;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
@@ -14,8 +15,8 @@ public class JsonUtils {
     private static Logger log = LoggerFactory.getLogger(JsonUtils.class);
 
     public static String toJson(Object obj) {
+        ObjectMapper objectMapper = getObjectMapper();
         StringWriter writer = new StringWriter();
-        ObjectMapper objectMapper = new ObjectMapper();
         try {
             objectMapper.writeValue(writer, obj);
         } catch (IOException ex) {
@@ -26,7 +27,7 @@ public class JsonUtils {
     }
 
     public static <T> T fromJson(Class<T> clazz, String json) {
-        ObjectMapper objectMapper = new ObjectMapper();
+        ObjectMapper objectMapper = getObjectMapper();
         try {
             return objectMapper.readValue(json, clazz);
         } catch (IOException ex) {
@@ -35,8 +36,8 @@ public class JsonUtils {
         }
     }
 
-    public static <T> List<T> fromJsonToArray(String jsonArray) {
-        ObjectMapper objectMapper = new ObjectMapper();
+    public static <T> List<T> fromJsonToList(String jsonArray) {
+        ObjectMapper objectMapper = getObjectMapper();
         try {
             return objectMapper.readValue(jsonArray, new TypeReference<List<T>>() {
             });
@@ -47,7 +48,7 @@ public class JsonUtils {
     }
 
     public static <T> Map<String, T> fromJsonToMap(String jsonMap) {
-        ObjectMapper objectMapper = new ObjectMapper();
+        ObjectMapper objectMapper = getObjectMapper();
         try {
             return objectMapper.readValue(jsonMap, new TypeReference<Map<String, T>>() {
             });
@@ -55,5 +56,14 @@ public class JsonUtils {
             log.error(ex.getMessage(), ex);
             return null;
         }
+    }
+
+    private static ObjectMapper getObjectMapper() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        Class<?>[] definitions = JsonIdGenerator.class.getDeclaredClasses();
+        for (Class<?> definition : definitions) {
+            objectMapper.addMixIn(definition.getAnnotation(JsonIdentityInfo.class).scope(), definition);
+        }
+        return objectMapper;
     }
 }

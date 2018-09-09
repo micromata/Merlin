@@ -1,6 +1,7 @@
 package de.reinhard.merlin.app.javafx;
 
 import de.reinhard.merlin.app.jetty.JettyServer;
+import de.reinhard.merlin.app.storage.TestData;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -27,7 +28,11 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) {
-        log.info("Starting Java FX application.");
+        log.info("Starting Java FX application in mode: " + RunningMode.getMode());
+        if (RunningMode.getMode() == RunningMode.Mode.TemplatesTest) {
+            // Creating data for testing.
+            TestData.create();
+        }
         main = this;
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(Main.class.getResource("/Main.fxml"));
