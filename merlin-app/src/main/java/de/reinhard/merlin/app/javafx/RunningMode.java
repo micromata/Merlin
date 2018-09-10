@@ -1,9 +1,9 @@
 package de.reinhard.merlin.app.javafx;
 
 public class RunningMode {
-    enum Mode {TemplatesTest}
+    public enum Mode {TemplatesTest}
 
-    enum OperatingSystem {MacOS, Windows, Other}
+    public enum OperatingSystem {MacOS, Windows, Other}
 
     public static Mode getMode() {
         return Mode.TemplatesTest;

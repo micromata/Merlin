@@ -23,7 +23,8 @@ public class AboutDialog
         final JPanel buttonBar = new JPanel();
         final FlowLayout layout = new FlowLayout(FlowLayout.CENTER);
         buttonBar.setLayout(layout);
-        okButton = new JButton(Context.getString("button.ok"));
+        Context context = Context.instance();
+        okButton = new JButton(context.getString("button.ok"));
         okButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent e) {
@@ -43,7 +44,7 @@ public class AboutDialog
                 + "1.0"
                 + "</html>");
         getContentPane().add(appLabel, con.setLabel(0, gridy++).get());
-        final JLabel aboutLabel = new JLabel("<html>" + Context.getMessage("about", 2018) + "</html>");
+        final JLabel aboutLabel = new JLabel("<html>" + context.getMessage("about", 2018) + "</html>");
         getContentPane().add(aboutLabel, con.setLabel(0, gridy++, GridBagConstraints.NORTH).setWeight(1.0, 1.0, GridBagConstraints.BOTH).get());
         getContentPane().add(buttonBar, con.set(0, gridy++, GridBagConstraints.CENTER).setFill(GridBagConstraints.HORIZONTAL).get());
         pack();

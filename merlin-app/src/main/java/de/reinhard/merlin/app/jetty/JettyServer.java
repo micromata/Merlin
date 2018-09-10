@@ -79,7 +79,7 @@ public class JettyServer {
     }
 
     private int findFreePort() {
-        int port = ConfigurationHandler.getInstance().getPort();
+        int port = ConfigurationHandler.getInstance().getConfiguration().getPort();
         for (int i = port; i < 8999; i++) {
             try (ServerSocket socket = new ServerSocket(i)) {
                 return i;

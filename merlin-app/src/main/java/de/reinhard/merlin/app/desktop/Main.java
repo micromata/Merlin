@@ -1,5 +1,6 @@
 package de.reinhard.merlin.app.desktop;
 
+import de.reinhard.merlin.app.javafx.RunningMode;
 import de.reinhard.merlin.app.jetty.JettyServer;
 import de.reinhard.merlin.app.storage.TestData;
 import org.slf4j.Logger;

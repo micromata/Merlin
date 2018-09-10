@@ -1,14 +1,13 @@
 package de.reinhard.merlin.app.desktop;
 
 import com.apple.eawt.*;
-import de.reinhard.merlin.app.javafx.Context;
+import de.reinhard.merlin.app.javafx.RunningMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class MacOSApplication extends Application {
     private static Logger log = LoggerFactory.getLogger(MacOSApplication.class);
 
-    @SuppressWarnings("deprecation")
     public MacOSApplication() {
         setQuitStrategy(QuitStrategy.CLOSE_ALL_WINDOWS);
         setAboutHandler(new AboutHandler() {
@@ -27,7 +26,7 @@ public class MacOSApplication extends Application {
     public static void main(String[] args) {
         if (RunningMode.isMacOS()) {
             System.setProperty("apple.laf.useScreenMenuBar", "true");
-            Context.setStartedAsMacOSApp();
+            //Context.setStartedAsMacOSApp();
             new MacOSApplication();
             // -Xdock:name=ProjectForge
         } else {
