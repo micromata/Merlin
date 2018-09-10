@@ -5,7 +5,7 @@ import de.reinhard.merlin.excel.ExcelSheet;
 import de.reinhard.merlin.excel.ExcelWorkbook;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.util.stream.Collectors;
@@ -14,9 +14,14 @@ public class DefinitionExcelConverter {
     public static ExcelWorkbook writeToWorkbook(TemplateDefinition template) {
         Workbook poiWorkbook = new XSSFWorkbook();
         ExcelWorkbook workbook = new ExcelWorkbook(poiWorkbook);
+        CellStyle headRowStyle = workbook.getPOIWorkbook().createCellStyle();
+        Font boldFont = workbook.getPOIWorkbook().createFont();
+        boldFont.setBold(true);
+        headRowStyle.setFont(boldFont);
+
         ExcelSheet variablesSheet = workbook.createOrGetSheet("Variables");
         ExcelRow row = variablesSheet.createRow();
-        row.createCells("Variable", "Values", "required", "unique", "type", "Minimum", "Maximum");
+        row.createCells(headRowStyle, "Variable", "Values", "required", "unique", "type", "Minimum", "Maximum");
         for (VariableDefinition variableDefinition : template.getVariableDefinitions()) {
             row = variablesSheet.createRow();
             // Variable
@@ -36,6 +41,7 @@ public class DefinitionExcelConverter {
             // unique
             row.createCell().setCellValue(getBooleanAsString(variableDefinition.isUnique()));
             // type
+            row.createCell().setCellValue(variableDefinition.getTypeAsString());
             //row.createCell().setCellValue(variableDefinition.getMaximumValue());
             // Minimum
             //row.createCell().setCellValue(variableDefinition.getMaximumValue());

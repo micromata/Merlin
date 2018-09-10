@@ -27,7 +27,11 @@ public class VariableDefinition {
     }
 
     public VariableDefinition(VariableType type, String variableName) {
-        this.type = type;
+        if (type == null) {
+            this.type = VariableType.STRING;
+        } else {
+            this.type = type;
+        }
         this.name = variableName;
     }
 

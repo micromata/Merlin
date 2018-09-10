@@ -1,6 +1,7 @@
 package de.reinhard.merlin.excel;
 
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
 
 public class ExcelRow {
@@ -29,9 +30,16 @@ public class ExcelRow {
     }
 
     public void createCells(String... cells) {
+        createCells(null, cells);
+    }
+
+    public void createCells(CellStyle cellStyle, String... cells) {
         for (String cellString : cells) {
             ExcelCell cell = this.createCell(ExcelCellType.STRING);
             cell.setCellValue(cellString);
+            if (cellStyle != null) {
+                cell.setCellStyle(cellStyle);
+            }
         }
     }
 }
