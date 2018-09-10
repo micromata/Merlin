@@ -1,10 +1,14 @@
 package de.reinhard.merlin.app.jetty;
 
-import de.reinhard.merlin.app.Configuration;
-import de.reinhard.merlin.app.rest.RestRegistry;
+import de.reinhard.merlin.app.ConfigurationHandler;
+import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.ServerConnector;
+import org.eclipse.jetty.servlet.DefaultServlet;
+import org.eclipse.jetty.servlet.ErrorPageErrorHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+import org.eclipse.jetty.util.resource.Resource;
 import org.glassfish.jersey.servlet.ServletContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,30 +27,39 @@ public class JettyServer {
             return;
         }
         log.info("Starting web server on port " + port);
-        ServletContextHandler context = new ServletContextHandler(ServletContextHandler.NO_SESSIONS);
-        context.setContextPath("/");
-        server = new Server(port);
-        server.setHandler(context);
-/*
-        ResourceHandler resource_handler = new ResourceHandler();
+        server = new Server();
 
-        // Configure the ResourceHandler. Setting the resource base indicates where the files should be served out of.
-        // In this example it is the current directory but it can be configured to anything that the jvm has access to.
-        resource_handler.setDirectoriesListed(false);
-        resource_handler.setWelcomeFiles(new String[]{"index.html"});
-        resource_handler.setResourceBase("classpath:/web");
+        ServerConnector connector = new ServerConnector(server);
+        connector.setHost("127.0.0.1");
+        connector.setPort(port);
+        server.setConnectors(new Connector[]{connector});
 
-        // Add the ResourceHandler to the server.
-        HandlerList handlers = new HandlerList();
-        handlers.setHandlers(new Handler[]{resource_handler, new DefaultHandler()});
-        server.setHandler(handlers);
-        */
-        ServletHolder jerseyServlet = context.addServlet(ServletContainer.class, "/rest/*");
+        ServletContextHandler ctx =
+                new ServletContextHandler(ServletContextHandler.NO_SESSIONS);
+        ctx.setContextPath("/");
+
+
+        ServletHolder jerseyServlet = ctx.addServlet(ServletContainer.class, "/rest/*");
         jerseyServlet.setInitOrder(1);
-        log.info("Rest services: " + RestRegistry.getInstance().getServiceList());
-        // Tells the Jersey Servlet which REST service/class to load.
+        // Tells the Jersey Servlxet which REST service/class to load.
         jerseyServlet.setInitParameter("jersey.config.server.provider.packages",
                 "de.reinhard.merlin.app.rest");
+
+        try {
+            // Resolve file to directory
+            ctx.setBaseResource(Resource.newResource("./merlin-webapp/build"));
+        } catch (IOException ex) {
+            log.error(ex.getMessage(), ex);
+            return;
+        }
+        ctx.setWelcomeFiles(new String[]{"index.html"});
+        ctx.addServlet(DefaultServlet.class, "/");
+
+        ErrorPageErrorHandler errorHandler = new ErrorPageErrorHandler();
+        errorHandler.addErrorPage(404, "/");
+        ctx.setErrorHandler(errorHandler);
+
+        server.setHandler(ctx);
 
         try {
             server.start();
@@ -66,7 +79,7 @@ public class JettyServer {
     }
 
     private int findFreePort() {
-        int port = Configuration.getInstance().getPort();
+        int port = ConfigurationHandler.getInstance().getPort();
         for (int i = port; i < 8999; i++) {
             try (ServerSocket socket = new ServerSocket(i)) {
                 return i;
