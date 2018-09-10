@@ -22,6 +22,8 @@ public class DefinitionExcelConverter {
         ExcelSheet variablesSheet = workbook.createOrGetSheet("Variables");
         ExcelRow row = variablesSheet.createRow();
         row.createCells(headRowStyle, "Variable", "Values", "required", "unique", "type", "Minimum", "Maximum");
+        variablesSheet.autosize();
+        variablesSheet.setColumnWidth(1, 10000);
         for (VariableDefinition variableDefinition : template.getVariableDefinitions()) {
             row = variablesSheet.createRow();
             // Variable
@@ -51,6 +53,7 @@ public class DefinitionExcelConverter {
         ExcelSheet dependentVariablesSheet = workbook.createOrGetSheet("Dependent Variables");
         row = dependentVariablesSheet.createRow();
         row.createCells(headRowStyle, "Variable", "Depends on variable", "Mapping values");
+        dependentVariablesSheet.autosize();
         for (DependentVariableDefinition variableDefinition : template.getDependentVariableDefinitions()) {
             row = dependentVariablesSheet.createRow();
             // Variable

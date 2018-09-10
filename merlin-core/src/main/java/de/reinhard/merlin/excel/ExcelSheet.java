@@ -457,4 +457,18 @@ public class ExcelSheet {
         Row row = poiSheet.createRow(rowCount + 1);
         return new ExcelRow(row);
     }
+
+    public void autosize() {
+        Row row = poiSheet.getRow(0);
+        Iterator<Cell> cellIterator = row.cellIterator();
+        while (cellIterator.hasNext()) {
+            Cell cell = cellIterator.next();
+            int columnIndex = cell.getColumnIndex();
+            poiSheet.autoSizeColumn(columnIndex);
+        }
+    }
+
+    public void setColumnWidth(int columnIndex, int width) {
+        poiSheet.setColumnWidth(columnIndex, width);
+    }
 }
