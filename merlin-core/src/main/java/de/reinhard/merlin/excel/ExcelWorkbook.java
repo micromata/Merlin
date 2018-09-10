@@ -61,7 +61,6 @@ public class ExcelWorkbook {
                 return sheet;
             }
         }
-        log.warn("No sheet named '" + sheetName + "' found.");
         return null;
     }
 

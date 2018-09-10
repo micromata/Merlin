@@ -8,6 +8,7 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.CellReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -459,16 +460,27 @@ public class ExcelSheet {
     }
 
     public void autosize() {
-        Row row = poiSheet.getRow(0);
-        Iterator<Cell> cellIterator = row.cellIterator();
-        while (cellIterator.hasNext()) {
-            Cell cell = cellIterator.next();
-            int columnIndex = cell.getColumnIndex();
-            poiSheet.autoSizeColumn(columnIndex);
+        for (int i = 0; i <= getLastColumn(); i++) {
+            log.debug("Autosize: " + i);
+            poiSheet.autoSizeColumn(i);
         }
     }
 
     public void setColumnWidth(int columnIndex, int width) {
         poiSheet.setColumnWidth(columnIndex, width);
+    }
+
+    public void addMergeRegion(CellRangeAddress range) {
+        poiSheet.addMergedRegion(range);
+    }
+
+    public int getLastColumn() {
+        int lastCol = 0;
+        for (Row row : poiSheet) {
+            if (row.getLastCellNum() > lastCol) {
+                lastCol= row.getLastCellNum();
+            }
+        }
+        return lastCol;
     }
 }

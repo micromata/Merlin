@@ -72,4 +72,24 @@ public class DependentVariableDefinition {
         }
         return list;
     }
+
+    public String getMappingInformation() {
+        if (dependsOn == null) {
+            return "";
+        }
+        StringBuilder sb = new StringBuilder();
+        sb.append("{");
+        boolean first = true;
+        for (Object masterValue : dependsOn.getAllowedValuesList()) {
+            if (first) {
+                first = false;
+            } else {
+                sb.append(", ");
+            }
+            String mappedValue = mapping.get(masterValue);
+            sb.append("\"").append(masterValue).append("\"->\"").append(mappedValue != null ? mappedValue:"").append("\"");
+        }
+        sb.append("}");
+        return sb.toString();
+    }
 }

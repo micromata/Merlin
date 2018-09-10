@@ -3,6 +3,7 @@ package de.reinhard.merlin.excel;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.util.CellRangeAddress;
 
 public class ExcelRow {
     private Row row;
@@ -41,5 +42,15 @@ public class ExcelRow {
                 cell.setCellStyle(cellStyle);
             }
         }
+    }
+
+    public ExcelRow setHeight(float height) {
+        row.setHeightInPoints(height);
+        return this;
+    }
+
+    public void addMergeRegion(int fromCol, int toCol) {
+        CellRangeAddress range = new CellRangeAddress(row.getRowNum(), row.getRowNum(), fromCol, toCol);
+        row.getSheet().addMergedRegion(range);
     }
 }

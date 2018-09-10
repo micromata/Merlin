@@ -19,11 +19,13 @@ public class ExcelCell {
         }
     }
 
-    public void setCellValue(String str) {
+    public ExcelCell setCellValue(String str) {
         this.cell.setCellValue(str);
+        return this;
     }
 
-    public void setCellStyle(CellStyle style) {
+    public ExcelCell setCellStyle(CellStyle style) {
         cell.setCellStyle(style);
+        return this;
     }
 }
