@@ -446,10 +446,14 @@ public class ExcelSheet {
 
     /**
      * Appends the row.
+     *
      * @return
      */
     public ExcelRow createRow() {
         int rowCount = poiSheet.getLastRowNum();
+        if (rowCount == 0 && poiSheet.getRow(0) == null) {
+            rowCount = -1;
+        }
         Row row = poiSheet.createRow(rowCount + 1);
         return new ExcelRow(row);
     }

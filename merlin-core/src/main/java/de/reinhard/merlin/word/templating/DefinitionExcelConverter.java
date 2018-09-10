@@ -1,12 +1,17 @@
 package de.reinhard.merlin.word.templating;
 
-import de.reinhard.merlin.excel.*;
+import de.reinhard.merlin.excel.ExcelRow;
+import de.reinhard.merlin.excel.ExcelSheet;
+import de.reinhard.merlin.excel.ExcelWorkbook;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import java.util.stream.Collectors;
+
 public class DefinitionExcelConverter {
-    public ExcelWorkbook writeToWorkbook(TemplateDefinition template) {
+    public static ExcelWorkbook writeToWorkbook(TemplateDefinition template) {
         Workbook poiWorkbook = new XSSFWorkbook();
         ExcelWorkbook workbook = new ExcelWorkbook(poiWorkbook);
         ExcelSheet variablesSheet = workbook.createOrGetSheet("Variables");
@@ -17,7 +22,15 @@ public class DefinitionExcelConverter {
             // Variable
             row.createCell().setCellValue(variableDefinition.getName());
             // Allowed values
-            row.createCell().setCellValue(StringUtils.join(variableDefinition.getAllowedValuesList(), ", "));
+            String allowedValues;
+            if (CollectionUtils.isEmpty(variableDefinition.getAllowedValuesList())) {
+                allowedValues = "";
+            } else {
+                allowedValues = variableDefinition.getAllowedValuesList().stream()
+                        .map(s -> "\"" + s + "\"")
+                        .collect(Collectors.joining(", "));
+            }
+            row.createCell().setCellValue(allowedValues);
             // required
             row.createCell().setCellValue(getBooleanAsString(variableDefinition.isRequired()));
             // unique
@@ -27,15 +40,16 @@ public class DefinitionExcelConverter {
             // Minimum
             //row.createCell().setCellValue(variableDefinition.getMaximumValue());
             // Maximum
+
         }
         return workbook;
     }
 
-    public String getBooleanAsString(boolean value) {
+    public static String getBooleanAsString(boolean value) {
         return value ? "X" : "";
     }
 
-    public boolean getStringAsBoolean(String value) {
+    public static boolean getStringAsBoolean(String value) {
         if (StringUtils.isBlank(value)) {
             return false;
         }

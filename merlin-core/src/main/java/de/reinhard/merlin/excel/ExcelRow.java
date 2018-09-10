@@ -21,7 +21,10 @@ public class ExcelRow {
 
     public ExcelCell createCell(ExcelCellType type) {
         int colCount = row.getLastCellNum();
-        Cell cell = row.createCell(colCount + 1, type.getCellType());
+        if (colCount < 0) {
+            colCount = 0;
+        }
+        Cell cell = row.createCell(colCount, type.getCellType());
         return new ExcelCell(cell, type);
     }
 
