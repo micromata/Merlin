@@ -28,7 +28,7 @@ public class ExcelRow {
     public void createCells(String... cells) {
         for (String cellString : cells) {
             ExcelCell cell = this.createCell(ExcelCellType.STRING);
-            cell.setCellValuealue(cellString);
+            cell.setCellValue(cellString);
         }
     }
 }

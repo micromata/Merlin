@@ -15,17 +15,17 @@ public class DefinitionExcelConverter {
         for (VariableDefinition variableDefinition : template.getVariableDefinitions()) {
             row = variablesSheet.createRow();
             // Variable
-            row.createCell().setCellValuealue(variableDefinition.getName());
+            row.createCell().setCellValue(variableDefinition.getName());
             // Allowed values
-            row.createCell().setCellValuealue(StringUtils.join(variableDefinition.getAllowedValuesList(), ", "));
+            row.createCell().setCellValue(StringUtils.join(variableDefinition.getAllowedValuesList(), ", "));
             // required
-            row.createCell().setCellValuealue(getBooleanAsString(variableDefinition.isRequired()));
+            row.createCell().setCellValue(getBooleanAsString(variableDefinition.isRequired()));
             // unique
-            row.createCell().setCellValuealue(getBooleanAsString(variableDefinition.isUnique()));
+            row.createCell().setCellValue(getBooleanAsString(variableDefinition.isUnique()));
             // type
-            row.createCell().setCellValuealue(variableDefinition.getTypeAsString());
+            //row.createCell().setCellValue(variableDefinition.getMaximumValue());
             // Minimum
-            row.createCell().setCellValuealue(variableDefinition.getTypeAsString());
+            //row.createCell().setCellValue(variableDefinition.getMaximumValue());
             // Maximum
         }
         return workbook;

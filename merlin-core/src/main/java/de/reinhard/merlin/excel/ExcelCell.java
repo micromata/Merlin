@@ -12,7 +12,7 @@ public class ExcelCell {
         //BuiltinFormats.
     }
 
-    public void setCellValuealue(String str) {
+    public void setCellValue(String str) {
         this.cell.setCellValue(str);
     }
 }
