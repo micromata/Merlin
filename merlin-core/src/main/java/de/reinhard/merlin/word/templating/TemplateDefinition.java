@@ -3,11 +3,14 @@ package de.reinhard.merlin.word.templating;
 import de.reinhard.merlin.excel.ExcelSheet;
 import de.reinhard.merlin.excel.ExcelWorkbook;
 import org.apache.commons.lang.RandomStringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.LinkedList;
 import java.util.List;
 
 public class TemplateDefinition {
+    private Logger log = LoggerFactory.getLogger(TemplateDefinition.class);
     private List<VariableDefinition> variableDefinitions = new LinkedList<>();
     private List<DependentVariableDefinition> dependentVariableDefinitions = new LinkedList<>();
     private String id;
@@ -95,5 +98,19 @@ public class TemplateDefinition {
 
     public void setDependentVariableDefinitions(List<DependentVariableDefinition> dependentVariableDefinitions) {
         this.dependentVariableDefinitions = dependentVariableDefinitions;
+    }
+
+    public VariableDefinition getVariableDefinition(String variableName) {
+        if (variableDefinitions == null) {
+            log.error("Variable named '" + variableName + "' not found in template '"+ getName() + "'. No variables defined.");
+            return null;
+        }
+        for (VariableDefinition variableDefinition : variableDefinitions) {
+            if (variableName.trim().equals(variableDefinition.getName())) {
+                return variableDefinition;
+            }
+        }
+        log.error("Variable named '" + variableName + "' not found in template '"+ getName() + "'.");
+        return null;
     }
 }

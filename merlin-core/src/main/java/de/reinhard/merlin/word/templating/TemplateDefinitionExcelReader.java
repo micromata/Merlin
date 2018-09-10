@@ -35,6 +35,7 @@ public class TemplateDefinitionExcelReader {
         template.setDescription(props.getConfig("Description"));
         template.setFilenamePattern(props.getConfig("Filename"));
         readVariables();
+        readDependentVariables();
         return template;
     }
 
@@ -79,6 +80,38 @@ public class TemplateDefinitionExcelReader {
             String[] values = CSVStringUtils.parseStringList(valuesString);
             if (values != null) {
                 variable.addAllowedValues((Object[]) values);
+            }
+            template.add(variable);
+        }
+    }
+
+    private void readDependentVariables() {
+        ExcelSheet sheet = workbook.getSheet("Dependent Variables");
+        ExcelColumnDef variableCol = sheet.registerColumn("Variable",
+                new ExcelColumnPatternValidator(RunsProcessor.IDENTIFIER_REGEXP).setRequired().setUnique());
+        ExcelColumnDef dependsOnCol = sheet.registerColumn("Depends on variable");
+        ExcelColumnDef mappingCol = sheet.registerColumn("Mapping values");
+        sheet.analyze(true);
+        for (ExcelValidationErrorMessage msg : sheet.getAllValidationErrors()) {
+            log.error(msg.getMessageWithAllDetails(I18n.getDefault()));
+        }
+
+        int counter = 0;
+        Iterator<Row> it = sheet.getDataRowIterator();
+        while (it.hasNext()) {
+            Row row = it.next();
+            String name = PoiHelper.getValueAsString(sheet.getCell(row, variableCol));
+            String valuesString = PoiHelper.getValueAsString(sheet.getCell(row, mappingCol));
+            String[] values = CSVStringUtils.parseStringList(valuesString);
+            String dependsOnString = PoiHelper.getValueAsString(sheet.getCell(row, dependsOnCol));
+            VariableDefinition master = template.getVariableDefinition(dependsOnString);
+            DependentVariableDefinition variable = new DependentVariableDefinition();
+            variable.setName(name);
+            variable.setDependsOn(master);
+            if (master != null && master.getAllowedValuesList() != null) {
+                for (int i = 0; i < master.getAllowedValuesList().size() && i < values.length; i++) {
+                    variable.addMapping(master.getAllowedValuesList().get(i), values[i]);
+                }
             }
             template.add(variable);
         }

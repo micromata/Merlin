@@ -35,7 +35,12 @@ public class DefinitionExcelConverterTest {
         for (int i = 0; i < originalTemplate.getVariableDefinitions().size(); i++) {
             assertVariable(originalTemplate.getVariableDefinitions().get(i), template.getVariableDefinitions().get(i));
         }
-        // assertEquals(originalTemplate.getDependentVariableDefinitions().size(), template.getDependentVariableDefinitions().size());
+        assertEquals(originalTemplate.getDependentVariableDefinitions().size(), template.getDependentVariableDefinitions().size());
+        for (int i = 0; i < originalTemplate.getDependentVariableDefinitions().size(); i++) {
+            assertVariable(originalTemplate.getDependentVariableDefinitions().get(i), template.getDependentVariableDefinitions().get(i));
+        }
+        //file = new File(Definitions.OUTPUT_DIR, "TemplateDefinition-2.xlsx");
+        //workbook.getPOIWorkbook().write(new FileOutputStream(file));
     }
 
     @Test
@@ -99,6 +104,19 @@ public class DefinitionExcelConverterTest {
             assertEquals(exp.getAllowedValuesList().size(), act.getAllowedValuesList().size());
             for (int i = 0; i < exp.getAllowedValuesList().size(); i++) {
                 assertEquals(exp.getAllowedValuesList().get(i), act.getAllowedValuesList().get(i));
+            }
+        }
+    }
+
+    private void assertVariable(DependentVariableDefinition exp, DependentVariableDefinition act) {
+        assertEquals(exp.getName(), act.getName());
+        assertEquals(exp.getDependsOn() != null, act.getDependsOn() != null);
+        assertEquals(exp.getDependsOn().getName(), act.getDependsOn().getName());
+        if (exp.getMappingList() != null) {
+            assertNotNull(act.getMappingList());
+            assertEquals(exp.getMappingList().size(), act.getMappingList().size());
+            for (int i = 0; i < exp.getMappingList().size(); i++) {
+                assertEquals(exp.getMappingList().get(i), act.getMappingList().get(i));
             }
         }
     }
