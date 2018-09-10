@@ -48,6 +48,27 @@ public class DefinitionExcelConverter {
             // Maximum
 
         }
+        ExcelSheet dependentVariablesSheet = workbook.createOrGetSheet("Dependent Variables");
+        row = dependentVariablesSheet.createRow();
+        row.createCells(headRowStyle, "Variable", "Depends on variable", "Mapping values");
+        for (DependentVariableDefinition variableDefinition : template.getDependentVariableDefinitions()) {
+            row = dependentVariablesSheet.createRow();
+            // Variable
+            row.createCell().setCellValue(variableDefinition.getName());
+            // Depends on variable
+            VariableDefinition dependsOnVariable = variableDefinition.getDependsOn();
+            row.createCell().setCellValue(dependsOnVariable != null ? dependsOnVariable.getName() : "");
+            // Mapping values
+            String mappedValues;
+            if (CollectionUtils.isEmpty(variableDefinition.getMappingList())) {
+                mappedValues = "";
+            } else {
+                mappedValues = variableDefinition.getMappingList().stream()
+                        .map(s -> "\"" + s + "\"")
+                        .collect(Collectors.joining(", "));
+            }
+            row.createCell().setCellValue(mappedValues);
+        }
         return workbook;
     }
 

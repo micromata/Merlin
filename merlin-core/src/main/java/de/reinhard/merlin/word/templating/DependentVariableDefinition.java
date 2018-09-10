@@ -1,11 +1,12 @@
 package de.reinhard.merlin.word.templating;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 /**
  * Defines a variable which is dependent of another variable (master variable).
- *
  */
 public class DependentVariableDefinition {
     private String name;
@@ -54,5 +55,21 @@ public class DependentVariableDefinition {
             mapping = new HashMap<>();
         }
         return mapping;
+    }
+
+    public List<String> getMappingList() {
+        List<String> list = new LinkedList<>();
+        if (dependsOn == null) {
+            return list;
+        }
+        for (Object masterValue : dependsOn.getAllowedValuesList()) {
+            String mappedValue = mapping.get(masterValue);
+            if (mappedValue != null) {
+                list.add(mappedValue);
+            } else {
+                list.add("");
+            }
+        }
+        return list;
     }
 }
