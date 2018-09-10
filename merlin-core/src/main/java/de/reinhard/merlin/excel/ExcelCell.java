@@ -11,4 +11,8 @@ public class ExcelCell {
         this.type = type;
         //BuiltinFormats.
     }
+
+    public void setCellValuealue(String str) {
+        this.cell.setCellValue(str);
+    }
 }

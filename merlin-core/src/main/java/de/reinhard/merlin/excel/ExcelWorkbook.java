@@ -22,6 +22,10 @@ public class ExcelWorkbook {
     private Map<String, CellStyle> cellStyleMap = new HashMap<>();
     private Map<String, Font> fontMap = new HashMap<>();
 
+    public ExcelWorkbook(Workbook workbook) {
+        this.workbook = workbook;
+    }
+
     public ExcelWorkbook(String excelFilename) {
         this(new File(excelFilename));
     }

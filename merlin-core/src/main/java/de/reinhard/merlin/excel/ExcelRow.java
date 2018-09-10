@@ -12,6 +12,7 @@ public class ExcelRow {
 
     /**
      * Assumes {@link ExcelCellType#STRING}
+     *
      * @return
      */
     public ExcelCell createCell() {
@@ -22,5 +23,12 @@ public class ExcelRow {
         int colCount = row.getLastCellNum();
         Cell cell = row.createCell(colCount + 1, type.getCellType());
         return new ExcelCell(cell, type);
+    }
+
+    public void createCells(String... cells) {
+        for (String cellString : cells) {
+            ExcelCell cell = this.createCell(ExcelCellType.STRING);
+            cell.setCellValuealue(cellString);
+        }
     }
 }

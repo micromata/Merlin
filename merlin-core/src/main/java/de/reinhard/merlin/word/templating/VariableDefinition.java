@@ -1,23 +1,33 @@
 package de.reinhard.merlin.word.templating;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
 
-public class VariableDefinition<T> {
+public class VariableDefinition {
+    private static Logger log = LoggerFactory.getLogger(VariableDefinition.class);
     private String name;
     private String description;
     private boolean required;
     private boolean unique;
-    private T standardValue;
-    private T minimumValue;
-    private T maximumValue;
-    private List<T> allowedValuesList;
+    private Object minimumValue;
+    private Object maximumValue;
+    private List<Object> allowedValuesList;
+    private VariableType type;
 
     public VariableDefinition() {
 
     }
 
     public VariableDefinition(String variableName) {
+        this(null, variableName);
+    }
+
+    public VariableDefinition(VariableType type, String variableName) {
+        this.type = type;
         this.name = variableName;
     }
 
@@ -36,7 +46,7 @@ public class VariableDefinition<T> {
     /**
      * @return this for chaining.
      */
-    public VariableDefinition<T> setRequired() {
+    public VariableDefinition setRequired() {
         return setRequired(true);
     }
 
@@ -44,7 +54,7 @@ public class VariableDefinition<T> {
      * @param required
      * @return this for chaining.
      */
-    public VariableDefinition<T> setRequired(boolean required) {
+    public VariableDefinition setRequired(boolean required) {
         this.required = required;
         return this;
     }
@@ -61,7 +71,7 @@ public class VariableDefinition<T> {
     /**
      * @return this for chaining.
      */
-    public VariableDefinition<T> setUnique() {
+    public VariableDefinition setUnique() {
         return setUnique(true);
     }
 
@@ -69,7 +79,7 @@ public class VariableDefinition<T> {
      * @param unique
      * @return this for chaining.
      */
-    public VariableDefinition<T> setUnique(boolean unique) {
+    public VariableDefinition setUnique(boolean unique) {
         this.unique = unique;
         return this;
     }
@@ -82,25 +92,12 @@ public class VariableDefinition<T> {
      * @param description
      * @return this for chaining.
      */
-    public VariableDefinition<T> setDescription(String description) {
+    public VariableDefinition setDescription(String description) {
         this.description = description;
         return this;
     }
 
-    public T getStandardValue() {
-        return standardValue;
-    }
-
-    /**
-     * @param standardValue
-     * @return this for chaining.
-     */
-    public VariableDefinition<T> setStandardValue(T standardValue) {
-        this.standardValue = standardValue;
-        return this;
-    }
-
-    public T getMinimumValue() {
+    public Object getMinimumValue() {
         return minimumValue;
     }
 
@@ -108,12 +105,12 @@ public class VariableDefinition<T> {
      * @param minimumValue
      * @return this for chaining.
      */
-    public VariableDefinition<T> setMinimumValue(T minimumValue) {
+    public VariableDefinition setMinimumValue(Object minimumValue) {
         this.minimumValue = minimumValue;
         return this;
     }
 
-    public T getMaximumValue() {
+    public Object getMaximumValue() {
         return maximumValue;
     }
 
@@ -121,7 +118,7 @@ public class VariableDefinition<T> {
      * @param maximumValue
      * @return this for chaining.
      */
-    public VariableDefinition<T> setMaximumValue(T maximumValue) {
+    public VariableDefinition setMaximumValue(Object maximumValue) {
         this.maximumValue = maximumValue;
         return this;
     }
@@ -132,11 +129,11 @@ public class VariableDefinition<T> {
      *
      * @return allowed values if given.
      */
-    public List<T> getAllowedValuesList() {
+    public List<Object> getAllowedValuesList() {
         return allowedValuesList;
     }
 
-    public void addAllowedValues(List<T> allowedValues) {
+    public void addAllowedValues(List<Object> allowedValues) {
         this.allowedValuesList = allowedValues;
     }
 
@@ -144,13 +141,105 @@ public class VariableDefinition<T> {
      * @param allowedValues
      * @return this for chaining.
      */
-    public VariableDefinition<T> addAllowedValues(T... allowedValues) {
+    public VariableDefinition addAllowedValues(Object... allowedValues) {
         if (this.allowedValuesList == null) {
             this.allowedValuesList = new LinkedList();
         }
-        for (T val : allowedValues) {
+        for (Object val : allowedValues) {
             this.allowedValuesList.add(val);
         }
         return this;
+    }
+
+    public VariableType getType() {
+        return type;
+    }
+
+    public String getTypeAsString() {
+        if (type == null) {
+            return "";
+        }
+        return type.toString().toLowerCase();
+    }
+
+    public VariableDefinition setType(VariableType type) {
+        this.type = type;
+        return this;
+    }
+
+    public VariableDefinition setType(String typeString) {
+        if (typeString == null) {
+            type = null;
+        } else {
+            String upper = typeString.toUpperCase();
+            try {
+                type = VariableType.valueOf(upper);
+            } catch (IllegalArgumentException ex) {
+                log.error("Can't convert '" + typeString + "' to VariableType: " + ex.getMessage());
+            }
+        }
+        return this;
+    }
+
+    private Object convertValue(Object value) {
+        if (value == null) {
+            return null; // Nothing to do.
+        }
+        if (type == null) {
+            setType(value);
+        }
+        switch (type) {
+            case INT:
+                if (value instanceof Number) {
+                    return ((Number) value).intValue();
+                }
+                if (value instanceof String) {
+                    try {
+                        return new Integer((String) value);
+                    } catch (NumberFormatException ex) {
+                        log.error("Can't parse integer '" + value + "': " + ex.getMessage(), ex);
+                        return 0;
+                    }
+                }
+                log.error("Can't get integer of type " + value.getClass().getCanonicalName() + ": " + value);
+                return 0;
+            case FLOAT:
+                if (value instanceof Number) {
+                    return ((Number) value).doubleValue();
+                }
+                if (value instanceof String) {
+                    try {
+                        return new Double((String) value);
+                    } catch (NumberFormatException ex) {
+                        log.error("Can't parse float '" + value + "': " + ex.getMessage(), ex);
+                        return 0.0;
+                    }
+                }
+                log.error("Can't get float of type " + value.getClass().getCanonicalName() + ": " + value);
+                return 0.0;
+            case STRING:
+                return value.toString();
+            case DATE:
+                log.error("*** Date not yet supported: " + value);
+        }
+        log.error("Value '" + value + "' of type " + value.getClass() + " doesn't match type: " + type);
+        return null;
+    }
+
+    private void setType(Object value) {
+        if (value == null) {
+            return; // Nothing to do.
+        }
+        if (value instanceof String) {
+            type = VariableType.STRING;
+        } else if (value instanceof Integer || value instanceof Long) {
+            type = VariableType.INT;
+        } else if (value instanceof Float || value instanceof Double) {
+            type = VariableType.FLOAT;
+        } else if (value instanceof LocalDate) {
+            type = VariableType.DATE;
+        } else {
+            log.error("Variable value of type " + value.getClass().getCanonicalName() + " not yet supported.");
+        }
     }
 }

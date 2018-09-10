@@ -6,12 +6,11 @@ import java.util.Map;
 /**
  * Defines a variable which is dependent of another variable (master variable).
  *
- * @param <T>
  */
-public class DependentVariableDefinition<T> {
+public class DependentVariableDefinition {
     private String name;
-    private VariableDefinition<T> dependsOn;
-    private Map<T, String> mapping;
+    private VariableDefinition dependsOn;
+    private Map<Object, String> mapping;
 
     /**
      * @return Name of the variable to use via ${name} in the templats..
@@ -20,7 +19,7 @@ public class DependentVariableDefinition<T> {
         return name;
     }
 
-    public DependentVariableDefinition<T> setName(String name) {
+    public DependentVariableDefinition setName(String name) {
         this.name = name;
         return this;
     }
@@ -29,7 +28,7 @@ public class DependentVariableDefinition<T> {
         return dependsOn;
     }
 
-    public DependentVariableDefinition<T> setDependsOn(VariableDefinition dependsOn) {
+    public DependentVariableDefinition setDependsOn(VariableDefinition dependsOn) {
         this.dependsOn = dependsOn;
         return this;
     }
@@ -37,20 +36,20 @@ public class DependentVariableDefinition<T> {
     /**
      * @return The mapping of the values of the master variable to this variable.
      */
-    public Map<T, String> getMapping() {
+    public Map<Object, String> getMapping() {
         return mapping;
     }
 
-    public void setMapping(Map<T, String> mapping) {
+    public void setMapping(Map<Object, String> mapping) {
         this.mapping = mapping;
     }
 
-    public DependentVariableDefinition<T> addMapping(T masterValue, String value) {
+    public DependentVariableDefinition addMapping(Object masterValue, String value) {
         createAndGetMapping().put(masterValue, value);
         return this;
     }
 
-    private Map<T, String> createAndGetMapping() {
+    private Map<Object, String> createAndGetMapping() {
         if (mapping == null) {
             mapping = new HashMap<>();
         }
