@@ -29,7 +29,7 @@ public class ExcelSheet {
     private boolean modified;
 
     ExcelSheet(ExcelWorkbook workbook, Sheet poiSheet) {
-        log.info("Reading sheet '" + poiSheet.getSheetName() + "'");
+        log.debug("Reading sheet '" + poiSheet.getSheetName() + "'");
         this.workbook = workbook;
         this.poiSheet = poiSheet;
     }
@@ -98,16 +98,31 @@ public class ExcelSheet {
 
     /**
      * @param columnHead
-     * @param listener
-     * @return this for chaining.
+     * @return Created and registered ExcelColumnDef.
      */
-    public ExcelSheet registerColumn(String columnHead, ExcelColumnListener listener) {
+    public ExcelColumnDef registerColumn(String columnHead) {
+        if (getColumnDef(columnHead) != null) {
+            log.error("Don't register column heads twice: '" + columnHead + "'.");
+            return getColumnDef(columnHead);
+        }
+        ExcelColumnDef columnDef = new ExcelColumnDef(columnHead);
+        columnDefList.add(columnDef);
+        return columnDef;
+    }
+
+    /**
+     * @param columnHead
+     * @param listener
+     * @return Created and registered ExcelColumnDef.
+     */
+    public ExcelColumnDef registerColumn(String columnHead, ExcelColumnListener listener) {
         ExcelColumnDef columnDef = getColumnDef(columnHead);
         if (columnDef == null) {
             columnDef = new ExcelColumnDef(columnHead);
             columnDefList.add(columnDef);
         }
-        return registerColumn(columnDef, listener);
+        registerColumn(columnDef, listener);
+        return columnDef;
     }
 
     /**
@@ -461,7 +476,6 @@ public class ExcelSheet {
 
     public void autosize() {
         for (int i = 0; i <= getLastColumn(); i++) {
-            log.debug("Autosize: " + i);
             poiSheet.autoSizeColumn(i);
         }
     }
@@ -478,7 +492,7 @@ public class ExcelSheet {
         int lastCol = 0;
         for (Row row : poiSheet) {
             if (row.getLastCellNum() > lastCol) {
-                lastCol= row.getLastCellNum();
+                lastCol = row.getLastCellNum();
             }
         }
         return lastCol;

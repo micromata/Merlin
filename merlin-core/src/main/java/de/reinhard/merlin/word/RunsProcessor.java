@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
  */
 public class RunsProcessor {
     private static Logger log = LoggerFactory.getLogger(RunsProcessor.class);
-    static final String IDENTIFIER_REGEXP = "[a-zA-Z_][a-zA-Z\\d_]*";
+    public static final String IDENTIFIER_REGEXP = "[a-zA-Z_][a-zA-Z\\d_]*";
     static final Pattern defaultVariablePattern = Pattern.compile("\\$\\{\\s*(" + IDENTIFIER_REGEXP + ")\\s*\\}");
     private int[] runSizes;
     private Pattern variablePattern;
@@ -35,6 +35,7 @@ public class RunsProcessor {
 
     /**
      * Only for test class.
+     *
      * @param runs
      */
     RunsProcessor(List<XWPFRun> runs) {

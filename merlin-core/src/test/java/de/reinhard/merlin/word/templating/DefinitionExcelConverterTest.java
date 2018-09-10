@@ -17,35 +17,50 @@ public class DefinitionExcelConverterTest {
 
     @Test
     public void createExcelTest() throws IOException {
-        ExcelWorkbook workbook = DefinitionExcelConverter.writeToWorkbook(create());
+        TemplateDefinitionExcelWriter writer = new TemplateDefinitionExcelWriter();
+        TemplateDefinition originalTemplate = create();
+        ExcelWorkbook workbook = writer.writeToWorkbook(originalTemplate);
         File file = new File(Definitions.OUTPUT_DIR, "TemplateDefinition.xlsx");
         log.info("Writing modified Excel file: " + file.getAbsolutePath());
         workbook.getPOIWorkbook().write(new FileOutputStream(file));
+
+        workbook = new ExcelWorkbook(file);
+        TemplateDefinitionExcelReader reader = new TemplateDefinitionExcelReader();
+        TemplateDefinition template = reader.readFromWorkbook(workbook);
+        assertEquals(originalTemplate.getId(), template.getId());
+        assertEquals(originalTemplate.getName(), template.getName());
+        assertEquals(originalTemplate.getDescription(), template.getDescription());
+        assertEquals(originalTemplate.getFilenamePattern(), template.getFilenamePattern());
+        assertEquals(originalTemplate.getVariableDefinitions().size(), template.getVariableDefinitions().size());
+        for (int i = 0; i < originalTemplate.getVariableDefinitions().size(); i++) {
+            assertVariable(originalTemplate.getVariableDefinitions().get(i), template.getVariableDefinitions().get(i));
+        }
+        // assertEquals(originalTemplate.getDependentVariableDefinitions().size(), template.getDependentVariableDefinitions().size());
     }
 
     @Test
     public void getBooleanAsStringTest() {
-        assertEquals("X", DefinitionExcelConverter.getBooleanAsString(true));
-        assertEquals("", DefinitionExcelConverter.getBooleanAsString(false));
+        assertEquals("X", TemplateDefinitionExcelWriter.getBooleanAsString(true));
+        assertEquals("", TemplateDefinitionExcelWriter.getBooleanAsString(false));
     }
 
     @Test
     public void getStringAsBooleanTest() {
-        assertFalse(DefinitionExcelConverter.getStringAsBoolean(null));
-        assertFalse(DefinitionExcelConverter.getStringAsBoolean(""));
-        assertFalse(DefinitionExcelConverter.getStringAsBoolean("no"));
-        assertFalse(DefinitionExcelConverter.getStringAsBoolean("-"));
-        assertFalse(DefinitionExcelConverter.getStringAsBoolean("sdlfkje9"));
-        assertTrue(DefinitionExcelConverter.getStringAsBoolean("X"));
-        assertTrue(DefinitionExcelConverter.getStringAsBoolean("x"));
-        assertTrue(DefinitionExcelConverter.getStringAsBoolean("Y"));
-        assertTrue(DefinitionExcelConverter.getStringAsBoolean("y"));
-        assertTrue(DefinitionExcelConverter.getStringAsBoolean("yes"));
-        assertTrue(DefinitionExcelConverter.getStringAsBoolean("Yes"));
-        assertTrue(DefinitionExcelConverter.getStringAsBoolean("J"));
-        assertTrue(DefinitionExcelConverter.getStringAsBoolean("j"));
-        assertTrue(DefinitionExcelConverter.getStringAsBoolean("Ja"));
-        assertTrue(DefinitionExcelConverter.getStringAsBoolean("ja"));
+        assertFalse(TemplateDefinitionExcelReader.getStringAsBoolean(null));
+        assertFalse(TemplateDefinitionExcelReader.getStringAsBoolean(""));
+        assertFalse(TemplateDefinitionExcelReader.getStringAsBoolean("no"));
+        assertFalse(TemplateDefinitionExcelReader.getStringAsBoolean("-"));
+        assertFalse(TemplateDefinitionExcelReader.getStringAsBoolean("sdlfkje9"));
+        assertTrue(TemplateDefinitionExcelReader.getStringAsBoolean("X"));
+        assertTrue(TemplateDefinitionExcelReader.getStringAsBoolean("x"));
+        assertTrue(TemplateDefinitionExcelReader.getStringAsBoolean("Y"));
+        assertTrue(TemplateDefinitionExcelReader.getStringAsBoolean("y"));
+        assertTrue(TemplateDefinitionExcelReader.getStringAsBoolean("yes"));
+        assertTrue(TemplateDefinitionExcelReader.getStringAsBoolean("Yes"));
+        assertTrue(TemplateDefinitionExcelReader.getStringAsBoolean("J"));
+        assertTrue(TemplateDefinitionExcelReader.getStringAsBoolean("j"));
+        assertTrue(TemplateDefinitionExcelReader.getStringAsBoolean("Ja"));
+        assertTrue(TemplateDefinitionExcelReader.getStringAsBoolean("ja"));
     }
 
     private TemplateDefinition create() {
@@ -70,4 +85,21 @@ public class DefinitionExcelConverterTest {
                 .setRequired(required).setUnique(unique);
     }
 
+    private void assertVariable(VariableDefinition exp, VariableDefinition act) {
+        assertEquals(exp.getName(), act.getName());
+        assertEquals(exp.getDescription(), act.getDescription());
+        assertEquals(exp.isRequired(), act.isRequired());
+        assertEquals(exp.isUnique(), act.isUnique());
+        assertEquals(exp.getType(), act.getType());
+        log.debug("Variable: " + exp.getName());
+        assertEquals(exp.getMinimumValue(), act.getMinimumValue());
+        assertEquals(exp.getMaximumValue(), act.getMaximumValue());
+        if (exp.getAllowedValuesList() != null) {
+            assertNotNull(act.getAllowedValuesList());
+            assertEquals(exp.getAllowedValuesList().size(), act.getAllowedValuesList().size());
+            for (int i = 0; i < exp.getAllowedValuesList().size(); i++) {
+                assertEquals(exp.getAllowedValuesList().get(i), act.getAllowedValuesList().get(i));
+            }
+        }
+    }
 }

@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -110,6 +111,10 @@ public class VariableDefinition {
      * @return this for chaining.
      */
     public VariableDefinition setMinimumValue(Object minimumValue) {
+        if (minimumValue != null && minimumValue instanceof String && ((String) minimumValue).length() == 0) {
+            this.minimumValue = null;
+            return this;
+        }
         this.minimumValue = minimumValue;
         return this;
     }
@@ -123,6 +128,10 @@ public class VariableDefinition {
      * @return this for chaining.
      */
     public VariableDefinition setMaximumValue(Object maximumValue) {
+        if (maximumValue != null && maximumValue instanceof String && ((String) maximumValue).length() == 0) {
+            this.maximumValue = null;
+            return this;
+        }
         this.maximumValue = maximumValue;
         return this;
     }
@@ -192,6 +201,18 @@ public class VariableDefinition {
         if (type == null) {
             setType(value);
         }
+        Object retval = convertValue(value, type);
+        if (retval != null) {
+            return retval;
+        }
+        log.error("Value '" + value + "' of type " + value.getClass() + " doesn't match type: " + type);
+        return null;
+    }
+
+    public static Object convertValue(Object value, VariableType type) {
+        if (value == null) {
+            return null;
+        }
         switch (type) {
             case INT:
                 if (value instanceof Number) {
@@ -205,7 +226,7 @@ public class VariableDefinition {
                         return 0;
                     }
                 }
-                log.error("Can't get integer of type " + value.getClass().getCanonicalName() + ": " + value);
+                log.error("Can't get integer from type " + value.getClass().getCanonicalName() + ": " + value);
                 return 0;
             case FLOAT:
                 if (value instanceof Number) {
@@ -219,15 +240,21 @@ public class VariableDefinition {
                         return 0.0;
                     }
                 }
-                log.error("Can't get float of type " + value.getClass().getCanonicalName() + ": " + value);
+                log.error("Can't get float from type " + value.getClass().getCanonicalName() + ": " + value);
                 return 0.0;
             case STRING:
                 return value.toString();
             case DATE:
-                log.error("*** Date not yet supported: " + value);
+                if (value instanceof Date) {
+                    return value;
+                } else if (value instanceof String) {
+                    if (((String) value).trim().length() == 0) {
+                        return null;
+                    }
+                }
+                log.error("Can't get date from type " + value.getClass().getCanonicalName() + ": " + value);
         }
-        log.error("Value '" + value + "' of type " + value.getClass() + " doesn't match type: " + type);
-        return null;
+        return value;
     }
 
     private void setType(Object value) {

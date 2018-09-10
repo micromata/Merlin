@@ -4,18 +4,21 @@ import org.apache.poi.ss.usermodel.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-class PoiHelper {
+public class PoiHelper {
     private static Logger log = LoggerFactory.getLogger(PoiHelper.class);
 
-    static String getValueAsString(Cell cell) {
+    public static String getValueAsString(Cell cell) {
         if (cell == null) {
-            return "";
+            return null;
+        }
+        if (cell.getCellTypeEnum() == CellType.STRING) {
+            return cell.getStringCellValue();
         }
         DataFormatter formatter = new DataFormatter();
         return formatter.formatCellValue(cell);
     }
 
-    static Object getValue(Cell cell) {
+    public static Object getValue(Cell cell) {
         if (cell == null) {
             return null;
         }
@@ -23,6 +26,9 @@ class PoiHelper {
             case BOOLEAN:
                 return cell.getBooleanCellValue();
             case NUMERIC:
+                if (DateUtil.isCellDateFormatted(cell)) {
+                    return cell.getDateCellValue();
+                }
                 return cell.getNumericCellValue();
             case STRING:
                 return cell.getStringCellValue();
@@ -34,7 +40,7 @@ class PoiHelper {
         }
     }
 
-    static boolean isEmpty(Cell cell) {
+    public static boolean isEmpty(Cell cell) {
         if (cell == null) {
             return true;
         }
@@ -47,7 +53,7 @@ class PoiHelper {
         return false;
     }
 
-    static void setComment(Cell cell, String message) {
+    public static void setComment(Cell cell, String message) {
         Comment actComment = cell.getCellComment();
         if (actComment != null) {
             log.error("Cell comment does already exist. Can't add cell comment twice.");
