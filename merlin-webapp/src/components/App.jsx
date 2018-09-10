@@ -5,6 +5,7 @@ import Menu from "./general/Menu";
 import Start from "./views/Start";
 import View from "./views/config/View";
 import TableExample from "./views/TableExample";
+import DropAreaExample from "./views/DropAreaExample";
 
 class App extends React.Component {
 
@@ -12,8 +13,9 @@ class App extends React.Component {
         const history = createBrowserHistory();
         const routes = [
             ['Start', '/', Start],
-            ['View', '/config', View],
-            ['Table Example', '/table', TableExample]
+            ['Config', '/config', View],
+            ['Table Example', '/table', TableExample],
+            ['Drop Area Example', '/drop', DropAreaExample]
         ];
 
         return (
