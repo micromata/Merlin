@@ -1,6 +1,6 @@
 package de.reinhard.merlin.app.jetty;
 
-import de.reinhard.merlin.app.Configuration;
+import de.reinhard.merlin.app.ConfigurationHandler;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
@@ -79,7 +79,7 @@ public class JettyServer {
     }
 
     private int findFreePort() {
-        int port = Configuration.getInstance().getPort();
+        int port = ConfigurationHandler.getInstance().getPort();
         for (int i = port; i < 8999; i++) {
             try (ServerSocket socket = new ServerSocket(i)) {
                 return i;

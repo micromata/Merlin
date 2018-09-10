@@ -1,14 +1,13 @@
 package de.reinhard.merlin;
 
-import java.text.MessageFormat;
 import java.util.Locale;
-import java.util.ResourceBundle;
 
 /**
  * For internationalization.
  */
-public class I18n {
+public class I18n extends AbstractI18n {
     private static I18n defaultInstance = new I18n();
+    public static final String BUNDLE_NAME = "MerlinCoreMessagesBundle";
 
     public static I18n getDefault() {
         return defaultInstance;
@@ -36,40 +35,14 @@ public class I18n {
         return defaultInstance;
     }
 
-    private ResourceBundle resourceBundle;
-
     /**
      * Uses the default message bundle "MessagesBundle" of class path with systems default locale.
      */
     public I18n() {
-        ResourceBundle.Control utf8Control = new UTF8ResourceBundleControl();
-        this.resourceBundle = ResourceBundle.getBundle("MessagesBundle", utf8Control);
-    }
-
-    public I18n(ResourceBundle resourceBundle) {
-        this.resourceBundle = resourceBundle;
+        super(BUNDLE_NAME);
     }
 
     public I18n(Locale locale) {
-        ResourceBundle.Control utf8Control = new UTF8ResourceBundleControl();
-        this.resourceBundle = ResourceBundle.getBundle("MessagesBundle", locale, utf8Control);
-    }
-
-    /**
-     * @param messageId
-     * @return localized message.
-     */
-    public String getMessage(String messageId) {
-        return resourceBundle.getString(messageId);
-    }
-
-    /**
-     * @param messageId
-     * @param params    Message parameter to replace in message.
-     * @return localized message.
-     * @see MessageFormat#format(String, Object...)
-     */
-    public String formatMessage(String messageId, Object... params) {
-        return MessageFormat.format(resourceBundle.getString(messageId), params);
+        super(BUNDLE_NAME, locale);
     }
 }
