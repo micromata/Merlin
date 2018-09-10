@@ -396,6 +396,10 @@ public class ExcelSheet {
         return modified;
     }
 
+    void setModified(boolean modified) {
+        this.modified = modified;
+    }
+
     private void addValidationError(ExcelValidationErrorMessage message) {
         if (validationErrors == null) {
             validationErrors = new TreeSet<>();
@@ -425,5 +429,28 @@ public class ExcelSheet {
     public Row getHeadRow() {
         findAndReadHeadRow();
         return headRow;
+    }
+
+    public void cleanSheet() {
+        int numberOfRows = poiSheet.getLastRowNum();
+        if (numberOfRows >= 0) {
+            return; // Nothing to do.
+        }
+        modified = true;
+        for (int i = numberOfRows; i >= 0; i--) {
+            if (poiSheet.getRow(i) != null) {
+                poiSheet.removeRow(poiSheet.getRow(i));
+            }
+        }
+    }
+
+    /**
+     * Appends the row.
+     * @return
+     */
+    public ExcelRow createRow() {
+        int rowCount = poiSheet.getLastRowNum();
+        Row row = poiSheet.createRow(rowCount + 1);
+        return new ExcelRow(row);
     }
 }

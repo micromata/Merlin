@@ -61,6 +61,22 @@ public class ExcelWorkbook {
         return null;
     }
 
+    public ExcelSheet createOrGetSheet(String sheetName) {
+        initializeSheetList();
+        if (sheetName == null) {
+            log.error("Can't get sheet by name without given name. Name parameter is null.");
+            return null;
+        }
+        ExcelSheet sheet = getSheet(sheetName);
+        if (sheet != null) {
+            return sheet;
+        }
+        sheet = new ExcelSheet(this, getPOIWorkbook().createSheet(sheetName));
+        sheet.setModified(true);
+        sheetList = null;
+        return sheet;
+    }
+
     public Workbook getPOIWorkbook() {
         return workbook;
     }
@@ -91,6 +107,7 @@ public class ExcelWorkbook {
 
     /**
      * Please re-use cell styles due to limitations of Excel.
+     *
      * @param id
      * @return
      */
@@ -105,6 +122,7 @@ public class ExcelWorkbook {
 
     /**
      * Please re-use cell styles due to limitations of Excel.
+     *
      * @param id
      * @return
      */
