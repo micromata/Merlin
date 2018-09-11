@@ -23,15 +23,16 @@ public class WordDocumentTest {
     @Test
     public void readWordTest() throws Exception {
         Map<String, String> variables = new HashMap<>();
-        variables.put("Mitarbeiter", "Kai Reinhard");
-        variables.put("Anrede", "Herr");
-        variables.put("Datum", "1.1.2001");
-        variables.put("Wochenstunden", "30");
-        variables.put("Arbeitszeit", "Vollzeit");
-        WordDocument document = new WordDocument(new File(Definitions.EXAMPLES_TEST_DIR, "Vertrag.docx"));
+        variables.put("Employee", "Kai Reinhard");
+        variables.put("Gender", "male");
+        variables.put("Date", "1/1/2001");
+        variables.put("BeginDate", "2/1/2001");
+        variables.put("WeeklyHours", "25");
+        variables.put("NumberOfLeaveDays", "30");
+        WordDocument document = new WordDocument(new File(Definitions.EXAMPLES_TEST_DIR, "ContractTemplate.docx"));
         document.process(variables);
         XWPFDocument doc = document.getDocument();
-        File file = new File(Definitions.OUTPUT_DIR, "Vertrag.docx");
+        File file = new File(Definitions.OUTPUT_DIR, "Contract.docx");
         log.info("Writing modified MS Word file: " + file.getAbsolutePath());
         doc.write(new FileOutputStream(file));
     }

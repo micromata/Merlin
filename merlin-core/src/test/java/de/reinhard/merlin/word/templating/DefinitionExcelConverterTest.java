@@ -20,7 +20,7 @@ public class DefinitionExcelConverterTest {
         TemplateDefinitionExcelWriter writer = new TemplateDefinitionExcelWriter();
         TemplateDefinition originalTemplate = create();
         ExcelWorkbook workbook = writer.writeToWorkbook(originalTemplate);
-        File file = new File(Definitions.OUTPUT_DIR, "TemplateDefinition.xlsx");
+        File file = new File(Definitions.OUTPUT_DIR, "ContractDefinition.xlsx");
         log.info("Writing modified Excel file: " + file.getAbsolutePath());
         workbook.getPOIWorkbook().write(new FileOutputStream(file));
 
@@ -72,10 +72,12 @@ public class DefinitionExcelConverterTest {
         TemplateDefinition template = new TemplateDefinition();
         template.setName("Employment contract").setFilenamePattern("employment-contract-${Employee}").setDescription("This template is used for the generation of emloyee contracts.");
         VariableDefinition gender = createStringVariable("Gender", "Gender of the employee.", true, true).addAllowedValues("male", "female");
-        template.add(createStringVariable("Employee", "Name of the employee.", true, true));
-        template.add(new VariableDefinition(VariableType.DATE, "BeginDate").setDescription("Begin of the contract.").setRequired());
         template.add(gender);
+        template.add(createStringVariable("Employee", "Name of the employee.", true, true));
+        template.add(new VariableDefinition(VariableType.DATE, "Date").setDescription("Date of contract.").setRequired());
+        template.add(new VariableDefinition(VariableType.DATE, "BeginDate").setDescription("Begin of the contract.").setRequired());
         template.add(new VariableDefinition(VariableType.INT, "WeeklyHours").setDescription("The weekly working hours.").setRequired().setMinimumValue(1).setMaximumValue(40));
+        template.add(new VariableDefinition(VariableType.INT, "NumberOfLeaveDays").setDescription("The number of leave days per year.").setRequired().setMinimumValue(20).setMaximumValue(30));
         template.add(new DependentVariableDefinition().setName("Mr_Mrs").setDependsOn(gender).addMapping("male", "Mr.").addMapping("female", "Mrs."));
         template.add(new DependentVariableDefinition().setName("He_She").setDependsOn(gender).addMapping("male", "He").addMapping("female", "She"));
         template.add(new DependentVariableDefinition().setName("he_she").setDependsOn(gender).addMapping("male", "he").addMapping("female", "she"));
