@@ -1,20 +1,21 @@
 package de.reinhard.merlin.app.jetty;
 
 import de.reinhard.merlin.app.ConfigurationHandler;
+import de.reinhard.merlin.app.javafx.RunningMode;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
-import org.eclipse.jetty.servlet.DefaultServlet;
-import org.eclipse.jetty.servlet.ErrorPageErrorHandler;
-import org.eclipse.jetty.servlet.ServletContextHandler;
-import org.eclipse.jetty.servlet.ServletHolder;
+import org.eclipse.jetty.servlet.*;
+import org.eclipse.jetty.servlets.CrossOriginFilter;
 import org.eclipse.jetty.util.resource.Resource;
 import org.glassfish.jersey.servlet.ServletContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.servlet.DispatcherType;
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.util.EnumSet;
 
 public class JettyServer {
     private Logger log = LoggerFactory.getLogger(JettyServer.class);
@@ -58,6 +59,24 @@ public class JettyServer {
         ErrorPageErrorHandler errorHandler = new ErrorPageErrorHandler();
         errorHandler.addErrorPage(404, "/");
         ctx.setErrorHandler(errorHandler);
+
+        if (RunningMode.isDevelopmentMode()) {
+            log.warn("*********************************");
+            log.warn("***********            **********");
+            log.warn("*********** ATTENTION! **********");
+            log.warn("***********            **********");
+            log.warn("*********** Running in **********");
+            log.warn("*********** dev mode!  **********");
+            log.warn("***********            **********");
+            log.warn("*********************************");
+            log.warn("Don't deliver this app in dev mode due to security reasons!");
+
+            FilterHolder filterHolder = ctx.addFilter(CrossOriginFilter.class,"/*", EnumSet.of(DispatcherType.REQUEST));
+            filterHolder.setInitParameter(CrossOriginFilter.ALLOWED_ORIGINS_PARAM, "*");
+            filterHolder.setInitParameter(CrossOriginFilter.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*");
+            filterHolder.setInitParameter(CrossOriginFilter.ALLOWED_METHODS_PARAM, "GET,POST,HEAD");
+            filterHolder.setInitParameter(CrossOriginFilter.ALLOWED_HEADERS_PARAM, "X-Requested-With,Content-Type,Accept,Origin");
+        }
 
         server.setHandler(ctx);
 

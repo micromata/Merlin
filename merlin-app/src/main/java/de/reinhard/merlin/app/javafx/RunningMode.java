@@ -16,4 +16,8 @@ public class RunningMode {
     public static boolean isMacOS() {
         return getOperationSystem() == OperatingSystem.MacOS;
     }
+
+    public static boolean isDevelopmentMode() {
+        return true;
+    }
 }
