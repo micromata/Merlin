@@ -1,5 +1,7 @@
 import {CONFIG_LOAD, CONFIG_RECEIVED, CONFIG_SET, CONFIG_SET_PROPERTY} from '../actions/types';
 
+const basePath = 'http://localhost:8042';
+
 // TODO CHANGE INITIAL STATE
 const initialState = {
     port: 8042,
@@ -8,8 +10,8 @@ const initialState = {
 //const initialState = {};
 
 const postConfig = config => {
-    console.log('Config', JSON.stringify(config));
-    fetch('/rest/configuration/config', {
+    // TODO CHANGE BASE PATH
+    fetch(basePath + '/rest/configuration/config', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
