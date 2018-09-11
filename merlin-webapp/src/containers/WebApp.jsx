@@ -1,19 +1,20 @@
 import React from 'react';
 import createBrowserHistory from 'history/createBrowserHistory';
 import {Route, Router, Switch} from 'react-router';
-import Menu from "./general/Menu";
-import Start from "./views/Start";
-import View from "./views/config/View";
-import TableExample from "./views/TableExample";
-import DropAreaExample from "./views/DropAreaExample";
 
-class App extends React.Component {
+import Menu from '../components/general/Menu';
+import Start from '../components/views/Start';
+import Config from '../components/views/config/View';
+import TableExample from '../components/views/TableExample';
+import DropAreaExample from '../components/views/DropAreaExample';
+
+class WebApp extends React.Component {
 
     render() {
         const history = createBrowserHistory();
         const routes = [
             ['Start', '/', Start],
-            ['Config', '/config', View],
+            ['Config', '/config', Config],
             ['Table Example', '/table', TableExample],
             ['Drop Area Example', '/drop', DropAreaExample]
         ];
@@ -23,6 +24,7 @@ class App extends React.Component {
                 <div>
                     <Menu routes={routes}/>
                     <div className={'container'}>
+                        <span>{JSON.stringify(this.props.config)}</span>
                         <Switch>
                             {
                                 routes.map((route, index) => (
@@ -42,4 +44,4 @@ class App extends React.Component {
     }
 }
 
-export default App;
+export default WebApp;

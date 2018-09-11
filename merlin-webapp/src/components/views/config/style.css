@@ -1,23 +1,29 @@
 div.config-form {
     width: 100%;
     display: block;
-    font-size: 0;
-    height: 34px;
+    font-size: 16px;
     margin: 5px 0;
 }
 
-div.config-form span.config-label, div.config-form span.config-value {
-    display: inline-block;
+div.config-form div {
+    display: block;
+    position: relative;
+}
+
+div.config-form div.config-label {
+    font-weight: 700;
+}
+
+div.config-form div.config-value {
+    width: 100%;
+}
+
+div.config-form div.config-value input {
     font-size: 16px;
 }
 
-div.config-form span.config-label {
-    width: 15%;
-    font-weight: 700;
-    vertical-align: top;
-}
-
-div.config-form span.config-value {
-    width: 85%;
-    min-height: 22px;
+div.config-form div.config-value.not-editing span {
+    padding: 6px 12px;
+    display: block;
+    width: 100%;
 }
