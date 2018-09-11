@@ -24,7 +24,7 @@ public class JsonUtilsTest {
                 + "\",\"name\":\"Test template\",\"description\":\"This is a test.\",\"filenamePattern\":\"Contract\"}", JsonUtils.toJson(t1));
         assertEquals(20, t1.getId().length());
         t1.add(createVar("Name", true, true));
-        t1.add(createVar("Sex", true, false));
+        t1.add(createVar("Gender", true, false));
         String json = JsonUtils.toJson(t1);
         TemplateDefinition t2 = JsonUtils.fromJson(TemplateDefinition.class, json);
         assertTemp(t1, t2);

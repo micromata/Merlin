@@ -71,16 +71,16 @@ public class DefinitionExcelConverterTest {
     private TemplateDefinition create() {
         TemplateDefinition template = new TemplateDefinition();
         template.setName("Employment contract").setFilenamePattern("employment-contract-${Employee}").setDescription("This template is used for the generation of emloyee contracts.");
-        VariableDefinition sex = createStringVariable("Sex", "Sex of the employee.", true, true).addAllowedValues("male", "female");
+        VariableDefinition gender = createStringVariable("Gender", "Gender of the employee.", true, true).addAllowedValues("male", "female");
         template.add(createStringVariable("Employee", "Name of the employee.", true, true));
         template.add(new VariableDefinition(VariableType.DATE, "BeginDate").setDescription("Begin of the contract.").setRequired());
-        template.add(sex);
+        template.add(gender);
         template.add(new VariableDefinition(VariableType.INT, "WeeklyHours").setDescription("The weekly working hours.").setRequired().setMinimumValue(1).setMaximumValue(40));
-        template.add(new DependentVariableDefinition().setName("Mr_Mrs").setDependsOn(sex).addMapping("male", "Mr.").addMapping("female", "Mrs."));
-        template.add(new DependentVariableDefinition().setName("He_She").setDependsOn(sex).addMapping("male", "He").addMapping("female", "She"));
-        template.add(new DependentVariableDefinition().setName("he_she").setDependsOn(sex).addMapping("male", "he").addMapping("female", "she"));
-        template.add(new DependentVariableDefinition().setName("His_Her").setDependsOn(sex).addMapping("male", "His").addMapping("female", "Her"));
-        template.add(new DependentVariableDefinition().setName("his_her").setDependsOn(sex).addMapping("male", "his").addMapping("female", "her"));
+        template.add(new DependentVariableDefinition().setName("Mr_Mrs").setDependsOn(gender).addMapping("male", "Mr.").addMapping("female", "Mrs."));
+        template.add(new DependentVariableDefinition().setName("He_She").setDependsOn(gender).addMapping("male", "He").addMapping("female", "She"));
+        template.add(new DependentVariableDefinition().setName("he_she").setDependsOn(gender).addMapping("male", "he").addMapping("female", "she"));
+        template.add(new DependentVariableDefinition().setName("His_Her").setDependsOn(gender).addMapping("male", "His").addMapping("female", "Her"));
+        template.add(new DependentVariableDefinition().setName("his_her").setDependsOn(gender).addMapping("male", "his").addMapping("female", "her"));
         return template;
     }
 
