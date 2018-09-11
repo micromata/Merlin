@@ -68,7 +68,7 @@ public class DefinitionExcelConverterTest {
         assertTrue(TemplateDefinitionExcelReader.getStringAsBoolean("ja"));
     }
 
-    private TemplateDefinition create() {
+    static TemplateDefinition create() {
         TemplateDefinition template = new TemplateDefinition();
         template.setName("Employment contract").setFilenamePattern("employment-contract-${Employee}").setDescription("This template is used for the generation of emloyee contracts.");
         VariableDefinition gender = createStringVariable("Gender", "Gender of the employee.", true, true).addAllowedValues("male", "female");
@@ -86,7 +86,7 @@ public class DefinitionExcelConverterTest {
         return template;
     }
 
-    private VariableDefinition createStringVariable(String name, String description, boolean required, boolean unique) {
+    private static VariableDefinition createStringVariable(String name, String description, boolean required, boolean unique) {
         return new VariableDefinition(name)
                 .setDescription(description)
                 .setRequired(required).setUnique(unique);

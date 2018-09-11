@@ -1,14 +1,11 @@
 package de.reinhard.merlin.word;
 
-import de.reinhard.merlin.Definitions;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -19,23 +16,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class WordDocumentTest {
     private Logger log = LoggerFactory.getLogger(WordDocumentTest.class);
-
-    @Test
-    public void readWordTest() throws Exception {
-        Map<String, String> variables = new HashMap<>();
-        variables.put("Employee", "Kai Reinhard");
-        variables.put("Gender", "male");
-        variables.put("Date", "1/1/2001");
-        variables.put("BeginDate", "2/1/2001");
-        variables.put("WeeklyHours", "25");
-        variables.put("NumberOfLeaveDays", "30");
-        WordDocument document = new WordDocument(new File(Definitions.EXAMPLES_TEST_DIR, "ContractTemplate.docx"));
-        document.process(variables);
-        XWPFDocument doc = document.getDocument();
-        File file = new File(Definitions.OUTPUT_DIR, "Contract.docx");
-        log.info("Writing modified MS Word file: " + file.getAbsolutePath());
-        doc.write(new FileOutputStream(file));
-    }
 
     @Test
     public void patternTest() {

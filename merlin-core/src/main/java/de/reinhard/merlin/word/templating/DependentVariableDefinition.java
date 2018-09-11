@@ -74,6 +74,14 @@ public class DependentVariableDefinition {
         return list;
     }
 
+    public String getMappedValue(Map<String, String> variables) {
+        if (mapping == null || variables == null || dependsOn == null) {
+            return "";
+        }
+        String value = variables.get(dependsOn.getName());
+        return mapping.get(value);
+    }
+
     @Transient
     public String getMappingInformation() {
         if (dependsOn == null) {
@@ -89,7 +97,7 @@ public class DependentVariableDefinition {
                 sb.append(", ");
             }
             String mappedValue = mapping.get(masterValue);
-            sb.append("\"").append(masterValue).append("\"->\"").append(mappedValue != null ? mappedValue:"").append("\"");
+            sb.append("\"").append(masterValue).append("\"->\"").append(mappedValue != null ? mappedValue : "").append("\"");
         }
         sb.append("}");
         return sb.toString();
