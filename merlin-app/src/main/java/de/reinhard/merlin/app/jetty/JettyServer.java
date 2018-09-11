@@ -14,11 +14,13 @@ import org.slf4j.LoggerFactory;
 
 import javax.servlet.DispatcherType;
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.util.EnumSet;
 
 public class JettyServer {
     private Logger log = LoggerFactory.getLogger(JettyServer.class);
+    private static final String HOST = "127.0.0.1";
     private Server server;
     private int port;
 
@@ -31,7 +33,7 @@ public class JettyServer {
         server = new Server();
 
         ServerConnector connector = new ServerConnector(server);
-        connector.setHost("127.0.0.1");
+        connector.setHost(HOST);
         connector.setPort(port);
         server.setConnectors(new Connector[]{connector});
 
@@ -100,7 +102,8 @@ public class JettyServer {
     private int findFreePort() {
         int port = ConfigurationHandler.getInstance().getConfiguration().getPort();
         for (int i = port; i < 8999; i++) {
-            try (ServerSocket socket = new ServerSocket(i)) {
+            try (ServerSocket socket = new ServerSocket()) {
+                socket.bind(new InetSocketAddress(HOST, i));
                 return i;
             } catch (IOException ex) {
                 log.info("Port " + i + " already in use. Trying next port.");
