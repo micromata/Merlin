@@ -3,6 +3,7 @@ package de.reinhard.merlin.word.templating;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.beans.Transient;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.LinkedList;
@@ -168,6 +169,7 @@ public class VariableDefinition {
         return type;
     }
 
+    @Transient
     public String getTypeAsString() {
         if (type == null) {
             return "";
@@ -180,6 +182,7 @@ public class VariableDefinition {
         return this;
     }
 
+    @Transient
     public VariableDefinition setType(String typeString) {
         if (typeString == null) {
             type = null;

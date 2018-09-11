@@ -1,5 +1,6 @@
 package de.reinhard.merlin.word.templating;
 
+import java.beans.Transient;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -73,6 +74,7 @@ public class DependentVariableDefinition {
         return list;
     }
 
+    @Transient
     public String getMappingInformation() {
         if (dependsOn == null) {
             return "";
