@@ -6,22 +6,27 @@ import org.apache.poi.xwpf.usermodel.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.util.Map;
 
 public class WordDocument {
     private Logger log = LoggerFactory.getLogger(WordDocument.class);
     XWPFDocument document;
+    private String filename;
 
+    /**
+     * @param document
+     */
     public WordDocument(XWPFDocument document) {
         this.document = document;
     }
 
-    public WordDocument(String wordFilename) {
-        this(new File(wordFilename));
+    /**
+     *
+     * @param filename File to read document from.
+     */
+    public WordDocument(String filename) {
+        this(new File(filename));
     }
 
     public WordDocument(File wordFile) {
@@ -32,13 +37,25 @@ public class WordDocument {
             log.error("Couldn't open File '" + wordFile.getAbsolutePath() + "': ", ex);
             throw new RuntimeException(ex);
         }
+        this.filename = wordFile.getAbsolutePath();
+        init(inputStream);
+    }
+
+    /**
+     * @param inputStream
+     */
+    public WordDocument(InputStream inputStream) {
+        init(inputStream);
+    }
+
+    private void init(InputStream inputStream) {
         try {
             document = new XWPFDocument(OPCPackage.open(inputStream));
         } catch (IOException ex) {
-            log.error("Couldn't open File '" + wordFile.getAbsolutePath() + "': " + ex.getMessage(), ex);
+            log.error("Couldn't open File '" + filename + "': " + ex.getMessage(), ex);
             throw new RuntimeException(ex);
         } catch (InvalidFormatException ex) {
-            log.error("Unsupported file format '" + wordFile.getAbsolutePath() + "': " + ex.getMessage(), ex);
+            log.error("Unsupported file format '" + filename + "': " + ex.getMessage(), ex);
             throw new RuntimeException(ex);
         }
     }
@@ -72,5 +89,13 @@ public class WordDocument {
                 log.warn("Unsupported body element: " + element);
             }
         }
+    }
+
+    public String getFilename() {
+        return filename;
+    }
+
+    public void setFilename(String filename) {
+        this.filename = filename;
     }
 }
