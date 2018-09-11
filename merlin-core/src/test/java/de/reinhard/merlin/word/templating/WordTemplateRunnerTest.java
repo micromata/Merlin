@@ -23,7 +23,7 @@ public class WordTemplateRunnerTest {
         runDocument(runner, "kai", "Kai Reinhard", "male", "3/16/2001",
                 "4/1/2001", "25", "30");
         runDocument(runner, "berta", "Berta Charlson", "female", "8/14/2017",
-                "19/1/2017", "28", "40");
+                "19/1/2017", "40", "30");
     }
 
     private void runDocument(WordTemplateRunner runner, String filenamepart, String employee, String gender, String date,
