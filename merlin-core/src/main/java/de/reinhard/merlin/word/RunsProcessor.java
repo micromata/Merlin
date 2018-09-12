@@ -5,10 +5,7 @@ import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -52,8 +49,8 @@ public class RunsProcessor {
         Matcher matcher = variablePattern.matcher(runsText);
         //log.debug("Start pos: " + lastPos);
         while (matcher.find()) {
-            String group = matcher.group(1);
-            Object objectValue = variables.get(group);
+            String variableName = matcher.group(1);
+            Object objectValue = variables.get(variableName);
             if (objectValue == null) {
                 continue; // Variable not found. Ignore this finding.
             }
@@ -66,6 +63,18 @@ public class RunsProcessor {
         for (ReplaceEntry entry : replaceEntries) {
             DocumentPosition startPos = getRunIdxAndPosition(-1, entry.start);
             replaceText(startPos, getRunIdxAndPosition(-1, entry.end - 1), entry.newText);
+        }
+    }
+
+    void scanVariables(Set<String> variables) {
+        if (runs == null || runs.size() == 0) {
+            return;
+        }
+        String runsText = getText();
+        Matcher matcher = variablePattern.matcher(runsText);
+        while (matcher.find()) {
+            String variableName = matcher.group(1);
+            variables.add(variableName);
         }
     }
 
