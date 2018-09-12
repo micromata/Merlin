@@ -11,6 +11,7 @@
     <name>Multi Chapter Merlin Parent Project</name>
 
     <modules>
+        <module>../merlin-app</module>
         <module>../merlin-core</module>
         <module>../merlin-velocity</module>
         <module>../merlin-smarthome</module>
