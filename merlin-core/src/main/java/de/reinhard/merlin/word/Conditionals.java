@@ -39,7 +39,9 @@ public class Conditionals {
         for (DocumentRange range : allControls) {
             AbstractConditional conditional = conditionalMap.get(range);
             if (conditional != null) {
-                log.debug("Processing conditional: " + conditional);
+                if (log.isDebugEnabled()) {
+                    log.debug("Processing conditional: " + conditional);
+                }
                 // If-expression:
                 if (current != null) {
                     // This is a child if-expression of current.
@@ -47,7 +49,9 @@ public class Conditionals {
                 }
                 current = conditional; // Set child as current.
             } else {
-                log.debug("Processing endif: " + range);
+                if (log.isDebugEnabled()) {
+                    log.debug("Processing endif: " + range);
+                }
                 // endif-expression:
                 if (current == null) {
                     log.error("endif without if-expression found. Ignoring it.");
