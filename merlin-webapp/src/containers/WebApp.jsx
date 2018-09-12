@@ -24,7 +24,6 @@ class WebApp extends React.Component {
                 <div>
                     <Menu routes={routes}/>
                     <div className={'container'}>
-                        <span>{JSON.stringify(this.props.config)}</span>
                         <Switch>
                             {
                                 routes.map((route, index) => (

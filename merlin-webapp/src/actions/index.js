@@ -1,10 +1,12 @@
-import {CONFIG_LOAD, CONFIG_RECEIVED, CONFIG_SET, CONFIG_SET_PROPERTY} from './types';
+import {CONFIG_RECEIVED, CONFIG_REQUESTED, CONFIG_SET, CONFIG_SET_PROPERTY} from './types';
 
-export const loadConfig = () => ({
-    type: CONFIG_LOAD,
+const basePath = 'http://localhost:8042';
+
+const requestConfig = () => ({
+    type: CONFIG_REQUESTED,
 });
 
-export const receiveConfig = data => ({
+export const receivedConfig = data => ({
     type: CONFIG_RECEIVED,
     payload: data
 });
@@ -20,3 +22,25 @@ export const setConfigProperty = (property, value) => ({
         property, value
     }
 });
+
+const fetchConfig = dispatch => {
+    dispatch(requestConfig());
+
+    return fetch(`${basePath}/rest/configuration/config`, {
+        method: 'GET',
+        headers: {
+            'Accepts': 'application/json'
+        }
+    })
+        .then(response => response.json())
+        .then(json => dispatch(receivedConfig(json.configuration)));
+};
+
+const shouldFetchConfig = config => !config.properties && !config.isFetching;
+
+export const fetchConfigIfNeeded = () => (dispatch, getState) => {
+    console.log(!getState().config.properties, !getState().config.isFetching);
+    if (shouldFetchConfig(getState().config)) {
+        dispatch(fetchConfig);
+    }
+};

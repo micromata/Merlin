@@ -10,7 +10,7 @@ describe('reducers', () => {
         });
     });
 
-    it('handles CONFIG_LOAD', () => {
+    it('handles CONFIG_REQUESTED', () => {
         // TODO EXPECT ACTION
         fail('TODOs open');
     });

@@ -1,13 +1,12 @@
-import {CONFIG_LOAD, CONFIG_RECEIVED, CONFIG_SET, CONFIG_SET_PROPERTY} from '../actions/types';
+import {CONFIG_RECEIVED, CONFIG_REQUESTED, CONFIG_SET, CONFIG_SET_PROPERTY} from '../actions/types';
 
 const basePath = 'http://localhost:8042';
 
 // TODO CHANGE INITIAL STATE
 const initialState = {
-    port: 8042,
-    language: 'en'
+    isFetching: false,
+    loaded: false
 };
-//const initialState = {};
 
 const postConfig = config => {
     // TODO CHANGE BASE PATH
@@ -26,12 +25,19 @@ const postConfig = config => {
 const reducer = (state = initialState, action) => {
     switch (action.type) {
 
-        case CONFIG_LOAD:
-            // TODO LOAD CONFIG
-            return state;
+        case CONFIG_REQUESTED:
+            console.log('Config will load', action);
+            return Object.assign({}, state, {
+                isFetching: true,
+                loaded: false
+            });
 
         case CONFIG_RECEIVED:
-            return action.payload;
+            console.log('Config received');
+            return Object.assign({}, state, {
+                isFetching: false,
+                properties: {...action.payload}
+            });
 
         case CONFIG_SET:
             postConfig(state);
