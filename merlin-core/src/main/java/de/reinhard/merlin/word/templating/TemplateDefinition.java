@@ -6,13 +6,12 @@ import org.apache.commons.lang.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class TemplateDefinition {
     private Logger log = LoggerFactory.getLogger(TemplateDefinition.class);
-    private List<VariableDefinition> variableDefinitions = new LinkedList<>();
-    private List<DependentVariableDefinition> dependentVariableDefinitions = new LinkedList<>();
+    private List<VariableDefinition> variableDefinitions = new ArrayList<>();
+    private List<DependentVariableDefinition> dependentVariableDefinitions = new ArrayList<>();
     private String id;
     private String name;
     private String description;
@@ -102,7 +101,7 @@ public class TemplateDefinition {
 
     public VariableDefinition getVariableDefinition(String variableName) {
         if (variableDefinitions == null) {
-            log.error("Variable named '" + variableName + "' not found in template '"+ getName() + "'. No variables defined.");
+            log.error("Variable named '" + variableName + "' not found in template '" + getName() + "'. No variables defined.");
             return null;
         }
         for (VariableDefinition variableDefinition : variableDefinitions) {
@@ -110,7 +109,24 @@ public class TemplateDefinition {
                 return variableDefinition;
             }
         }
-        log.error("Variable named '" + variableName + "' not found in template '"+ getName() + "'.");
+        log.error("Variable named '" + variableName + "' not found in template '" + getName() + "'.");
         return null;
+    }
+
+    /**
+     * @return Name of all variables defined (dependant variables included) in a sorted order.
+     */
+    public List<String> getAllDefinedVariableNames() {
+        Set<String> variables = new HashSet<>();
+        for (VariableDefinition def : variableDefinitions) {
+            variables.add(def.getName());
+        }
+        for (DependentVariableDefinition def : dependentVariableDefinitions) {
+            variables.add(def.getName());
+        }
+        List<String> result = new ArrayList<>();
+        result.addAll(variables);
+        Collections.sort(result, String.CASE_INSENSITIVE_ORDER);
+        return result;
     }
 }
