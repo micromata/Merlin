@@ -1,6 +1,7 @@
 package de.reinhard.merlin.app.rest;
 
 import de.reinhard.merlin.app.javafx.FileBrowser;
+import de.reinhard.merlin.app.javafx.RunningMode;
 import org.apache.commons.io.IOUtils;
 import org.glassfish.jersey.media.multipart.ContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataBodyPart;
@@ -84,7 +85,13 @@ public class FilesServiceRest {
     @Path("/browse-dir")
     @Produces(MediaType.TEXT_PLAIN)
     public String browseDirectory(@Context HttpServletRequest requestContext) {
-        log.info("browseDirectory called from: " + requestContext.getRemoteAddr());
+        if (RunningMode.isRunning() == false) {
+            return "Service unavailable. No desktop app on localhost available.";
+        }
+        String remoteAddr = requestContext.getRemoteAddr();
+        if (remoteAddr == null || !remoteAddr.equals("127.0.0.1")) {
+            return "Service not available. Can't call this service remote. Run this service on localhost of the running desktop app.";
+        }
         CompletableFuture<File> future = new CompletableFuture<>();
         FileBrowser.getInstance().open(FileBrowser.SelectFilter.DIRECTORY, future);
         File file = null;
@@ -94,7 +101,6 @@ public class FilesServiceRest {
             log.error("While waiting for file browser: " + ex.getMessage(), ex);
         }
         String result = file != null ? file.getAbsolutePath() : null;
-        log.info("Director chosen: " + result);
         return result;
     }
 
