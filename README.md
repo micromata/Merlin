@@ -66,3 +66,6 @@ Via templates the different configuration files for OpenHab are automatically ge
 Forget Copy&Paste and vi (in this context). Make your changes convenient in Excel and let do Merlin all the rest.
 
 Please refer examples/OpenHab-KNX-Definitions.xlsx for a first impression.
+
+# To-Do
+* Multiple Template files (Word, AsciiDoc, Text etc.) for one TemplateDefinition.xlsx. (def-Tag in Word-Template?)
