@@ -7,6 +7,8 @@ public class RunningMode {
 
     public enum OS_TYPE {MAC_OS, WINDOWS, LINUX, OTHER}
 
+    private static boolean running;
+
     public static Mode getMode() {
         return Mode.TemplatesTest;
     }
@@ -31,5 +33,13 @@ public class RunningMode {
             }
         }
         return osType;
+    }
+
+    public static boolean isRunning() {
+        return running;
+    }
+
+    static void setRunning(boolean running) {
+        RunningMode.running = running;
     }
 }

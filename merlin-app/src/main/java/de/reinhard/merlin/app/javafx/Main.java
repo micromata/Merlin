@@ -20,6 +20,7 @@ public class Main extends Application {
     private Logger log = LoggerFactory.getLogger(Main.class);
     private JettyServer server;
     private static Main main;
+    private Stage stage;
 
     public static void main(String[] args) {
         launch(args);
@@ -31,6 +32,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) {
+        this.stage = stage;
         log.info("Starting Java FX application in mode: " + RunningMode.getMode());
         if (RunningMode.getMode() == RunningMode.Mode.TemplatesTest) {
             // Creating data for testing.
@@ -62,6 +64,7 @@ public class Main extends Application {
         stage.show();
         server = new JettyServer();
         server.start();
+        RunningMode.setRunning(true);
     }
 
     @Override
@@ -69,6 +72,10 @@ public class Main extends Application {
         super.stop();
         log.info("Stopping Java FX application.");
         server.stop();
+    }
+
+    public Stage getStage() {
+        return stage;
     }
 
     void openBrowser() {

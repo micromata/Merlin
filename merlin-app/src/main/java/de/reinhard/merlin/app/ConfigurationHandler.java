@@ -10,7 +10,7 @@ public class ConfigurationHandler {
     private Logger log = LoggerFactory.getLogger(ConfigurationHandler.class);
     private static final ConfigurationHandler instance = new ConfigurationHandler();
     private static final String WEBSERVER_PORT_PREF = "webserver-port";
-    private static final int WEBSERVER_PORT_DEFAULT = 8042;
+    public static final int WEBSERVER_PORT_DEFAULT = 8042;
     private static final String LANGUAGE_PREF = "language";
     private static final String LANGUAGE_DEFAULT = "en";
 
