@@ -73,7 +73,7 @@ public class JettyServer {
             log.warn("*********************************");
             log.warn("Don't deliver this app in dev mode due to security reasons!");
 
-            FilterHolder filterHolder = ctx.addFilter(CrossOriginFilter.class,"/*", EnumSet.of(DispatcherType.REQUEST));
+            FilterHolder filterHolder = ctx.addFilter(CrossOriginFilter.class, "/*", EnumSet.of(DispatcherType.REQUEST));
             filterHolder.setInitParameter(CrossOriginFilter.ALLOWED_ORIGINS_PARAM, "*");
             filterHolder.setInitParameter(CrossOriginFilter.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*");
             filterHolder.setInitParameter(CrossOriginFilter.ALLOWED_METHODS_PARAM, "GET,POST,HEAD");
@@ -96,19 +96,30 @@ public class JettyServer {
         } catch (Exception ex) {
             log.error("Can't stop web server: " + ex.getMessage(), ex);
         }
-        server.destroy();
+        if (server != null) {
+            server.destroy();
+        }
     }
 
     private int findFreePort() {
         int port = ConfigurationHandler.getInstance().getConfiguration().getPort();
-        for (int i = port; i < 8999; i++) {
+        return findFreePort(port);
+    }
+
+    private int findFreePort(int startPort) {
+        int port = startPort;
+        for (int i = port; i < port + 10; i++) {
             try (ServerSocket socket = new ServerSocket()) {
                 socket.bind(new InetSocketAddress(HOST, i));
                 return i;
             } catch (IOException ex) {
-                log.info("Port " + i + " already in use. Trying next port.");
+                log.info("Port " + i + " already in use or not available. Trying next port.");
                 continue; // try next port
             }
+        }
+        if (startPort != ConfigurationHandler.WEBSERVER_PORT_DEFAULT) {
+            log.info("Trying to fix port due to a possible mis-configuration.");
+            return findFreePort(ConfigurationHandler.WEBSERVER_PORT_DEFAULT);
         }
         log.error("No free port found! Giving up.");
         return -1;
