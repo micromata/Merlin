@@ -64,6 +64,7 @@ public class Main extends Application {
         stage.show();
         server = new JettyServer();
         server.start();
+        RunningMode.setRunning(true);
     }
 
     @Override
