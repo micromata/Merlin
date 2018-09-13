@@ -101,11 +101,15 @@ public class FilesServiceRest {
     // save uploaded file to a defined location on the server
     private void saveFile(InputStream uploadedInputStream, String serverLocation) {
         try {
-            OutputStream outpuStream = new FileOutputStream(new File(serverLocation));
+            File file = new File(serverLocation);
+            log.info("Writing file '" + file.getAbsolutePath() + "'");
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+            OutputStream outpuStream = new FileOutputStream(file);
             IOUtils.copy(uploadedInputStream, outpuStream);
-        } catch (IOException e) {
-
-            e.printStackTrace();
+        } catch (IOException ex) {
+            log.error("Can't write file '" + serverLocation + "': " + ex.getMessage());
         }
     }
 
