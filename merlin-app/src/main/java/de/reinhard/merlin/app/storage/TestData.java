@@ -14,6 +14,7 @@ public class TestData {
     public static void create() {
         List<TemplateDefinition> templates = Storage.getInstance().getTemplatesList();
         TemplateDefinition template = new TemplateDefinition();
+        template.setId("oYuCAsH5kuEbL8JfPRkP");
         template.setName("Employment contract").setFilenamePattern("employment-contract-${Employee}").setDescription("This template is used for the generation of emloyee contracts.");
         templates.add(template);
         VariableDefinition gender = createStringVariable("Gender", "Gender of the employee.", true, true).addAllowedValues("male", "female");
@@ -28,6 +29,7 @@ public class TestData {
         template.add(new DependentVariableDefinition().setName("his_her").setDependsOn(gender).addMapping("male", "his").addMapping("female", "her"));
 
         template = new TemplateDefinition();
+        template.setId("WtiPJpabhhaFklLefy3c");
         template.setName("Service agreement").setFilenamePattern("service-agreement-${contractNumber}").setDescription("This template is used for the generation of service contracts (such as SLA).");
         templates.add(template);
         template.add(createStringVariable("Customer", "Our customer.", true, true));

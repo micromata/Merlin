@@ -11,7 +11,10 @@ import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.swing.*;
+import java.awt.*;
 import java.io.IOException;
+import java.net.URL;
 
 public class Main extends Application {
     private Logger log = LoggerFactory.getLogger(Main.class);
@@ -43,6 +46,12 @@ public class Main extends Application {
         } catch (IOException ex) {
             log.error(ex.getMessage(), ex);
             return;
+        }
+
+        if (RunningMode.getOSType() == RunningMode.OS_TYPE.MAC_OS) {
+            URL iconURL = Main.class.getResource("/icon.png");
+            Image image = new ImageIcon(iconURL).getImage();
+            com.apple.eawt.Application.getApplication().setDockIconImage(image);
         }
 
         Scene scene = new Scene(root);

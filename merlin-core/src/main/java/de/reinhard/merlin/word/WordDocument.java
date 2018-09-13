@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
-import java.util.Map;
+import java.util.*;
 
 public class WordDocument {
     private Logger log = LoggerFactory.getLogger(WordDocument.class);
@@ -65,10 +65,38 @@ public class WordDocument {
     }
 
     public void process(Map<String, String> variables) {
-        Conditionals conditionals = new Conditionals(this);
-        conditionals.read();
+        Conditionals conditionals = getConditionals();
         conditionals.process(variables);
         replaceVariables(variables);
+    }
+
+    public Conditionals getConditionals() {
+        Conditionals conditionals = new Conditionals(this);
+        conditionals.read();
+        return conditionals;
+    }
+
+    public Set<String> getVariables() {
+        Set<String> variables = new HashSet<>();
+        for (IBodyElement element : document.getBodyElements()) {
+            if (element instanceof XWPFParagraph) {
+                XWPFParagraph paragraph = (XWPFParagraph) element;
+                new RunsProcessor(paragraph).scanVariables(variables);
+            } else if (element instanceof XWPFTable) {
+                XWPFTable table = (XWPFTable) element;
+                for (XWPFTableRow row : table.getRows()) {
+                    for (XWPFTableCell cell : row.getTableCells()) {
+                        for (XWPFParagraph p : cell.getParagraphs()) {
+                            new RunsProcessor(p).scanVariables(variables);
+                        }
+                    }
+                }
+            } else {
+                log.warn("Unsupported body element: " + element);
+            }
+
+        }
+        return variables;
     }
 
     private void replaceVariables(Map<String, String> variables) {
