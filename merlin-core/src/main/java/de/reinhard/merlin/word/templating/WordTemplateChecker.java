@@ -18,7 +18,7 @@ public class WordTemplateChecker {
     private WordDocument document;
     private Conditionals conditionals;
     private Collection<String> allDefinedVariables; // All variables defined in TemplateDefinition.
-    private List<String> allUsedVariables;    // All variables used in the Word template.
+    private List<String> allUsedVariables;          // All variables used in the Word template.
     private Collection<String> unusedVariables;     // Variables defined but not used in the Word template.
     private Collection<String> undefinedVariables;  // Variables used in the Word template but not defined.
 
