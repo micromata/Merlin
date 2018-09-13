@@ -1,4 +1,4 @@
-import {CONFIG_FETCH_FAILED, CONFIG_RECEIVED, CONFIG_REQUESTED, CONFIG_SET, CONFIG_SET_PROPERTY} from './types';
+import {CONFIG_CHANGED_PROPERTY, CONFIG_FETCH_FAILED, CONFIG_RECEIVED, CONFIG_REQUESTED} from './types';
 
 const basePath = 'http://localhost:8042';
 
@@ -6,22 +6,17 @@ const requestConfig = () => ({
     type: CONFIG_REQUESTED,
 });
 
-export const receivedConfig = data => ({
+const receivedConfig = data => ({
     type: CONFIG_RECEIVED,
     payload: data
 });
 
-export const failedConfigFetch = () => ({
+const failedConfigFetch = () => ({
     type: CONFIG_FETCH_FAILED
 });
 
-export const setConfig = config => ({
-    type: CONFIG_SET,
-    payload: config
-});
-
-export const setConfigProperty = (property, value) => ({
-    type: CONFIG_SET_PROPERTY,
+const changedConfigProperty = (property, value) => ({
+    type: CONFIG_CHANGED_PROPERTY,
     payload: {
         property, value
     }
@@ -41,10 +36,28 @@ export const fetchConfig = () => dispatch => {
         .catch(() => dispatch(failedConfigFetch()));
 };
 
-const shouldFetchConfig = config => !config.failed && !config.properties && !config.isFetching;
+export const updateConfigProperty = (property, value) => (dispatch, getState) => {
+    return fetch(`${basePath}/rest/configuration/config`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(Object.assign({}, getState().config.properties, {
+            [property.toLowerCase()]: value
+        }))
+    })
+        .then(response => {
+            if (response.status >= 200 && response.status < 300) {
+                dispatch(changedConfigProperty(property, value))
+            }
+        })
+};
+
 
 export const fetchConfigIfNeeded = () => (dispatch, getState) => {
     if (shouldFetchConfig(getState().config)) {
         dispatch(fetchConfig());
     }
 };
+
+const shouldFetchConfig = config => !config.failed && !config.properties && !config.isFetching;
