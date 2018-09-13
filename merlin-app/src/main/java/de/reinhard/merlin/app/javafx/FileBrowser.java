@@ -16,7 +16,6 @@ public class FileBrowser {
 
     private File lastDir;
     private FileChooser fileChooser;
-    private File chosenFile;
 
     public static FileBrowser getInstance() {
         if (instance == null) {
@@ -30,15 +29,15 @@ public class FileBrowser {
         fileChooser.setTitle("Merlin");
     }
 
-    public File open(SelectFilter filter, CompletableFuture<File> future) {
-        return open(filter, (File) null, future);
+    public void open(SelectFilter filter, CompletableFuture<File> future) {
+        open(filter, (File) null, future);
     }
 
-    public File open(SelectFilter filter, String initialDirectory, CompletableFuture<File> future) {
-        return open(filter, new File(initialDirectory), future);
+    public void open(SelectFilter filter, String initialDirectory, CompletableFuture<File> future) {
+        open(filter, new File(initialDirectory), future);
     }
 
-    public File open(SelectFilter filter, File initialDirectory, CompletableFuture<File> future) {
+    public void open(SelectFilter filter, File initialDirectory, CompletableFuture<File> future) {
         if (initialDirectory == null || !initialDirectory.isDirectory()) {
             initialDirectory = lastDir;
         }
@@ -58,7 +57,6 @@ public class FileBrowser {
                 Main.getInstance().getStage().toFront();
             }
         });
-        return chosenFile;
     }
 
     private void addExtensionFilter(SelectFilter filter) {
