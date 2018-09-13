@@ -85,6 +85,11 @@ public class FileSystemBrowser {
         if (initialDirectory == null || !initialDirectory.isDirectory()) {
             initialDirectory = new File(System.getProperty("user.home"));
         }
+        if (filter == SelectFilter.DIRECTORY) {
+            directoryChooser.setInitialDirectory(initialDirectory);
+        } else {
+            fileChooser.setInitialDirectory(initialDirectory);
+        }
         addExtensionFilter(filter);
         Platform.runLater(new Runnable() {
             @Override

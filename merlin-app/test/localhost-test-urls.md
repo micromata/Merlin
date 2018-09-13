@@ -7,7 +7,7 @@ http://localhost:8042/rest/templates/list
 http://localhost:8042/rest/templates/oYuCAsH5kuEbL8JfPRkP
 
 ## Browse local file system
-* Dir: http://localhost:8042/rest/files/browse?type=dir
+* Dir: http://localhost:8042/rest/files/browse?type=dir&current=/Users/kai/tmp/motion.png
 * Excel: http://localhost:8042/rest/files/browse?type=excel
 * Word: http://localhost:8042/rest/files/browse?type=word
 * All: http://localhost:8042/rest/files/browse
