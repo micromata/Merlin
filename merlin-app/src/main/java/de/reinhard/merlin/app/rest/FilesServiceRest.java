@@ -1,19 +1,26 @@
 package de.reinhard.merlin.app.rest;
 
+import de.reinhard.merlin.app.javafx.FileBrowser;
 import org.apache.commons.io.IOUtils;
-import org.glassfish.jersey.media.multipart.*;
+import org.glassfish.jersey.media.multipart.ContentDisposition;
+import org.glassfish.jersey.media.multipart.FormDataBodyPart;
+import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import java.io.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 @Path("/files")
-public class UploadServiceRest {
-    private Logger log = LoggerFactory.getLogger(UploadServiceRest.class);
+public class FilesServiceRest {
+    private Logger log = LoggerFactory.getLogger(FilesServiceRest.class);
     private static final String TEST_OUT_DIR = "./out/";
     private static final String TEST_SRC_DIR = "./merlin-core/examples/tests/";
 
@@ -66,6 +73,29 @@ public class UploadServiceRest {
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     public Response downloadFilebyPath(@PathParam("filename") String fileName) {
         return download(fileName);
+    }
+
+    /**
+     * Opens a file browser on the desktop app and returns the chosen dir. Works only if Browser and Desktop app are running
+     * on the same host.
+     * @return The chosen directory path (absolute path).
+     */
+    @GET
+    @Path("/browse-dir")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String browseDirectory(@Context HttpServletRequest requestContext) {
+        log.info("browseDirectory called from: " + requestContext.getRemoteAddr());
+        CompletableFuture<File> future = new CompletableFuture<>();
+        FileBrowser.getInstance().open(FileBrowser.SelectFilter.DIRECTORY, future);
+        File file = null;
+        try {
+            file = future.get(); // wait for future to be assigned a result and retrieve it
+        } catch (InterruptedException | ExecutionException ex) {
+            log.error("While waiting for file browser: " + ex.getMessage(), ex);
+        }
+        String result = file != null ? file.getAbsolutePath() : null;
+        log.info("Director chosen: " + result);
+        return result;
     }
 
     // save uploaded file to a defined location on the server
