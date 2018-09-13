@@ -1,6 +1,7 @@
 package de.reinhard.merlin.app.javafx;
 
 import javafx.application.Platform;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +17,7 @@ public class FileBrowser {
 
     private File lastDir;
     private FileChooser fileChooser;
+    private DirectoryChooser directoryChooser;
 
     public static FileBrowser getInstance() {
         if (instance == null) {
@@ -27,6 +29,22 @@ public class FileBrowser {
     private FileBrowser() {
         fileChooser = new FileChooser();
         fileChooser.setTitle("Merlin");
+        directoryChooser = new DirectoryChooser();
+        directoryChooser.setTitle("Merlin");
+    }
+
+    /**
+     * @param file File or directory. If file then parent directory is used. Null-safe.
+     */
+    public void setLastDir(File file) {
+        if (file == null) {
+            return;
+        }
+        if (file.isDirectory()) {
+            lastDir = file;
+        } else {
+            lastDir = file.getParentFile();
+        }
     }
 
     public void open(SelectFilter filter, CompletableFuture<File> future) {
@@ -37,7 +55,7 @@ public class FileBrowser {
         open(filter, new File(initialDirectory), future);
     }
 
-    public void open(SelectFilter filter, File initialDirectory, CompletableFuture<File> future) {
+    public synchronized void open(SelectFilter filter, File initialDirectory, CompletableFuture<File> future) {
         if (initialDirectory == null || !initialDirectory.isDirectory()) {
             initialDirectory = lastDir;
         }
@@ -48,7 +66,11 @@ public class FileBrowser {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                future.complete(fileChooser.showOpenDialog(Main.getInstance().getStage()));
+                if (filter == SelectFilter.DIRECTORY) {
+                    future.complete(directoryChooser.showDialog(Main.getInstance().getStage()));
+                } else {
+                    future.complete(fileChooser.showOpenDialog(Main.getInstance().getStage()));
+                }
             }
         });
         Platform.runLater(new Runnable() {
