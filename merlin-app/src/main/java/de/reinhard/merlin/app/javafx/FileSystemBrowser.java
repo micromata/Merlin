@@ -9,24 +9,26 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.util.concurrent.CompletableFuture;
 
-public class FileBrowser {
-    private Logger log = LoggerFactory.getLogger(FileBrowser.class);
-    private static FileBrowser instance;
+public class FileSystemBrowser {
+    private Logger log = LoggerFactory.getLogger(FileSystemBrowser.class);
+    private static FileSystemBrowser instance;
 
-    public enum SelectFilter {EXCEL, WORD, ALL, DIRECTORY}
+    public enum SelectFilter {
+        EXCEL, WORD, ALL, DIRECTORY
+    }
 
     private File lastDir;
     private FileChooser fileChooser;
     private DirectoryChooser directoryChooser;
 
-    public static FileBrowser getInstance() {
+    public static FileSystemBrowser getInstance() {
         if (instance == null) {
-            instance = new FileBrowser();
+            instance = new FileSystemBrowser();
         }
         return instance;
     }
 
-    private FileBrowser() {
+    private FileSystemBrowser() {
         fileChooser = new FileChooser();
         fileChooser.setTitle("Merlin");
         directoryChooser = new DirectoryChooser();
@@ -40,11 +42,32 @@ public class FileBrowser {
         if (file == null) {
             return;
         }
+        lastDir = getDirectory(file);
+    }
+
+    public static File getDirectory(File file) {
         if (file.isDirectory()) {
-            lastDir = file;
+            return file;
         } else {
-            lastDir = file.getParentFile();
+            return file.getParentFile();
         }
+    }
+
+    public static SelectFilter getFilter(String filter) {
+        if (filter == null) {
+            return SelectFilter.ALL;
+        }
+        filter = filter.toLowerCase();
+        if (filter.contains("dir")) {
+            return SelectFilter.DIRECTORY;
+        }
+        if (filter.contains("excel") || filter.contains("xls")) {
+            return SelectFilter.EXCEL;
+        }
+        if (filter.contains("word") || filter.contains("doc")) {
+            return SelectFilter.WORD;
+        }
+        return SelectFilter.ALL;
     }
 
     public void open(SelectFilter filter, CompletableFuture<File> future) {
@@ -88,13 +111,13 @@ public class FileBrowser {
                 break;
             case WORD:
                 fileChooser.getExtensionFilters().addAll(//
-                        new FileChooser.ExtensionFilter("All Files", "*.*"),
-                        new FileChooser.ExtensionFilter("Word", "*.docx"));
+                        new FileChooser.ExtensionFilter("Word (*.docx)", "*.docx"),
+                        new FileChooser.ExtensionFilter("*.*", "*.*"));
                 break;
             case EXCEL:
                 fileChooser.getExtensionFilters().addAll(//
-                        new FileChooser.ExtensionFilter("All Files", "*.*"),
-                        new FileChooser.ExtensionFilter("Excel", "*.xlsx", "*.xls"));
+                        new FileChooser.ExtensionFilter("Excel (*.xlsx, *.xls)", "*.xlsx", "*.xls"),
+                        new FileChooser.ExtensionFilter("*.*", "*.*"));
                 break;
         }
     }
