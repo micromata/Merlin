@@ -112,7 +112,7 @@ public class JettyServer {
             try (ServerSocket socket = new ServerSocket()) {
                 socket.bind(new InetSocketAddress(HOST, i));
                 return i;
-            } catch (IOException ex) {
+            } catch (Exception ex) {
                 log.info("Port " + i + " already in use or not available. Trying next port.");
                 continue; // try next port
             }
