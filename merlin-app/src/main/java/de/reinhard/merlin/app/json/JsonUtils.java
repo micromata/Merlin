@@ -12,6 +12,9 @@ public class JsonUtils {
     private static Logger log = LoggerFactory.getLogger(JsonUtils.class);
 
     public static String toJson(Object obj) {
+        if (obj == null) {
+            return "";
+        }
         ObjectMapper objectMapper = getObjectMapper();
         StringWriter writer = new StringWriter();
         try {

@@ -6,6 +6,7 @@ import org.apache.commons.lang.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.beans.Transient;
 import java.util.*;
 
 public class TemplateDefinition {
@@ -116,6 +117,7 @@ public class TemplateDefinition {
     /**
      * @return Name of all variables defined (dependant variables included) in a sorted order.
      */
+    @Transient
     public List<String> getAllDefinedVariableNames() {
         Set<String> variables = new HashSet<>();
         for (VariableDefinition def : variableDefinitions) {
