@@ -1,16 +1,9 @@
 package de.reinhard.merlin.word.templating;
 
-import de.reinhard.merlin.I18n;
-import de.reinhard.merlin.csv.CSVStringUtils;
 import de.reinhard.merlin.excel.*;
-import de.reinhard.merlin.word.RunsProcessor;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang.StringUtils;
-import org.apache.poi.ss.usermodel.Row;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Iterator;
 
 public class SerialDataExcelReader {
     private Logger log = LoggerFactory.getLogger(SerialDataExcelReader.class);
@@ -46,7 +39,7 @@ public class SerialDataExcelReader {
             validator.setUnique(variableDefinition.isUnique());
             ExcelColumnDef variableCol = sheet.registerColumn(variableDefinition.getName(), validator);
         }
-
+/*
         ExcelColumnDef variableCol = sheet.registerColumn("Variable",
                 new ExcelColumnPatternValidator(RunsProcessor.IDENTIFIER_REGEXP).setRequired().setUnique());
         ExcelColumnDef descriptionCol = sheet.registerColumn("Description");
@@ -88,6 +81,6 @@ public class SerialDataExcelReader {
                 variable.addAllowedValues((Object[]) values);
             }
             template.add(variable);
-        }
+        }*/
     }
 }
