@@ -27,22 +27,21 @@ public class TemplateDefinitionExcelWriter extends AbstractExcelWriter {
         addConfigRow("Filename", template.getFilenamePattern(), null);
         ExcelCell cell = addConfigRow("Id", template.getId(), "merlin.word.templating.please_do_not_modify_id");
         cell.setCellStyle(warningCellStyle);
-        sheet.autosize();
-        sheet.getPoiSheet().setActiveCell(new CellAddress(3, 0));
+        currentSheet.autosize();
         return workbook;
     }
 
     private void createVariablesSheet() {
-        sheet = workbook.createOrGetSheet("Variables");
+        currentSheet = workbook.createOrGetSheet("Variables");
         ExcelRow row = addDescriptionRow("merlin.word.templating.sheet_variables_description", 8);
-        row = sheet.createRow();
+        row = currentSheet.createRow();
         row.createCells(headRowStyle, "Variable", "Type", "required", "unique", "Values", "Minimum", "Maximum", "Description");
-        sheet.autosize();
-        sheet.setColumnWidth(0, COLUMN_WIDE_LENGTH);
-        sheet.setColumnWidth(4, COLUMN_EXTRA_WIDE_LENGTH);
-        sheet.setColumnWidth(7, COLUMN_EXTRA_WIDE_LENGTH);
+        currentSheet.autosize();
+        currentSheet.setColumnWidth(0, COLUMN_WIDE_LENGTH);
+        currentSheet.setColumnWidth(4, COLUMN_EXTRA_WIDE_LENGTH);
+        currentSheet.setColumnWidth(7, COLUMN_EXTRA_WIDE_LENGTH);
         for (VariableDefinition variableDefinition : template.getVariableDefinitions()) {
-            row = sheet.createRow();
+            row = currentSheet.createRow();
             // Variable
             row.createCell().setCellValue(variableDefinition.getName());
             // type
@@ -69,22 +68,22 @@ public class TemplateDefinitionExcelWriter extends AbstractExcelWriter {
             row.createCell().setCellValue(variableDefinition.getDescription());
 
         }
-        sheet.getPoiSheet().setActiveCell(new CellAddress(3, 0));
+        currentSheet.getPoiSheet().setActiveCell(new CellAddress(3, 0));
     }
 
     private void createDependentVariablesSheet() {
         // Dependent variables.
-        sheet = workbook.createOrGetSheet("Dependent Variables");
+        currentSheet = workbook.createOrGetSheet("Dependent Variables");
         ExcelRow row = addDescriptionRow("merlin.word.templating.sheet_dependent_variables_description", 4);
-        row = sheet.createRow();
+        row = currentSheet.createRow();
         row.createCells(headRowStyle, "Variable", "Depends on variable", "Mapping values", I18n.getDefault().getMessage("merlin.word.templating.sheet_dependent_variables_mapping"));
-        sheet.autosize();
-        sheet.setColumnWidth(0, COLUMN_WIDE_LENGTH);
-        sheet.setColumnWidth(1, COLUMN_WIDE_LENGTH);
-        sheet.setColumnWidth(2, COLUMN_WIDE_LENGTH);
-        sheet.setColumnWidth(3, COLUMN_EXTRA_WIDE_LENGTH);
+        currentSheet.autosize();
+        currentSheet.setColumnWidth(0, COLUMN_WIDE_LENGTH);
+        currentSheet.setColumnWidth(1, COLUMN_WIDE_LENGTH);
+        currentSheet.setColumnWidth(2, COLUMN_WIDE_LENGTH);
+        currentSheet.setColumnWidth(3, COLUMN_EXTRA_WIDE_LENGTH);
         for (DependentVariableDefinition variableDefinition : template.getDependentVariableDefinitions()) {
-            row = sheet.createRow();
+            row = currentSheet.createRow();
             // Variable
             row.createCell().setCellValue(variableDefinition.getName());
             // Depends on variable
@@ -102,6 +101,6 @@ public class TemplateDefinitionExcelWriter extends AbstractExcelWriter {
             row.createCell().setCellValue(mappedValues);
             row.createCell().setCellValue(variableDefinition.getMappingInformation());
         }
-        sheet.getPoiSheet().setActiveCell(new CellAddress(3, 0));
+        currentSheet.getPoiSheet().setActiveCell(new CellAddress(3, 0));
     }
  }

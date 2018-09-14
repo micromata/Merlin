@@ -21,7 +21,7 @@ public class AbstractExcelWriter {
     protected CellStyle headRowStyle;
     protected CellStyle warningCellStyle;
     protected CellStyle descriptionStyle;
-    protected ExcelSheet sheet;
+    protected ExcelSheet currentSheet; // Current working sheet.
 
     protected void init() {
         Workbook poiWorkbook = new XSSFWorkbook();
@@ -34,10 +34,10 @@ public class AbstractExcelWriter {
     }
 
     protected ExcelRow addDescriptionRow(String descriptionKey, int numberOfColumns) {
-        ExcelRow row = sheet.createRow();
+        ExcelRow row = currentSheet.createRow();
         row.createCell().setCellStyle(titleStyle).setCellValue("Merlin");
         row.setHeight(50).addMergeRegion(0, numberOfColumns - 1);
-        row = sheet.createRow();
+        row = currentSheet.createRow();
         row.createCell().setCellStyle(descriptionStyle).setCellValue(I18n.getDefault().getMessage(descriptionKey)
                 + "\n"
                 + I18n.getDefault().getMessage("merlin.word.templating.sheet_configuration_hint"));
@@ -46,7 +46,7 @@ public class AbstractExcelWriter {
     }
 
     protected ExcelCell addConfigRow(String variable, String value, String descriptionKey) {
-        ExcelRow row = sheet.createRow();
+        ExcelRow row = currentSheet.createRow();
         // Variable
         row.createCell().setCellValue(variable);
         // Value
@@ -106,9 +106,9 @@ public class AbstractExcelWriter {
 
 
     protected void createConfigurationSheet() {
-        sheet = workbook.createOrGetSheet("Configuration");
+        currentSheet = workbook.createOrGetSheet("Configuration");
         ExcelRow row = addDescriptionRow("merlin.word.templating.sheet_configuration_description", 3);
-        row = sheet.createRow();
+        row = currentSheet.createRow();
         row.createCells(headRowStyle, "Variable", "Value", "Description");
     }
 }
