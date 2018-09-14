@@ -1,6 +1,13 @@
 # Merlin
 Magic and customer-friendly Excel, Word and configuration acrobatics.
 
+## Merlin packages
+Merlin is organized as a multi module project.
+* __merlin-core__ is a lightweight library to embed
+awesome Excel- and Word-features in your own application.
+* __merlin-app__ is a desktop application (with embedded web server and web app) for convenient Excel and Word acrobatics.
+Some more modules for different use-cases.
+
 ## Excel validation (xls and xlsx)
 * Supports validation of columns, such as cell type, flags like required, unique and pattern (e. g. E-Mail-Format)
 * Supports visualization and highlighing inside the original Excel document:
@@ -51,8 +58,12 @@ Merlin will create a Word document for each row.
 This feature is under construction.
 
 ## Merlin desktop app
-The Merlin desktop app is under construction. It will be a simple Desktop app for dummy users for
-using Merlin for own Word templates.
+The Merlin desktop app is a standalone app which contains an embedded web server and a modern React single page app.
+Simply press the Start button to open the merlin app in your standard browser.
+Drag&Drop is also supported as running a desktop file browser for configuring template directories as an example.
+After starting the user can configure, run and do everything through a web browser.
+
+A web version running on web servers for allowing teams to work with the same Merlin configuration is planned.
 
 ## Configuring and templating with Excel
 * configuration including configuration also with Excel, CSV and user-friendly Excel-Upload
@@ -69,3 +80,4 @@ Please refer examples/OpenHab-KNX-Definitions.xlsx for a first impression.
 
 # To-Do
 * Multiple Template files (Word, AsciiDoc, Text etc.) for one TemplateDefinition.xlsx. (def-Tag in Word-Template?)
+* Separate Java FX and web for supporting desktop version as well as a web server version.

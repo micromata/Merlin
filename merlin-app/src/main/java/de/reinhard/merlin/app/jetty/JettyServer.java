@@ -8,6 +8,8 @@ import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.servlet.*;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
 import org.eclipse.jetty.util.resource.Resource;
+import org.glassfish.jersey.media.multipart.MultiPartFeature;
+import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.servlet.ServletContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,11 +44,15 @@ public class JettyServer {
         ctx.setContextPath("/");
 
 
-        ServletHolder jerseyServlet = ctx.addServlet(ServletContainer.class, "/rest/*");
+        ServletHolder jerseyServlet = new ServletHolder(
+                new ServletContainer(
+                        new ResourceConfig()
+                                .packages("de.reinhard.merlin.app.rest")
+                                .register(MultiPartFeature.class)
+                )
+        );
         jerseyServlet.setInitOrder(1);
-        // Tells the Jersey Servlxet which REST service/class to load.
-        jerseyServlet.setInitParameter("jersey.config.server.provider.packages",
-                "de.reinhard.merlin.app.rest");
+        ctx.addServlet(jerseyServlet, "/rest/*");
 
         try {
             // Resolve file to directory

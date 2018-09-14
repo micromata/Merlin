@@ -15,9 +15,6 @@ import java.util.Iterator;
 public class TemplateDefinitionExcelReader {
     private Logger log = LoggerFactory.getLogger(TemplateDefinitionExcelReader.class);
 
-    private static final int COLUMN_WIDE_LENGTH = 5000;
-    private static final int COLUMN_EXTRA_WIDE_LENGTH = 15000;
-
     private ExcelWorkbook workbook;
     private TemplateDefinition template;
 
