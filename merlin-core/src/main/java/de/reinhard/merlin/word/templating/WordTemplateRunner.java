@@ -21,7 +21,7 @@ public class WordTemplateRunner {
         this.srcDocument = document;
     }
 
-    public WordDocument run(Map<String, String> variables) {
+    public WordDocument run(Map<String, Object> variables) {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         try {
             srcDocument.getDocument().write(bos);

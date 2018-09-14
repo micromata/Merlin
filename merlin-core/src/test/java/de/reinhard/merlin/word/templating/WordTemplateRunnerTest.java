@@ -41,7 +41,7 @@ public class WordTemplateRunnerTest {
         TemplateDefinitionExcelReader reader = new TemplateDefinitionExcelReader();
         TemplateDefinition templateDefinition = reader.readFromWorkbook(workbook);
         WordTemplateRunner runner = new WordTemplateRunner(templateDefinition, templateDocument);
-        Map<String, String> variables = new HashMap<>();
+        Map<String, Object> variables = new HashMap<>();
         variables.put("Mitarbeiter", "Markus Meier");
         variables.put("Geschlecht", "männlich");
         variables.put("MA_Strasse", "ABC-Straße 5");
@@ -68,7 +68,7 @@ public class WordTemplateRunnerTest {
 
     private void runDocument(WordTemplateRunner runner, String filenamepart, String employee, String gender, String date,
                              String beginDate, String weeklyHours, String numberOfLeaveDays) throws Exception {
-        Map<String, String> variables = new HashMap<>();
+        Map<String, Object> variables = new HashMap<>();
         variables.put("Employee", employee);
         variables.put("Gender", gender);
         variables.put("Vertragstyp", "befristet");
@@ -81,7 +81,7 @@ public class WordTemplateRunnerTest {
         runDocument(runner, file, variables);
     }
 
-    private void runDocument(WordTemplateRunner runner, File file, Map<String, String> variables) throws Exception {
+    private void runDocument(WordTemplateRunner runner, File file, Map<String, Object> variables) throws Exception {
         WordDocument document = runner.run(variables);
         XWPFDocument doc = document.getDocument();
         log.info("Writing modified MS Word file: " + file.getAbsolutePath());

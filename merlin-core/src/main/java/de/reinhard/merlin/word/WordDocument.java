@@ -64,7 +64,7 @@ public class WordDocument {
         return document;
     }
 
-    public void process(Map<String, String> variables) {
+    public void process(Map<String, Object> variables) {
         Conditionals conditionals = getConditionals();
         conditionals.process(variables);
         replaceVariables(variables);
@@ -99,7 +99,7 @@ public class WordDocument {
         return variables;
     }
 
-    private void replaceVariables(Map<String, String> variables) {
+    private void replaceVariables(Map<String, Object> variables) {
         for (IBodyElement element : document.getBodyElements()) {
             if (element instanceof XWPFParagraph) {
                 XWPFParagraph paragraph = (XWPFParagraph) element;

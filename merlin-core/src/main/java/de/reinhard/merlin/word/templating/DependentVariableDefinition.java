@@ -1,10 +1,7 @@
 package de.reinhard.merlin.word.templating;
 
 import java.beans.Transient;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Defines a variable which is dependent of another variable (master variable).
@@ -12,7 +9,7 @@ import java.util.Map;
 public class DependentVariableDefinition {
     private String name;
     private VariableDefinition dependsOn;
-    private Map<Object, String> mapping;
+    private Map<Object, Object> mapping;
 
     /**
      * @return Name of the variable to use via ${name} in the templats..
@@ -38,33 +35,33 @@ public class DependentVariableDefinition {
     /**
      * @return The mapping of the values of the master variable to this variable.
      */
-    public Map<Object, String> getMapping() {
+    public Map<Object, Object> getMapping() {
         return mapping;
     }
 
-    public void setMapping(Map<Object, String> mapping) {
+    public void setMapping(Map<Object, Object> mapping) {
         this.mapping = mapping;
     }
 
-    public DependentVariableDefinition addMapping(Object masterValue, String value) {
+    public DependentVariableDefinition addMapping(Object masterValue, Object value) {
         createAndGetMapping().put(masterValue, value);
         return this;
     }
 
-    private Map<Object, String> createAndGetMapping() {
+    private Map<Object, Object> createAndGetMapping() {
         if (mapping == null) {
             mapping = new HashMap<>();
         }
         return mapping;
     }
 
-    public List<String> getMappingList() {
-        List<String> list = new LinkedList<>();
+    public List<Object> getMappingList() {
+        List<Object> list = new ArrayList<>();
         if (dependsOn == null) {
             return list;
         }
         for (Object masterValue : dependsOn.getAllowedValuesList()) {
-            String mappedValue = mapping.get(masterValue);
+            Object mappedValue = mapping.get(masterValue);
             if (mappedValue != null) {
                 list.add(mappedValue);
             } else {
@@ -74,16 +71,16 @@ public class DependentVariableDefinition {
         return list;
     }
 
-    public String getMappedValue(Map<String, String> variables) {
+    public Object getMappedValue(Map<String, Object> variables) {
         if (mapping == null || variables == null || dependsOn == null) {
             return "";
         }
-        String value = variables.get(dependsOn.getName());
+        Object value = variables.get(dependsOn.getName());
         return mapping.get(value);
     }
 
     @Transient
-    public String getMappingInformation() {
+    public String getMappingInformation(TemplateWriterContext context) {
         if (dependsOn == null) {
             return "";
         }
@@ -96,8 +93,9 @@ public class DependentVariableDefinition {
             } else {
                 sb.append(", ");
             }
-            String mappedValue = mapping.get(masterValue);
-            sb.append("\"").append(masterValue).append("\"->\"").append(mappedValue != null ? mappedValue : "").append("\"");
+            Object mappedValue = mapping.get(masterValue);
+            sb.append("\"").append(context.toString(masterValue, dependsOn.getType())).append("\"->\"")
+                    .append(mappedValue != null ? mappedValue : "").append("\"");
         }
         sb.append("}");
         return sb.toString();

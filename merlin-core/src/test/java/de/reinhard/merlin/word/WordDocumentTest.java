@@ -6,10 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -51,14 +48,14 @@ public class WordDocumentTest {
 
     @Test
     public void regExpTest() {
-        Map<String, String> variables = new HashMap<>();
+        Map<String, Object> variables = new HashMap<>();
         variables.put("var", "world");
         variables.put("endlessLoop", "${endlessLoop}");
         variables.put("endlessLoop2", "... ${endlessLoop} ...");
         variables.put("endlessLoop3", "....................................... ${endlessLoop} ...");
 
         XWPFDocument doc = new XWPFDocument();
-        List<Entry> exptected = new LinkedList<>();
+        List<Entry> exptected = new ArrayList<>();
         add(exptected, TestHelper.createParagraph(doc, "1: Hello ${var}."),
                 new String[]{"1: Hello world."});
         add(exptected, TestHelper.createParagraph(doc, "2: Hello ${var}"),
@@ -105,7 +102,7 @@ public class WordDocumentTest {
 
     @Test
     public void conditionalsTest() {
-        Map<String, String> variables = new HashMap<>();
+        Map<String, Object> variables = new HashMap<>();
         variables.put("var", "world");
         variables.put("counter", "42");
         variables.put("endlessLoop2", "... ${endlessLoop} ...");

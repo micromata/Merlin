@@ -15,6 +15,7 @@ public class TemplateDefinitionExcelWriter extends AbstractExcelWriter {
     private Logger log = LoggerFactory.getLogger(TemplateDefinitionExcelWriter.class);
 
     private TemplateDefinition template;
+    private TemplateWriterContext templateWriterContext = new TemplateWriterContext();
 
     public ExcelWorkbook writeToWorkbook(TemplateDefinition template) {
         this.template = template;
@@ -29,6 +30,10 @@ public class TemplateDefinitionExcelWriter extends AbstractExcelWriter {
         cell.setCellStyle(warningCellStyle);
         currentSheet.autosize();
         return workbook;
+    }
+
+    public TemplateWriterContext getTemplateWriterContext() {
+        return templateWriterContext;
     }
 
     private void createVariablesSheet() {
@@ -99,7 +104,7 @@ public class TemplateDefinitionExcelWriter extends AbstractExcelWriter {
                         .collect(Collectors.joining(", "));
             }
             row.createCell().setCellValue(mappedValues);
-            row.createCell().setCellValue(variableDefinition.getMappingInformation());
+            row.createCell().setCellValue(variableDefinition.getMappingInformation(templateWriterContext));
         }
         currentSheet.getPoiSheet().setActiveCell(new CellAddress(3, 0));
     }
