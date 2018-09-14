@@ -1,22 +1,6 @@
-import {CONFIG_LOAD, CONFIG_RECEIVED, CONFIG_SET, CONFIG_SET_PROPERTY} from './types';
+import {fetchConfig, fetchConfigIfNeeded, updateConfigProperty} from './config';
+import {uploadFile} from './fileupload';
 
-export const loadConfig = () => ({
-    type: CONFIG_LOAD,
-});
+export {fetchConfig, fetchConfigIfNeeded, updateConfigProperty};
 
-export const receiveConfig = data => ({
-    type: CONFIG_RECEIVED,
-    payload: data
-});
-
-export const setConfig = config => ({
-    type: CONFIG_SET,
-    payload: config
-});
-
-export const setConfigProperty = (property, value) => ({
-    type: CONFIG_SET_PROPERTY,
-    payload: {
-        property, value
-    }
-});
+export {uploadFile};

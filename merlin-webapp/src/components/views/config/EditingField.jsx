@@ -1,7 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {Button, FormControl, Glyphicon, InputGroup} from 'react-bootstrap';
-import {setConfigProperty} from '../../../actions';
+import {updateConfigProperty} from '../../../actions';
 
 class EditingField extends React.Component {
 
@@ -72,7 +72,7 @@ class EditingField extends React.Component {
     }
 
     saveEdit() {
-        this.props.setProperty(this.props.name, this.state.value);
+        this.props.updateConfigProperty(this.props.name, this.state.value);
 
         this.props.stopEditing();
     }
@@ -112,7 +112,7 @@ class EditingField extends React.Component {
 const mapStateToProps = () => ({});
 
 const actions = {
-    setProperty: setConfigProperty
+    updateConfigProperty
 };
 
 export default connect(mapStateToProps, actions)(EditingField);

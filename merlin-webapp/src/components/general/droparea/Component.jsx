@@ -1,5 +1,5 @@
 import React from 'react';
-import {Glyphicon} from 'react-bootstrap';
+import {Button, Glyphicon} from 'react-bootstrap';
 import './style.css';
 
 class DropArea extends React.Component {
@@ -14,11 +14,11 @@ class DropArea extends React.Component {
 
         this.handleDragEnter = this.handleDragEnter.bind(this);
         this.handleDragLeave = this.handleDragLeave.bind(this);
-        this.cancelAndLog = this.cancelAndLog.bind(this);
         this.handleDropCapture = this.handleDropCapture.bind(this);
         this.handleDragOver = this.handleDragOver.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this);
         this.addFiles = this.addFiles.bind(this);
+        this.uploadFiles = this.uploadFiles.bind(this);
     }
 
     handleDragEnter(event) {
@@ -38,11 +38,6 @@ class DropArea extends React.Component {
     }
 
     handleDragOver(event) {
-        event.preventDefault();
-    }
-
-    cancelAndLog(event) {
-        event.stopPropagation();
         event.preventDefault();
     }
 
@@ -82,6 +77,17 @@ class DropArea extends React.Component {
         this.setState({
             files: [fileList[0]]
         });
+    }
+
+    uploadFiles(event) {
+
+        event.preventDefault();
+
+        if (!this.state.files || this.state.files.length === 0) {
+            return;
+        }
+
+        this.props.upload(this.state.files[0]);
     }
 
     render() {
@@ -126,7 +132,22 @@ class DropArea extends React.Component {
                         </span>
                     </div>
                 </div>
-                {this.state.files.map((file, index) => (<p key={index}>{file.name}</p>))}
+                {
+                    this.state.files.map((file, index) => <p key={index}>{file.name}</p>)
+                }
+                {
+                    this.props.upload ?
+                        <div>
+                            <br/>
+                            <Button
+                                bsStyle={'success'}
+                                onClick={this.uploadFiles}
+                            >
+                                Upload
+                            </Button>
+                        </div> :
+                        <div/>
+                }
             </div>
         );
     }
