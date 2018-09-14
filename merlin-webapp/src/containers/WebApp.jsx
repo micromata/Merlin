@@ -6,7 +6,7 @@ import Menu from '../components/general/Menu';
 import Start from '../components/views/Start';
 import Config from '../components/views/config/View';
 import TableExample from '../components/views/TableExample';
-import DropAreaExample from '../components/views/DropAreaExample';
+import FileUploadView from '../components/views/FileUpload';
 
 class WebApp extends React.Component {
 
@@ -16,7 +16,7 @@ class WebApp extends React.Component {
             ['Start', '/', Start],
             ['Config', '/config', Config],
             ['Table Example', '/table', TableExample],
-            ['Drop Area Example', '/drop', DropAreaExample]
+            ['File Upload', '/drop', FileUploadView]
         ];
 
         return (
