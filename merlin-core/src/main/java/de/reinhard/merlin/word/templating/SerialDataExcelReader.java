@@ -16,6 +16,11 @@ public class SerialDataExcelReader {
     private Logger log = LoggerFactory.getLogger(SerialDataExcelReader.class);
 
     private ExcelWorkbook workbook;
+    private TemplateContext templateContext = new TemplateContext();
+
+    public TemplateContext getTemplateContext() {
+        return templateContext;
+    }
 
     public TemplateDefinition readTemplateReference(ExcelWorkbook workbook) {
         TemplateDefinitionExcelReader templateDefinitionExcelReader = new TemplateDefinitionExcelReader();
@@ -74,8 +79,8 @@ public class SerialDataExcelReader {
                 if (value == null) {
                     continue;
                 }
-                Object val = variableDefinition.convertValue(value);
-                serialDataEntry.put(variableDefinition.getName(), String.valueOf(val));
+                Object val = templateContext.convertValue(value, variableDefinition.getType());
+                serialDataEntry.put(variableDefinition.getName(), val);
             }
             serialData.add(serialDataEntry);
         }

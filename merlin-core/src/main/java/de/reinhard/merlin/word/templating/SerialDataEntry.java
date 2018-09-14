@@ -9,24 +9,20 @@ import java.util.Map;
 public class SerialDataEntry {
     private static Logger log = LoggerFactory.getLogger(SerialDataEntry.class);
 
-    private Map<String, String> variables = new HashMap<>();
+    private Map<String, Object> variables = new HashMap<>();
 
     public SerialDataEntry() {
     }
 
-    public void put(String variable, String value) {
+    public void put(String variable, Object value) {
         variables.put(variable, value);
     }
 
-    public void put(String variable, int value) {
-        variables.put(variable, String.valueOf(value));
-    }
-
-    public String get(String variable) {
+    public Object get(String variable) {
         return variables.get(variable);
     }
 
-    public Map<String, String> getVariables() {
+    public Map<String, Object> getVariables() {
         return variables;
     }
 }

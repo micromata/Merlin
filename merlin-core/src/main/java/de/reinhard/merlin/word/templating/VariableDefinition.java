@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 
 import java.beans.Transient;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -195,69 +194,6 @@ public class VariableDefinition {
             }
         }
         return this;
-    }
-
-    public Object convertValue(Object value) {
-        if (value == null) {
-            return null; // Nothing to do.
-        }
-        if (type == null) {
-            setType(value);
-        }
-        Object retval = convertValue(value, type);
-        if (retval != null) {
-            return retval;
-        }
-        log.error("Value '" + value + "' of type " + value.getClass() + " doesn't match type: " + type);
-        return null;
-    }
-
-    public static Object convertValue(Object value, VariableType type) {
-        if (value == null) {
-            return null;
-        }
-        switch (type) {
-            case INT:
-                if (value instanceof Number) {
-                    return ((Number) value).intValue();
-                }
-                if (value instanceof String) {
-                    try {
-                        return new Integer((String) value);
-                    } catch (NumberFormatException ex) {
-                        log.error("Can't parse integer '" + value + "': " + ex.getMessage(), ex);
-                        return 0;
-                    }
-                }
-                log.error("Can't get integer from type " + value.getClass().getCanonicalName() + ": " + value);
-                return 0;
-            case FLOAT:
-                if (value instanceof Number) {
-                    return ((Number) value).doubleValue();
-                }
-                if (value instanceof String) {
-                    try {
-                        return new Double((String) value);
-                    } catch (NumberFormatException ex) {
-                        log.error("Can't parse float '" + value + "': " + ex.getMessage(), ex);
-                        return 0.0;
-                    }
-                }
-                log.error("Can't get float from type " + value.getClass().getCanonicalName() + ": " + value);
-                return 0.0;
-            case STRING:
-                return value.toString();
-            case DATE:
-                if (value instanceof Date) {
-                    return value;
-                } else if (value instanceof String) {
-                    if (((String) value).trim().length() == 0) {
-                        return null;
-                    }
-                }
-                log.error("Can't get date from type " + value.getClass().getCanonicalName() + ": " + value);
-        }
-        return value;
     }
 
     private void setType(Object value) {

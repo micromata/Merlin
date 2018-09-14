@@ -8,14 +8,15 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.text.ParseException;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 public class SerialDataExcelTest {
     private Logger log = LoggerFactory.getLogger(SerialDataExcelTest.class);
+    private TemplateContext templateContext = new TemplateContext();
 
     @Test
     public void writeReadExcelTest() throws Exception {
@@ -32,10 +33,10 @@ public class SerialDataExcelTest {
         SerialData serialData = reader.readFromWorkbook(workbook, templateDefinition);
         assertEquals(origSerialData.getEntries().size(), serialData.getEntries().size());
         for (int i = 0; i < origSerialData.getEntries().size(); i++) {
-            Map<String, String> origMap = origSerialData.getEntries().get(i).getVariables();
-            Map<String, String> map = serialData.getEntries().get(i).getVariables();
+            Map<String, Object> origMap = origSerialData.getEntries().get(i).getVariables();
+            Map<String, Object> map = serialData.getEntries().get(i).getVariables();
             assertEquals(origMap.size(), map.size());
-            for (Map.Entry<String, String> entry : origMap.entrySet()) {
+            for (Map.Entry<String, Object> entry : origMap.entrySet()) {
                 assertNotNull(map.get(entry.getKey()));
                 assertEquals(entry.getValue(), map.get(entry.getKey()));
             }
@@ -53,8 +54,12 @@ public class SerialDataExcelTest {
         SerialDataEntry entry = new SerialDataEntry();
         entry.put("Gender", gender);
         entry.put("Employee", employee);
-        entry.put("Date", date);
-        entry.put("BeginDate", beginDate);
+        try {
+            entry.put("Date", templateContext.getDateFormatter().parse(date));
+            entry.put("BeginDate", templateContext.getDateFormatter().parse(beginDate));
+        } catch (ParseException ex) {
+            fail("Couldn't parse date: " + ex.getMessage());
+        }
         entry.put("WeeklyHours", weeklyHours);
         entry.put("NumberOfLeaveDays", numberOfLeaveDays);
         return entry;

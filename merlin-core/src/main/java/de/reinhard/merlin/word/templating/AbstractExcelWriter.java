@@ -22,6 +22,11 @@ public class AbstractExcelWriter {
     protected CellStyle warningCellStyle;
     protected CellStyle descriptionStyle;
     protected ExcelSheet currentSheet; // Current working sheet.
+    protected TemplateContext templateContext = new TemplateContext();
+
+    public TemplateContext getTemplateContext() {
+        return templateContext;
+    }
 
     protected void init() {
         Workbook poiWorkbook = new XSSFWorkbook();
@@ -76,10 +81,6 @@ public class AbstractExcelWriter {
         return cell;
     }
 
-    public static String getBooleanAsString(boolean value) {
-        return value ? "X" : "";
-    }
-
     protected CellStyle createCellStyle(Short color, boolean bold, boolean italic, boolean wrapText, Integer fontSize) {
         CellStyle style = workbook.getPOIWorkbook().createCellStyle();
         Font font = workbook.getPOIWorkbook().createFont();
@@ -100,7 +101,7 @@ public class AbstractExcelWriter {
     }
 
     protected void writeValue(ExcelCell cell, Object value, VariableType type) {
-        Object targetValue = VariableDefinition.convertValue(value, type);
+        Object targetValue = templateContext.convertValue(value, type);
         if (targetValue == null) {
             return;
         }

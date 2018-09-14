@@ -48,8 +48,9 @@ public class DefinitionExcelConverterTest {
 
     @Test
     public void getBooleanAsStringTest() {
-        assertEquals("X", TemplateDefinitionExcelWriter.getBooleanAsString(true));
-        assertEquals("", TemplateDefinitionExcelWriter.getBooleanAsString(false));
+        TemplateContext templateContext = new TemplateContext();
+        assertEquals("X", templateContext.getBooleanAsString(true));
+        assertEquals("", templateContext.getBooleanAsString(false));
     }
 
     @Test

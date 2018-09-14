@@ -3,6 +3,9 @@ package de.reinhard.merlin.excel;
 import org.apache.poi.ss.usermodel.BuiltinFormats;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.CreationHelper;
+
+import java.util.Date;
 
 public class ExcelCell {
     private Cell cell;
@@ -26,30 +29,22 @@ public class ExcelCell {
     }
 
     /**
-     *
      * @param workbook Needed for creating int DataFormat.
      * @param intValue
      * @return this for chaining.
      */
     public ExcelCell setCellValue(ExcelWorkbook workbook, int intValue) {
-        this.cell.setCellValue((double)intValue);
-        CellStyle cellStyle = workbook.createOrGetCellStyle("DataFormat.int");
-        cellStyle.setDataFormat((short)BuiltinFormats.getBuiltinFormat("0"));
-        cell.setCellStyle(cellStyle);
+        setCellValue(workbook, cell, intValue);
         return this;
     }
 
     /**
-     *
-     * @param workbook Needed for creating int DataFormat.
+     * @param workbook    Needed for creating int DataFormat.
      * @param doubleValue
      * @return this for chaining.
      */
     public ExcelCell setCellValue(ExcelWorkbook workbook, double doubleValue) {
-        this.cell.setCellValue(doubleValue);
-        CellStyle cellStyle = workbook.createOrGetCellStyle("DataFormat.float");
-        cellStyle.setDataFormat(workbook.getPOIWorkbook().getCreationHelper().createDataFormat().getFormat("#.#"));
-        cell.setCellStyle(cellStyle);
+        setCellValue(workbook, cell, doubleValue);
         return this;
     }
 
@@ -60,5 +55,27 @@ public class ExcelCell {
 
     public Cell getCell() {
         return cell;
+    }
+
+    public static void setCellValue(ExcelWorkbook workbook, Cell cell, double doubleValue) {
+        cell.setCellValue(doubleValue);
+        CellStyle cellStyle = workbook.createOrGetCellStyle("DataFormat.float");
+        cellStyle.setDataFormat(workbook.getPOIWorkbook().getCreationHelper().createDataFormat().getFormat("#.#"));
+        cell.setCellStyle(cellStyle);
+    }
+
+    public static void setCellValue(ExcelWorkbook workbook, Cell cell, int intValue) {
+        cell.setCellValue((double) intValue);
+        CellStyle cellStyle = workbook.createOrGetCellStyle("DataFormat.int");
+        cellStyle.setDataFormat((short) BuiltinFormats.getBuiltinFormat("0"));
+        cell.setCellStyle(cellStyle);
+    }
+
+    public static void setCellValue(ExcelWorkbook workbook, Cell cell, String format, Date dateValue) {
+        CellStyle cellStyle = workbook.createOrGetCellStyle("DataFormat.date");
+        CreationHelper createHelper = workbook.getPOIWorkbook().getCreationHelper();
+        cellStyle.setDataFormat(createHelper.createDataFormat().getFormat(format));
+        cell.setCellValue(dateValue);
+        cell.setCellStyle(cellStyle);
     }
 }

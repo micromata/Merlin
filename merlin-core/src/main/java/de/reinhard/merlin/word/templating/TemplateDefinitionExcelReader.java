@@ -17,6 +17,11 @@ public class TemplateDefinitionExcelReader {
 
     private ExcelWorkbook workbook;
     private TemplateDefinition template;
+    private TemplateContext templateContext = new TemplateContext();
+
+    public TemplateContext getTemplateContext() {
+        return templateContext;
+    }
 
     public TemplateDefinition readFromWorkbook(ExcelWorkbook workbook) {
         template = readConfigFromWorkbook(workbook);
@@ -76,9 +81,9 @@ public class TemplateDefinitionExcelReader {
             variable.setRequired(required);
             variable.setUnique(unique);
             Object minimum = PoiHelper.getValue(sheet.getCell(row, minimumCol));
-            variable.setMinimumValue(VariableDefinition.convertValue(minimum, variable.getType()));
+            variable.setMinimumValue(templateContext.convertValue(minimum, variable.getType()));
             Object maximum = PoiHelper.getValue(sheet.getCell(row, maximumCol));
-            variable.setMaximumValue(VariableDefinition.convertValue(maximum, variable.getType()));
+            variable.setMaximumValue(templateContext.convertValue(maximum, variable.getType()));
             String[] values = CSVStringUtils.parseStringList(valuesString);
             if (values != null) {
                 variable.addAllowedValues((Object[]) values);
