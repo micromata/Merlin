@@ -6,6 +6,8 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
+
 /**
  * Checks, if a cell matches given options, e. g. colors (red, blue, yello).
  */
@@ -21,9 +23,6 @@ public class ExcelColumnOptionsValidator extends ExcelColumnValidator {
     private String validationErrorMessageId;
     private boolean caseSensitive;
 
-    public ExcelColumnOptionsValidator() {
-    }
-
     /**
      * Cell values must match one of the given options.
      *
@@ -31,6 +30,15 @@ public class ExcelColumnOptionsValidator extends ExcelColumnValidator {
      */
     public ExcelColumnOptionsValidator(String... options) {
         this.options = options;
+    }
+
+    /**
+     * Cell values must match one of the given options.
+     *
+     * @param options
+     */
+    public ExcelColumnOptionsValidator(List<Object> options) {
+        this.options = options.toArray(new String[0]);
     }
 
     /**

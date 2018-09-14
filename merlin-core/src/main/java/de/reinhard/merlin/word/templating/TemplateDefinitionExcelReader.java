@@ -19,6 +19,13 @@ public class TemplateDefinitionExcelReader {
     private TemplateDefinition template;
 
     public TemplateDefinition readFromWorkbook(ExcelWorkbook workbook) {
+        template = readConfigFromWorkbook(workbook);
+        readVariables();
+        readDependentVariables();
+        return template;
+    }
+
+    public TemplateDefinition readConfigFromWorkbook(ExcelWorkbook workbook) {
         this.workbook = workbook;
         template = new TemplateDefinition();
         ExcelConfigReader configReader = new ExcelConfigReader(workbook.getSheet("Configuration"),
@@ -31,8 +38,6 @@ public class TemplateDefinitionExcelReader {
         template.setName(props.getConfig("Name"));
         template.setDescription(props.getConfig("Description"));
         template.setFilenamePattern(props.getConfig("Filename"));
-        readVariables();
-        readDependentVariables();
         return template;
     }
 

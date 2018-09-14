@@ -8,7 +8,7 @@ import org.apache.poi.ss.util.CellRangeAddress;
 public class ExcelRow {
     private Row row;
 
-    ExcelRow(Row row) {
+    public ExcelRow(Row row) {
         this.row = row;
     }
 

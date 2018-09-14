@@ -115,6 +115,17 @@ public class ExcelColumnValidator extends ExcelColumnListener {
         return this;
     }
 
+    /**
+     * Mark this column and are all its cell values as required.
+     *
+     * @param required
+     * @return this for chaining.
+     */
+    public ExcelColumnValidator setRequired(boolean required) {
+        this.required = required;
+        return this;
+    }
+
     public boolean isUnique() {
         return unique;
     }
@@ -133,6 +144,17 @@ public class ExcelColumnValidator extends ExcelColumnListener {
      */
     public ExcelColumnValidator setUnique() {
         this.unique = true;
+        return this;
+    }
+
+    /**
+     * All cell values must be unique, if given.
+     *
+     * @param unique
+     * @return this for chaining.
+     */
+    public ExcelColumnValidator setUnique(boolean unique) {
+        this.unique = unique;
         return this;
     }
 

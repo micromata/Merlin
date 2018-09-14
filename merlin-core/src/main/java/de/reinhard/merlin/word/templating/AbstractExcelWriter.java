@@ -34,14 +34,29 @@ public class AbstractExcelWriter {
     }
 
     protected ExcelRow addDescriptionRow(String descriptionKey, int numberOfColumns) {
+        return addDescriptionRow(descriptionKey, numberOfColumns, true);
+    }
+
+    protected ExcelRow addDescriptionRow(String descriptionKey, int numberOfColumns, boolean dontModify) {
         ExcelRow row = currentSheet.createRow();
         row.createCell().setCellStyle(titleStyle).setCellValue("Merlin");
-        row.setHeight(50).addMergeRegion(0, numberOfColumns - 1);
+        row.setHeight(50);
+        if (numberOfColumns > 0) {
+            row.addMergeRegion(0, numberOfColumns - 1);
+        }
         row = currentSheet.createRow();
-        row.createCell().setCellStyle(descriptionStyle).setCellValue(I18n.getDefault().getMessage(descriptionKey)
-                + "\n"
-                + I18n.getDefault().getMessage("merlin.word.templating.sheet_configuration_hint"));
-        row.setHeight(80).addMergeRegion(0, numberOfColumns - 1);
+        String msg;
+        if (dontModify) {
+            msg = I18n.getDefault().getMessage(descriptionKey)
+                    + "\n"
+                    + I18n.getDefault().getMessage("merlin.word.templating.sheet_configuration_hint");
+        } else {
+            msg = I18n.getDefault().getMessage(descriptionKey);
+        }
+        row.createCell().setCellStyle(descriptionStyle).setCellValue(msg);
+        if (numberOfColumns > 0) {
+            row.setHeight(80).addMergeRegion(0, numberOfColumns - 1);
+        }
         return row;
     }
 
@@ -94,10 +109,10 @@ public class AbstractExcelWriter {
                 cell.setCellValue((String) targetValue);
                 break;
             case INT:
-                cell.setCellValue(workbook, (Integer)targetValue);
+                cell.setCellValue(workbook, (Integer) targetValue);
                 break;
             case FLOAT:
-                cell.setCellValue(workbook, (Double)targetValue);
+                cell.setCellValue(workbook, (Double) targetValue);
                 break;
             case DATE:
                 log.error("Date not yet implemented.");

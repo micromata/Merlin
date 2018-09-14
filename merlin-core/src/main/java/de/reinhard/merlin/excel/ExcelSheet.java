@@ -442,6 +442,10 @@ public class ExcelSheet {
         return workbook;
     }
 
+    public ExcelRow getRow(int rowwnum) {
+        return new ExcelRow(poiSheet.getRow(rowwnum));
+    }
+
     public Row getHeadRow() {
         findAndReadHeadRow();
         return headRow;
