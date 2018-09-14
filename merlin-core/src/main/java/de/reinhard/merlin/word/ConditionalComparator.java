@@ -83,11 +83,11 @@ public class ConditionalComparator extends AbstractConditional {
                 .toString();
     }
 
-    static boolean greaterThan(double a, double b) {
+    public static boolean greaterThan(double a, double b) {
         return a - b > EPSILON;
     }
 
-    static boolean equals(double a, double b) {
+    public static boolean equals(double a, double b) {
         return a == b ? true : Math.abs(a - b) < EPSILON;
     }
 }

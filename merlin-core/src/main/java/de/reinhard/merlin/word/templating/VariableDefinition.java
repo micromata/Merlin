@@ -197,7 +197,7 @@ public class VariableDefinition {
         return this;
     }
 
-    private Object convertValue(Object value) {
+    public Object convertValue(Object value) {
         if (value == null) {
             return null; // Nothing to do.
         }

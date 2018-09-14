@@ -25,4 +25,8 @@ public class SerialDataEntry {
     public String get(String variable) {
         return variables.get(variable);
     }
+
+    public Map<String, String> getVariables() {
+        return variables;
+    }
 }

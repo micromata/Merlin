@@ -1,18 +1,22 @@
 package de.reinhard.merlin.excel;
 
+import de.reinhard.merlin.utils.Converter;
+import de.reinhard.merlin.word.ConditionalComparator;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class ExcelColumnNumberValidator extends ExcelColumnValidator {
-    /**
-     * Parameter: Sheet name, Column in letter format: (A, B, ..., AA, AB, ...), Column head name, Row number,
-     * Cell value, pattern
-     */
     public static final String MESSAGE_NUMBER_EXPECTED = "merlin.excel.validation_error.number_expected";
 
+    public static final String MESSAGE_NUMBER_LESS_THAN_MINIMUM = "merlin.excel.validation_error.number_less_than_minimum";
+
+    public static final String MESSAGE_NUMBER_GREATER_THAN_MAXIMUM = "merlin.excel.validation_error.number_greater_than_maximum";
+
     private Logger log = LoggerFactory.getLogger(ExcelColumnNumberValidator.class);
+
+    private Double minimum, maximum;
 
     /**
      * Checks if the cell value is date formatted.
@@ -30,15 +34,38 @@ public class ExcelColumnNumberValidator extends ExcelColumnValidator {
         if (PoiHelper.isEmpty(cell)) {
             return null; // Do not check empty cells. If required, it's done by super.
         }
-        boolean isNumberFormatted = false;
+        Double val = null;
         if (cell.getCellTypeEnum() == CellType.NUMERIC) {
-            double val = cell.getNumericCellValue();
-            isNumberFormatted = true;
+            val = cell.getNumericCellValue();
+        } else if (cell.getCellTypeEnum() == CellType.STRING) {
+            val = Converter.createDouble(cell.getStringCellValue());
         }
-        if (!isNumberFormatted) {
+        if (val == null) {
             return createValidationError(MESSAGE_NUMBER_EXPECTED, rowNumber, PoiHelper.getValueAsString(cell));
         }
+        if (minimum != null && ConditionalComparator.greaterThan(minimum, val)) {
+            return createValidationError(MESSAGE_NUMBER_LESS_THAN_MINIMUM, rowNumber, val, minimum);
+        }
+        if (maximum != null && ConditionalComparator.greaterThan(val, maximum)) {
+            return createValidationError(MESSAGE_NUMBER_GREATER_THAN_MAXIMUM, rowNumber, val, maximum);
+        }
         return null;
+    }
+
+    public Double getMinimum() {
+        return minimum;
+    }
+
+    public void setMinimum(Double minimum) {
+        this.minimum = minimum;
+    }
+
+    public Double getMaximum() {
+        return maximum;
+    }
+
+    public void setMaximum(Double maximum) {
+        this.maximum = maximum;
     }
 }
 
