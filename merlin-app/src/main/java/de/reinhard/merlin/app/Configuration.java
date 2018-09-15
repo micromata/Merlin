@@ -1,5 +1,9 @@
 package de.reinhard.merlin.app;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import de.reinhard.merlin.app.json.ConfigurationTestDeserializer;
+import de.reinhard.merlin.app.json.ConfigurationTestSerializer;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.ArrayList;
@@ -24,6 +28,8 @@ public class Configuration {
         this.language = language;
     }
 
+    @JsonSerialize(using = ConfigurationTestSerializer.class)
+    @JsonDeserialize(using = ConfigurationTestDeserializer.class)
     public List<String> getTemplateDirs() {
         return templateDirs;
     }
@@ -45,5 +51,6 @@ public class Configuration {
     public void copyFrom(Configuration configuration) {
         this.language = configuration.language;
         this.port = configuration.port;
+        this.templateDirs = configuration.templateDirs;
     }
 }

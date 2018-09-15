@@ -34,7 +34,7 @@ public class ConfigurationHandler {
     }
 
     private ConfigurationHandler() {
-        preferences = Preferences.userRoot().node("merlin");
+        preferences = Preferences.userRoot().node("de").node("micromata").node("merlin");
         load();
     }
 
