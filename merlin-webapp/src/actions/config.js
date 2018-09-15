@@ -43,7 +43,7 @@ export const updateConfigProperty = (property, value) => (dispatch, getState) =>
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(Object.assign({}, getState().config.properties, {
-            [property.toLowerCase()]: value
+            [property]: value
         }))
     })
         .then(response => {

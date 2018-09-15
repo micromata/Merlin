@@ -28,7 +28,7 @@ const reducer = (state = {}, action) => {
             return Object.assign({}, state, {
                 properties: {
                     ...state.properties,
-                    [action.payload.property.toLowerCase()]: action.payload.value
+                    [action.payload.property]: action.payload.value
                 }
             });
 
