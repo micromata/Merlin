@@ -32,7 +32,7 @@ export const fetchConfig = () => dispatch => {
         }
     })
         .then(response => response.json())
-        .then(json => dispatch(receivedConfig(json.configuration)))
+        .then(json => dispatch(receivedConfig(json)))
         .catch(() => dispatch(failedConfigFetch()));
 };
 

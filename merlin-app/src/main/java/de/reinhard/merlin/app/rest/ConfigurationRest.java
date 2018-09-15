@@ -20,7 +20,7 @@ public class ConfigurationRest {
     @Path("config")
     @Produces(MediaType.APPLICATION_JSON)
     public String getConfig() {
-        return JsonUtils.toJson(ConfigurationHandler.getInstance());
+        return JsonUtils.toJson(ConfigurationHandler.getInstance().getConfiguration());
     }
 
     @POST
