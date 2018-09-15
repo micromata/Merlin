@@ -23,7 +23,7 @@ import java.util.concurrent.ExecutionException;
 @Path("/files")
 public class FilesServiceRest {
     private Logger log = LoggerFactory.getLogger(FilesServiceRest.class);
-    private static final String TEST_OUT_DIR = "./out/";
+    private static final String TEST_OUT_DIR = "./merlin-core/out/";
     private static final String TEST_SRC_DIR = "./merlin-core/examples/tests/";
 
     // https://www.geekmj.org/jersey/jax-rs-multiple-files-upload-example-408/
@@ -39,10 +39,8 @@ public class FilesServiceRest {
 
         InputStream fileInputStream = filePart.getValueAs(InputStream.class);
 
-        String filePath = TEST_OUT_DIR + headerOfFilePart.getFileName();
-
         // save the file to the server
-        saveFile(fileInputStream, filePath);
+        saveFile(fileInputStream, new File(TEST_OUT_DIR), headerOfFilePart.getFileName());
         String output = "File upload OK.";
         return Response.status(200).entity(output).build();
     }
@@ -99,9 +97,12 @@ public class FilesServiceRest {
     }
 
     // save uploaded file to a defined location on the server
-    private void saveFile(InputStream uploadedInputStream, String serverLocation) {
+    private void saveFile(InputStream uploadedInputStream, File dir, String filename) {
         try {
-            File file = new File(serverLocation);
+            if (!dir.exists()) {
+                dir.createNewFile();
+            }
+            File file = new File(dir, filename);
             log.info("Writing file '" + file.getAbsolutePath() + "'");
             if (!file.exists()) {
                 file.createNewFile();
@@ -109,7 +110,7 @@ public class FilesServiceRest {
             OutputStream outpuStream = new FileOutputStream(file);
             IOUtils.copy(uploadedInputStream, outpuStream);
         } catch (IOException ex) {
-            log.error("Can't write file '" + serverLocation + "': " + ex.getMessage());
+            log.error("Can't write file '" + filename + "': " + ex.getMessage());
         }
     }
 
