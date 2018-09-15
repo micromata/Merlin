@@ -36,6 +36,7 @@ public class ConfigurationHandler {
     }
 
     public void save() {
+        log.info("Saving configuration to user prefs.");
         preferences.putInt(WEBSERVER_PORT_PREF, configuration.getPort());
         preferences.put(LANGUAGE_PREF, configuration.getLanguage());
         try {
