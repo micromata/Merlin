@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import java.beans.Transient;
 import java.time.LocalDate;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 public class VariableDefinition {
@@ -156,7 +156,7 @@ public class VariableDefinition {
      */
     public VariableDefinition addAllowedValues(Object... allowedValues) {
         if (this.allowedValuesList == null) {
-            this.allowedValuesList = new LinkedList();
+            this.allowedValuesList = new ArrayList<>();
         }
         for (Object val : allowedValues) {
             this.allowedValuesList.add(val);

@@ -109,7 +109,7 @@ public class WordDocumentTest {
         variables.put("endlessLoop3", "....................................... ${endlessLoop} ...");
 
         XWPFDocument doc = new XWPFDocument();
-        List<Entry> exptected = new LinkedList<>();
+        List<Entry> exptected = new ArrayList<>();
         add(exptected, TestHelper.createParagraph(doc, "1: Hello {if var = 'world'}Super world{endif}{if var != 'world'}${world}{endif}."),
                 new String[]{"1: Hello Super world."});
         add(exptected, TestHelper.createParagraph(doc, "2: {if counter > 5}We have more than 5 elements: ${counter}{endif}"),

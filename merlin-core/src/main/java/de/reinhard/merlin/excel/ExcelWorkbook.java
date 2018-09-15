@@ -9,10 +9,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ExcelWorkbook {
     private Logger log = LoggerFactory.getLogger(ExcelWorkbook.class);
@@ -88,7 +85,7 @@ public class ExcelWorkbook {
         if (sheetList != null) {
             return; // Already initialized.
         }
-        sheetList = new LinkedList<>();
+        sheetList = new ArrayList<>();
         for (Sheet poiSheet : workbook) {
             ExcelSheet excelSheet = new ExcelSheet(this, poiSheet);
             sheetList.add(excelSheet);

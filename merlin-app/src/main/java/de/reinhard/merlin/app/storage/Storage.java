@@ -4,7 +4,7 @@ import de.reinhard.merlin.word.templating.TemplateDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Storage {
@@ -27,7 +27,7 @@ public class Storage {
 
     public List<TemplateDefinition> getTemplatesList() {
         if (templatesList == null) {
-            templatesList = new LinkedList<>();
+            templatesList = new ArrayList<>();
         }
         return templatesList;
     }

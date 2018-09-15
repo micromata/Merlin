@@ -4,7 +4,7 @@ import org.apache.poi.ss.util.CellReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ExcelColumnDef {
@@ -54,7 +54,7 @@ public class ExcelColumnDef {
 
     public void addColumnListener(ExcelColumnListener columnListener) {
         if (this.columnListeners == null) {
-            columnListeners = new LinkedList<>();
+            columnListeners = new ArrayList<>();
         }
         columnListeners.add(columnListener);
         columnListener.setColumnDef(this);

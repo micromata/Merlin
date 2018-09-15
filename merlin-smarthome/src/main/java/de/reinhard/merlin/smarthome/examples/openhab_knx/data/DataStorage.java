@@ -6,21 +6,18 @@ import org.slf4j.LoggerFactory;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class DataStorage {
     private Logger log = LoggerFactory.getLogger(DataStorage.class);
     private static final DataStorage instance = new DataStorage();
 
     private Map<String, String> config = new HashMap<String, String>();
-    private List<KnxThing> knxThings = new LinkedList<KnxThing>();
+    private List<KnxThing> knxThings = new ArrayList<>();
     // Contains all knx things:
     private Map<String, KnxThing> knxThingRegistryMap = new HashMap<String, KnxThing>();
-    private List<String> knxDevices = new LinkedList<String>();
-    private List<String> knxPersistencies = new LinkedList<String>();
+    private List<String> knxDevices = new ArrayList<String>();
+    private List<String> knxPersistencies = new ArrayList<String>();
     // Contains all knx things as a list of things per device:
     private Map<String, List<KnxThing>> knxDeviceThingMap = new HashMap<String, List<KnxThing>>();
     private Map<String, List<KnxThing>> knxPersistencyThingMap = new HashMap<String, List<KnxThing>>();
@@ -41,7 +38,7 @@ public class DataStorage {
         if (knxDevices.contains(thing.getDevice()) == false) {
             log.debug("Found KNX device: " + thing.getDevice());
             knxDevices.add(thing.getDevice());
-            List<KnxThing> list = new LinkedList<KnxThing>();
+            List<KnxThing> list = new ArrayList<KnxThing>();
             knxDeviceThingMap.put(thing.getDevice(), list);
         }
         List<KnxThing> list = knxDeviceThingMap.get(thing.getDevice());
@@ -50,7 +47,7 @@ public class DataStorage {
             if (knxPersistencies.contains(thing.getPersistency()) == false) {
                 log.debug("Found KNX persistency: " + thing.getPersistency());
                 knxPersistencies.add(thing.getPersistency());
-                list = new LinkedList<KnxThing>();
+                list = new ArrayList<KnxThing>();
                 knxPersistencyThingMap.put(thing.getPersistency(), list);
             }
             list = knxPersistencyThingMap.get(thing.getPersistency());

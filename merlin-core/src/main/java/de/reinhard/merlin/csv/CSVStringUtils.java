@@ -3,7 +3,7 @@ package de.reinhard.merlin.csv;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 public class CSVStringUtils {
@@ -27,7 +27,7 @@ public class CSVStringUtils {
         if (str == null || str.length() == 0) {
             return new String[0];
         }
-        List<String> params = new LinkedList<>();
+        List<String> params = new ArrayList<>();
         StringBuilder value = null;
         QuotationStyle quotation = null;
         boolean separatorCharExpected = false;

@@ -5,10 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -36,7 +33,7 @@ public class RunsProcessorTest {
     }
 
     private void assertRunIdx(int runIdx, int runIdxPos, int pos, String... runStrings) {
-        List<XWPFRun> runs = new LinkedList<>();
+        List<XWPFRun> runs = new ArrayList<>();
         for (String str : runStrings) {
             runs.add(createRun(str));
         }

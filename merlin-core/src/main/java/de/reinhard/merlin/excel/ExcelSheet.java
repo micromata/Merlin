@@ -20,7 +20,7 @@ public class ExcelSheet {
     public static final String MESSAGE_MISSING_COLUMN_NUMBER = "merlin.excel.validation_error.missing_column_number";
     public static final String MESSAGE_MISSING_COLUMN_BY_NAME = "merlin.excel.validation_error.missing_column_by_name";
 
-    private List<ExcelColumnDef> columnDefList = new LinkedList<>();
+    private List<ExcelColumnDef> columnDefList = new ArrayList<>();
     private Sheet poiSheet;
     private ExcelWorkbook workbook;
     private Row headRow = null;
