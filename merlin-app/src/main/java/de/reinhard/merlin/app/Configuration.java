@@ -1,5 +1,8 @@
 package de.reinhard.merlin.app;
 
+import org.apache.commons.lang.StringUtils;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class Configuration {
@@ -27,6 +30,16 @@ public class Configuration {
 
     public void setTemplateDirs(List<String> templateDirs) {
         this.templateDirs = templateDirs;
+    }
+
+    public void addTemplateDir(String templateDir) {
+        if (StringUtils.isBlank(templateDir)) {
+            return;
+        }
+        if (templateDirs == null) {
+            templateDirs = new ArrayList<>();
+        }
+        templateDirs.add(templateDir);
     }
 
     public void copyFrom(Configuration configuration) {
