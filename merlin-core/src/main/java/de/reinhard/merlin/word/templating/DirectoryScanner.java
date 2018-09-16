@@ -60,4 +60,12 @@ public class DirectoryScanner {
             templateFilenames.put(templateDefinition.getId(), file);
         }
     }
+
+    public List<TemplateDefinition> getTemplates() {
+        return templates;
+    }
+
+    public File getTemplateFile(String templateId) {
+        return templateFilenames.get(templateId);
+    }
 }
