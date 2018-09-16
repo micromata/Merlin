@@ -47,6 +47,9 @@ public class TemplateDefinition {
 
     }
 
+    /**
+     * @return Unique id (randomized chars). There should not exist multiple templates with the same id.
+     */
     public String getId() {
         return id;
     }
