@@ -1,45 +1,30 @@
 package de.reinhard.merlin.app.storage;
 
-import de.reinhard.merlin.word.templating.DependentVariableDefinition;
+import de.reinhard.merlin.word.templating.DirectoryScanner;
 import de.reinhard.merlin.word.templating.TemplateDefinition;
-import de.reinhard.merlin.word.templating.VariableDefinition;
-import de.reinhard.merlin.word.templating.VariableType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.List;
+import java.io.File;
 
 /**
  * Creates test data.
  */
 public class TestData {
+    private static Logger log = LoggerFactory.getLogger(TestData.class);
+
+    private static final String TEST_TEMPLATES_DIR = "./merlin-app/test/templates/";
+
     public static void create() {
-        List<TemplateDefinition> templates = Storage.getInstance().getTemplatesList();
-        TemplateDefinition template = new TemplateDefinition();
-        template.setId("oYuCAsH5kuEbL8JfPRkP");
-        template.setName("Employment contract").setFilenamePattern("employment-contract-${Employee}").setDescription("This template is used for the generation of emloyee contracts.");
-        templates.add(template);
-        VariableDefinition gender = createStringVariable("Gender", "Gender of the employee.", true, true).addAllowedValues("male", "female");
-        template.add(createStringVariable("Employee", "Name of the employee.", true, true));
-        template.add(new VariableDefinition(VariableType.DATE, "BeginDate").setDescription("Begin of the contract.").setRequired());
-        template.add(gender);
-        template.add(new VariableDefinition(VariableType.INT, "WeeklyHours").setDescription("The weekly working hours.").setRequired().setMinimumValue(1).setMaximumValue(40));
-        template.add(new DependentVariableDefinition().setName("Mr_Mrs").setDependsOn(gender).addMapping("male", "Mr.").addMapping("female", "Mrs."));
-        template.add(new DependentVariableDefinition().setName("He_She").setDependsOn(gender).addMapping("male", "He").addMapping("female", "She"));
-        template.add(new DependentVariableDefinition().setName("he_she").setDependsOn(gender).addMapping("male", "he").addMapping("female", "she"));
-        template.add(new DependentVariableDefinition().setName("His_Her").setDependsOn(gender).addMapping("male", "His").addMapping("female", "Her"));
-        template.add(new DependentVariableDefinition().setName("his_her").setDependsOn(gender).addMapping("male", "his").addMapping("female", "her"));
-
-        template = new TemplateDefinition();
-        template.setId("WtiPJpabhhaFklLefy3c");
-        template.setName("Service agreement").setFilenamePattern("service-agreement-${contractNumber}").setDescription("This template is used for the generation of service contracts (such as SLA).");
-        templates.add(template);
-        template.add(createStringVariable("Customer", "Our customer.", true, true));
-        template.add(new VariableDefinition(VariableType.DATE, "BeginDate").setDescription("Begin of the contract.").setRequired());
-        template.add(new VariableDefinition(VariableType.INT, "contractNumber").setDescription("The unique contract number.").setRequired().setMinimumValue(1));
-    }
-
-    private static VariableDefinition createStringVariable(String name, String description, boolean required, boolean unique) {
-        return new VariableDefinition(name)
-                .setDescription(description)
-                .setRequired(required).setUnique(unique);
+        DirectoryScanner directoryScanner = new DirectoryScanner();
+        File dir = new File(TEST_TEMPLATES_DIR);
+        directoryScanner.process(dir);
+        if (directoryScanner.getTemplates() == null) {
+            log.error("Can't scan directory '" + dir.getAbsolutePath() + "' for test template files.");
+            return;
+        }
+        for (TemplateDefinition templateDefinition : directoryScanner.getTemplates()) {
+            Storage.getInstance().add(templateDefinition, directoryScanner.getTemplateFile(templateDefinition.getId()));
+        }
     }
 }
