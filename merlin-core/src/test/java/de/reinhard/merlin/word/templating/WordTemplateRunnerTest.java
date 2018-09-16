@@ -13,6 +13,9 @@ import java.io.FileOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 public class WordTemplateRunnerTest {
     private Logger log = LoggerFactory.getLogger(WordTemplateRunnerTest.class);
 
@@ -23,6 +26,9 @@ public class WordTemplateRunnerTest {
         TemplateDefinition templateDefinition = DefinitionExcelConverterTest.create();
         WordDocument templateDocument = new WordDocument(new File(Definitions.EXAMPLES_TEST_DIR, "ContractTemplate.docx"));
         WordTemplateRunner runner = new WordTemplateRunner(templateDefinition, templateDocument);
+        TemplateDefinitionReference ref = runner.scanForTemplateDefinitionReference();
+        assertNotNull(ref);
+        assertEquals("JZpnpojeSuN5JDqtm9KZ", ref.getTemplateDefinitionId());
         runDocument(runner, "kai", "Kai Reinhard", "male", "3/16/2001",
                 "4/1/2001", "25", "30");
         runDocument(runner, "berta", "Berta Charlson", "female", "8/14/2017",

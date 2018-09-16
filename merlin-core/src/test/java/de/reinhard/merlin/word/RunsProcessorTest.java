@@ -5,7 +5,11 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -14,6 +18,20 @@ import static org.mockito.Mockito.when;
 
 public class RunsProcessorTest {
     private Logger log = LoggerFactory.getLogger(RunsProcessorTest.class);
+
+    @Test
+    public void templateReferenceRegexTest() {
+        assertMatcher("{template.name='letter'}", "name", "'letter'");
+        assertMatcher("lfd lk { template.id= \"hruzer' }kdlfkaj", "id", "\"hruzer' ");
+    }
+
+    private void assertMatcher(String str, String variable, String quotedValue) {
+        Matcher matcher = RunsProcessor.templateDefinitionReferencePattern.matcher(str);
+        if (matcher.find()) {
+            assertEquals(variable, matcher.group(1));
+            assertEquals(quotedValue, matcher.group(2));
+        }
+    }
 
     @Test
     public void readWordTest() throws Exception {

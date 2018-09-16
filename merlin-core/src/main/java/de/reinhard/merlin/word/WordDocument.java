@@ -1,5 +1,6 @@
 package de.reinhard.merlin.word;
 
+import de.reinhard.merlin.word.templating.TemplateDefinitionReference;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.openxml4j.opc.OPCPackage;
 import org.apache.poi.xwpf.usermodel.*;
@@ -7,7 +8,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class WordDocument {
     private Logger log = LoggerFactory.getLogger(WordDocument.class);
@@ -22,7 +25,6 @@ public class WordDocument {
     }
 
     /**
-     *
      * @param filename File to read document from.
      */
     public WordDocument(String filename) {
@@ -70,6 +72,19 @@ public class WordDocument {
         replaceVariables(variables);
     }
 
+    public TemplateDefinitionReference scanForTemplateDefinitionReference() {
+        for (IBodyElement element : document.getBodyElements()) {
+            if (element instanceof XWPFParagraph) {
+                XWPFParagraph paragraph = (XWPFParagraph) element;
+                TemplateDefinitionReference ref = new RunsProcessor(paragraph).scanForTemplateDefinitionReference();
+                if (ref != null) {
+                    return ref;
+                }
+            }
+        }
+        return null;
+    }
+
     public Conditionals getConditionals() {
         Conditionals conditionals = new Conditionals(this);
         conditionals.read();
@@ -81,7 +96,7 @@ public class WordDocument {
         for (IBodyElement element : document.getBodyElements()) {
             if (element instanceof XWPFParagraph) {
                 XWPFParagraph paragraph = (XWPFParagraph) element;
-                new RunsProcessor(paragraph).scanVariables(variables);
+                 new RunsProcessor(paragraph).scanVariables(variables);
             } else if (element instanceof XWPFTable) {
                 XWPFTable table = (XWPFTable) element;
                 for (XWPFTableRow row : table.getRows()) {

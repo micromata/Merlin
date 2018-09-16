@@ -1,5 +1,7 @@
 package de.reinhard.merlin.word;
 
+import de.reinhard.merlin.csv.CSVStringUtils;
+import de.reinhard.merlin.word.templating.TemplateDefinitionReference;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.slf4j.Logger;
@@ -17,6 +19,8 @@ public class RunsProcessor {
     private static Logger log = LoggerFactory.getLogger(RunsProcessor.class);
     public static final String IDENTIFIER_REGEXP = "[a-zA-Z_][a-zA-Z\\d_]*";
     static final Pattern defaultVariablePattern = Pattern.compile("\\$\\{\\s*(" + IDENTIFIER_REGEXP + ")\\s*\\}");
+    // {template.id="JZpnpojeSuN5JDqtm9KZ"} or {template.name="Letter"}:
+    static final Pattern templateDefinitionReferencePattern = Pattern.compile("\\{\\s*template\\.(id?|name?)\\s*=\\s*([^\\}]*)\\s*\\}");
     private int[] runSizes;
     private Pattern variablePattern;
     private XWPFParagraph paragraph;
@@ -40,12 +44,17 @@ public class RunsProcessor {
         this.variablePattern = defaultVariablePattern;
     }
 
+    /**
+     * Replace all variable by their values. Removes also any occurencies of template references: {@link #removeTemplateReference()}.
+     * @param variables
+     */
     public void replace(Map<String, ?> variables) {
         if (runs == null || runs.size() == 0) {
             return;
         }
         replaceEntries = new ArrayList<>();
         String runsText = getText();
+        removeTemplateReference();
         Matcher matcher = variablePattern.matcher(runsText);
         //log.debug("Start pos: " + lastPos);
         while (matcher.find()) {
@@ -66,6 +75,18 @@ public class RunsProcessor {
         }
     }
 
+    /**
+     * Removes any occurence of {template.id = "..."} or { template.name = "..." }.
+     */
+    private void removeTemplateReference() {
+        Matcher matcher = templateDefinitionReferencePattern.matcher(runsText);
+        while (matcher.find()) {
+            int start = matcher.start();
+            int end = matcher.end();
+            replaceEntries.add(new ReplaceEntry(start, end, ""));
+        }
+    }
+
     void scanVariables(Set<String> variables) {
         if (runs == null || runs.size() == 0) {
             return;
@@ -76,6 +97,32 @@ public class RunsProcessor {
             String variableName = matcher.group(1);
             variables.add(variableName);
         }
+    }
+
+    public TemplateDefinitionReference scanForTemplateDefinitionReference() {
+        if (runs == null || runs.size() == 0) {
+            return null;
+        }
+        String runsText = getText();
+        Matcher matcher = templateDefinitionReferencePattern.matcher(runsText);
+        if (matcher.find()) {
+            String variable = matcher.group(1);
+            String quotedValue = matcher.group(2);
+            String[] strArray = CSVStringUtils.parseStringList(quotedValue, true);
+            if (strArray == null || strArray.length != 1) {
+                log.error("Can't get template reference: " + strArray);
+                return null;
+            }
+            String value = strArray[0];
+            TemplateDefinitionReference ref = new TemplateDefinitionReference();
+            if ("id".equals(variable)) {
+                ref.setTemplateDefinitionId(value);
+            } else {
+                ref.setTemplateName(value);
+            }
+            return ref;
+        }
+        return null;
     }
 
     DocumentPosition getEnd(int bodyElementNo) {

@@ -16,12 +16,47 @@ public class WordTemplateRunner {
     private TemplateDefinition templateDefinition;
     private WordDocument srcDocument;
 
+    /**
+     * @param templateDefinition Bind this Template to this Word document. Any template definition read inside the
+     *                           Word document will be ignored.
+     * @param document
+     */
     public WordTemplateRunner(TemplateDefinition templateDefinition, WordDocument document) {
         this.templateDefinition = templateDefinition;
         this.srcDocument = document;
     }
 
+    /**
+     * Don't forget to bind the Word template before running {@link #run(Map)}.
+     *
+     * @param document
+     */
+    public WordTemplateRunner(WordDocument document) {
+        this.srcDocument = document;
+    }
+
+    public void setTemplateDefinition(TemplateDefinition templateDefinition) {
+        this.templateDefinition = templateDefinition;
+    }
+
+    /**
+     * Scans the Word file for template definition, such as:
+     * <ul>
+     * <li>{template.id="of84r3orn3w0jo"} or</li>
+     * <li>{template.name="Employee Contract"} or</li>
+     * </ul>
+     *
+     * @return TemplateDefinition only with fields id and or name.
+     */
+    public TemplateDefinitionReference scanForTemplateDefinitionReference() {
+        return srcDocument.scanForTemplateDefinitionReference();
+    }
+
     public WordDocument run(Map<String, Object> variables) {
+        if (templateDefinition == null) {
+            log.error("No TemplateDefinition given. Can't process Word document.");
+            return srcDocument;
+        }
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         try {
             srcDocument.getDocument().write(bos);
