@@ -31,8 +31,8 @@ public class ExcelWorkbookTest {
         assertEquals(1, validationErrors.size());
         assertEquals("In sheet 'Config', column A:'Property' and row #5: Cell value isn't unique. It's already used in row #3: 'user'.",
                 validationErrors.iterator().next().getMessageWithAllDetails(i18n));
-        assertEquals("horst", props.getConfig("user"));
-        assertEquals("Hamburg", props.getConfig("city"));
+        assertEquals("horst", props.getConfigString("user"));
+        assertEquals("Hamburg", props.getConfigString("city"));
     }
 
     @Test

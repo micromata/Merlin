@@ -39,10 +39,10 @@ public class TemplateDefinitionExcelReader {
             log.error(msg.getMessageWithAllDetails(I18n.getDefault()));
         }
         PropertiesStorage props = configReader.readConfig(workbook);
-        template.setId(props.getConfig("Id"));
-        template.setName(props.getConfig("Name"));
-        template.setDescription(props.getConfig("Description"));
-        template.setFilenamePattern(props.getConfig("Filename"));
+        template.setId(props.getConfigString("Id"));
+        template.setName(props.getConfigString("Name"));
+        template.setDescription(props.getConfigString("Description"));
+        template.setFilenamePattern(props.getConfigString("Filename"));
         return template;
     }
 
