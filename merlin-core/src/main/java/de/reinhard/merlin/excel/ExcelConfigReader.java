@@ -45,6 +45,10 @@ public class ExcelConfigReader {
         return propertiesStorage;
     }
 
+    public boolean isValid() {
+        return sheet.isValid();
+    }
+
     public ExcelSheet getSheet() {
         return sheet;
     }
