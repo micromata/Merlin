@@ -285,6 +285,19 @@ public class ExcelSheet {
         return poiSheet.getWorkbook().getSheetIndex(poiSheet);
     }
 
+    /**
+     * Don't forget to call analyze(true) first.
+     * Is an alias for !{@link #hasValidationErrors()}.
+     * @return true if no error messages exist, otherwise false.
+     */
+    public boolean isValid() {
+        return !hasValidationErrors();
+    }
+
+    /**
+     * Don't forget to call analyze(true) first.
+     * @return true if no error messages exist, otherwise false.
+     */
     public boolean hasValidationErrors() {
         if (validationErrors != null && validationErrors.size() > 0) {
             return true;
