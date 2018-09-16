@@ -7,6 +7,10 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * You may define each column of a sheet via ExcelColumnDef. This is used as well for validating as well as for a more
+ * convenient parsing of Excel values.
+ */
 public class ExcelColumnDef {
     private Logger log = LoggerFactory.getLogger(ExcelColumnDef.class);
 
@@ -15,7 +19,7 @@ public class ExcelColumnDef {
     private List<ExcelColumnListener> columnListeners;
 
     ExcelColumnDef(String columnHeadname) {
-        this.columnHeadname = columnHeadname != null ? columnHeadname : CellReference.convertNumToColString(columnNumber);
+        this.columnHeadname = columnHeadname;
     }
 
     ExcelColumnDef(int columnNumber, String columnHeadname) {
@@ -23,6 +27,11 @@ public class ExcelColumnDef {
         this.columnHeadname = columnHeadname != null ? columnHeadname : CellReference.convertNumToColString(columnNumber);
     }
 
+    /**
+     * Return the number of this column (0-based). The number is set by {@link ExcelSheet#findAndReadHeadRow()}.
+     *
+     * @return
+     */
     public int getColumnNumber() {
         return columnNumber;
     }
@@ -40,6 +49,7 @@ public class ExcelColumnDef {
 
     /**
      * @return Column number as letters: A, B, ..., AA, AB, ...
+     * @see CellReference#convertNumToColString(int)
      */
     public String getColumnNumberAsLetters() {
         return CellReference.convertNumToColString(columnNumber);
@@ -48,6 +58,7 @@ public class ExcelColumnDef {
     public boolean hasColumnListeners() {
         return columnListeners != null && columnListeners.size() > 0;
     }
+
     public List<ExcelColumnListener> getColumnListeners() {
         return columnListeners;
     }

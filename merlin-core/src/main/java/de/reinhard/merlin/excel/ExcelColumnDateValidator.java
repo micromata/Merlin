@@ -6,8 +6,9 @@ import org.apache.poi.ss.usermodel.DateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.regex.PatternSyntaxException;
-
+/**
+ * Validates each cell of a column: Each cell must be a valid Excel date format.
+ */
 public class ExcelColumnDateValidator extends ExcelColumnValidator {
     /**
      * Parameter: Sheet name, Column in letter format: (A, B, ..., AA, AB, ...), Column head name, Row number,

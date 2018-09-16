@@ -11,6 +11,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.*;
 
+/**
+ * Wraps and enhances a POI workbook.
+ */
 public class ExcelWorkbook {
     private Logger log = LoggerFactory.getLogger(ExcelWorkbook.class);
 

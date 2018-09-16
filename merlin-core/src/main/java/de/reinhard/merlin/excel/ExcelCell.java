@@ -7,6 +7,9 @@ import org.apache.poi.ss.usermodel.CreationHelper;
 
 import java.util.Date;
 
+/**
+ * Optional holder for POI cells. Useful for creating new cells.
+ */
 public class ExcelCell {
     private Cell cell;
     private ExcelCellType type;

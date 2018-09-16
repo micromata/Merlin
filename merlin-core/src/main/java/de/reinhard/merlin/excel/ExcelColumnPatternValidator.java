@@ -7,6 +7,9 @@ import org.slf4j.LoggerFactory;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Validates cell values for matching Java regexp pattern.
+ */
 public class ExcelColumnPatternValidator extends ExcelColumnValidator {
     /**
      * Parameter: Sheet name, Column in letter format: (A, B, ..., AA, AB, ...), Column head name, Row number,

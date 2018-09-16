@@ -7,6 +7,10 @@ import org.apache.poi.ss.usermodel.CellType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Validates Excel cells (must be numbers).
+ * @see CellType#NUMERIC
+ */
 public class ExcelColumnNumberValidator extends ExcelColumnValidator {
     public static final String MESSAGE_NUMBER_EXPECTED = "merlin.excel.validation_error.number_expected";
 
@@ -18,8 +22,11 @@ public class ExcelColumnNumberValidator extends ExcelColumnValidator {
 
     private Double minimum, maximum;
 
+    private boolean tryToConvertStringToNumber;
+
     /**
-     * Checks if the cell value is date formatted.
+     * Checks if the cell value is of type {@link CellType#NUMERIC} or if {@link #isTryToConvertStringToNumber()} is true if
+     * it is possible to convert a string cell value to a number.
      *
      * @param cell
      * @param rowNumber Row number of cell value in given sheet.
@@ -37,7 +44,7 @@ public class ExcelColumnNumberValidator extends ExcelColumnValidator {
         Double val = null;
         if (cell.getCellTypeEnum() == CellType.NUMERIC) {
             val = cell.getNumericCellValue();
-        } else if (cell.getCellTypeEnum() == CellType.STRING) {
+        } else if (tryToConvertStringToNumber && cell.getCellTypeEnum() == CellType.STRING) {
             val = Converter.createDouble(cell.getStringCellValue());
         }
         if (val == null) {
@@ -56,6 +63,9 @@ public class ExcelColumnNumberValidator extends ExcelColumnValidator {
         return minimum;
     }
 
+    /**
+     * @param minimum If given each number must be equals or higher than this given minimum value. Default is null.
+     */
     public void setMinimum(Double minimum) {
         this.minimum = minimum;
     }
@@ -64,8 +74,24 @@ public class ExcelColumnNumberValidator extends ExcelColumnValidator {
         return maximum;
     }
 
+    /**
+     *
+     * @param maximum If given each number must be equals or lower than this given maximum value. Default is null.
+     */
     public void setMaximum(Double maximum) {
         this.maximum = maximum;
+    }
+
+    public boolean isTryToConvertStringToNumber() {
+        return tryToConvertStringToNumber;
+    }
+
+    /**
+     * If true a string value of a cell will be converted by this validator to a string (if possible). Default is false.
+     * @param tryToConvertStringToNumber
+     */
+    public void setTryToConvertStringToNumber(boolean tryToConvertStringToNumber) {
+        this.tryToConvertStringToNumber = tryToConvertStringToNumber;
     }
 }
 

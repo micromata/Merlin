@@ -2,6 +2,9 @@ package de.reinhard.merlin.excel;
 
 import org.apache.poi.ss.usermodel.CellType;
 
+/**
+ * Used for creating new ExcelCells.
+ */
 public enum ExcelCellType {
     DATE, STRING, INT, DOUBLE, BOOLEAN;
 

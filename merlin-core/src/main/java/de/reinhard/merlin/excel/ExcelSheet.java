@@ -15,6 +15,9 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
+/**
+ * Wraps and enhances a POI sheet.
+ */
 public class ExcelSheet {
     private Logger log = LoggerFactory.getLogger(ExcelSheet.class);
     public static final String MESSAGE_MISSING_COLUMN_NUMBER = "merlin.excel.validation_error.missing_column_number";
@@ -385,14 +388,14 @@ public class ExcelSheet {
                         highlightedColumnHeads.add(columnDef); // Don't highlight column heads twice.
                         // Cell validation error. Highlight column head cell.
                         Cell headCell = headRow.getCell(columnDef.getColumnNumber());
-                        excelWriterContext.getColumnHeadCellHighlighter().highlightColumnHeadCell(headCell, excelWriterContext, this,
+                        excelWriterContext.getCellHighlighter().highlightColumnHeadCell(headCell, excelWriterContext, this,
                                 columnDef, headRow);
                         modified = true;
                     }
                 }
                 if (excelWriterContext.isAddCellComments()) {
                     // Cell validation error. Add error message as comment.
-                    excelWriterContext.getCommentWriter().setCellComment(cell, excelWriterContext, this,
+                    excelWriterContext.getCellHighlighter().setCellComment(cell, excelWriterContext, this,
                             columnDef, row, validationError.getMessage(i18n));
                     modified = true;
                 }

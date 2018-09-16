@@ -4,6 +4,9 @@ import org.apache.poi.ss.usermodel.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Some helper classes.
+ */
 public class PoiHelper {
     private static Logger log = LoggerFactory.getLogger(PoiHelper.class);
 
@@ -65,9 +68,9 @@ public class PoiHelper {
         // When the comment box is visible, have it show in a 1x3 space
         ClientAnchor anchor = factory.createClientAnchor();
         anchor.setCol1(cell.getColumnIndex());
-        anchor.setCol2(cell.getColumnIndex() + 5);
+        anchor.setCol2(cell.getColumnIndex() + 3);
         anchor.setRow1(cell.getRowIndex());
-        anchor.setRow2(cell.getRowIndex() + 5);
+        anchor.setRow2(cell.getRowIndex() + 3);
         // Create the comment and set the text+author
         Comment comment = drawing.createCellComment(anchor);
         RichTextString str = factory.createRichTextString(message);

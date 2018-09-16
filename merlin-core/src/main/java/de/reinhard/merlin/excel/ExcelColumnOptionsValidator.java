@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 
 /**
- * Checks, if a cell matches given options, e. g. colors (red, blue, yello).
+ * Checks, if a cell matches given options, e. g. colors (red, blue, yellow).
  */
 public class ExcelColumnOptionsValidator extends ExcelColumnValidator {
     /**

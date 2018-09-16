@@ -6,6 +6,9 @@ import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.IndexedColors;
 
+/**
+ * Context while writing Excel files for customizing CellStyle of error cells, localization (i18n) etc.
+ */
 public class ExcelWriterContext {
     private boolean addCellComments = true;
     private boolean addErrorColumn;
@@ -21,9 +24,7 @@ public class ExcelWriterContext {
     private int maxErrorMessagesPerColumn = 100;
     private ExcelValidationErrorCellHighlighter cellHighlighter;
     private ExcelValidationErrorCellCleaner cellCleaner;
-    private ExcelValidationErrorCommentWriter commentWriter;
     private ExcelValidationErrorMessageWriter errorMessageWriter;
-    private ExcelValidationErrorColumnHeadCellHighlighter columnHeadCellHighlighter;
 
 
     public ExcelWriterContext(I18n i18n, ExcelWorkbook workbook) {
@@ -145,33 +146,6 @@ public class ExcelWriterContext {
 
     public void setCellCleaner(ExcelValidationErrorCellCleaner cellCleaner) {
         this.cellCleaner = cellCleaner;
-    }
-
-    public ExcelValidationErrorColumnHeadCellHighlighter getColumnHeadCellHighlighter() {
-        if (columnHeadCellHighlighter == null) {
-            columnHeadCellHighlighter = new ExcelValidationErrorColumnHeadCellHighlighter();
-        }
-        return columnHeadCellHighlighter;
-    }
-
-    public void setColumnHeadCellHighlighter(ExcelValidationErrorColumnHeadCellHighlighter columnHeadCellHighlighter) {
-        this.columnHeadCellHighlighter = columnHeadCellHighlighter;
-    }
-
-    public ExcelValidationErrorCommentWriter getCommentWriter() {
-        if (commentWriter == null) {
-            commentWriter = new ExcelValidationErrorCommentWriter();
-        }
-        return commentWriter;
-    }
-
-    /**
-     * For customizing comments in error cells.
-     *
-     * @param commentWriter
-     */
-    public void setCommentWriter(ExcelValidationErrorCommentWriter commentWriter) {
-        this.commentWriter = commentWriter;
     }
 
     public ExcelValidationErrorMessageWriter getErrorMessageWriter() {

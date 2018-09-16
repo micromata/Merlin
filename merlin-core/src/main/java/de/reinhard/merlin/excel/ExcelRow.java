@@ -5,6 +5,9 @@ import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.util.CellRangeAddress;
 
+/**
+ * A helper wrapper for creating rows in a more convenient way.
+ */
 public class ExcelRow {
     private Row row;
 

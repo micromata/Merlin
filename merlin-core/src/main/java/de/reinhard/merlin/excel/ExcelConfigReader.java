@@ -8,6 +8,10 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Iterator;
 
+/**
+ * Reads a Excel sheet containing key-value columns. You may define the key column and the value column and this
+ * helper will store each key-value pair in a {@link PropertiesStorage}. Each row contains a key-value pair.
+ */
 public class ExcelConfigReader {
     private Logger log = LoggerFactory.getLogger(ExcelConfigReader.class);
 
