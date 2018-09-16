@@ -1,5 +1,6 @@
 package de.reinhard.merlin.word.templating;
 
+import de.reinhard.merlin.I18n;
 import de.reinhard.merlin.excel.ExcelCell;
 import de.reinhard.merlin.excel.ExcelWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
@@ -25,6 +26,7 @@ public class TemplateContext {
     DateFormat[] dateFormatters;
     Locale locale;
     private String excelDateFormatPattern;
+    private I18n i18n;
 
     public TemplateContext() {
         this(Locale.getDefault());
@@ -181,5 +183,16 @@ public class TemplateContext {
         } else {
             cell.setCellValue(String.valueOf(value));
         }
+    }
+
+    public void setI18n(I18n i18n) {
+        this.i18n = i18n;
+    }
+
+    public I18n getI18n() {
+        if (i18n == null) {
+            return I18n.getDefault();
+        }
+        return i18n;
     }
 }
