@@ -1,5 +1,7 @@
 package de.reinhard.merlin.app.javafx;
 
+import java.io.File;
+
 public class RunningMode {
     private static OS_TYPE osType;
 
@@ -8,6 +10,7 @@ public class RunningMode {
     public enum OS_TYPE {MAC_OS, WINDOWS, LINUX, OTHER}
 
     private static boolean running;
+    private static File baseDir;
 
     public static Mode getMode() {
         return Mode.TemplatesTest;
@@ -41,5 +44,12 @@ public class RunningMode {
 
     static void setRunning(boolean running) {
         RunningMode.running = running;
+    }
+
+    static File getBaseDir() {
+        if (baseDir == null) {
+            baseDir = new File(System.getProperty("user.dir")); // Merlin base dir.
+        }
+        return null;
     }
 }

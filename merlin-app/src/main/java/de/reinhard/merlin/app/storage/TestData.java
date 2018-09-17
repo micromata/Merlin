@@ -13,11 +13,11 @@ import java.io.File;
 public class TestData {
     private static Logger log = LoggerFactory.getLogger(TestData.class);
 
-    private static final String TEST_TEMPLATES_DIR = "./merlin-app/test/templates/";
+    private static final String TEST_TEMPLATES_DIR = "merlin-app/test/templates/";
 
-    public static void create() {
+    public static void create(File parent) {
         DirectoryScanner directoryScanner = new DirectoryScanner();
-        File dir = new File(TEST_TEMPLATES_DIR);
+        File dir = new File(parent, TEST_TEMPLATES_DIR);
         directoryScanner.process(dir);
         if (directoryScanner.getTemplates() == null) {
             log.error("Can't scan directory '" + dir.getAbsolutePath() + "' for test template files.");

@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -32,7 +33,7 @@ public class JsonUtilsTest {
 
     @Test
     public void testData() {
-        TestData.create();
+        TestData.create(new File("..")); // current dir is merlin-app.
         List<TemplateDefinition> ts1 = Storage.getInstance().getTemplatesList();
         String json = JsonUtils.toJson(ts1);
         log.debug(json);
