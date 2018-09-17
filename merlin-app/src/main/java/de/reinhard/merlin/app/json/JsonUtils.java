@@ -1,6 +1,7 @@
 package de.reinhard.merlin.app.json;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
@@ -17,6 +18,7 @@ public class JsonUtils {
             return "";
         }
         ObjectMapper objectMapper = getObjectMapper();
+        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         StringWriter writer = new StringWriter();
         try {
             objectMapper.writeValue(writer, obj);
