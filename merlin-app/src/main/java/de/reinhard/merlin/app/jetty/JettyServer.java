@@ -2,6 +2,8 @@ package de.reinhard.merlin.app.jetty;
 
 import de.reinhard.merlin.app.ConfigurationHandler;
 import de.reinhard.merlin.app.javafx.RunningMode;
+import de.reinhard.merlin.app.rest.ConfigurationRest;
+import de.reinhard.merlin.app.ui.rest.ConfigurationUIRest;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
@@ -46,7 +48,8 @@ public class JettyServer {
         ServletHolder jerseyServlet = new ServletHolder(
                 new ServletContainer(
                         new ResourceConfig()
-                                .packages("de.reinhard.merlin.app.rest")
+                                .packages(ConfigurationRest.class.getPackage().getName(),
+                                        ConfigurationUIRest.class.getPackage().getName())
                                 .register(MultiPartFeature.class)
                 )
         );
