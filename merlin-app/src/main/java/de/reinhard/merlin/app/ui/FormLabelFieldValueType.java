@@ -5,7 +5,7 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * The value type of a form field.
  */
-public enum FormLabelFieldType {
+public enum FormLabelFieldValueType {
     STRING, INTEGER, FLOAT, CHECKED,
     /**
      * Represents a directory (path) string with a browse button. The browse button

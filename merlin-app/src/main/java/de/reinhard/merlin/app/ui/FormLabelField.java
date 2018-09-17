@@ -8,7 +8,7 @@ import java.util.List;
  */
 public class FormLabelField extends FormEntry {
     private boolean required;
-    private FormLabelFieldType type = FormLabelFieldType.STRING;
+    private FormLabelFieldValueType valueType = FormLabelFieldValueType.STRING;
     private String path;
     private String label;
     private Number minumumValue, maximumValue;
@@ -40,16 +40,16 @@ public class FormLabelField extends FormEntry {
         this.path = path;
     }
 
-    public FormLabelFieldType getType() {
-        return type;
+    public FormLabelFieldValueType getValueType() {
+        return valueType;
     }
 
     /**
-     * @param type Default is {@link FormLabelFieldType#STRING}.
+     * @param valueType Default is {@link FormLabelFieldValueType#STRING}.
      * @return this for chaining.
      */
-    public FormLabelField setType(FormLabelFieldType type) {
-        this.type = type;
+    public FormLabelField setValueType(FormLabelFieldValueType valueType) {
+        this.valueType = valueType;
         return this;
     }
 

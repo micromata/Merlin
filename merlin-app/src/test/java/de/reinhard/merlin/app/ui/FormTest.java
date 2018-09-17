@@ -15,10 +15,10 @@ public class FormTest {
     public void toJsonTest() {
         Form form1 = new Form();
         form1.add(new FormLabelField("name", "Name").setRequired(true));
-        form1.add(new FormLabelField("age", "Age").setRequired(true).setType(FormLabelFieldType.INTEGER).setMinumumValue(0).setMaximumValue(120));
+        form1.add(new FormLabelField("age", "Age").setRequired(true).setValueType(FormLabelFieldValueType.INTEGER).setMinumumValue(0).setMaximumValue(120));
         form1.add(new FormLabelField("remark", "Remark"));
         form1.add(new FormLabelField("language", "Language").addOption("en", "English").addOption("de", "Deutsch"));
-        form1.add(new FormLabelField("directory", "Directory").setType(FormLabelFieldType.DIRECTORY));
+        form1.add(new FormLabelField("directory", "Directory").setValueType(FormLabelFieldValueType.DIRECTORY));
         String json = JsonUtils.toJson(form1);
         Form form2 = JsonUtils.fromJson(Form.class, json);
         assertForm(form1, form2);
@@ -33,7 +33,7 @@ public class FormTest {
                 assertEquals(f1.getPath(), f2.getPath());
                 assertEquals(f1.getLabel(), f2.getLabel());
                 assertEquals(f1.isRequired(), f2.isRequired());
-                assertEquals(f1.getType(), f2.getType());
+                assertEquals(f1.getValueType(), f2.getValueType());
                 assertEquals(f1.getMinumumValue(), f2.getMinumumValue());
                 assertEquals(f1.getMaximumValue(), f2.getMaximumValue());
                 if (f1.getOptions() == null) {
