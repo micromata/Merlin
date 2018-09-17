@@ -13,6 +13,11 @@ import static org.mockito.Mockito.when;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ConfigurationTest {
+    private final static String DIR1 = "/Users/kai/Documents/templates";
+    private final static String DIR2 = "/Users/kai/Templates";
+    private final static String DIR3 = "/Users/kai/Templates of \"Kai\"";
+    private final static String DIR3b = "/Users/kai/Templates of \\\"Kai\\\"";
+
     @Test
     public void configurationSaveTest() throws Exception {
         Preferences preferences = mock(Preferences.class);
@@ -25,12 +30,12 @@ public class ConfigurationTest {
         configurationHandler.save();
         configuration.addTemplateDir("   "); // Ignore: 4. remove expected.
         configurationHandler.save();
-        configuration.addTemplateDir("/Users/kai/Documents/templates");
+        configuration.addTemplateDir(DIR1);
         configurationHandler.save();
-        configuration.addTemplateDir("/Users/kai/Templates");
+        configuration.addTemplateDir(DIR2);
         configuration.addTemplateDir("  ");
         configurationHandler.save();
-        configuration.addTemplateDir("/Users/kai/Templates of \"Kai\"");
+        configuration.addTemplateDir(DIR3);
         configurationHandler.save();
 
         InOrder inOrder = Mockito.inOrder(preferences);
@@ -38,9 +43,11 @@ public class ConfigurationTest {
         inOrder.verify(preferences).remove(TEMPLATES_DIRS);
         inOrder.verify(preferences).remove(TEMPLATES_DIRS);
         inOrder.verify(preferences).remove(TEMPLATES_DIRS);
-        inOrder.verify(preferences).put(TEMPLATES_DIRS, "\"/Users/kai/Documents/templates\"");
-        inOrder.verify(preferences).put(TEMPLATES_DIRS, "\"/Users/kai/Documents/templates\";\"/Users/kai/Templates\"");
-        inOrder.verify(preferences).put(TEMPLATES_DIRS, "\"/Users/kai/Documents/templates\";\"/Users/kai/Templates\";\"/Users/kai/Templates of \"\"Kai\"\"\"");
+        inOrder.verify(preferences).put(TEMPLATES_DIRS, "[{\"directory\":\"" + DIR1 + "\",\"recursive\":false}]");
+        inOrder.verify(preferences).put(TEMPLATES_DIRS, "[{\"directory\":\"" + DIR1 + "\",\"recursive\":false},{\"directory\":\"" +
+                DIR2 + "\",\"recursive\":false}]");
+        inOrder.verify(preferences).put(TEMPLATES_DIRS, "[{\"directory\":\"" + DIR1 + "\",\"recursive\":false},{\"directory\":\"" +
+                DIR2 + "\",\"recursive\":false},{\"directory\":\"" + DIR3b + "\",\"recursive\":false}]");
         inOrder.verify(preferences).flush();
         inOrder.verifyNoMoreInteractions();
     }
@@ -51,17 +58,18 @@ public class ConfigurationTest {
         ConfigurationHandler configurationHandler = new ConfigurationHandler(preferences);
         Configuration configuration = configurationHandler.getConfiguration();
         when(preferences.get(TEMPLATES_DIRS, null)).thenReturn(null)
-                .thenReturn("\"/Users/kai/Documents/templates\"")
-                .thenReturn("\"/Users/kai/Documents/templates\";\"/Users/kai/Templates\";\"/Users/kai/Templates of \"\"Kai\"\"\"");
+                .thenReturn("[{\"directory\":\"" + DIR1 + "\",\"recursive\":false}]")
+                .thenReturn("[{\"directory\":\"" + DIR1 + "\",\"recursive\":false},{\"directory\":\"" +
+                        DIR2 + "\",\"recursive\":false},{\"directory\":\"" + DIR3b + "\",\"recursive\":false}]");
         configurationHandler.load();
         assertNull(configuration.getTemplateDirs());
         configurationHandler.load();
         assertEquals(1, configuration.getTemplateDirs().size());
-        assertEquals("/Users/kai/Documents/templates", configuration.getTemplateDirs().get(0));
+        assertEquals(DIR1, configuration.getTemplateDirs().get(0).getDirectory());
         configurationHandler.load();
         assertEquals(3, configuration.getTemplateDirs().size());
-        assertEquals("/Users/kai/Documents/templates", configuration.getTemplateDirs().get(0));
-        assertEquals("/Users/kai/Templates", configuration.getTemplateDirs().get(1));
-        assertEquals("/Users/kai/Templates of \"Kai\"", configuration.getTemplateDirs().get(2));
+        assertEquals(DIR1, configuration.getTemplateDirs().get(0).getDirectory());
+        assertEquals(DIR2, configuration.getTemplateDirs().get(1).getDirectory());
+        assertEquals(DIR3, configuration.getTemplateDirs().get(2).getDirectory());
     }
 }

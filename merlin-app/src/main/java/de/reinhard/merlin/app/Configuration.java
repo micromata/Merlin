@@ -12,7 +12,7 @@ import java.util.List;
 public class Configuration {
     private int port;
     private String language;
-    private List<String> templateDirs;
+    private List<ConfigurationTemplateDir> templateDirs;
 
     public int getPort() {
         return port;
@@ -22,7 +22,9 @@ public class Configuration {
         this.port = port;
     }
 
-    public String getLanguage() { return language; }
+    public String getLanguage() {
+        return language;
+    }
 
     public void setLanguage(String language) {
         this.language = language;
@@ -30,22 +32,26 @@ public class Configuration {
 
     @JsonSerialize(using = ConfigurationTestSerializer.class)
     @JsonDeserialize(using = ConfigurationTestDeserializer.class)
-    public List<String> getTemplateDirs() {
+    public List<ConfigurationTemplateDir> getTemplateDirs() {
         return templateDirs;
     }
 
-    public void setTemplateDirs(List<String> templateDirs) {
+    public void setTemplateDirs(List<ConfigurationTemplateDir> templateDirs) {
         this.templateDirs = templateDirs;
     }
 
     public void addTemplateDir(String templateDir) {
+        addTemplateDir(templateDir, false);
+    }
+
+    public void addTemplateDir(String templateDir, boolean recursive) {
         if (StringUtils.isBlank(templateDir)) {
             return;
         }
         if (templateDirs == null) {
             templateDirs = new ArrayList<>();
         }
-        templateDirs.add(templateDir);
+        templateDirs.add(new ConfigurationTemplateDir().setDirectory(templateDir).setRecursive(recursive));
     }
 
     public void copyFrom(Configuration configuration) {
