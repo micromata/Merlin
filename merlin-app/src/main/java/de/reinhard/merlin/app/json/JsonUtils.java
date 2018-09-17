@@ -1,6 +1,7 @@
 package de.reinhard.merlin.app.json;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +35,16 @@ public class JsonUtils {
             log.error(ex.getMessage(), ex);
             return null;
         }
+    }
+
+    public static <T> T fromJson(final TypeReference<T> type, final String json) {
+        try {
+           T data = new ObjectMapper().readValue(json, type);
+           return data;
+        } catch (Exception ex) {
+            log.error("Json: '" + json + "': " + ex.getMessage(), ex);
+        }
+        return null;
     }
 
     private static ObjectMapper getObjectMapper() {
