@@ -68,9 +68,9 @@ public class FilesServiceRest {
      * @return The chosen directory path (absolute path).
      */
     @GET
-    @Path("/browse")
+    @Path("/browse-local-filesystem")
     @Produces(MediaType.TEXT_PLAIN)
-    public String browseDirectory(@Context HttpServletRequest requestContext, @QueryParam("type") String type, @QueryParam("current") String current) {
+    public String browseLocalFilesystem(@Context HttpServletRequest requestContext, @QueryParam("type") String type, @QueryParam("current") String current) {
         if (RunningMode.isRunning() == false) {
             return "Service unavailable. No desktop app on localhost available.";
         }
