@@ -43,7 +43,6 @@ public class JettyServer {
                 new ServletContextHandler(ServletContextHandler.NO_SESSIONS);
         ctx.setContextPath("/");
 
-
         ServletHolder jerseyServlet = new ServletHolder(
                 new ServletContainer(
                         new ResourceConfig()
@@ -62,6 +61,8 @@ public class JettyServer {
             return;
         }
         ctx.setWelcomeFiles(new String[]{"index.html"});
+        ctx.setInitParameter(DefaultServlet.CONTEXT_INIT + "cacheControl", "no-store,no-cache,must-revalidate");//"max-age=5,public");
+        ctx.setInitParameter(DefaultServlet.CONTEXT_INIT + "useFileMappedBuffer", "false");
         ctx.addServlet(DefaultServlet.class, "/");
 
         ErrorPageErrorHandler errorHandler = new ErrorPageErrorHandler();
