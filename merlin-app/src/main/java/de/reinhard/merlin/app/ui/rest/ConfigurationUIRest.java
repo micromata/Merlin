@@ -2,8 +2,9 @@ package de.reinhard.merlin.app.ui.rest;
 
 import de.reinhard.merlin.app.json.JsonUtils;
 import de.reinhard.merlin.app.ui.Form;
-import de.reinhard.merlin.app.ui.FormEntry;
-import de.reinhard.merlin.app.ui.FormEntryType;
+import de.reinhard.merlin.app.ui.FormContainer;
+import de.reinhard.merlin.app.ui.FormLabelField;
+import de.reinhard.merlin.app.ui.FormLabelFieldType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,10 +22,11 @@ public class ConfigurationUIRest {
     @Produces(MediaType.APPLICATION_JSON)
     public String getConfig() {
         Form form = new Form();
-        form.add(new FormEntry("port", "Port").setType(FormEntryType.INTEGER).setMinumumValue(0).setMaximumValue(65535));
-        form.add(new FormEntry("language", "Language").addOption("en", "English").addOption("de", "Deutsch"));
-        form.add(new FormEntry("templateDirs", "Template directories").setType(FormEntryType.LIST)
-                .setChildType(FormEntryType.DIRECTORY));
+        form.add(new FormLabelField("port", "Port").setType(FormLabelFieldType.INTEGER).setMinumumValue(0).setMaximumValue(65535));
+        form.add(new FormLabelField("language", "Language").addOption("en", "English").addOption("de", "Deutsch"));
+        form.add(new FormContainer().setTitle("Template directories").setMultiple(true)
+                .addChild(new FormLabelField("templateDir", "Template dir").setType(FormLabelFieldType.DIRECTORY))
+                .addChild(new FormLabelField("recursive", "Recursive").setType(FormLabelFieldType.DIRECTORY)));
         return JsonUtils.toJson(form);
     }
 }

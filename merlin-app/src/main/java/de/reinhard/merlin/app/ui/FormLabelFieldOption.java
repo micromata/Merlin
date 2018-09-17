@@ -3,14 +3,14 @@ package de.reinhard.merlin.app.ui;
 /**
  * Represents a option entry of a FormEntry. The label is displayed for the user.
  */
-public class FormFieldOption {
+public class FormLabelFieldOption {
     private Object value;
     private String label;
 
-    public FormFieldOption() {
+    public FormLabelFieldOption() {
     }
 
-    public FormFieldOption(Object value, String label) {
+    public FormLabelFieldOption(Object value, String label) {
         this.value = value;
         this.label = label;
     }
