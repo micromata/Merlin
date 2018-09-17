@@ -26,7 +26,7 @@ public class ConfigurationUIRest {
         form.add(new FormLabelField("language", "Language").addOption("en", "English").addOption("de", "Deutsch"));
         form.add(new FormContainer().setTitle("Template directories").setMultiple(true)
                 .addChild(new FormLabelField("templateDir", "Template dir").setType(FormLabelFieldType.DIRECTORY))
-                .addChild(new FormLabelField("recursive", "Recursive").setType(FormLabelFieldType.DIRECTORY)));
+                .addChild(new FormLabelField("recursive", "Recursive").setType(FormLabelFieldType.CHECKED)));
         return JsonUtils.toJson(form);
     }
 }
