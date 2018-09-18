@@ -8,7 +8,7 @@ import org.apache.commons.collections4.CollectionUtils;
 public class OldConfiguration {
     private int port;
     private String language;
-    private String templateDirs;
+    private String templatesDir;
 
     public OldConfiguration() {
     }
@@ -16,7 +16,7 @@ public class OldConfiguration {
     public OldConfiguration(Configuration configuration) {
         this.language = configuration.getLanguage();
         this.port = configuration.getPort();
-        this.templateDirs = CollectionUtils.isNotEmpty(configuration.getTemplatesDirs())
+        this.templatesDir = CollectionUtils.isNotEmpty(configuration.getTemplatesDirs())
                 ? configuration.getTemplatesDirs().get(0).getDirectory() : null;
     }
 
@@ -37,21 +37,21 @@ public class OldConfiguration {
         this.language = language;
     }
 
-    public String getTemplateDirs() {
-        return templateDirs;
+    public String getTemplatesDir() {
+        return templatesDir;
     }
 
-    public void setTemplateDirs(String templateDirs) {
-        this.templateDirs = templateDirs;
+    public void setTemplatesDir(String templatesDir) {
+        this.templatesDir = templatesDir;
     }
 
     public void copyTo(Configuration configuration) {
         configuration.setLanguage(this.language);
         configuration.setPort(this.port);
         if (CollectionUtils.isNotEmpty(configuration.getTemplatesDirs())) {
-            configuration.getTemplatesDirs().get(0).setDirectory(this.templateDirs);
+            configuration.getTemplatesDirs().get(0).setDirectory(this.templatesDir);
         } else {
-            configuration.addTemplatesDir(this.templateDirs);
+            configuration.addTemplatesDir(this.templatesDir);
         }
     }
 }
