@@ -8,6 +8,7 @@ import Config from '../components/views/config/View';
 import DynamicConfig from '../components/views/DynamicConfig';
 import TableExample from '../components/views/TableExample';
 import FileUploadView from '../components/views/FileUpload';
+import RestServices from '../components/views/develop/RestServices';
 
 class WebApp extends React.Component {
 
@@ -18,7 +19,8 @@ class WebApp extends React.Component {
             ['Config', '/config', Config],
             ['DynamicConfig', '/dynamicConfig', DynamicConfig],
             ['Table Example', '/table', TableExample],
-            ['File Upload', '/drop', FileUploadView]
+            ['File Upload', '/drop', FileUploadView],
+            ['Rest services', '/restServices', RestServices]
         ];
 
         return (
