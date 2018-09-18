@@ -88,6 +88,6 @@ public class Main extends Application {
     }
 
     void openBrowser() {
-        getHostServices().showDocument("http://localhost:" + server.getPort() + "/");
+        getHostServices().showDocument(server.getUrl());
     }
 }

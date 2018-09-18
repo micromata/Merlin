@@ -138,5 +138,9 @@ public class JettyServer {
     public int getPort() {
         return port;
     }
+
+    public String getUrl() {
+        return "http://" + HOST + ":" + port + "/";
+    }
 }
 
