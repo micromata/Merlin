@@ -14,19 +14,27 @@ public class JsonUtils {
     private static Logger log = LoggerFactory.getLogger(JsonUtils.class);
 
     public static String toJson(Object obj) {
+        return toJson(obj, false);
+    }
+
+    public static String toJson(Object obj, boolean stringify) {
         if (obj == null) {
             return "";
         }
         ObjectMapper objectMapper = getObjectMapper();
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-        StringWriter writer = new StringWriter();
         try {
-            objectMapper.writeValue(writer, obj);
+            if (stringify) {
+                return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(obj);
+            } else {
+                StringWriter writer = new StringWriter();
+                objectMapper.writeValue(writer, obj);
+                return writer.toString();
+            }
         } catch (IOException ex) {
             log.error(ex.getMessage(), ex);
             return "";
         }
-        return writer.toString();
     }
 
     public static <T> T fromJson(Class<T> clazz, String json) {
@@ -41,8 +49,8 @@ public class JsonUtils {
 
     public static <T> T fromJson(final TypeReference<T> type, final String json) {
         try {
-           T data = new ObjectMapper().readValue(json, type);
-           return data;
+            T data = new ObjectMapper().readValue(json, type);
+            return data;
         } catch (Exception ex) {
             log.error("Json: '" + json + "': " + ex.getMessage(), ex);
         }

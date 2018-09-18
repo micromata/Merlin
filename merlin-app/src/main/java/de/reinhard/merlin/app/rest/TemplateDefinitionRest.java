@@ -4,10 +4,7 @@ import de.reinhard.merlin.app.json.JsonUtils;
 import de.reinhard.merlin.app.storage.Storage;
 import de.reinhard.merlin.word.templating.TemplateDefinition;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
@@ -16,9 +13,13 @@ public class TemplateDefinitionRest {
     @GET
     @Path("list")
     @Produces(MediaType.APPLICATION_JSON)
-    public String getTemplatesList() {
+    /**
+     *
+     * @param stringify If true then the json output will be stringified (in pretty format).
+     */
+    public String getTemplatesList(@QueryParam("stringify") boolean stringify) {
         List<TemplateDefinition> templatesList = Storage.getInstance().getTemplatesList();
-        return JsonUtils.toJson(templatesList);
+        return JsonUtils.toJson(templatesList, stringify);
     }
 
     @GET

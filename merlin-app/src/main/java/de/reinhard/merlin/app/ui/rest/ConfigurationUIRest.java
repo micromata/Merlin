@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 @Path("/configuration")
@@ -20,13 +21,17 @@ public class ConfigurationUIRest {
     @GET
     @Path("config-ui")
     @Produces(MediaType.APPLICATION_JSON)
-    public String getConfig() {
+    /**
+     *
+     * @param stringify If true then the json output will be stringified (in pretty format).
+     */
+    public String getConfig(@QueryParam("stringify") boolean stringify) {
         Form form = new Form();
         form.add(new FormLabelField("port", "Port").setValueType(FormLabelFieldValueType.INTEGER).setMinumumValue(0).setMaximumValue(65535));
         form.add(new FormLabelField("language", "Language").addOption("en", "English").addOption("de", "Deutsch"));
         form.add(new FormContainer().setTitle("Template directories").setMultiple(true)
                 .addChild(new FormLabelField("templateDir", "Template dir").setValueType(FormLabelFieldValueType.DIRECTORY))
                 .addChild(new FormLabelField("recursive", "Recursive").setValueType(FormLabelFieldValueType.CHECKED)));
-        return JsonUtils.toJson(form);
+        return JsonUtils.toJson(form, stringify);
     }
 }

@@ -13,13 +13,13 @@ class RestServices extends React.Component {
                     Config
                 </h3>
                 <ul>
-                    <li><a href="http://localhost:8042/rest/configuration/config">rest/configuration/config</a></li>
-                    <li><a href="http://localhost:8042/rest/configuration/config-ui">rest/configuration/config-ui</a></li>
-                    <li><a href="http://localhost:8042/rest/configuration/config-old">rest/configuration/config-old</a></li>
+                    <li><a href="http://localhost:8042/rest/configuration/config?stringify=true">rest/configuration/config</a></li>
+                    <li><a href="http://localhost:8042/rest/configuration/config-ui?stringify=true">rest/configuration/config-ui</a></li>
+                    <li><a href="http://localhost:8042/rest/configuration/config-old?stringify=true">rest/configuration/config-old</a></li>
                 </ul>
                 <h3>Templates</h3>
                 <ul>
-                    <li><a href="http://localhost:8042/rest/templates/list">rest/templates/list</a></li>
+                    <li><a href="http://localhost:8042/rest/templates/list?stringify=true">rest/templates/list</a></li>
                 </ul>
                 <h3>Browse local filesystem</h3>
                 <ul>
