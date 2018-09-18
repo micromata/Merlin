@@ -32,10 +32,10 @@ public class FormTest {
                 FormLabelField f2 = (FormLabelField) form2.getEntries().get(i);
                 assertEquals(f1.getPath(), f2.getPath());
                 assertEquals(f1.getLabel(), f2.getLabel());
-                assertEquals(f1.isRequired(), f2.isRequired());
+                assertEquals(f1.getProps().isRequired(), f2.getProps().isRequired());
                 assertEquals(f1.getValueType(), f2.getValueType());
-                assertEquals(f1.getMinumumValue(), f2.getMinumumValue());
-                assertEquals(f1.getMaximumValue(), f2.getMaximumValue());
+                assertEquals(f1.getProps().getMin(), f2.getProps().getMin());
+                assertEquals(f1.getProps().getMax(), f2.getProps().getMax());
                 if (f1.getOptions() == null) {
                     assertNull(f2.getOptions());
                 } else {
