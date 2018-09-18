@@ -1,6 +1,6 @@
 package de.reinhard.merlin.app;
 
-public class ConfigurationTemplateDir {
+public class ConfigurationTemplatesDir {
     private String directory;
     private boolean recursive;
 
@@ -8,7 +8,7 @@ public class ConfigurationTemplateDir {
         return directory;
     }
 
-    public ConfigurationTemplateDir setDirectory(String directory) {
+    public ConfigurationTemplatesDir setDirectory(String directory) {
         this.directory = directory;
         return this;
     }
@@ -23,7 +23,7 @@ public class ConfigurationTemplateDir {
      *                  directory is scanned without looking at the sub directories. Default is false.
      * @return this for chaining.
      */
-    public ConfigurationTemplateDir setRecursive(boolean recursive) {
+    public ConfigurationTemplatesDir setRecursive(boolean recursive) {
         this.recursive = recursive;
         return this;
     }

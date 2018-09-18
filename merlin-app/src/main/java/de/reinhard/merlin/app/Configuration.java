@@ -1,9 +1,5 @@
 package de.reinhard.merlin.app;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import de.reinhard.merlin.app.json.ConfigurationTestDeserializer;
-import de.reinhard.merlin.app.json.ConfigurationTestSerializer;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.ArrayList;
@@ -12,7 +8,7 @@ import java.util.List;
 public class Configuration {
     private int port;
     private String language;
-    private List<ConfigurationTemplateDir> templateDirs;
+    private List<ConfigurationTemplatesDir> templatesDirs;
 
     public int getPort() {
         return port;
@@ -30,33 +26,31 @@ public class Configuration {
         this.language = language;
     }
 
-    @JsonSerialize(using = ConfigurationTestSerializer.class)
-    @JsonDeserialize(using = ConfigurationTestDeserializer.class)
-    public List<ConfigurationTemplateDir> getTemplateDirs() {
-        return templateDirs;
+    public List<ConfigurationTemplatesDir> getTemplatesDirs() {
+        return templatesDirs;
     }
 
-    public void setTemplateDirs(List<ConfigurationTemplateDir> templateDirs) {
-        this.templateDirs = templateDirs;
+    public void setTemplatesDirs(List<ConfigurationTemplatesDir> templatesDirs) {
+        this.templatesDirs = templatesDirs;
     }
 
-    public void addTemplateDir(String templateDir) {
-        addTemplateDir(templateDir, false);
+    public void addTemplatesDir(String templateDir) {
+        addTemplatesDir(templateDir, false);
     }
 
-    public void addTemplateDir(String templateDir, boolean recursive) {
+    public void addTemplatesDir(String templateDir, boolean recursive) {
         if (StringUtils.isBlank(templateDir)) {
             return;
         }
-        if (templateDirs == null) {
-            templateDirs = new ArrayList<>();
+        if (templatesDirs == null) {
+            templatesDirs = new ArrayList<>();
         }
-        templateDirs.add(new ConfigurationTemplateDir().setDirectory(templateDir).setRecursive(recursive));
+        templatesDirs.add(new ConfigurationTemplatesDir().setDirectory(templateDir).setRecursive(recursive));
     }
 
     public void copyFrom(Configuration configuration) {
         this.language = configuration.language;
         this.port = configuration.port;
-        this.templateDirs = configuration.templateDirs;
+        this.templatesDirs = configuration.templatesDirs;
     }
 }

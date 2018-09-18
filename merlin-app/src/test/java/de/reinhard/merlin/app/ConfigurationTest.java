@@ -24,18 +24,18 @@ public class ConfigurationTest {
         ConfigurationHandler configurationHandler = new ConfigurationHandler(preferences);
         Configuration configuration = configurationHandler.getConfiguration();
         configurationHandler.save();
-        configuration.addTemplateDir(null);  // Ignore: 2. remove expected.
+        configuration.addTemplatesDir(null);  // Ignore: 2. remove expected.
         configurationHandler.save();
-        configuration.addTemplateDir("");    // Ignore: 3. remove expected.
+        configuration.addTemplatesDir("");    // Ignore: 3. remove expected.
         configurationHandler.save();
-        configuration.addTemplateDir("   "); // Ignore: 4. remove expected.
+        configuration.addTemplatesDir("   "); // Ignore: 4. remove expected.
         configurationHandler.save();
-        configuration.addTemplateDir(DIR1);
+        configuration.addTemplatesDir(DIR1);
         configurationHandler.save();
-        configuration.addTemplateDir(DIR2);
-        configuration.addTemplateDir("  ");
+        configuration.addTemplatesDir(DIR2);
+        configuration.addTemplatesDir("  ");
         configurationHandler.save();
-        configuration.addTemplateDir(DIR3);
+        configuration.addTemplatesDir(DIR3);
         configurationHandler.save();
 
         InOrder inOrder = Mockito.inOrder(preferences);
@@ -62,14 +62,14 @@ public class ConfigurationTest {
                 .thenReturn("[{\"directory\":\"" + DIR1 + "\",\"recursive\":false},{\"directory\":\"" +
                         DIR2 + "\",\"recursive\":false},{\"directory\":\"" + DIR3b + "\",\"recursive\":false}]");
         configurationHandler.load();
-        assertNull(configuration.getTemplateDirs());
+        assertNull(configuration.getTemplatesDirs());
         configurationHandler.load();
-        assertEquals(1, configuration.getTemplateDirs().size());
-        assertEquals(DIR1, configuration.getTemplateDirs().get(0).getDirectory());
+        assertEquals(1, configuration.getTemplatesDirs().size());
+        assertEquals(DIR1, configuration.getTemplatesDirs().get(0).getDirectory());
         configurationHandler.load();
-        assertEquals(3, configuration.getTemplateDirs().size());
-        assertEquals(DIR1, configuration.getTemplateDirs().get(0).getDirectory());
-        assertEquals(DIR2, configuration.getTemplateDirs().get(1).getDirectory());
-        assertEquals(DIR3, configuration.getTemplateDirs().get(2).getDirectory());
+        assertEquals(3, configuration.getTemplatesDirs().size());
+        assertEquals(DIR1, configuration.getTemplatesDirs().get(0).getDirectory());
+        assertEquals(DIR2, configuration.getTemplatesDirs().get(1).getDirectory());
+        assertEquals(DIR3, configuration.getTemplatesDirs().get(2).getDirectory());
     }
 }

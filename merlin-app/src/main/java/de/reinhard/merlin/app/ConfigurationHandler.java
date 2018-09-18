@@ -50,15 +50,15 @@ public class ConfigurationHandler {
         String json = preferences.get(TEMPLATES_DIRS, null);
         if (json != null) {
             try {
-                List<ConfigurationTemplateDir> templateDirs =
-                        JsonUtils.fromJson(new TypeReference<List<ConfigurationTemplateDir>>() {
+                List<ConfigurationTemplatesDir> templateDirs =
+                        JsonUtils.fromJson(new TypeReference<List<ConfigurationTemplatesDir>>() {
                         }, json);
-                configuration.setTemplateDirs(templateDirs);
+                configuration.setTemplatesDirs(templateDirs);
             } catch (Exception ex) {
                 log.error("Exception while parsing template dirs from json: " + ex.getMessage(), ex);
             }
         } else {
-            configuration.setTemplateDirs(null);
+            configuration.setTemplatesDirs(null);
         }
     }
 
@@ -66,8 +66,8 @@ public class ConfigurationHandler {
         log.info("Saving configuration to user prefs.");
         preferences.putInt(WEBSERVER_PORT_PREF, configuration.getPort());
         preferences.put(LANGUAGE_PREF, configuration.getLanguage());
-        if (CollectionUtils.isNotEmpty(configuration.getTemplateDirs())) {
-            String  json = JsonUtils.toJson(configuration.getTemplateDirs());
+        if (CollectionUtils.isNotEmpty(configuration.getTemplatesDirs())) {
+            String  json = JsonUtils.toJson(configuration.getTemplatesDirs());
             preferences.put(TEMPLATES_DIRS, json);
         } else {
             preferences.remove(TEMPLATES_DIRS);
