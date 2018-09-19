@@ -17,14 +17,20 @@ public class JsonUtils {
         return toJson(obj, false);
     }
 
-    public static String toJson(Object obj, boolean stringify) {
+    /**
+     *
+     * @param obj
+     * @param prettyPrinter If true, the json output will be pretty printed (human readable with new lines and indenting).
+     * @return
+     */
+    public static String toJson(Object obj, boolean prettyPrinter) {
         if (obj == null) {
             return "";
         }
         ObjectMapper objectMapper = getObjectMapper();
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         try {
-            if (stringify) {
+            if (prettyPrinter) {
                 return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(obj);
             } else {
                 StringWriter writer = new StringWriter();

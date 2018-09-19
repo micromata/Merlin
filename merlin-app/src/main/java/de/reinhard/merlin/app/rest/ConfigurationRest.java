@@ -19,10 +19,11 @@ public class ConfigurationRest {
     @Produces(MediaType.APPLICATION_JSON)
     /**
      *
-     * @param stringify If true then the json output will be stringified (in pretty format).
+     * @param prettyPrinter If true then the json output will be in pretty format.
+     * @see JsonUtils#toJson(Object, boolean)
      */
-    public String getConfig(@QueryParam("stringify") boolean stringify) {
-        String json =JsonUtils.toJson(ConfigurationHandler.getInstance().getConfiguration(), stringify);
+    public String getConfig(@QueryParam("prettyPrinter") boolean prettyPrinter) {
+        String json =JsonUtils.toJson(ConfigurationHandler.getInstance().getConfiguration(), prettyPrinter);
         return json;
     }
 
@@ -42,11 +43,12 @@ public class ConfigurationRest {
     @Produces(MediaType.APPLICATION_JSON)
     /**
      *
-     * @param stringify If true then the json output will be stringified (in pretty format).
+     * @param prettyPrinter If true then the json output will be in pretty format.
+     * @see JsonUtils#toJson(Object, boolean)
      */
-    public String getOldConfig(@QueryParam("stringify") boolean stringify) {
+    public String getOldConfig(@QueryParam("prettyPrinter") boolean prettyPrinter) {
         Configuration configuration = ConfigurationHandler.getInstance().getConfiguration();
-        return JsonUtils.toJson(new OldConfiguration(configuration), stringify);
+        return JsonUtils.toJson(new OldConfiguration(configuration), prettyPrinter);
     }
 
     @POST

@@ -15,11 +15,12 @@ public class TemplateDefinitionRest {
     @Produces(MediaType.APPLICATION_JSON)
     /**
      *
-     * @param stringify If true then the json output will be stringified (in pretty format).
+     * @param prettyPrinter If true then the json output will be in pretty format.
+     * @see JsonUtils#toJson(Object, boolean)
      */
-    public String getTemplatesList(@QueryParam("stringify") boolean stringify) {
+    public String getTemplatesList(@QueryParam("prettyPrinter") boolean prettyPrinter) {
         List<TemplateDefinition> templatesList = Storage.getInstance().getTemplatesList();
-        return JsonUtils.toJson(templatesList, stringify);
+        return JsonUtils.toJson(templatesList, prettyPrinter);
     }
 
     @GET
