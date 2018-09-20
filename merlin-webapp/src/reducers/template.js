@@ -1,4 +1,11 @@
-import {CONFIG_CHANGED_PROPERTY, CONFIG_FETCH_FAILED, CONFIG_RECEIVED, CONFIG_REQUESTED} from '../actions/types';
+import {
+    TEMPLATE_LIST_RECEIVED,
+    TEMPLATE_LIST_REQUEST_FAILED,
+    TEMPLATE_LIST_REQUESTED,
+    TEMPLATE_RECEIVED,
+    TEMPLATE_REQUEST_FAILED,
+    TEMPLATE_REQUESTED
+} from '../actions/types';
 
 const initialState = {
     isFetching: false,
@@ -9,34 +16,35 @@ const initialState = {
 const reducer = (state = initialState, action) => {
     switch (action.type) {
 
-        case CONFIG_REQUESTED:
+        case TEMPLATE_LIST_REQUESTED:
             return Object.assign({}, state, {
                 isFetching: true,
                 loaded: false
             });
 
-        case CONFIG_FETCH_FAILED:
+        case TEMPLATE_LIST_REQUEST_FAILED:
             return Object.assign({}, state, {
                 isFetching: false,
                 failed: true,
                 loaded: false
             });
 
-        case CONFIG_RECEIVED:
+        case TEMPLATE_LIST_RECEIVED:
+            console.log(action);
+
             return Object.assign({}, state, {
                 isFetching: false,
                 failed: false,
                 loaded: true,
-                properties: {...action.payload}
+                list: {...action.payload}
             });
 
-        case CONFIG_CHANGED_PROPERTY:
-            return Object.assign({}, state, {
-                properties: {
-                    ...state.properties,
-                    [action.payload.property]: action.payload.value
-                }
-            });
+        // TODO HANDLE CASES
+        case TEMPLATE_REQUESTED:
+        case TEMPLATE_REQUEST_FAILED:
+        case TEMPLATE_RECEIVED:
+            console.log(action);
+            return state;
 
         default:
             return state;
