@@ -7,13 +7,12 @@ import java.util.List;
  * Represents a form field which will be rendered by the client (ReactJS).
  */
 public class FormLabelField extends FormEntry {
-    private boolean required;
     private FormLabelFieldValueType valueType = FormLabelFieldValueType.STRING;
     private String path;
     private String label;
-    private Number minumumValue, maximumValue;
     private List<FormLabelFieldOption> options;
     private String tooltip;
+    private FormFieldProps props = new FormFieldProps();
 
     public FormLabelField() {
     }
@@ -66,37 +65,6 @@ public class FormLabelField extends FormEntry {
         return this;
     }
 
-    public boolean isRequired() {
-        return required;
-    }
-
-    /**
-     * @param required Default is false.
-     * @return this for chaining.
-     */
-    public FormLabelField setRequired(boolean required) {
-        this.required = required;
-        return this;
-    }
-
-    public Number getMinumumValue() {
-        return minumumValue;
-    }
-
-    public FormLabelField setMinumumValue(Number minumumValue) {
-        this.minumumValue = minumumValue;
-        return this;
-    }
-
-    public Number getMaximumValue() {
-        return maximumValue;
-    }
-
-    public FormLabelField setMaximumValue(Number maximumValue) {
-        this.maximumValue = maximumValue;
-        return this;
-    }
-
     public List<FormLabelFieldOption> getOptions() {
         return options;
     }
@@ -127,6 +95,25 @@ public class FormLabelField extends FormEntry {
      */
     public FormLabelField setTooltip(String tooltip) {
         this.tooltip = tooltip;
+        return this;
+    }
+
+    public FormFieldProps getProps() {
+        return props;
+    }
+
+    public FormLabelField setMinumumValue(Number minumumValue) {
+        this.props.setMin(minumumValue);
+        return this;
+    }
+
+    public FormLabelField setMaximumValue(Number maximumValue) {
+        this.props.setMax(maximumValue);
+        return this;
+    }
+
+    public FormLabelField setRequired(boolean required) {
+        this.props.setRequired(required);
         return this;
     }
 }
