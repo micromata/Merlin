@@ -4,7 +4,7 @@ import {Route, Router, Switch} from 'react-router';
 
 import Menu from '../components/general/Menu';
 import Start from '../components/views/Start';
-import Config from '../components/views/config/View';
+import Config from '../components/views/config/ConfigView';
 import DynamicConfig from '../components/views/DynamicConfig';
 import TableExample from '../components/views/TableExample';
 import FileUploadView from '../components/views/FileUpload';
