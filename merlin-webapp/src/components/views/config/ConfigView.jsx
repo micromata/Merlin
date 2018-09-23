@@ -5,24 +5,24 @@ import ConfigField from './Field';
 import {fetchConfig, fetchConfigIfNeeded} from '../../../actions/';
 import ConfigFetchFailed from './ConfigFetchFailed';
 
-const ConfigView = () => {
+const ConfigView = (props) => {
 
-    this.props.fetchConfigIfNeeded();
+    props.fetchConfigIfNeeded();
 
     return (
         <div>
             <PageHeader>Config</PageHeader>
 
             {
-                this.props.config.failed ?
+                props.config.failed ?
                     <ConfigFetchFailed
-                        fetchConfig={this.props.fetchConfig}
+                        fetchConfig={props.fetchConfig}
                     /> :
-                    (this.props.config.loaded ? Object.keys(this.props.config.properties).map(key =>
+                    (props.config.loaded ? Object.keys(props.config.properties).map(key =>
                         <ConfigField
                             key={key}
                             title={key}
-                            value={this.props.config.properties[key]}
+                            value={props.config.properties[key]}
                         />
                     ) : <i>Loading...</i>)
             }
@@ -30,11 +30,9 @@ const ConfigView = () => {
     );
 };
 
-const mapStateToProps = state => {
-    return {
+const mapStateToProps = state => ({
         config: state.config
-    };
-};
+});
 
 const actions = {
     fetchConfig,

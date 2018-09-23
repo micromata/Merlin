@@ -10,7 +10,7 @@ import {
 const initialState = {
     isFetching: false,
     failed: false,
-    loaded: false
+    loaded: false,
 };
 
 const reducer = (state = initialState, action) => {

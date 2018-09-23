@@ -70,7 +70,7 @@ export const getTemplate = id => dispatch => {
 
 const shouldLoadTemplates = templates => !templates.failed && !templates.list && !templates.isFetching;
 
-export const loadTemplatesIfNeeded = () => (dispatch, getState) => {
+export const listTemplatesIfNeeded = () => (dispatch, getState) => {
     if (shouldLoadTemplates(getState().templates)) {
         dispatch(listTemplates());
     }
