@@ -1,8 +1,8 @@
 import React from 'react';
 import {PageHeader} from 'react-bootstrap';
 import {connect} from 'react-redux';
-import ConfigField from './Field';
-import {fetchConfig, fetchConfigIfNeeded} from '../../../actions/';
+import ConfigField from '../../general/configuration/Field'
+import {fetchConfig, fetchConfigIfNeeded, updateConfigProperty} from '../../../actions/';
 import ConfigFetchFailed from './ConfigFetchFailed';
 
 const ConfigView = (props) => {
@@ -23,6 +23,7 @@ const ConfigView = (props) => {
                             key={key}
                             title={key}
                             value={props.config.properties[key]}
+                            updateValue={(value) => props.updateConfigProperty(key, value)}
                         />
                     ) : <i>Loading...</i>)
             }
@@ -36,7 +37,8 @@ const mapStateToProps = state => ({
 
 const actions = {
     fetchConfig,
-    fetchConfigIfNeeded
+    fetchConfigIfNeeded,
+    updateConfigProperty
 };
 
 export default connect(mapStateToProps, actions)(ConfigView);
