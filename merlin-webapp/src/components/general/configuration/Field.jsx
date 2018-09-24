@@ -26,7 +26,7 @@ class ConfigurationField extends React.Component {
             editing: false
         });
 
-        if (value) {
+        if (value && this.props.updateValue) {
             this.props.updateValue(value);
         }
     };
