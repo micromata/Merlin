@@ -1,19 +1,33 @@
 import React from 'react';
 import {PageHeader} from 'react-bootstrap';
-import {fetchConfig, fetchConfigIfNeeded, updateConfigProperty} from '../../../actions/';
 import {getRestServiceUrl} from "../../../actions/global";
 
 class DirectoryField extends React.Component {
     constructor(props) {
         super(props);
-        this.state={resultDirectory:""}
+        this.state = {
+            directory: this.props.directory,
+            recursive: this.props.recursive
+        }
+        this.handleTextChange = this.handleTextChange.bind(this);
+        this.handleCheckedChange = this.handleCheckedChange.bind(this);
     }
 
-    componentDidMount(){
+    handleTextChange = event => {
+        event.preventDefault();
+        console.log("id=" + event.target.id + ", name=" + event.target.name + " -> " + event.target.value);
+        this.setState({[event.target.name]: event.target.value});
     }
+
+    handleCheckedChange(e) {
+        console.log(e.target.value);
+        this.setState({[e.target.name]: e.target.value});
+    }
+
 
     browseDirectory = () => {
-        fetch(getRestServiceUrl("files/browse-local-filesystem?type=dir"), {
+        const current = this.state.directory ? "&current=" + encodeURIComponent(this.state.directory) : '';
+        fetch(getRestServiceUrl("files/browse-local-filesystem?type=dir" + current), {
             method: "GET",
             dataType: "JSON",
             headers: {
@@ -25,7 +39,7 @@ class DirectoryField extends React.Component {
             })
             .then((data) => {
                 if (data.directory) {
-                    this.setState({resultDirectory: data.directory})
+                    this.setState({directory: data.directory})
                 }
             })
             .catch((error) => {
@@ -35,32 +49,31 @@ class DirectoryField extends React.Component {
 
 
     render() {
-        const directory = this.props.directory;
-        const recursive = this.props.recursive;
-
         return (
-                <div className="form-group row">
-                    <label className="col-sm-2 col-form-label" htmlFor="inputPort">Directory {this.state.resultDirectory}</label>
-                    <div className="col-sm-6">
-                        <input type="text" className="form-control" id="inputDirectory"
-                               value={directory} placeholder="Enter directory"/>
-                    </div>
-                    <div className="form-check col-sm-2">
-                        <input className="form-check-input" type="checkbox" checked={recursive} id="checkRecursive"
-                               title="If checked, Merlin will search for all templates inside this directory including all sub directories. If not checked, the sub directories will be skipped."/>
-                        <label className="form-check-label" htmlFor="checkRecursive">
-                            recursive
-                        </label>
-                    </div>
-                    <div className="col-sm-2">
-                        <button type="button" className="btn" onClick={this.browseDirectory}
-                                title="Call rest service for browsing local directories">Browse
-                        </button>
-                        <button type="button" className="btn btn-danger" title="remove this entry"><span
-                            className="glyphicon glyphicon-remove"/>
-                        </button>
-                    </div>
+            <div className="form-group row">
+                <label className="col-sm-2 col-form-label"
+                       htmlFor="inputDirectory">Directory</label>
+                <div className="col-sm-6">
+                    <input name="directory" type="text" className="form-control" id="inputDirectory" onChange={this.handleTextChange}
+                           value={this.state.directory} placeholder="Enter directory"/>
                 </div>
+                <div className="form-check col-sm-2">
+                    <input className="form-check-input" type="checkbox" checked={this.props.recursive}
+                           id="checkRecursive"
+                           title="If checked, Merlin will search for all templates inside this directory including all sub directories. If not checked, the sub directories will be skipped."/>
+                    <label className="form-check-label" htmlFor="checkRecursive">
+                        recursive
+                    </label>
+                </div>
+                <div className="col-sm-2">
+                    <button type="button" className="btn" onClick={this.browseDirectory}
+                            title="Call rest service for browsing local directories">Browse
+                    </button>
+                    <button type="button" className="btn btn-danger" title="remove this entry"><span
+                        className="glyphicon glyphicon-remove"/>
+                    </button>
+                </div>
+            </div>
         );
     }
 }
@@ -128,10 +141,6 @@ class MyConfigView extends React.Component {
                 <h3>ToDo</h3>
                 <ul>
                     <li>Binding rest services.</li>
-                    <li>Implementing Browse-Button: calling rest
-                        service: <b>rest/files/browse-local-filesystem?type=dir</b> and putting result in input
-                        field.
-                    </li>
                     <li>Functionality: adding and deleting template directories.</li>
                     <li>Cancel-Button: Discard changes and proceed to Start.</li>
                     <li>Submit-Button: Save changes via rest service.</li>
