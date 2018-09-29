@@ -5,7 +5,7 @@ class DirectoryItem extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            browseDirectory: ''
+            fileBrowserResult: ''
         }
         this.handleDirectoryChange = this.handleDirectoryChange.bind(this);
         this.handleRecursiveFlagChange = this.handleRecursiveFlagChange.bind(this);
@@ -26,7 +26,7 @@ class DirectoryItem extends React.Component {
     }
 
     browseDirectory = () => {
-        const current = this.state.browseDirectory ? "&current=" + encodeURIComponent(this.state.browseDirectory) : '';
+        const current = this.state.fileBrowserResult ? "&current=" + encodeURIComponent(this.state.fileBrowserResult) : '';
         fetch(getRestServiceUrl("files/browse-local-filesystem?type=dir" + current), {
             method: "GET",
             dataType: "JSON",
@@ -39,7 +39,7 @@ class DirectoryItem extends React.Component {
             })
             .then((data) => {
                 if (data.directory) {
-                    this.setState({browseDirectory: data.directory})
+                    this.setState({fileBrowserResult: data.directory})
                     this.props.onDirectoryChange(this.props.index, data.directory)
                 }
             })
