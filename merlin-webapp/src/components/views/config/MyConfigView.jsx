@@ -1,6 +1,6 @@
 import React from 'react';
 import {Redirect} from 'react-router-dom'
-import {PageHeader} from 'react-bootstrap';
+import {PageHeader, FormGroup, ControlLabel, FormControl, HelpBlock} from 'react-bootstrap';
 import DirectoryItemsFieldset from "./DirectoryItemsFieldset";
 import {getRestServiceUrl} from "../../../actions/global";
 
@@ -10,7 +10,7 @@ class MyConfigForm extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            port: 8000,
+            port: 8042,
             language: 'en',
             directoryItems: [],
             redirect: false
@@ -122,20 +122,37 @@ class MyConfigForm extends React.Component {
         this.setState({directoryItems: directoryItems});
     }
 
+    getPortValidationState() {
+        // https://codepen.io/_arpy/pen/xYoyPW
+        if (isNaN(this.state.port)) return 'error';
+        const port = parseInt(this.state.port, 10);
+        if (!port) return 'error';
+        if (port <0 || port > 65535) return 'error';
+        if (port < 1024) return 'warning';
+        return null;
+    }
+
     render() {
         if (this.state.redirect) {
             return <Redirect to='/'/>
         }
         return (
             <form>
-                <div className="form-group row">
-                    <label className="col-sm-2 col-form-label" htmlFor="inputPort">Port</label>
-                    <div className="col-sm-2">
-                        <input type="number" min="0" max="65535" step="1" className="form-control" id="inputPort"
-                               value={this.state.port} name="port" onChange={this.handleTextChange}
-                               placeholder="Enter port"/>
-                    </div>
-                </div>
+                <FormGroup bsClass="form-group row"
+                    controlId="formPort"
+                    validationState={this.getPortValidationState()}
+                >
+                    <ControlLabel bsClass="col-sm-2 col-form-label">Port</ControlLabel>
+                    <FormControl
+                        name="port"
+                        bsClass="col-sm-2"
+                        value={this.state.port}
+                        placeholder="Enter port"
+                        onChange={this.handleTextChange}
+                        type="number" min="0" max="65535" step="1" required invalid
+                    />
+                    <FormControl.Feedback />
+                </FormGroup>
                 <div className="form-group row">
                     <label className="col-sm-2 col-form-label" htmlFor="selectLanguage">Language</label>
                     <div className="col-sm-2">
