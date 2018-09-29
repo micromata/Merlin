@@ -3,7 +3,7 @@ import {CONFIG_CHANGED_PROPERTY, CONFIG_FETCH_FAILED, CONFIG_RECEIVED, CONFIG_RE
 const path = 'http://localhost:8042/rest/configuration/config-old';
 
 const requestConfig = () => ({
-    type: CONFIG_REQUESTED,
+    type: CONFIG_REQUESTED
 });
 
 const receivedConfig = data => ({

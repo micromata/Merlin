@@ -1,7 +1,6 @@
 import {FILE_UPLOAD_FAILED, FILE_UPLOAD_FINISHED, FILE_UPLOAD_STARTED} from './types';
 
 const path = 'http://localhost:8042/rest/files/upload';
-// const path = 'http://httpbin.org/post';
 
 const startedFileUpload = (file) => ({
     type: FILE_UPLOAD_STARTED,

@@ -4,10 +4,11 @@ import {Route, Router, Switch} from 'react-router';
 
 import Menu from '../components/general/Menu';
 import Start from '../components/views/Start';
-import Config from '../components/views/config/View';
+import Config from '../components/views/config/ConfigView';
 import TableExample from '../components/views/TableExample';
 import FileUploadView from '../components/views/FileUpload';
 import RestServices from '../components/views/develop/RestServices';
+import TemplateListView from '../components/views/templates/TemplateListView';
 
 class WebApp extends React.Component {
 
@@ -16,9 +17,10 @@ class WebApp extends React.Component {
         const routes = [
             ['Start', '/', Start],
             ['Config', '/config', Config],
-                ['Table Example', '/table', TableExample],
+            ['Table Example', '/table', TableExample],
             ['File Upload', '/drop', FileUploadView],
-            ['Rest services', '/restServices', RestServices]
+            ['Rest services', '/restServices', RestServices],
+            ['Templates', '/templates', TemplateListView]
         ];
 
         return (

@@ -1,6 +1,12 @@
 import {CONFIG_CHANGED_PROPERTY, CONFIG_FETCH_FAILED, CONFIG_RECEIVED, CONFIG_REQUESTED} from '../actions/types';
 
-const reducer = (state = {}, action) => {
+const initialState = {
+    isFetching: false,
+    failed: false,
+    loaded: false
+};
+
+const reducer = (state = initialState, action) => {
     switch (action.type) {
 
         case CONFIG_REQUESTED:
@@ -13,7 +19,7 @@ const reducer = (state = {}, action) => {
             return Object.assign({}, state, {
                 isFetching: false,
                 failed: true,
-                loaded: true
+                loaded: false
             });
 
         case CONFIG_RECEIVED:

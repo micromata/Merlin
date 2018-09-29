@@ -1,0 +1,29 @@
+div.configuration-field {
+    width: 100%;
+    display: block;
+    font-size: 16px;
+    margin: 5px 0;
+}
+
+div.configuration-field div {
+    display: block;
+    position: relative;
+}
+
+div.configuration-field div.configuration-field-label {
+    font-weight: 700;
+}
+
+div.configuration-field div.configuration-field-value-container {
+    width: 100%;
+}
+
+div.configuration-field div.configuration-field-value-container input {
+    font-size: 16px;
+}
+
+div.configuration-field div.configuration-field-value-container span.configuration-field-value {
+    padding: 6px 12px;
+    display: block;
+    width: 100%;
+}

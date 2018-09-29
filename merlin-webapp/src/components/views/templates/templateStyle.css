@@ -1,0 +1,59 @@
+div.template-container {
+    display: inline-block;
+    width: 100%;
+    margin: 10px;
+
+    border: 1px solid #E6E6E6;
+    border-radius: 1px;
+    font-size: 15px;
+}
+
+@media (min-width: 768px) {
+    div.template-container {
+        width: calc(33% - 20px);
+    }
+}
+
+div.template-container:hover {
+    background-color: #f5f5f5;
+}
+
+div.template {
+    display: block;
+    padding: 20px;
+}
+
+div.template-container span {
+    display: block;
+    width: 100%;
+}
+
+div.template-container span.name {
+    color: #000;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+div.template-container span.description {
+    color: #999;
+}
+
+div.template-container div.icons {
+    text-align: right;
+}
+
+div.template-container span {
+    display: inline-block;
+}
+
+div.template-container div.icons span.play {
+    color: #4CD964;
+}
+
+div.template-container div.icons span.play:hover {
+    color: #4BC563;
+}
+
+div.template-container div.icons span span {
+    margin: 5px;
+}
