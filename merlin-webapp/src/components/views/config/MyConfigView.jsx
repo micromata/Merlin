@@ -94,6 +94,7 @@ class MyConfigView extends React.Component {
                         <li>Cancel-Button: Discard changes and proceed to Start.</li>
                         <li>Submit-Button: Save changes via rest service.</li>
                         <li>Submit-Button: Make Save button as default button (if the user hits return, this button should be executed).</li>
+                        <li>Do the form validation (server and/or client side) with error fields.</li>
                         <li>I18n: Get the translations from the server via json for labels, languages etc.</li>
                     </ul>
                 </div>
