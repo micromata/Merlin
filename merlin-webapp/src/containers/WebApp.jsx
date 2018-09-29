@@ -5,7 +5,6 @@ import {Route, Router, Switch} from 'react-router';
 import Menu from '../components/general/Menu';
 import Start from '../components/views/Start';
 import Config from '../components/views/config/View';
-import DynamicConfig from '../components/views/DynamicConfig';
 import TableExample from '../components/views/TableExample';
 import FileUploadView from '../components/views/FileUpload';
 import RestServices from '../components/views/develop/RestServices';
@@ -17,8 +16,7 @@ class WebApp extends React.Component {
         const routes = [
             ['Start', '/', Start],
             ['Config', '/config', Config],
-            ['DynamicConfig', '/dynamicConfig', DynamicConfig],
-            ['Table Example', '/table', TableExample],
+                ['Table Example', '/table', TableExample],
             ['File Upload', '/drop', FileUploadView],
             ['Rest services', '/restServices', RestServices]
         ];
