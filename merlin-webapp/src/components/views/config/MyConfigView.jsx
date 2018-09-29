@@ -1,16 +1,46 @@
 import React from 'react';
 import {PageHeader} from 'react-bootstrap';
 import {fetchConfig, fetchConfigIfNeeded, updateConfigProperty} from '../../../actions/';
+import {getRestServiceUrl} from "../../../actions/global";
 
 class DirectoryField extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state={resultDirectory:""}
+    }
+
+    componentDidMount(){
+    }
+
+    browseDirectory = () => {
+        fetch(getRestServiceUrl("files/browse-local-filesystem?type=dir"), {
+            method: "GET",
+            dataType: "JSON",
+            headers: {
+                "Content-Type": "text/plain; charset=utf-8",
+            }
+        })
+            .then((resp) => {
+                return resp.json()
+            })
+            .then((data) => {
+                if (data.directory) {
+                    this.setState({resultDirectory: data.directory})
+                }
+            })
+            .catch((error) => {
+                console.log(error, "Oups, what's happened?")
+            })
+    }
+
+
     render() {
         const directory = this.props.directory;
         const recursive = this.props.recursive;
 
         return (
-            <form>
                 <div className="form-group row">
-                    <label className="col-sm-2 col-form-label" htmlFor="inputPort">Directory</label>
+                    <label className="col-sm-2 col-form-label" htmlFor="inputPort">Directory {this.state.resultDirectory}</label>
                     <div className="col-sm-6">
                         <input type="text" className="form-control" id="inputDirectory"
                                value={directory} placeholder="Enter directory"/>
@@ -23,7 +53,7 @@ class DirectoryField extends React.Component {
                         </label>
                     </div>
                     <div className="col-sm-2">
-                        <button type="button" className="btn"
+                        <button type="button" className="btn" onClick={this.browseDirectory}
                                 title="Call rest service for browsing local directories">Browse
                         </button>
                         <button type="button" className="btn btn-danger" title="remove this entry"><span
@@ -31,7 +61,6 @@ class DirectoryField extends React.Component {
                         </button>
                     </div>
                 </div>
-            </form>
         );
     }
 }
@@ -87,10 +116,6 @@ class MyConfigForm extends React.Component {
 }
 
 class MyConfigView extends React.Component {
-    constructor(props) {
-        super(props);
-        // props.fetchConfigIfNeeded();
-    }
 
     render() {
         const port = this.props.port;
