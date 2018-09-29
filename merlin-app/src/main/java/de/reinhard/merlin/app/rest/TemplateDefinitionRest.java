@@ -26,8 +26,13 @@ public class TemplateDefinitionRest {
     @GET
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String getTodo(@PathParam("id") String id) {
+    /**
+     *
+     * @param prettyPrinter If true then the json output will be in pretty format.
+     * @see JsonUtils#toJson(Object, boolean)
+     */
+    public String getTemplate(@PathParam("id") String id, @QueryParam("prettyPrinter") boolean prettyPrinter) {
         TemplateDefinition templateDefinition = Storage.getInstance().getTemplate(id);
-        return JsonUtils.toJson(templateDefinition);
+        return JsonUtils.toJson(templateDefinition, prettyPrinter);
     }
 }
