@@ -69,7 +69,7 @@ public class FilesServiceRest {
      */
     @GET
     @Path("/browse-local-filesystem")
-    @Produces(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
     public String browseLocalFilesystem(@Context HttpServletRequest requestContext, @QueryParam("type") String type, @QueryParam("current") String current) {
         if (RunningMode.isRunning() == false) {
             return "Service unavailable. No desktop app on localhost available.";
@@ -92,7 +92,7 @@ public class FilesServiceRest {
             log.error("While waiting for file browser: " + ex.getMessage(), ex);
         }
         FileSystemBrowser.getInstance().setLastDir(file);
-        String result = file != null ? file.getAbsolutePath() : null;
+        String result = "{\"directory\":\"" + (file != null ? file.getAbsolutePath() : "") + "\"}";
         return result;
     }
 

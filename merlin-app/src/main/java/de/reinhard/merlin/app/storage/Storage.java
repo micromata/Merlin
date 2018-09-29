@@ -50,6 +50,9 @@ public class Storage {
             if (id.equals(templateDefinition.getId())) {
                 return templateDefinition;
             }
+            if (id.equals(templateDefinition.getName().trim())) {
+                return templateDefinition;
+            }
         }
         log.info("Template with id '" + id + "' not found.");
         return null;
