@@ -1,5 +1,17 @@
 import React from 'react';
 import {PageHeader} from 'react-bootstrap';
+import {getRestServiceUrl} from "../../../actions/global";
+
+class RestUrlLink extends  React.Component {
+    render() {
+        const service = this.props.service;
+        const params = this.props.params;
+
+        return (
+            <a href={getRestServiceUrl(service) + (params ? '?' + params : '?prettyPrinter=true')}>rest/{service}{params ? '?' + params : ''}</a>
+        )
+    }
+}
 
 class RestServices extends React.Component {
 
@@ -13,20 +25,20 @@ class RestServices extends React.Component {
                     Config
                 </h3>
                 <ul>
-                    <li><a href="http://localhost:8042/rest/configuration/config?prettyPrinter=true">rest/configuration/config</a></li>
-                    <li><a href="http://localhost:8042/rest/configuration/config-ui?prettyPrinter=true">rest/configuration/config-ui</a></li>
-                    <li><a href="http://localhost:8042/rest/configuration/config-old?prettyPrinter=true">rest/configuration/config-old</a></li>
+                    <li><RestUrlLink service='configuration/config'/></li>
+                    <li><RestUrlLink service='configuration/config-ui'/></li>
+                    <li><RestUrlLink service='configuration/config-old'/></li>
                 </ul>
                 <h3>Templates</h3>
                 <ul>
-                    <li><a href="http://localhost:8042/rest/templates/list?prettyPrinter=true">rest/templates/list</a></li>
+                    <li><RestUrlLink service='templates/list'/></li>
                 </ul>
                 <h3>Browse local filesystem</h3>
                 <ul>
-                    <li><a href="http://localhost:8042/rest/files/browse-local-filesystem?type=dir">rest/files/browse-local-filesystem?type=dir</a></li>
-                    <li><a href="http://localhost:8042/rest/files/browse-local-filesystem?type=excel">rest/files/browse-local-filesystem?type=excel</a></li>
-                    <li><a href="http://localhost:8042/rest/files/browse-local-filesystem?type=word">rest/files/browse-local-filesystem?type=word</a></li>
-                    <li><a href="http://localhost:8042/rest/files/browse-local-filesystem?type=file">rest/files/browse-local-filesystem?type=file</a></li>
+                    <li><RestUrlLink service='files/browse-local-filesystem' params='type=dir'/></li>
+                    <li><RestUrlLink service='files/browse-local-filesystem' params='type=excel'/></li>
+                    <li><RestUrlLink service='files/browse-local-filesystem' params='type=word'/></li>
+                    <li><RestUrlLink service='files/browse-local-filesystem' params='type=file'/></li>
                 </ul>
             </div>
         );
