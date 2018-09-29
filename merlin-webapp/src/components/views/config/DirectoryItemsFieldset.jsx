@@ -8,7 +8,7 @@ class DirectoryItemsFieldset extends React.Component {
     }
 
     onAdd = event => {
-        event.preventDefault();
+        // event.preventDefault();
         this.props.addItem();
     }
 

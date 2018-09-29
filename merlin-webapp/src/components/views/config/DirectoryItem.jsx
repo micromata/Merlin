@@ -10,7 +10,7 @@ class DirectoryItem extends React.Component {
         }
         this.handleTextChange = this.handleTextChange.bind(this);
         this.handleCheckboxChange = this.handleCheckboxChange.bind(this);
-        this.onRemove = this.onRemove.bind(this);
+        this.onClickRemove = this.onClickRemove.bind(this);
     }
 
     handleTextChange = event => {
@@ -22,7 +22,7 @@ class DirectoryItem extends React.Component {
         this.setState({[event.target.name]: event.target.checked});
     }
 
-    onRemove() {
+    onClickRemove() {
         var index = parseInt(this.props.index, 10);
         this.props.removeItem(index);
     }
@@ -73,7 +73,7 @@ class DirectoryItem extends React.Component {
                     <button type="button" className="btn" onClick={this.browseDirectory}
                             title="Call rest service for browsing local directories">Browse
                     </button>
-                    <button type="button" onClick={this.onRemove} className="btn btn-danger"
+                    <button type="button" onClick={this.onClickRemove} className="btn btn-danger"
                             title="remove this item"><span
                         className="glyphicon glyphicon-remove"/>
                     </button>

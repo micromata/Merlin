@@ -31,7 +31,7 @@ class MyConfigForm extends React.Component {
     }
 
     addDirectoryItem() {
-        directoryItems.unshift({
+        directoryItems.push({
             index: directoryItems.length + 1,
             directory: "",
             recursive: false
@@ -40,7 +40,6 @@ class MyConfigForm extends React.Component {
     }
 
     removeDirectoryItem(itemIndex) {
-        console.log("removing item with index " + itemIndex);
         directoryItems.splice(itemIndex, 1);
         this.setState({directoryItems: directoryItems});
     }
@@ -66,7 +65,8 @@ class MyConfigForm extends React.Component {
                         </select>
                     </div>
                 </div>
-                <DirectoryItemsFieldset items={this.props.directoryItems} addItem={this.addDirectoryItem} removeItem={this.removeDirectoryItem}/>
+                <DirectoryItemsFieldset items={this.props.directoryItems} addItem={this.addDirectoryItem}
+                                        removeItem={this.removeDirectoryItem}/>
                 <div className="form-group row">
                     <div className="col-sm-12">
                         <button type="button" className="btn btn-danger"
