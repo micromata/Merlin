@@ -21,6 +21,7 @@ div.template-container:hover {
 div.template {
     display: block;
     padding: 20px;
+    cursor: pointer;
 }
 
 div.template-container span {
@@ -56,4 +57,15 @@ div.template-container div.icons span.play:hover {
 
 div.template-container div.icons span span {
     margin: 5px;
+}
+
+div.template-configuration-modal div.variable {
+    width: 50%;
+    display: inline-block;
+    padding: 0 5px;
+    margin-bottom: 15px;
+}
+
+div.template-configuration-modal div.variable div.configuration-field-label {
+    font-weight: 500;
 }

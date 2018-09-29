@@ -1,6 +1,8 @@
 import React from 'react';
-import ConfigurationEditingField from './EditingField';
 import './style.css';
+import ConfigurationTextField from './TextField';
+import ConfigurationCheckboxGroup from './CheckboxGroup';
+import ConfigurationFieldLabel from './FieldLabel';
 
 class ConfigurationField extends React.Component {
 
@@ -31,25 +33,37 @@ class ConfigurationField extends React.Component {
         }
     };
 
-    render = () => <div className={'configuration-field'}>
-        <div className={'configuration-field-label'}>{this.props.title}</div>
-        <div className={'configuration-field-value-container'}>
-            {this.state.editing ?
-                <ConfigurationEditingField
+    render = () => {
+
+        let input;
+
+        switch (this.props.type) {
+            case 'checkbox-group':
+                console.log();
+                input = <ConfigurationCheckboxGroup
+                    value={this.props.value}
+                />;
+                break;
+            default:
+                input = <ConfigurationTextField
+                    editing={this.state.editing}
                     type={this.props.type}
                     value={this.props.value}
-                    name={this.props.title}
+                    title={this.props.title}
+                    startEditing={this.startEditing}
                     stopEditing={this.stopEditing}
-                /> :
-                <span
-                    onClick={this.startEditing}
-                    className={'configuration-field-value'}
-                >
-                    {this.props.value}
-                </span>
-            }
-        </div>
-    </div>;
+                />;
+        }
+
+        return <div className={'configuration-field'}>
+            {this.props.title ?
+                <ConfigurationFieldLabel title={this.props.title}/>
+                : undefined}
+            <div className={'configuration-field-value-container'}>
+                {input}
+            </div>
+        </div>;
+    }
 }
 
 export default ConfigurationField;

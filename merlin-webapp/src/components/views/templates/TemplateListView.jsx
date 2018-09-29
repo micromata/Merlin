@@ -22,8 +22,7 @@ class TemplateListView extends React.Component {
                             <Template
                                 key={key}
                                 id={key}
-                                name={this.props.templates.list[key].name}
-                                description={this.props.templates.list[key].description}
+                                {...this.props.templates.list[key]}
                             />
                         ) : <i>Loading...</i>)
                 }

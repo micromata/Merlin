@@ -10,8 +10,11 @@ div.configuration-field div {
     position: relative;
 }
 
-div.configuration-field div.configuration-field-label {
+div.configuration-field-label {
+    display: block;
+    position: relative;
     font-weight: 700;
+    font-size: 16px;
 }
 
 div.configuration-field div.configuration-field-value-container {
@@ -26,4 +29,5 @@ div.configuration-field div.configuration-field-value-container span.configurati
     padding: 6px 12px;
     display: block;
     width: 100%;
+    cursor: pointer;
 }
