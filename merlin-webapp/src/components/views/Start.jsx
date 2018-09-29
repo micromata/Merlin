@@ -9,6 +9,12 @@ class Start extends React.Component {
                 <PageHeader>
                     Start
                 </PageHeader>
+
+                <h3>ToDo</h3>
+                <ul>
+                    <li>I18n: Get the translations from the server via json for labels etc. Do it globally or on every single view?</li>
+                </ul>
+
             </div>
         );
     }
