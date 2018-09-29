@@ -30,6 +30,24 @@ class MyConfigForm extends React.Component {
         this.setState({[event.target.name]: event.target.checked});
     }
 
+    handleDirectoryChange = (index, newDirectory) => {
+        const items = this.state.directoryItems;
+        items[index].directory = newDirectory;
+        // update state
+        this.setState({
+            directoryItems,
+        });
+    }
+
+    handleRecursiveFlagChange = (index, newRecursiveState) => {
+        const items = this.state.directoryItems;
+        items[index].recursive = newRecursiveState;
+        // update state
+        this.setState({
+            directoryItems,
+        });
+    }
+
     addDirectoryItem() {
         directoryItems.push({
             index: directoryItems.length + 1,
@@ -66,7 +84,9 @@ class MyConfigForm extends React.Component {
                     </div>
                 </div>
                 <DirectoryItemsFieldset items={this.props.directoryItems} addItem={this.addDirectoryItem}
-                                        removeItem={this.removeDirectoryItem}/>
+                                        removeItem={this.removeDirectoryItem}
+                                        onDirectoryChange={this.handleDirectoryChange}
+                                        onRecursiveFlagChange={this.handleRecursiveFlagChange}/>
                 <div className="form-group row">
                     <div className="col-sm-12">
                         <button type="button" className="btn btn-danger"

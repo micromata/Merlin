@@ -5,21 +5,19 @@ class DirectoryItem extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            directory: this.props.item.directory,
-            recursive: this.props.item.recursive
+            browseDirectory: ''
         }
-        this.handleTextChange = this.handleTextChange.bind(this);
-        this.handleCheckboxChange = this.handleCheckboxChange.bind(this);
+        this.handleDirectoryChange = this.handleDirectoryChange.bind(this);
+        this.handleRecursiveFlagChange = this.handleRecursiveFlagChange.bind(this);
         this.onClickRemove = this.onClickRemove.bind(this);
     }
 
-    handleTextChange = event => {
-        event.preventDefault();
-        this.setState({[event.target.name]: event.target.value});
+    handleDirectoryChange = event => {
+        this.props.onDirectoryChange(this.props.index, event.target.value);
     }
 
-    handleCheckboxChange = event => {
-        this.setState({[event.target.name]: event.target.checked});
+    handleRecursiveFlagChange = event => {
+        this.props.onRecursiveFlagChange(this.props.index, event.target.checked);
     }
 
     onClickRemove() {
@@ -28,7 +26,7 @@ class DirectoryItem extends React.Component {
     }
 
     browseDirectory = () => {
-        const current = this.state.directory ? "&current=" + encodeURIComponent(this.state.directory) : '';
+        const current = this.state.browseDirectory ? "&current=" + encodeURIComponent(this.state.browseDirectory) : '';
         fetch(getRestServiceUrl("files/browse-local-filesystem?type=dir" + current), {
             method: "GET",
             dataType: "JSON",
@@ -41,7 +39,8 @@ class DirectoryItem extends React.Component {
             })
             .then((data) => {
                 if (data.directory) {
-                    this.setState({directory: data.directory})
+                    this.setState({browseDirectory: data.directory})
+                    this.props.onDirectoryChange(this.props.index, data.directory)
                 }
             })
             .catch((error) => {
@@ -58,12 +57,12 @@ class DirectoryItem extends React.Component {
                        htmlFor={"inputDirectory" + index}>Directory</label>
                 <div className="col-sm-6">
                     <input name="directory" type="text" className="form-control" id={"inputDirectory" + index}
-                           onChange={this.handleTextChange}
-                           value={this.state.directory} placeholder="Enter directory"/>
+                           onChange={this.handleDirectoryChange}
+                           value={this.props.item.directory} placeholder="Enter directory"/>
                 </div>
                 <div className="form-check col-sm-2">
-                    <input className="form-check-input" type="checkbox" checked={this.state.recursive}
-                           id={"checkedRecursive" + index} name="recursive" onChange={this.handleCheckboxChange}
+                    <input className="form-check-input" type="checkbox" checked={this.props.item.recursive}
+                           id={"checkedRecursive" + index} name="recursive" onChange={this.handleRecursiveFlagChange}
                            title="If checked, Merlin will search for all templates inside this directory including all sub directories. If not checked, the sub directories will be skipped."/>
                     <label className="form-check-label" htmlFor={"checkedRecursive" + index}>
                         recursive

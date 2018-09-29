@@ -15,7 +15,9 @@ class DirectoryItemsFieldset extends React.Component {
     render() {
         var items = this.props.items.map((item, index) => {
             return (
-                <DirectoryItem item={item} key={index} index={index} removeItem={this.props.removeItem}/>
+                <DirectoryItem item={item} key={index} index={index} removeItem={this.props.removeItem}
+                               onDirectoryChange={this.props.onDirectoryChange}
+                               onRecursiveFlagChange={this.props.onRecursiveFlagChange}/>
             );
         });
         return (
