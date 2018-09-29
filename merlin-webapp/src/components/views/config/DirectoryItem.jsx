@@ -1,16 +1,16 @@
 import React from 'react';
-import {PageHeader} from 'react-bootstrap';
 import {getRestServiceUrl} from "../../../actions/global";
 
-class DirectoryEntry extends React.Component {
+class DirectoryItem extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            directory: this.props.directory,
-            recursive: this.props.recursive
+            directory: this.props.item.directory,
+            recursive: this.props.item.recursive
         }
         this.handleTextChange = this.handleTextChange.bind(this);
         this.handleCheckboxChange = this.handleCheckboxChange.bind(this);
+        this.onRemove = this.onRemove.bind(this);
     }
 
     handleTextChange = event => {
@@ -22,6 +22,10 @@ class DirectoryEntry extends React.Component {
         this.setState({[event.target.name]: event.target.checked});
     }
 
+    onRemove() {
+        var index = parseInt(this.props.index, 10);
+        this.props.removeItem(index);
+    }
 
     browseDirectory = () => {
         const current = this.state.directory ? "&current=" + encodeURIComponent(this.state.directory) : '';
@@ -69,7 +73,8 @@ class DirectoryEntry extends React.Component {
                     <button type="button" className="btn" onClick={this.browseDirectory}
                             title="Call rest service for browsing local directories">Browse
                     </button>
-                    <button type="button" className="btn btn-danger" title="remove this entry"><span
+                    <button type="button" onClick={this.onRemove} className="btn btn-danger"
+                            title="remove this item"><span
                         className="glyphicon glyphicon-remove"/>
                     </button>
                 </div>
@@ -78,5 +83,5 @@ class DirectoryEntry extends React.Component {
     }
 }
 
-export default DirectoryEntry;
+export default DirectoryItem;
 

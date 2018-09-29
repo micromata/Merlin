@@ -1,44 +1,72 @@
 import React from 'react';
 import {PageHeader} from 'react-bootstrap';
-import {getRestServiceUrl} from "../../../actions/global";
-import DirectoryEntry from "./DirectoryEntry";
+import DirectoryItemsFieldset from "./DirectoryItemsFieldset";
+
+var directoryItems = [];
+directoryItems.push({index: 1, directory: "/Users/kai/Documents/", recursive: true});
+directoryItems.push({index: 2, directory: "/Users/kai/Documents/workspace/Merlin/templates", recursive: false});
 
 
 class MyConfigForm extends React.Component {
-    render() {
-        const port = this.props.port;
-        const language = this.props.language;
+    constructor(props) {
+        super(props);
+        this.state = {
+            port: this.props.port,
+            language: this.props.language,
+            directoryItems: this.props.directoryItems
+        }
+        this.handleTextChange = this.handleTextChange.bind(this);
+        this.handleCheckboxChange = this.handleCheckboxChange.bind(this);
+        this.addDirectoryItem = this.addDirectoryItem.bind(this);
+        this.removeDirectoryItem = this.removeDirectoryItem.bind(this);
+    }
 
+    handleTextChange = event => {
+        event.preventDefault();
+        this.setState({[event.target.name]: event.target.value});
+    }
+
+    handleCheckboxChange = event => {
+        this.setState({[event.target.name]: event.target.checked});
+    }
+
+    addDirectoryItem() {
+        directoryItems.unshift({
+            index: directoryItems.length + 1,
+            directory: "",
+            recursive: false
+        });
+        this.setState({directoryItems: directoryItems});
+    }
+
+    removeDirectoryItem(itemIndex) {
+        console.log("removing item with index " + itemIndex);
+        directoryItems.splice(itemIndex, 1);
+        this.setState({directoryItems: directoryItems});
+    }
+
+    render() {
         return (
             <form>
                 <div className="form-group row">
                     <label className="col-sm-2 col-form-label" htmlFor="inputPort">Port</label>
                     <div className="col-sm-2">
                         <input type="number" min="0" max="65535" step="1" className="form-control" id="inputPort"
-                               value={port} placeholder="Enter port"/>
+                               value={this.state.port} name="port" onChange={this.handleTextChange}
+                               placeholder="Enter port"/>
                     </div>
                 </div>
                 <div className="form-group row">
                     <label className="col-sm-2 col-form-label" htmlFor="selectLanguage">Language</label>
                     <div className="col-sm-2">
-                        <select className="form-control" id="selectLanguage" value={language}>
+                        <select className="form-control" id="selectLanguage" value={this.state.language} name="language"
+                                onChange={this.handleTextChange}>
                             <option>English</option>
                             <option>German</option>
                         </select>
                     </div>
                 </div>
-                <fieldset className="form-group">
-                    <legend>Template directories</legend>
-                    <DirectoryEntry directory="/Users/kai/Documents/Merlin-templates" index="0" recursive="true"/>
-                    <DirectoryEntry directory="/Users/kai/Projects/ACME/contracts/templates" index="1"/>
-                    <div className="form-group row">
-                        <div className="col-sm-2"></div>
-                        <div className="col-sm-10">
-                            <button type="button" className="btn" title="Add new Template directory row"><span
-                                className="glyphicon glyphicon-plus"/></button>
-                        </div>
-                    </div>
-                </fieldset>
+                <DirectoryItemsFieldset items={this.props.directoryItems} addItem={this.addDirectoryItem} removeItem={this.removeDirectoryItem}/>
                 <div className="form-group row">
                     <div className="col-sm-12">
                         <button type="button" className="btn btn-danger"
@@ -57,12 +85,10 @@ class MyConfigForm extends React.Component {
 class MyConfigView extends React.Component {
 
     render() {
-        const port = this.props.port;
-
         return (
             <div>
                 <PageHeader>Config</PageHeader>
-                <MyConfigForm port="8042" language="German"/>
+                <MyConfigForm port="8042" language="German" directoryItems={directoryItems}/>
 
                 <h3>ToDo</h3>
                 <ul>
