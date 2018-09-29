@@ -23,7 +23,7 @@ public class ConfigurationRest {
      * @see JsonUtils#toJson(Object, boolean)
      */
     public String getConfig(@QueryParam("prettyPrinter") boolean prettyPrinter) {
-        String json =JsonUtils.toJson(ConfigurationHandler.getInstance().getConfiguration(), prettyPrinter);
+        String json = JsonUtils.toJson(ConfigurationHandler.getInstance().getConfiguration(), prettyPrinter);
         return json;
     }
 
