@@ -1,4 +1,5 @@
 import React from 'react';
+import { Redirect } from 'react-router-dom'
 import {PageHeader} from 'react-bootstrap';
 import DirectoryItemsFieldset from "./DirectoryItemsFieldset";
 
@@ -13,14 +14,22 @@ class MyConfigForm extends React.Component {
         this.state = {
             port: this.props.port,
             language: this.props.language,
-            directoryItems: this.props.directoryItems
+            directoryItems: this.props.directoryItems,
+            redirect: false
         }
         this.handleTextChange = this.handleTextChange.bind(this);
         this.handleCheckboxChange = this.handleCheckboxChange.bind(this);
         this.addDirectoryItem = this.addDirectoryItem.bind(this);
         this.removeDirectoryItem = this.removeDirectoryItem.bind(this);
+        this.onSave = this.onSave.bind(this);
+        this.onCancel = this.onCancel.bind(this);
     }
 
+    setRedirect = () => {
+        this.setState({
+            redirect: true
+        })
+    }
     handleTextChange = event => {
         event.preventDefault();
         this.setState({[event.target.name]: event.target.value});
@@ -48,6 +57,15 @@ class MyConfigForm extends React.Component {
         });
     }
 
+    onSave(event) {
+        console.log("onSave: " + JSON.stringify(this.state));
+        this.setRedirect();
+    }
+
+    onCancel() {
+        this.setRedirect();
+    }
+
     addDirectoryItem() {
         directoryItems.push({
             index: directoryItems.length + 1,
@@ -63,6 +81,9 @@ class MyConfigForm extends React.Component {
     }
 
     render() {
+        if (this.state.redirect) {
+            return <Redirect to='/' />
+        }
         return (
             <form>
                 <div className="form-group row">
@@ -89,10 +110,10 @@ class MyConfigForm extends React.Component {
                                         onRecursiveFlagChange={this.handleRecursiveFlagChange}/>
                 <div className="form-group row">
                     <div className="col-sm-12">
-                        <button type="button" className="btn btn-danger"
+                        <button type="button" onClick={this.onCancel} className="btn btn-danger"
                                 title="Discard changes and go to Start page.">Cancel
                         </button>
-                        <button type="button" className="btn btn-success"
+                        <button type="button" onClick={this.onSave} className="btn btn-success"
                                 title="Persist changes and go to Start page.">Save
                         </button>
                     </div>
@@ -113,8 +134,6 @@ class MyConfigView extends React.Component {
                 <h3>ToDo</h3>
                 <ul>
                     <li>Binding rest services.</li>
-                    <li>Functionality: adding and deleting template directories.</li>
-                    <li>Cancel-Button: Discard changes and proceed to Start.</li>
                     <li>Submit-Button: Save changes via rest service.</li>
                     <li>Submit-Button: Make Save button as default button (if the user hits return, this button
                         should be executed).
