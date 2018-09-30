@@ -131,6 +131,10 @@ public class Template {
         this.undefinedVariables = undefinedVariables;
     }
 
+    public String getTemplateDefinitionId() {
+        return templateDefinition != null ? templateDefinition.getId() : null;
+    }
+
     @Override
     public String toString() {
         ToStringBuilder tos = new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE);
