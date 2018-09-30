@@ -122,7 +122,7 @@ public class Conditionals {
 
     }
 
-    public SortedSet<AbstractConditional> getConditionals() {
+    public SortedSet<AbstractConditional> getConditionalsSet() {
         return conditionals;
     }
 }
