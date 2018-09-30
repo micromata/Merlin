@@ -37,8 +37,31 @@ public class Template {
         return templateDefinition;
     }
 
-    public void assignTemplateDefinition(TemplateDefinition templateDefinition) {
+    /**
+     * Please use {@link #assignTemplateDefinition(TemplateDefinition)} for updating statistics (unused variables etc.) or
+     * don't forget to call {@link #updateStatistics()}.
+     * @param templateDefinition
+     */
+    public void setTemplateDefinition(TemplateDefinition templateDefinition) {
         this.templateDefinition = templateDefinition;
+    }
+
+    public void assignTemplateDefinition(TemplateDefinition templateDefinition) {
+        setTemplateDefinition(templateDefinition);
+        updateStatistics();
+    }
+
+    /**
+     * Analyzes used variables by this template and compares it to the defined variables in the given templateDefinition.
+     */
+    public void updateStatistics() {
+        if (templateDefinition == null) {
+            log.debug("No templateDefinition given. Can't update statistics. Clearing statistics.");
+            this.allDefinedVariables = null;
+            this.unusedVariables = null;
+            this.undefinedVariables = null;
+            return;
+        }
         this.allDefinedVariables = templateDefinition.getAllDefinedVariableNames();
         if (log.isDebugEnabled()) {
             for (String variable : this.allDefinedVariables) {
