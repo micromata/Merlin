@@ -12,6 +12,12 @@ Merlin core contains the base library supporting:
   substitution is as well supported as conditionals (equals, greater-less etc.)
   for having dynamic content in the result word file. Support of serial letters.
 
+## Excel validation
+tbd. Refer e. g. de.reinhard.merlin.word.templating.TemplateDefinitionExcelReader as a full example of
+reading and validating an excel file.
+Refer e. g.  de.reinhard.merlin.excel.ExcelWorkbookTest for returning Excel files with marked validation
+errors.
+
 ## Templating
 ### Glossar
 * Templates (or template files) are Word files containing variables and conditionals such as
@@ -19,12 +25,12 @@ Merlin core contains the base library supporting:
   > __{if fox = "lazy"}__ The __${color}__ fox is lazy.__{endif}__
 
   See [ContractTemplate.docx](https://github.com/kreinhard/merlin/raw/master/examples/ContractTemplate.docx)
-  in the examples directory.
+  in the [examples](https://github.com/kreinhard/merlin/tree/master/examples) directory.
 * Template definitions (optional) describes variables and also so called dependent variables.
   An template can be assigned to a template definition for more functionality.
 
   See [ContractDefinition.xlsx](https://github.com/kreinhard/merlin/raw/master/examples/ContractDefinition.xlsx)
-  in the examples directory.
+  in the [examples](https://github.com/kreinhard/merlin/tree/master/examples) directory.
 * Variables are customizable by the end-user running a template process. All variables in
   the template file will be replaced by the customized values and all conditionals will be executed
   by using the variables.
@@ -33,6 +39,12 @@ Merlin core contains the base library supporting:
   receivers 'Dear Miss' and for male receivers 'Dear Mister' should be used. Dependent variables
   will be set automatically dependent on the assigned variable and has to be defined once on template
   definition creation.
+* Serial letters: You may run templates multiple times for different variables (such as letters for
+  many receivers.)
+  
+  See [Contract-Serial.xlsx](https://github.com/kreinhard/merlin/raw/master/examples/Contract-Serial.xlsx)
+  in the [examples](https://github.com/kreinhard/merlin/tree/master/examples) directory.
+
 
 ### Running a template
 * You may run a template with the following settings:
@@ -40,5 +52,11 @@ Merlin core contains the base library supporting:
   * A template file. This template file may contain a reference to an existing template definition.
     >
   * Optional a template definition file containing dependent variables.
+* You may run a template with the following settings:
+  * Serial definition file containg variables. The template and template definition file may be specified
+    inside this definition file (Excel).
+  * A template file to run (required if not defined in the serial definition file).
+  * A template definition file for usage of dependent variables (may already be defined in the serial
+    definition file).
 
 
