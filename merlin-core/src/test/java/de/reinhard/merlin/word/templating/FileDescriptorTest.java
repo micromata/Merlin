@@ -5,12 +5,12 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class FileLocationTest {
+public class FileDescriptorTest {
 
     @Test
     public void matchesTest() {
-        FileLocation location1 = new FileLocation();
-        FileLocation location2 = new FileLocation();
+        FileDescriptor location1 = new FileDescriptor();
+        FileDescriptor location2 = new FileDescriptor();
         assertFalse(location1.matches(location2));
         location1.setDirectory("/Users/kai");
         location2.setDirectory("/Users/kai");

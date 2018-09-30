@@ -16,8 +16,8 @@ import java.io.File;
  * If the template files and definition files aren't stored in a local file system this class can also be used.
  * Directory may represent the area, the relative path the sub area for clustering template files.
  */
-public class FileLocation {
-    private Logger log = LoggerFactory.getLogger(FileLocation.class);
+public class FileDescriptor {
+    private Logger log = LoggerFactory.getLogger(FileDescriptor.class);
     private String directory;
     private String relativePath;
     private String filename;
@@ -35,7 +35,7 @@ public class FileLocation {
      * @param dir
      * @return this for chaining.
      */
-    public FileLocation setDirectory(File dir) {
+    public FileDescriptor setDirectory(File dir) {
         directory = dir.getAbsolutePath();
         return this;
     }
@@ -48,7 +48,7 @@ public class FileLocation {
         return relativePath;
     }
 
-    public FileLocation setRelativePath(String relativePath) {
+    public FileDescriptor setRelativePath(String relativePath) {
         this.relativePath = relativePath;
         return this;
     }
@@ -57,7 +57,7 @@ public class FileLocation {
         return filename;
     }
 
-    public FileLocation setFilename(String filename) {
+    public FileDescriptor setFilename(String filename) {
         this.filename = filename;
         return this;
     }
@@ -68,7 +68,7 @@ public class FileLocation {
      * @param other
      * @return true, if the filenames matches and the files are both placed in the same directory (including relative path).
      */
-    public boolean matches(FileLocation other) {
+    public boolean matches(FileDescriptor other) {
         if (!StringUtils.equals(directory, other.directory)) {
             return false;
         }

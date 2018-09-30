@@ -20,7 +20,7 @@ public class TemplateDefinition {
     private String name;
     private String description;
     private String filenamePattern;
-    private FileLocation fileLocation;
+    private FileDescriptor fileDescriptor;
 
     public TemplateDefinition() {
         this.id = RandomStringUtils.random(20, true, true);
@@ -94,12 +94,12 @@ public class TemplateDefinition {
 
     }
 
-    public FileLocation getFileLocation() {
-        return fileLocation;
+    public FileDescriptor getFileDescriptor() {
+        return fileDescriptor;
     }
 
-    public void setFileLocation(FileLocation fileLocation) {
-        this.fileLocation = fileLocation;
+    public void setFileDescriptor(FileDescriptor fileDescriptor) {
+        this.fileDescriptor = fileDescriptor;
     }
 
     public List<VariableDefinition> getVariableDefinitions() {

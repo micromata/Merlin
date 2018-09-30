@@ -20,7 +20,7 @@ public class Template {
     private List<String> usedVariables = new ArrayList<>();
     private Conditionals conditionals;
     private TemplateDefinition templateDefinition;
-    private FileLocation fileLocation;
+    private FileDescriptor fileDescriptor;
     private Collection<String> allDefinedVariables; // All variables defined in TemplateDefinition.
     private List<String> allUsedVariables;          // All variables used in the Word template.
     private Collection<String> unusedVariables;     // Variables defined but not used in the Word template.
@@ -83,12 +83,12 @@ public class Template {
         }
     }
 
-    public FileLocation getFileLocation() {
-        return fileLocation;
+    public FileDescriptor getFileDescriptor() {
+        return fileDescriptor;
     }
 
-    public void setFileLocation(FileLocation fileLocation) {
-        this.fileLocation = fileLocation;
+    public void setFileDescriptor(FileDescriptor fileDescriptor) {
+        this.fileDescriptor = fileDescriptor;
     }
 
     public Conditionals getConditionals() {
