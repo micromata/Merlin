@@ -54,7 +54,7 @@ errors.
     > ${template.id = "JZpnpojeSuN5JDqtm9KZ"} (template definition referenced by id)
     > ${template.name = "ContractTemplate"} (template definition referenced by name)
     
-    Template definitions are automatically assigned if they have the same file name (without suffix) as the template
+    Template definitions are automatically assigned if they have the same file name (without file extension) as the template
      file, e. g. a template named ContractTemplate.docx matches a definition file named ContractTemplate.xlsx.
   * Optional a template definition file containing dependent variables.
 * You may run a template with the following settings:
