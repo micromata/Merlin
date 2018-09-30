@@ -6,9 +6,7 @@ class RestUrlLink extends React.Component {
     render() {
         const service = this.props.service;
         const params = this.props.params;
-        const hiddenParams = this.props.hiddenParams;
         var url;
-        var displayUrl;
         if (params) {
             if (service === 'files/browse-local-filesystem') {
                 url = getRestServiceUrl(service) + '?' + params;
