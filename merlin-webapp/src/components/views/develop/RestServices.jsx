@@ -2,7 +2,7 @@ import React from 'react';
 import {PageHeader} from 'react-bootstrap';
 import {getRestServiceUrl} from "../../../actions/global";
 
-class RestUrlLink extends  React.Component {
+class RestUrlLink extends React.Component {
     render() {
         const service = this.props.service;
         const params = this.props.params;
@@ -77,16 +77,21 @@ class RestServices extends React.Component {
                     <li><RestUrlLink service='templates/list'/></li>
                     <li><RestUrlLink service='templates/definition-list'/></li>
                     <li><RestUrlLink service={'templates/definition/' + this.state.templateDefinitionId}/> (by id)</li>
-                    <li><RestUrlLink service='templates/definition/Letter-Template'/> (by template name)</li>
-                    <li><RestUrlLink service='templates/example'/> (example for run with json as post parameter: rest/templates/run)</li>
+                    <li><RestUrlLink service='templates/definition/Letter-Template'/> (by name)</li>
                 </ul>
-                <h4>How to proceed with a template:</h4>
+                <h4>How to get and run a template:</h4>
                 <ol>
                     <li>Get a list of all templates:<br/>
                         <RestUrlLink service='templates/list'/></li>
-                    <li>Get a single template from list or get one by the canonical path via rest (path={this.state.templateCanonicalPath}):<br/>
-                        <RestUrlLink service='templates/template' params={'canonicalPath=' +  encodeURIComponent(this.state.templateCanonicalPath)}/></li>
+                    <li>Get a single template from list or get one by the canonical path via rest
+                        (path={this.state.templateCanonicalPath}):<br/>
+                        <RestUrlLink service='templates/template'
+                                     params={'canonicalPath=' + encodeURIComponent(this.state.templateCanonicalPath)}/>
+                    </li>
                     <li>You will receive a template including its template definition if assigned.</li>
+                    <li>Run template with post parameters for service <b>rest/templates/run</b>:<br/>
+                        <RestUrlLink service='templates/example'/>
+                    </li>
                 </ol>
                 <h3>Browse local filesystem</h3>
                 <ul>
