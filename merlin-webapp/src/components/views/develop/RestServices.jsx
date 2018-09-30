@@ -30,6 +30,7 @@ class RestServices extends React.Component {
                 </ul>
                 <h3>Templates</h3>
                 <ul>
+                    <li><RestUrlLink service='templates/list'/></li>
                     <li><RestUrlLink service='templates/definition-list'/></li>
                     <li><RestUrlLink service='templates/definition/9MJdzFN2v2PKMJ9erj59'/> (by id)</li>
                     <li><RestUrlLink service='templates/definition/Letter-Template'/> (by template name)</li>
