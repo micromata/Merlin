@@ -62,7 +62,7 @@ public class DirectoryScanner {
             }
             log.info("Scanning file '" + file.getAbsolutePath() + "'.");
             FileDescriptor fileDescriptor = new FileDescriptor().setDirectory(dir).setRelativePath(file)
-                    .setFilename(file.getName()).setLastUpdate(now);
+                    .setLastUpdate(now);
             TemplateDefinition existingTemplateDefinition = getTemplateDefinition(fileDescriptor);
             if (existingTemplateDefinition != null && !existingTemplateDefinition.getFileDescriptor().isModified(file)) {
                 log.debug("Skipping file '" + file.getAbsolutePath() + "'. It's not modified since last scan.");
@@ -105,7 +105,7 @@ public class DirectoryScanner {
             }
             log.info("Scanning file '" + file.getAbsolutePath() + "'.");
             FileDescriptor fileDescriptor = new FileDescriptor().setDirectory(dir).setRelativePath(file)
-                    .setFilename(file.getName()).setLastUpdate(now);
+                    .setLastUpdate(now);
             Template existingTemplate = getTemplate(fileDescriptor);
             if (existingTemplate != null && !existingTemplate.getFileDescriptor().isModified(file)) {
                 log.debug("Skipping file '" + file.getAbsolutePath() + "'. It's not modified since last scan.");
