@@ -11,7 +11,7 @@ import java.util.List;
 @Path("/templates")
 public class TemplateDefinitionRest {
     @GET
-    @Path("list")
+    @Path("definition-list")
     @Produces(MediaType.APPLICATION_JSON)
     /**
      *
@@ -24,7 +24,7 @@ public class TemplateDefinitionRest {
     }
 
     @GET
-    @Path("{id}")
+    @Path("definition/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     /**
      *

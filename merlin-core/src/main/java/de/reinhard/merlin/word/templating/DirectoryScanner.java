@@ -19,7 +19,7 @@ public class DirectoryScanner {
 
     private boolean recursive;
     private File dir;
-    private List<TemplateDefinition> templates;
+    private List<TemplateDefinition> templateDefinitions;
     private Map<String, File> templateFilenames;
 
     public void process(File dir) {
@@ -37,7 +37,7 @@ public class DirectoryScanner {
         }
         this.dir = dir;
         log.info("Scanning directory '" + dir.getAbsolutePath() + "' for Merlin templates.");
-        templates = new ArrayList<>();
+        templateDefinitions = new ArrayList<>();
         templateFilenames = new HashMap<>();
         List<File> files = (List<File>) FileUtils.listFiles(dir, new String[]{"xls", "xlsx"}, recursive);
         for (File file : files) {
@@ -56,13 +56,13 @@ public class DirectoryScanner {
                 continue;
             }
             log.info("Valid Merlin template found: '" + file.getAbsolutePath() + "'.");
-            templates.add(templateDefinition);
+            templateDefinitions.add(templateDefinition);
             templateFilenames.put(templateDefinition.getId(), file);
         }
     }
 
-    public List<TemplateDefinition> getTemplates() {
-        return templates;
+    public List<TemplateDefinition> getTemplateDefinitions() {
+        return templateDefinitions;
     }
 
     public File getTemplateFile(String templateId) {
