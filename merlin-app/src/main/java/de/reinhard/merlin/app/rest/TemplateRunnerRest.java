@@ -19,7 +19,7 @@ public class TemplateRunnerRest {
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     public Response runTemplate(String json) {
         TemplateRunnerData data = JsonUtils.fromJson(TemplateRunnerData.class, json);
-        log.info("Running template: definition=" + data.getTemplateDefinitionId() + ", template=" + data.getTemplateId());
+        log.info("Running template: definition=" + data.getTemplateDefinitionId() + ", template=" + data.getTemplateCanonicalPath());
         String fileLocation = "Test.xlsx";
         Response response = null;
 
@@ -52,7 +52,7 @@ public class TemplateRunnerRest {
     public String getConfig(@QueryParam("prettyPrinter") boolean prettyPrinter) {
         TemplateRunnerData data = new TemplateRunnerData();
         data.setTemplateDefinitionId(Storage.getInstance().getTemplateDefinitions().get(0).getId());
-        data.setTemplateId("ContractTemplate.docx");
+        data.setTemplateCanonicalPath("/Users/kai/Documents/merlin/templates/ContractTemplate.docx");
         data.put("Gender", "female");
         data.put("Employee", "Berta Smith");
         data.put("Date", new Date());
