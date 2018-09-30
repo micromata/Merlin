@@ -1,7 +1,6 @@
 package de.reinhard.merlin.app.rest;
 
 import de.reinhard.merlin.app.json.JsonUtils;
-import de.reinhard.merlin.app.storage.Storage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,10 +48,12 @@ public class TemplateRunnerRest {
      * @param prettyPrinter If true then the json output will be in pretty format.
      * @see JsonUtils#toJson(Object, boolean)
      */
-    public String getConfig(@QueryParam("prettyPrinter") boolean prettyPrinter) {
+    public String getConfig(@QueryParam("templateCanonicalPath") String templateCanonicalPath,
+                            @QueryParam("prettyPrinter") String templateDefinitionId,
+                            @QueryParam("prettyPrinter") boolean prettyPrinter) {
         TemplateRunnerData data = new TemplateRunnerData();
-        data.setTemplateDefinitionId(Storage.getInstance().getTemplateDefinitions().get(0).getId());
-        data.setTemplateCanonicalPath("/Users/kai/Documents/merlin/templates/ContractTemplate.docx");
+        data.setTemplateDefinitionId(templateDefinitionId);
+        data.setTemplateCanonicalPath(templateCanonicalPath);
         data.put("Gender", "female");
         data.put("Employee", "Berta Smith");
         data.put("Date", new Date());

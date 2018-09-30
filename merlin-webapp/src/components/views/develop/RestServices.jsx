@@ -6,6 +6,7 @@ class RestUrlLink extends React.Component {
     render() {
         const service = this.props.service;
         const params = this.props.params;
+        const hiddenParams = this.props.hiddenParams;
         var url;
         var displayUrl;
         if (params) {
@@ -65,13 +66,6 @@ class RestServices extends React.Component {
                 <PageHeader>
                     Rest Services
                 </PageHeader>
-                <h3>
-                    Config
-                </h3>
-                <ul>
-                    <li><RestUrlLink service='configuration/config'/></li>
-                    <li><RestUrlLink service='configuration/config-ui'/></li>
-                </ul>
                 <h3>Templates</h3>
                 <ul>
                     <li><RestUrlLink service='templates/list'/></li>
@@ -89,10 +83,19 @@ class RestServices extends React.Component {
                                      params={'canonicalPath=' + encodeURIComponent(this.state.templateCanonicalPath)}/>
                     </li>
                     <li>You will receive a template including its template definition if assigned.</li>
-                    <li>Run template with post parameters for service <b>rest/templates/run</b>:<br/>
-                        <RestUrlLink service='templates/example'/>
+                    <li>Run template with json post parameter for service<br/>
+                        <a href={getRestServiceUrl('templates/example') + '?prettyPrinter=true&templateCanonicalPath='
+                        + this.state.templateCanonicalPath + 'templateDefinitionId='
+                        + this.state.templateDefinitionId}>rest/templates/run</a> (links shows post json as an example)
                     </li>
                 </ol>
+                <h3>
+                    Config
+                </h3>
+                <ul>
+                    <li><RestUrlLink service='configuration/config'/></li>
+                    <li><RestUrlLink service='configuration/config-ui'/> (as a trial for dynamic forms)</li>
+                </ul>
                 <h3>Browse local filesystem</h3>
                 <ul>
                     <li><RestUrlLink service='files/browse-local-filesystem' params='type=dir'/></li>
