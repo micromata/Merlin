@@ -2,6 +2,8 @@ package de.reinhard.merlin.word.templating;
 
 import de.reinhard.merlin.word.Conditionals;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang.builder.ToStringStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -127,5 +129,16 @@ public class Template {
 
     public void setUndefinedVariables(Collection<String> undefinedVariables) {
         this.undefinedVariables = undefinedVariables;
+    }
+
+    @Override
+    public String toString() {
+        ToStringBuilder tos = new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE);
+        tos.append("allUsedVariables", allUsedVariables);
+        tos.append("usedVariables", usedVariables);
+        tos.append("unusedVariables", unusedVariables);
+        tos.append("undefinedVariables", undefinedVariables);
+        tos.append("conditionals", conditionals);
+        return tos.toString();
     }
 }
