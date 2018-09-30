@@ -11,17 +11,17 @@ public class DirectoryScannerTest {
 
     @Test
     public void scanTest() {
-        DirectoryScanner directoryScanner = new DirectoryScanner();
-        directoryScanner.process(new File(TEST_TEMPLATES_DIR));
+        DirectoryScanner directoryScanner = new DirectoryScanner(new File(TEST_TEMPLATES_DIR), false);
+        directoryScanner.process();
         assertEquals(3, directoryScanner.getTemplateDefinitions().size());
         assertEquals("9MJdzFN2v2PKMJ9erj59", directoryScanner.getTemplateDefinitions().get(0).getId());
         assertEquals("hDl7LBuOJ1kzqF09gUHP", directoryScanner.getTemplateDefinitions().get(1).getId());
         assertEquals("JZpnpojeSuN5JDqtm9KZ", directoryScanner.getTemplateDefinitions().get(2).getId());
-        assertEquals("../merlin-app/test/templates/LetterTemplate.xlsx",
-                directoryScanner.getTemplateFile("9MJdzFN2v2PKMJ9erj59").toString());
-        assertEquals("../merlin-app/test/templates/LetterTemplate-old.xls",
-                directoryScanner.getTemplateFile("hDl7LBuOJ1kzqF09gUHP").toString());
-        assertEquals("../merlin-app/test/templates/ContractTemplate.xlsx",
-                directoryScanner.getTemplateFile("JZpnpojeSuN5JDqtm9KZ").toString());
+        assertEquals("LetterTemplate.xlsx",
+                directoryScanner.getTemplateDefinition("9MJdzFN2v2PKMJ9erj59").getFileDescriptor().getFilename());
+        assertEquals("LetterTemplate-old.xls",
+                directoryScanner.getTemplateDefinition("hDl7LBuOJ1kzqF09gUHP").getFileDescriptor().getFilename());
+        assertEquals("ContractTemplate.xlsx",
+                directoryScanner.getTemplateDefinition("JZpnpojeSuN5JDqtm9KZ").getFileDescriptor().getFilename());
     }
 }

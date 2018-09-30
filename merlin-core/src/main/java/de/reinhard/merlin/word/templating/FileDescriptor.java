@@ -2,12 +2,16 @@ package de.reinhard.merlin.word.templating;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.beans.Transient;
 import java.io.File;
+import java.util.Date;
 
 /**
  * Information about a file location. Used for auto-matching of template files and template definition files (if
@@ -21,6 +25,7 @@ public class FileDescriptor {
     private String directory;
     private String relativePath;
     private String filename;
+    private Date lastUpdate;
 
     public String getDirectory() {
         return directory;
@@ -32,6 +37,7 @@ public class FileDescriptor {
 
     /**
      * Sets the property directory as absolute path of the given dir.
+     *
      * @param dir
      * @return this for chaining.
      */
@@ -63,6 +69,21 @@ public class FileDescriptor {
     }
 
     /**
+     * For syncing purposes: do only update if any modification of the representing file is newer than the last update.
+     *
+     * @return Date of last update of this object (if set).
+     */
+    @Transient
+    public Date getLastUpdate() {
+        return lastUpdate;
+    }
+
+    public FileDescriptor setLastUpdate(Date lastUpdate) {
+        this.lastUpdate = lastUpdate;
+        return this;
+    }
+
+    /**
      * Checks if the filename matches the other filename (excluding the file extension).
      *
      * @param other
@@ -81,6 +102,37 @@ public class FileDescriptor {
         String filenameWithoutExtension = FilenameUtils.removeExtension(filename).trim().toLowerCase();
         String otherFilenameWithoutExtension = FilenameUtils.removeExtension(other.filename).trim().toLowerCase();
         return filenameWithoutExtension.equals(otherFilenameWithoutExtension);
+    }
+
+    /**
+     * Checks weather the given file was modified after last update.
+     *
+     * @param file
+     * @return true, if the gifen file was modified after last update or if last update is not set.
+     */
+    public boolean isModified(File file) {
+        if (lastUpdate == null) {
+            return true;
+        }
+        Date lastModified = new Date(file.lastModified());
+        return lastModified.after(lastUpdate);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        FileDescriptor other = (FileDescriptor) obj;
+        EqualsBuilder eb = new EqualsBuilder();
+        eb.append(directory, other.directory);
+        eb.append(relativePath, other.relativePath);
+        eb.append(filename, other.filename);
+        return eb.isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        HashCodeBuilder hcb = new HashCodeBuilder();
+        hcb.append(directory).append(relativePath).append(filename);
+        return hcb.toHashCode();
     }
 
     @Override

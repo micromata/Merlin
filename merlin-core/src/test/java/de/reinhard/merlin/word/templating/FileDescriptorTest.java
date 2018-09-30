@@ -1,36 +1,63 @@
 package de.reinhard.merlin.word.templating;
 
+import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class FileDescriptorTest {
+    private Logger log = LoggerFactory.getLogger(FileDescriptorTest.class);
+
+    private static final String TEST_DIR = "./target/";
 
     @Test
     public void matchesTest() {
-        FileDescriptor location1 = new FileDescriptor();
-        FileDescriptor location2 = new FileDescriptor();
-        assertFalse(location1.matches(location2));
-        location1.setDirectory("/Users/kai");
-        location2.setDirectory("/Users/kai");
-        assertFalse(location1.matches(location2));
-        location1.setDirectory("Documents/templates");
-        location2.setDirectory("Documents/templates");
-        assertFalse(location1.matches(location2));
-        location1.setFilename("ContractTemplate.docx");
-        location2.setFilename("ContractTemplate.xlsx");
-        assertTrue(location1.matches(location2));
+        FileDescriptor descriptor1 = new FileDescriptor();
+        FileDescriptor descriptor2 = new FileDescriptor();
+        assertFalse(descriptor1.matches(descriptor2));
+        descriptor1.setDirectory("/Users/kai");
+        descriptor2.setDirectory("/Users/kai");
+        assertFalse(descriptor1.matches(descriptor2));
+        descriptor1.setDirectory("Documents/templates");
+        descriptor2.setDirectory("Documents/templates");
+        assertFalse(descriptor1.matches(descriptor2));
+        descriptor1.setFilename("ContractTemplate.docx");
+        descriptor2.setFilename("ContractTemplate.xlsx");
+        assertTrue(descriptor1.matches(descriptor2));
 
-        location2.setDirectory("/Users/horst");
-        assertFalse(location1.matches(location2));
-        location2.setDirectory("/Users/kai");
-        location2.setDirectory("Documents/templates/test");
-        assertFalse(location1.matches(location2));
-        location2.setDirectory("Documents/templates");
-        location2.setFilename("ContractTemplate2.xlsx");
-        assertFalse(location1.matches(location2));
-        location2.setFilename("ContractTemplate.xls");
-        assertTrue(location1.matches(location2));
+        descriptor2.setDirectory("/Users/horst");
+        assertFalse(descriptor1.matches(descriptor2));
+        descriptor2.setDirectory("/Users/kai");
+        descriptor2.setDirectory("Documents/templates/test");
+        assertFalse(descriptor1.matches(descriptor2));
+        descriptor2.setDirectory("Documents/templates");
+        descriptor2.setFilename("ContractTemplate2.xlsx");
+        assertFalse(descriptor1.matches(descriptor2));
+        descriptor2.setFilename("ContractTemplate.xls");
+        assertTrue(descriptor1.matches(descriptor2));
+    }
+
+    @Test
+    public void lastModifiedTest() throws IOException, InterruptedException {
+        File file = new File(TEST_DIR, "tmp.txt");
+        FileUtils.write(file, "Test", Charset.defaultCharset());
+        FileDescriptor descriptor = new FileDescriptor();
+        assertTrue(descriptor.isModified(file));
+        log.info("Sleeping 1s...");
+        Thread.sleep(1000);
+        descriptor.setLastUpdate(new Date());
+        assertFalse(descriptor.isModified(file));
+        log.info("Sleeping 1s...");
+        Thread.sleep(1000);
+        FileUtils.write(file, "Test", Charset.defaultCharset());
+        assertTrue(descriptor.isModified(file));
     }
 }

@@ -8,13 +8,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
- * Searches in directories for Merlin template definition files.
+ * Searches in directories for Merlin template definition files and template files.
+ * TODO: WatchService watcher = FileSystems.getDefault().newWatchService()
  */
 public class DirectoryScanner {
     private Logger log = LoggerFactory.getLogger(DirectoryScanner.class);
@@ -23,34 +21,39 @@ public class DirectoryScanner {
     private File dir;
     private List<TemplateDefinition> templateDefinitions;
     private List<Template> templates;
-    private Map<String, File> templateDefintionFilenames;
-
-    public void process(File dir) {
-        process(dir, false);
-    }
 
     /**
      * @param dir
      * @param recursive If true, the directory will be searched recursively for Merlin templates. Default is false.
      */
-    public void process(File dir, boolean recursive) {
+    public DirectoryScanner(File dir, boolean recursive) {
+        this.dir = dir;
+        this.recursive = recursive;
+        clear();
+    }
+
+    public void clear() {
+        templateDefinitions = new ArrayList<>();
+        templates = new ArrayList<>();
+    }
+
+    /**
+     * Scans the directory for template and template definition files. Updates only items if the file is newer than the
+     * last update. To force a reload call clear() first.
+     */
+    public void process() {
         if (!dir.exists()) {
             log.error("Directory '" + dir.getAbsolutePath() + "' doesn't exist.");
             return;
         }
-        this.dir = dir;
-        processTemplateDefinitions(dir, recursive);
-        processTemplates(dir, recursive);
+        processTemplateDefinitions();
+        processTemplates();
     }
 
-    /**
-     * @param dir
-     * @param recursive If true, the directory will be searched recursively for Merlin templates. Default is false.
-     */
-    private void processTemplateDefinitions(File dir, boolean recursive) {
+    private void processTemplateDefinitions() {
         log.info("Scanning directory '" + dir.getAbsolutePath() + "' for Merlin template definitions (xls and xlsx).");
-        templateDefinitions = new ArrayList<>();
-        templateDefintionFilenames = new HashMap<>();
+        Date now = new Date();
+        Map<String, File> templateDefintionFilenames = new HashMap<>();
         List<File> files = (List<File>) FileUtils.listFiles(dir, new String[]{"xls", "xlsx"}, recursive);
         for (File file : files) {
             if (file.getName().startsWith("~$")) {
@@ -58,6 +61,13 @@ public class DirectoryScanner {
                 continue;
             }
             log.info("Scanning file '" + file.getAbsolutePath() + "'.");
+            FileDescriptor fileDescriptor = new FileDescriptor().setDirectory(dir).setRelativePath(file.getParent())
+                    .setFilename(file.getName()).setLastUpdate(now);
+            TemplateDefinition existingTemplateDefinition = getTemplateDefinition(fileDescriptor);
+            if (existingTemplateDefinition != null && !existingTemplateDefinition.getFileDescriptor().isModified(file)) {
+                log.debug("Skipping file '" + file.getAbsolutePath() + "'. It's not modified since last scan.");
+                continue;
+            }
             ExcelWorkbook workbook;
             try {
                 workbook = new ExcelWorkbook(file);
@@ -67,8 +77,6 @@ public class DirectoryScanner {
             }
             TemplateDefinitionExcelReader templateReader = new TemplateDefinitionExcelReader();
             TemplateDefinition templateDefinition = templateReader.readFromWorkbook(workbook);
-            FileDescriptor fileDescriptor = new FileDescriptor().setDirectory(dir).setRelativePath(file.getParent())
-                    .setFilename(file.getName());
             templateDefinition.setFileDescriptor(fileDescriptor);
             if (!templateReader.isValidTemplate()) {
                 log.info("Skipping '" + file.getAbsolutePath() + "'. It's not a valid Merlin template file.");
@@ -86,13 +94,9 @@ public class DirectoryScanner {
         }
     }
 
-    /**
-     * @param dir
-     * @param recursive If true, the directory will be searched recursively for Merlin templates. Default is false.
-     */
-    private void processTemplates(File dir, boolean recursive) {
+    private void processTemplates() {
         log.info("Scanning directory '" + dir.getAbsolutePath() + "' for Merlin templates (docx).");
-        templates = new ArrayList<>();
+        Date now = new Date();
         List<File> files = (List<File>) FileUtils.listFiles(dir, new String[]{"docx"}, recursive);
         for (File file : files) {
             if (file.getName().startsWith("~$")) {
@@ -100,6 +104,13 @@ public class DirectoryScanner {
                 continue;
             }
             log.info("Scanning file '" + file.getAbsolutePath() + "'.");
+            FileDescriptor fileDescriptor = new FileDescriptor().setDirectory(dir).setRelativePath(file.getParent())
+                    .setFilename(file.getName()).setLastUpdate(now);
+            Template existingTemplate = getTemplate(fileDescriptor);
+            if (existingTemplate != null && !existingTemplate.getFileDescriptor().isModified(file)) {
+                log.debug("Skipping file '" + file.getAbsolutePath() + "'. It's not modified since last scan.");
+                continue;
+            }
             WordDocument doc;
             try {
                 doc = new WordDocument(file);
@@ -113,8 +124,6 @@ public class DirectoryScanner {
                         + "'. It's seemd to be not a Merlin template. No variables and conditionals found.");
                 continue;
             }
-            FileDescriptor fileDescriptor = new FileDescriptor().setDirectory(dir).setRelativePath(file.getParent())
-                    .setFilename(file.getName());
             templateChecker.getTemplate().setFileDescriptor(fileDescriptor);
             TemplateDefinitionReference templateDefinitionReference = doc.scanForTemplateDefinitionReference();
             if (templateDefinitionReference != null) {
@@ -172,7 +181,38 @@ public class DirectoryScanner {
         return templateDefinitions;
     }
 
-    public File getTemplateFile(String templateId) {
-        return templateDefintionFilenames.get(templateId);
+    public Template getTemplate(FileDescriptor descriptor) {
+        for (Template template : templates) {
+            if (descriptor.equals(template.getFileDescriptor())) {
+                return template;
+            }
+        }
+        return null;
+    }
+
+    public TemplateDefinition getTemplateDefinition(FileDescriptor descriptor) {
+        for (TemplateDefinition templateDefinition : templateDefinitions) {
+            if (descriptor.equals(templateDefinition.getFileDescriptor())) {
+                return templateDefinition;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * @param idOrName Id or name of the template definition to search for.
+     * @return
+     */
+    public TemplateDefinition getTemplateDefinition(String idOrName) {
+        if (idOrName == null) {
+            return null;
+        }
+        String search = idOrName.trim().toLowerCase();
+        for (TemplateDefinition templateDefinition : templateDefinitions) {
+            if (search.equals(templateDefinition.getId().trim().toLowerCase())) {
+                return templateDefinition;
+            }
+        }
+        return null;
     }
 }
