@@ -181,6 +181,10 @@ public class DirectoryScanner {
         return templateDefinitions;
     }
 
+    public List<Template> getTemplates() {
+        return templates;
+    }
+
     public Template getTemplate(FileDescriptor descriptor) {
         for (Template template : templates) {
             if (descriptor.equals(template.getFileDescriptor())) {
