@@ -29,6 +29,7 @@ public class WordTemplateChecker {
         }
         template.setAllUsedVariables(new ArrayList<>());
         template.getAllUsedVariables().addAll(variables);
+        template.getUsedVariables().addAll(variables);
         Collections.sort(template.getAllUsedVariables(), String.CASE_INSENSITIVE_ORDER);
         if (log.isDebugEnabled()) {
             for (String variable : template.getAllUsedVariables()) {
