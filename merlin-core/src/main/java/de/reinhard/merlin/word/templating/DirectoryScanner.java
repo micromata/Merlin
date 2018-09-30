@@ -54,7 +54,17 @@ public class DirectoryScanner {
         List<File> files = (List<File>) FileUtils.listFiles(dir, new String[]{"xls", "xlsx"}, recursive);
         for (File file : files) {
             log.info("Scanning file '" + file.getAbsolutePath() + "'.");
-            ExcelWorkbook workbook = new ExcelWorkbook(file);
+            if (file.getName().startsWith("~$")) {
+                log.debug("Ignoring backup file '" + file.getAbsolutePath() + "'. Skipping.");
+                continue;
+            }
+            ExcelWorkbook workbook;
+            try {
+                workbook = new ExcelWorkbook(file);
+            } catch (Exception ex) {
+                log.info("Can't parse '" + file.getAbsolutePath() + "'. Skipping.");
+                continue;
+            }
             TemplateDefinitionExcelReader templateReader = new TemplateDefinitionExcelReader();
             TemplateDefinition templateDefinition = templateReader.readFromWorkbook(workbook);
             if (!templateReader.isValidTemplate()) {
@@ -99,6 +109,45 @@ public class DirectoryScanner {
                 log.debug("Skipping Word document: '" + file.getAbsolutePath()
                         + "'. It's seemd to be not a Merlin template. No variables and conditionals found.");
                 continue;
+            }
+            TemplateDefinitionReference templateDefinitionReference = doc.scanForTemplateDefinitionReference();
+            if (templateDefinitionReference != null) {
+                log.debug("Template definition reference found: " + templateDefinitionReference);
+                TemplateDefinition templateDefinition = null;
+                if (CollectionUtils.isEmpty(templateDefinitions)) {
+                    log.warn("No templateDefinitions given, can't look for reference: " + templateDefinitionReference);
+                } else {
+                    String id = templateDefinitionReference.getTemplateDefinitionId();
+                    if (id != null) {
+                        id = id.trim().toLowerCase();
+                    }
+                    String name = templateDefinitionReference.getTemplateName();
+                    if (name != null) {
+                        name = name.trim();
+                    }
+                    for (TemplateDefinition def : templateDefinitions) {
+                        if (id != null) {
+                            if (id.equals(def.getId())) {
+                                templateDefinition = def;
+                                break;
+                            }
+                        }
+                        if (name != null) {
+                            if (name.equals(def.getName())) {
+                                templateDefinition = def;
+                                break;
+                            }
+                        }
+                    }
+                }
+                if (templateDefinition != null) {
+                    templateChecker.getTemplate().assignTemplateDefinition(templateDefinition);
+                } else {
+                    log.warn("Template definition not found: " + templateDefinitionReference);
+                }
+            } else {
+                // Check filename
+                log.warn("Implement file name checking!");
             }
             templates.add(templateChecker.getTemplate());
             log.info("Valid Merlin template found: '" + file.getAbsolutePath() + "'.");
