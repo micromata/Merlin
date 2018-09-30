@@ -27,7 +27,6 @@ class RestServices extends React.Component {
                 <ul>
                     <li><RestUrlLink service='configuration/config'/></li>
                     <li><RestUrlLink service='configuration/config-ui'/></li>
-                    <li><RestUrlLink service='configuration/config-old'/></li>
                 </ul>
                 <h3>Templates</h3>
                 <ul>
