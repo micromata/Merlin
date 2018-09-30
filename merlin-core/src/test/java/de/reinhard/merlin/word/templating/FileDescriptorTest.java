@@ -50,16 +50,14 @@ public class FileDescriptorTest {
     public void lastModifiedTest() throws IOException, InterruptedException {
         File file = new File(TEST_DIR, "tmp.txt");
         FileUtils.write(file, "Test", Charset.defaultCharset());
+        Date now = new Date();
         FileDescriptor descriptor = new FileDescriptor();
-        assertTrue(descriptor.isModified(file));
-        log.info("Sleeping 1s...");
-        Thread.sleep(1000);
-        descriptor.setLastUpdate(new Date());
-        assertFalse(descriptor.isModified(file));
-        log.info("Sleeping 1s...");
-        Thread.sleep(1000);
+        assertTrue(descriptor.isModified(file)); // last update not set.
+        descriptor.setLastUpdate(new Date(now.getTime() + 1000));
+        assertFalse(descriptor.isModified(file)); // last update is 1s in the future.
+        descriptor.setLastUpdate(new Date(now.getTime() - 1000));
         FileUtils.write(file, "Test", Charset.defaultCharset());
-        assertTrue(descriptor.isModified(file));
+        assertTrue(descriptor.isModified(file)); // last update is 1s in the past.
     }
 
     @Test
