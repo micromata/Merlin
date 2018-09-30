@@ -38,7 +38,7 @@ public class ExcelConfigReader {
             String property = PoiHelper.getValueAsString(sheet.getCell(row, propertyColumnDef));
             String value = PoiHelper.getValueAsString(sheet.getCell(row, valueColumnDef));
             if (StringUtils.isNotEmpty(value)) {
-                log.info("Read config property '" + property + "'='" + value + "'");
+                log.debug("Read config property '" + property + "'='" + value + "'");
                 propertiesStorage.setConfig(property, value);
             }
         }

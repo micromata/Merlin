@@ -96,7 +96,7 @@ public class WordDocument {
         for (IBodyElement element : document.getBodyElements()) {
             if (element instanceof XWPFParagraph) {
                 XWPFParagraph paragraph = (XWPFParagraph) element;
-                 new RunsProcessor(paragraph).scanVariables(variables);
+                new RunsProcessor(paragraph).scanVariables(variables);
             } else if (element instanceof XWPFTable) {
                 XWPFTable table = (XWPFTable) element;
                 for (XWPFTableRow row : table.getRows()) {
@@ -105,6 +105,13 @@ public class WordDocument {
                             new RunsProcessor(p).scanVariables(variables);
                         }
                     }
+                }
+            } else if (element instanceof XWPFSDT) {
+                ISDTContent content = ((XWPFSDT) element).getContent();
+                if (content == null) {
+                    log.info("Unsupported XWPFSDT element (not body or no paragraphs).");
+                } else {
+                    log.warn("Unsupported content: " + content.getText());
                 }
             } else {
                 log.warn("Unsupported body element: " + element);

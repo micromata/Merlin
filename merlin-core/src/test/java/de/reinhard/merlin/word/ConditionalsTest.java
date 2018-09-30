@@ -24,8 +24,8 @@ public class ConditionalsTest {
         TestHelper.createParagraph(doc, "{if var < 5}H", "allo{e", "ndif}"); // 2
         Conditionals conditionals = new Conditionals(new WordDocument(doc));
         conditionals.read();
-        assertEquals(3, conditionals.getConditionals().size());
-        Iterator<AbstractConditional> it = conditionals.getConditionals().iterator();
+        assertEquals(3, conditionals.getConditionalsSet().size());
+        Iterator<AbstractConditional> it = conditionals.getConditionalsSet().iterator();
         AbstractConditional cond = it.next();
         test(cond, "var", ConditionalType.EQUAL, 1, 1, "test");
         cond = it.next();
@@ -47,7 +47,7 @@ public class ConditionalsTest {
         TestHelper.createParagraph(doc, "Enjoy your life.{endif}"); // 5
         Conditionals conditionals = new Conditionals(new WordDocument(doc));
         conditionals.read();
-        Iterator<AbstractConditional> it = conditionals.getConditionals().iterator();
+        Iterator<AbstractConditional> it = conditionals.getConditionalsSet().iterator();
         AbstractConditional cond = it.next();
         AbstractConditional parent = cond;
         test(cond, "var", ConditionalType.NOT_EQUAL, 1, 4, "test");

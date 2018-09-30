@@ -47,7 +47,7 @@ public class SerialDataExcelWriter extends AbstractExcelWriter {
                 for (VariableDefinition variableDefinition : template.getVariableDefinitions()) {
                     Object valueObject = entry.get(variableDefinition.getName());
                     ExcelCell cell = row.createCell();
-                    templateContext.setCellValue(workbook, cell.getCell(), valueObject, variableDefinition.getType());
+                    templateRunContext.setCellValue(workbook, cell.getCell(), valueObject, variableDefinition.getType());
                 }
             }
         }

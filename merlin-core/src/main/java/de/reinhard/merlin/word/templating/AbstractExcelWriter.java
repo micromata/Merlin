@@ -22,10 +22,10 @@ public class AbstractExcelWriter {
     protected CellStyle warningCellStyle;
     protected CellStyle descriptionStyle;
     protected ExcelSheet currentSheet; // Current working sheet.
-    protected TemplateContext templateContext = new TemplateContext();
+    protected TemplateRunContext templateRunContext = new TemplateRunContext();
 
-    public TemplateContext getTemplateContext() {
-        return templateContext;
+    public TemplateRunContext getTemplateRunContext() {
+        return templateRunContext;
     }
 
     protected void init() {
@@ -101,7 +101,7 @@ public class AbstractExcelWriter {
     }
 
     protected void writeValue(ExcelCell cell, Object value, VariableType type) {
-        Object targetValue = templateContext.convertValue(value, type);
+        Object targetValue = templateRunContext.convertValue(value, type);
         if (targetValue == null) {
             return;
         }

@@ -9,6 +9,9 @@ import org.slf4j.LoggerFactory;
 import java.beans.Transient;
 import java.util.*;
 
+/**
+ * A template definition defines variabled usable by templates as well as dependent variables.
+ */
 public class TemplateDefinition {
     private Logger log = LoggerFactory.getLogger(TemplateDefinition.class);
     private List<VariableDefinition> variableDefinitions = new ArrayList<>();

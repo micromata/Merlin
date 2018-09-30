@@ -19,11 +19,11 @@ public class TestData {
         DirectoryScanner directoryScanner = new DirectoryScanner();
         File dir = new File(parent, TEST_TEMPLATES_DIR);
         directoryScanner.process(dir);
-        if (directoryScanner.getTemplates() == null) {
+        if (directoryScanner.getTemplateDefinitions() == null) {
             log.error("Can't scan directory '" + dir.getAbsolutePath() + "' for test template files.");
             return;
         }
-        for (TemplateDefinition templateDefinition : directoryScanner.getTemplates()) {
+        for (TemplateDefinition templateDefinition : directoryScanner.getTemplateDefinitions()) {
             Storage.getInstance().add(templateDefinition, directoryScanner.getTemplateFile(templateDefinition.getId()));
         }
     }

@@ -17,11 +17,11 @@ public class TemplateDefinitionExcelReader {
 
     private ExcelWorkbook workbook;
     private TemplateDefinition template;
-    private TemplateContext templateContext = new TemplateContext();
+    private TemplateRunContext templateRunContext = new TemplateRunContext();
     private boolean validTemplate = true;
 
-    public TemplateContext getTemplateContext() {
-        return templateContext;
+    public TemplateRunContext getTemplateRunContext() {
+        return templateRunContext;
     }
 
     public TemplateDefinition readFromWorkbook(ExcelWorkbook workbook) {
@@ -61,7 +61,7 @@ public class TemplateDefinitionExcelReader {
             validTemplate = false;
             log.error("Sheet Configuration isn't valid. Not a valid Merlin template:");
             for (ExcelValidationErrorMessage errorMessage : configReader.getSheet().getAllValidationErrors()) {
-                log.error(errorMessage.getMessageWithAllDetails(templateContext.getI18n()));
+                log.error(errorMessage.getMessageWithAllDetails(templateRunContext.getI18n()));
             }
         }
         return template;
@@ -107,9 +107,9 @@ public class TemplateDefinitionExcelReader {
             variable.setRequired(required);
             variable.setUnique(unique);
             Object minimum = PoiHelper.getValue(sheet.getCell(row, minimumCol));
-            variable.setMinimumValue(templateContext.convertValue(minimum, variable.getType()));
+            variable.setMinimumValue(templateRunContext.convertValue(minimum, variable.getType()));
             Object maximum = PoiHelper.getValue(sheet.getCell(row, maximumCol));
-            variable.setMaximumValue(templateContext.convertValue(maximum, variable.getType()));
+            variable.setMaximumValue(templateRunContext.convertValue(maximum, variable.getType()));
             String[] values = CSVStringUtils.parseStringList(valuesString);
             if (values != null) {
                 variable.addAllowedValues((Object[]) values);

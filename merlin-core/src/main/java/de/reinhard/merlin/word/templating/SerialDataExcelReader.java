@@ -16,10 +16,10 @@ public class SerialDataExcelReader {
     private Logger log = LoggerFactory.getLogger(SerialDataExcelReader.class);
 
     private ExcelWorkbook workbook;
-    private TemplateContext templateContext = new TemplateContext();
+    private TemplateRunContext templateRunContext = new TemplateRunContext();
 
-    public TemplateContext getTemplateContext() {
-        return templateContext;
+    public TemplateRunContext getTemplateRunContext() {
+        return templateRunContext;
     }
 
     public TemplateDefinition readTemplateReference(ExcelWorkbook workbook) {
@@ -79,7 +79,7 @@ public class SerialDataExcelReader {
                 if (value == null) {
                     continue;
                 }
-                Object val = templateContext.convertValue(value, variableDefinition.getType());
+                Object val = templateRunContext.convertValue(value, variableDefinition.getType());
                 serialDataEntry.put(variableDefinition.getName(), val);
             }
             serialData.add(serialDataEntry);

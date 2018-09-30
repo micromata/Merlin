@@ -27,13 +27,12 @@ class RestServices extends React.Component {
                 <ul>
                     <li><RestUrlLink service='configuration/config'/></li>
                     <li><RestUrlLink service='configuration/config-ui'/></li>
-                    <li><RestUrlLink service='configuration/config-old'/></li>
                 </ul>
                 <h3>Templates</h3>
                 <ul>
-                    <li><RestUrlLink service='templates/list'/></li>
-                    <li><RestUrlLink service='templates/9MJdzFN2v2PKMJ9erj59'/> (by id)</li>
-                    <li><RestUrlLink service='templates/Letter-Template'/> (by template name)</li>
+                    <li><RestUrlLink service='templates/definition-list'/></li>
+                    <li><RestUrlLink service='templates/definition/9MJdzFN2v2PKMJ9erj59'/> (by id)</li>
+                    <li><RestUrlLink service='templates/definition/Letter-Template'/> (by template name)</li>
                     <li><RestUrlLink service='templates/example'/> (example for run with json as post parameter: rest/templates/run)</li>
                 </ul>
                 <h3>Browse local filesystem</h3>

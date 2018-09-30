@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class SerialDataExcelTest {
     private Logger log = LoggerFactory.getLogger(SerialDataExcelTest.class);
-    private TemplateContext templateContext = new TemplateContext();
+    private TemplateRunContext templateRunContext = new TemplateRunContext();
 
     @Test
     public void writeReadExcelTest() throws Exception {
@@ -55,8 +55,8 @@ public class SerialDataExcelTest {
         entry.put("Gender", gender);
         entry.put("Employee", employee);
         try {
-            entry.put("Date", templateContext.getDateFormatter().parse(date));
-            entry.put("BeginDate", templateContext.getDateFormatter().parse(beginDate));
+            entry.put("Date", templateRunContext.getDateFormatter().parse(date));
+            entry.put("BeginDate", templateRunContext.getDateFormatter().parse(beginDate));
         } catch (ParseException ex) {
             fail("Couldn't parse date: " + ex.getMessage());
         }
