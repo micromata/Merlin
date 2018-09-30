@@ -50,7 +50,6 @@ errors.
 * You may run a template with the following settings:
   * Customized variables (gender, name of receiver, etc.)
   * A template file. This template file may contain a reference to an existing template definition.
-    >
   * Optional a template definition file containing dependent variables.
 * You may run a template with the following settings:
   * Serial definition file containg variables. The template and template definition file may be specified
