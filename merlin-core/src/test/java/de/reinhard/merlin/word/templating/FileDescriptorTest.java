@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Date;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -59,5 +60,24 @@ public class FileDescriptorTest {
         Thread.sleep(1000);
         FileUtils.write(file, "Test", Charset.defaultCharset());
         assertTrue(descriptor.isModified(file));
+    }
+
+    @Test
+    public void relativizePathTest() {
+        File dir = new File("/Users/kai/Documents");
+        FileDescriptor fileDescriptor = new FileDescriptor();
+        fileDescriptor.setDirectory(dir);
+        File file = new File("/Users/kai/Documents/templates/template.xls");
+        fileDescriptor.setRelativePath(file);
+        assertEquals("templates", fileDescriptor.getRelativePath());
+        file = new File("/Users/kai/template.xls");
+        fileDescriptor.setRelativePath(file);
+        assertEquals("..", fileDescriptor.getRelativePath());
+        file = new File("/Users/kai/templates/template.xls");
+        fileDescriptor.setRelativePath(file);
+        assertEquals("../templates", fileDescriptor.getRelativePath());
+         file = new File("/Users/kai/Documents/template.xls");
+        fileDescriptor.setRelativePath(file);
+        assertEquals(".", fileDescriptor.getRelativePath());
     }
 }

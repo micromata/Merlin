@@ -11,6 +11,8 @@ import org.slf4j.LoggerFactory;
 
 import java.beans.Transient;
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Date;
 
 /**
@@ -56,6 +58,15 @@ public class FileDescriptor {
 
     public FileDescriptor setRelativePath(String relativePath) {
         this.relativePath = relativePath;
+        return this;
+    }
+
+    public FileDescriptor setRelativePath(File file) {
+        Path dirPath = Paths.get(directory);
+        Path filePath = Paths.get(file.getAbsolutePath());
+        Path relPath = dirPath.relativize(filePath);
+        Path parent = relPath.getParent();
+        this.relativePath = parent != null ? parent.toString() : ".";
         return this;
     }
 

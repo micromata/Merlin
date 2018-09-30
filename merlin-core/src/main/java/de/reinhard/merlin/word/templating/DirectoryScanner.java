@@ -104,7 +104,7 @@ public class DirectoryScanner {
                 continue;
             }
             log.info("Scanning file '" + file.getAbsolutePath() + "'.");
-            FileDescriptor fileDescriptor = new FileDescriptor().setDirectory(dir).setRelativePath(file.getParent())
+            FileDescriptor fileDescriptor = new FileDescriptor().setDirectory(dir).setRelativePath(file)
                     .setFilename(file.getName()).setLastUpdate(now);
             Template existingTemplate = getTemplate(fileDescriptor);
             if (existingTemplate != null && !existingTemplate.getFileDescriptor().isModified(file)) {
@@ -212,7 +212,14 @@ public class DirectoryScanner {
             if (search.equals(templateDefinition.getId().trim().toLowerCase())) {
                 return templateDefinition;
             }
+            if (search.equals(templateDefinition.getName().trim().toLowerCase())) {
+                return templateDefinition;
+            }
         }
         return null;
+    }
+
+    public File getDir() {
+        return dir;
     }
 }
