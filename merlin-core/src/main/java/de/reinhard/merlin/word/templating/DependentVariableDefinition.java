@@ -80,7 +80,7 @@ public class DependentVariableDefinition {
     }
 
     @Transient
-    public String getMappingInformation(TemplateContext context) {
+    public String getMappingInformation(TemplateRunContext context) {
         if (dependsOn == null) {
             return "";
         }

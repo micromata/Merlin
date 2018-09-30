@@ -47,9 +47,9 @@ public class TemplateDefinitionExcelWriter extends AbstractExcelWriter {
             // type
             row.createCell().setCellValue(variableDefinition.getTypeAsString());
             // required
-            row.createCell().setCellValue(templateContext.getBooleanAsString(variableDefinition.isRequired()));
+            row.createCell().setCellValue(templateRunContext.getBooleanAsString(variableDefinition.isRequired()));
             // unique
-            row.createCell().setCellValue(templateContext.getBooleanAsString(variableDefinition.isUnique()));
+            row.createCell().setCellValue(templateRunContext.getBooleanAsString(variableDefinition.isUnique()));
             // Allowed values
             String allowedValues;
             if (CollectionUtils.isEmpty(variableDefinition.getAllowedValuesList())) {
@@ -99,7 +99,7 @@ public class TemplateDefinitionExcelWriter extends AbstractExcelWriter {
                         .collect(Collectors.joining(", "));
             }
             row.createCell().setCellValue(mappedValues);
-            row.createCell().setCellValue(variableDefinition.getMappingInformation(templateContext));
+            row.createCell().setCellValue(variableDefinition.getMappingInformation(templateRunContext));
         }
         currentSheet.getPoiSheet().setActiveCell(new CellAddress(3, 0));
     }

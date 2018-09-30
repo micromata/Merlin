@@ -18,7 +18,7 @@ import java.util.Locale;
 /**
  * For defining formats, such as number formats, date formats etc.
  */
-public class TemplateContext {
+public class TemplateRunContext {
     private Logger log = LoggerFactory.getLogger(VariableDefinition.class);
     private static final String DEFAULT_DATE_PATTERN = "dd/MM/yyyy";
 
@@ -28,11 +28,11 @@ public class TemplateContext {
     private String excelDateFormatPattern;
     private I18n i18n;
 
-    public TemplateContext() {
+    public TemplateRunContext() {
         this(Locale.getDefault());
     }
 
-    public TemplateContext(Locale locale) {
+    public TemplateRunContext(Locale locale) {
         dateFormatter = new SimpleDateFormat(DEFAULT_DATE_PATTERN);
         dateFormatters = new DateFormat[]{
                 new SimpleDateFormat("yyyy-MM-dd"),
