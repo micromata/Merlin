@@ -7,6 +7,7 @@ import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.beans.Transient;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -77,6 +78,7 @@ public abstract class AbstractConditional implements Comparable<AbstractConditio
         this.endConditionalExpressionRange = endConditionalExpressionRange;
     }
 
+    @Transient
     public AbstractConditional getParent() {
         return parent;
     }
@@ -97,14 +99,17 @@ public abstract class AbstractConditional implements Comparable<AbstractConditio
         return childConditionals;
     }
 
+    @Transient
     public DocumentRange getConditionalExpressionRange() {
         return conditionalExpressionRange;
     }
 
+    @Transient
     public DocumentRange getEndConditionalExpressionRange() {
         return endConditionalExpressionRange;
     }
 
+    @Transient
     public DocumentRange getRange() {
         if (range == null && endConditionalExpressionRange != null) {
             range = new DocumentRange(conditionalExpressionRange.getStartPosition(), endConditionalExpressionRange.getEndPosition());
