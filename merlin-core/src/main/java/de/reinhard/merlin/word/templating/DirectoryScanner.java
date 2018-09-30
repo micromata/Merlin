@@ -61,7 +61,7 @@ public class DirectoryScanner {
                 continue;
             }
             log.info("Scanning file '" + file.getAbsolutePath() + "'.");
-            FileDescriptor fileDescriptor = new FileDescriptor().setDirectory(dir).setRelativePath(file.getParent())
+            FileDescriptor fileDescriptor = new FileDescriptor().setDirectory(dir).setRelativePath(file)
                     .setFilename(file.getName()).setLastUpdate(now);
             TemplateDefinition existingTemplateDefinition = getTemplateDefinition(fileDescriptor);
             if (existingTemplateDefinition != null && !existingTemplateDefinition.getFileDescriptor().isModified(file)) {
