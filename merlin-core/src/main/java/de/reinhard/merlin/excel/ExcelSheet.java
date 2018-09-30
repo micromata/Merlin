@@ -207,7 +207,7 @@ public class ExcelSheet {
         if (headRow != null) {
             return; // head row already run.
         }
-        log.info("Reading head row of sheet '" + poiSheet.getSheetName() + "'.");
+        log.debug("Reading head row of sheet '" + poiSheet.getSheetName() + "'.");
         int numberOfFoundHeadColumns = 0;
         Iterator<Row> rowIterator = poiSheet.rowIterator();
         Row current = null;
@@ -215,7 +215,7 @@ public class ExcelSheet {
             if (!rowIterator.hasNext()) {
                 break;
             }
-            log.info("Parsing row #" + i + " of sheet '" + poiSheet.getSheetName() + "'.");
+            log.debug("Parsing row #" + i + " of sheet '" + poiSheet.getSheetName() + "'.");
             current = rowIterator.next();
             if (current.getLastCellNum() > columnWithValidationErrorMessages) {
                 columnWithValidationErrorMessages = current.getLastCellNum();
@@ -236,7 +236,7 @@ public class ExcelSheet {
             }
         }
         if (headRow == null || current == null) {
-            log.info("No head row found in sheet '" + getSheetName() + "'.");
+            log.debug("No head row found in sheet '" + getSheetName() + "'.");
             return;
         }
         // Now run all columns for assigning column numbers to column definitions.
