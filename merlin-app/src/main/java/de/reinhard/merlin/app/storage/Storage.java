@@ -69,4 +69,17 @@ public class Storage {
         }
         return templates;
     }
+
+    public Template getTemplate(String canonicalPath) {
+        for (DirectoryScanner directoryScanner : directoryScannerMap.values()) {
+            if (CollectionUtils.isNotEmpty(directoryScanner.getTemplates())) {
+                for (Template template : directoryScanner.getTemplates()) {
+                    if(canonicalPath.equals(template.getFileDescriptor().getCanonicalPath())) {
+                        return template;
+                    }
+                }
+            }
+        }
+        return null;
+    }
 }

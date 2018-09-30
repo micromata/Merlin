@@ -38,6 +38,19 @@ public class TemplatesRest {
     }
 
     @GET
+    @Path("template")
+    @Produces(MediaType.APPLICATION_JSON)
+    /**
+     *
+     * @param prettyPrinter If true then the json output will be in pretty format.
+     * @see JsonUtils#toJson(Object, boolean)
+     */
+    public String getTemplate(@QueryParam("canonicalPath") String canonicalPath, @QueryParam("prettyPrinter") boolean prettyPrinter) {
+        Template template = Storage.getInstance().getTemplate(canonicalPath);
+        return JsonUtils.toJson(template, prettyPrinter);
+    }
+
+    @GET
     @Path("list")
     @Produces(MediaType.APPLICATION_JSON)
     /**
