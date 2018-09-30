@@ -1,7 +1,9 @@
 package de.reinhard.merlin.app.storage;
 
+import de.reinhard.merlin.word.templating.DirectoryScanner;
+import de.reinhard.merlin.word.templating.Template;
 import de.reinhard.merlin.word.templating.TemplateDefinition;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,9 +17,7 @@ public class Storage {
     private Logger log = LoggerFactory.getLogger(Storage.class);
     private static final Storage instance = new Storage();
 
-    private List<TemplateDefinition> templatesList = new ArrayList<>();
-
-    private Map<String, File> templateFilenames = new HashMap<>();
+    private Map<String, DirectoryScanner> directoryScannerMap = new HashMap<>();
 
     public static Storage getInstance() {
         return instance;
@@ -26,35 +26,47 @@ public class Storage {
     private Storage() {
     }
 
-    public void add(TemplateDefinition template, File file) {
-        if (StringUtils.isBlank(template.getId())) {
-            log.error("Can't store template without id: '" + template.getName() + "'.");
-            return;
-        }
-        if (getTemplate(template.getId()) != null) {
-            log.info("Template with id already exist. Overwriting it: '" + template.getId() + "'.");
-        }
-        templatesList.add(template);
-        templateFilenames.put(template.getId(), file);
+    public void add(File directory, boolean recursive) {
+        DirectoryScanner directoryScanner = new DirectoryScanner(directory, recursive);
+        directoryScanner.process();
+        directoryScannerMap.put(directory.getAbsolutePath(), directoryScanner);
     }
 
-    public List<TemplateDefinition> getTemplatesList() {
-        return templatesList;
+    public void add(DirectoryScanner directoryScanner) {
+        directoryScannerMap.put(directoryScanner.getDir().getAbsolutePath(), directoryScanner);
     }
 
-    public TemplateDefinition getTemplate(String id) {
-        if (id == null) {
+    public List<TemplateDefinition> getTemplateDefinitions() {
+        List<TemplateDefinition> templateDefinitions = new ArrayList<>();
+        for (DirectoryScanner directoryScanner : directoryScannerMap.values()) {
+            if (CollectionUtils.isNotEmpty(directoryScanner.getTemplateDefinitions())) {
+                templateDefinitions.addAll(directoryScanner.getTemplateDefinitions());
+            }
+        }
+        return templateDefinitions;
+    }
+
+    public TemplateDefinition getTemplateDefinition(String idOrName) {
+        if (idOrName == null) {
             return null;
         }
-        for (TemplateDefinition templateDefinition : templatesList) {
-            if (id.equals(templateDefinition.getId())) {
-                return templateDefinition;
-            }
-            if (id.equals(templateDefinition.getName().trim())) {
+        for (DirectoryScanner directoryScanner : directoryScannerMap.values()) {
+            TemplateDefinition templateDefinition = directoryScanner.getTemplateDefinition(idOrName);
+            if (templateDefinition != null) {
                 return templateDefinition;
             }
         }
-        log.info("Template with id '" + id + "' not found.");
+        log.info("Template definition with id or name '" + idOrName + "' not found.");
         return null;
+    }
+
+    public List<Template> getTemplates() {
+        List<Template> templates = new ArrayList<>();
+        for (DirectoryScanner directoryScanner : directoryScannerMap.values()) {
+            if (CollectionUtils.isNotEmpty(directoryScanner.getTemplates())) {
+                templates.addAll(directoryScanner.getTemplates());
+            }
+        }
+        return templates;
     }
 }

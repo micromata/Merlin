@@ -51,7 +51,7 @@ public class TemplateRunnerRest {
      */
     public String getConfig(@QueryParam("prettyPrinter") boolean prettyPrinter) {
         TemplateRunnerData data = new TemplateRunnerData();
-        data.setTemplateDefinitionId(Storage.getInstance().getTemplatesList().get(0).getId());
+        data.setTemplateDefinitionId(Storage.getInstance().getTemplateDefinitions().get(0).getId());
         data.setTemplateId("ContractTemplate.docx");
         data.put("Gender", "female");
         data.put("Employee", "Berta Smith");
