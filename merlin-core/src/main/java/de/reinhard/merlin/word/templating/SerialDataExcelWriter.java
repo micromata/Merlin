@@ -10,21 +10,21 @@ import org.slf4j.LoggerFactory;
 public class SerialDataExcelWriter extends AbstractExcelWriter {
     private Logger log = LoggerFactory.getLogger(SerialDataExcelWriter.class);
 
-    private TemplateDefinition template;
+    private TemplateDefinition templateDefinition;
 
-    public ExcelWorkbook writeToWorkbook(TemplateDefinition template) {
-        return writeToWorkbook(template, null);
+    public ExcelWorkbook writeToWorkbook(TemplateDefinition templateDefinition) {
+        return writeToWorkbook(templateDefinition, null);
     }
 
-    public ExcelWorkbook writeToWorkbook(TemplateDefinition template, SerialData serialData) {
-        this.template = template;
+    public ExcelWorkbook writeToWorkbook(TemplateDefinition templateDefinition, SerialData serialData) {
+        this.templateDefinition = templateDefinition;
         super.init();
         createVariablesSheet(serialData);
         createConfigurationSheet();
-        addConfigRow("Name", template.getName(), null);
-        addConfigRow("Description", template.getDescription(), null);
-        addConfigRow("Filename", template.getFilenamePattern(), null);
-        ExcelCell cell = addConfigRow("Id", template.getId(), "merlin.word.templating.please_do_not_modify_id");
+        addConfigRow("Name", templateDefinition.getName(), null);
+        addConfigRow("Description", templateDefinition.getDescription(), null);
+        addConfigRow("Filename", templateDefinition.getFilenamePattern(), null);
+        ExcelCell cell = addConfigRow("Id", templateDefinition.getId(), "merlin.word.templating.please_do_not_modify_id");
         cell.setCellStyle(warningCellStyle);
         currentSheet.autosize();
         return workbook;
@@ -35,7 +35,7 @@ public class SerialDataExcelWriter extends AbstractExcelWriter {
         ExcelRow row = addDescriptionRow("merlin.word.templating.sheet_serial_variables_description", -1, false);
         row = currentSheet.createRow();
         int numberOfColumns = 0;
-        for (VariableDefinition variableDefinition : template.getVariableDefinitions()) {
+        for (VariableDefinition variableDefinition : templateDefinition.getVariableDefinitions()) {
             row.createCells(headRowStyle, variableDefinition.getName());
             numberOfColumns++;
         }
@@ -44,7 +44,7 @@ public class SerialDataExcelWriter extends AbstractExcelWriter {
         if (serialData != null) {
             for (SerialDataEntry entry : serialData.getEntries()) {
                 row = currentSheet.createRow();
-                for (VariableDefinition variableDefinition : template.getVariableDefinitions()) {
+                for (VariableDefinition variableDefinition : templateDefinition.getVariableDefinitions()) {
                     Object valueObject = entry.get(variableDefinition.getName());
                     ExcelCell cell = row.createCell();
                     templateRunContext.setCellValue(workbook, cell.getCell(), valueObject, variableDefinition.getType());
