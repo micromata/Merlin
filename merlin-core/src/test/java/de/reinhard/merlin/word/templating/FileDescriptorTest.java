@@ -74,8 +74,24 @@ public class FileDescriptorTest {
         file = new File("/Users/kai/templates/template.xls");
         fileDescriptor.setRelativePath(file);
         assertEquals("../templates", fileDescriptor.getRelativePath());
-         file = new File("/Users/kai/Documents/template.xls");
+        file = new File("/Users/kai/Documents/template.xls");
         fileDescriptor.setRelativePath(file);
         assertEquals(".", fileDescriptor.getRelativePath());
+    }
+
+    @Test
+    public void canonicalPathTest() {
+        File dir = new File("/Users/kai/Documents");
+        FileDescriptor fileDescriptor = new FileDescriptor();
+        fileDescriptor.setDirectory(dir);
+        File file = new File("/Users/kai/Documents/templates/template.xls");
+        fileDescriptor.setRelativePath(file);
+        assertEquals("/Users/kai/Documents/templates/template.xls", fileDescriptor.getCanonicalPath());
+        file = new File("/Users/kai/Documents/template.xls");
+        fileDescriptor.setRelativePath(file);
+        assertEquals("/Users/kai/Documents/template.xls", fileDescriptor.getCanonicalPath());
+        file = new File("/Users/kai/tmp/template.xls");
+        fileDescriptor.setRelativePath(file);
+        assertEquals("/Users/kai/tmp/template.xls", fileDescriptor.getCanonicalPath());
     }
 }

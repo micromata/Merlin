@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import java.beans.Transient;
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Date;
@@ -44,7 +45,7 @@ public class FileDescriptor {
      * @return this for chaining.
      */
     public FileDescriptor setDirectory(File dir) {
-        directory = dir.getAbsolutePath();
+        directory = getCanonicalPath(dir);
         return this;
     }
 
@@ -63,10 +64,11 @@ public class FileDescriptor {
 
     public FileDescriptor setRelativePath(File file) {
         Path dirPath = Paths.get(directory);
-        Path filePath = Paths.get(file.getAbsolutePath());
+        Path filePath = Paths.get(getCanonicalPath(file));
         Path relPath = dirPath.relativize(filePath);
         Path parent = relPath.getParent();
         this.relativePath = parent != null ? parent.toString() : ".";
+        this.filename = file.getName();
         return this;
     }
 
@@ -92,6 +94,16 @@ public class FileDescriptor {
     public FileDescriptor setLastUpdate(Date lastUpdate) {
         this.lastUpdate = lastUpdate;
         return this;
+    }
+
+    public String getCanonicalPath() {
+        File path= new File(directory, relativePath);
+        File file = new File(path, filename);
+        try {
+            return file.getCanonicalPath();
+        } catch (IOException ex) {
+            return file.getAbsolutePath();
+        }
     }
 
     /**
@@ -153,5 +165,13 @@ public class FileDescriptor {
         tos.append("relativePath", relativePath);
         tos.append("filename", filename);
         return tos.toString();
+    }
+
+    public static String getCanonicalPath(File file) {
+        try {
+            return file.getCanonicalPath();
+        } catch (IOException ex) {
+            return file.getAbsolutePath();
+        }
     }
 }
