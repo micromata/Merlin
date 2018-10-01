@@ -62,6 +62,9 @@ public class TemplatesRest {
         Data data = new Data();
         List<TemplateDefinition> templateDefinitionsList = Storage.getInstance().getTemplateDefinitions();
         List<Template> templates = Storage.getInstance().getTemplates();
+        for (Template template : templates) {
+            template.createDummyTemplateDefinitionIfNotExist();
+        }
         data.setTemplateDefinitions(templateDefinitionsList);
         data.setTemplates(templates);
         return JsonUtils.toJson(data, prettyPrinter);
