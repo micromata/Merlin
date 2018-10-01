@@ -20,6 +20,7 @@ class TemplateListView extends React.Component {
         this.setState({
             isFetching: true,
             failed: false,
+            definitions: undefined,
             templates: undefined
         });
 
@@ -31,27 +32,26 @@ class TemplateListView extends React.Component {
         })
             .then(response => response.json())
             .then(json => {
-                console.log(json);
+                const definitions = json.templateDefinitions.reduce((accumulator, current) => ({
+                    ...accumulator,
+                    [current.refId]: current
+                }), {});
+
+                const templates = json.templates.map(template => {
+                    if (typeof template.templateDefinition === 'object') {
+                        definitions[template.templateDefinition.refId] = template.templateDefinition;
+                        template.templateDefinition = template.templateDefinition.refId;
+                    }
+
+                    return {
+                        templateDefinition: template.templateDefinition,
+                        fileDescriptor: template.fileDescriptor
+                    };
+                });
+
                 this.setState({
                     isFetching: false,
-                    templates: json.templates.map(template => {
-                        let templateDefinition, name;
-
-                        if (typeof template.templateDefinition === 'object') {
-                            templateDefinition = template.templateDefinition;
-                            name = template.fileDescriptor.filename;
-                        } else {
-                            templateDefinition = json.templateDefinitions.filter(definition =>
-                                definition.refId === template.templateDefinition)[0];
-                            name = templateDefinition.name;
-                        }
-
-                        return {
-                            name,
-                            description: templateDefinition.description,
-                            fileDescriptor: template.fileDescriptor
-                        };
-                    })
+                    definitions, templates
                 })
             })
             .catch(() => this.setState({isFetching: false, failed: true}));
@@ -61,8 +61,11 @@ class TemplateListView extends React.Component {
         let content = undefined;
 
         if (this.state.isFetching) {
+
             content = <i>Loading...</i>;
+
         } else if (this.state.failed) {
+
             content = <ErrorAlert
                 title={'Cannot load Templates'}
                 description={'Something went wrong during contacting the rest api.'}
@@ -71,14 +74,20 @@ class TemplateListView extends React.Component {
                     title: 'Try again'
                 }}
             />;
+
         } else if (this.state.templates) {
+
             content = <div>
-                {this.state.templates.map(template => <Template
-                    key={template.name}
-                    {...template}
-                />)}
+                {this.state.templates.map(template => {
+                    const definition = this.state.definitions[template.templateDefinition];
+
+                    return <Template
+                        key={template.fileDescriptor.canonicalPath}
+                        {...definition}
+                    />;
+                })}
             </div>;
-            console.log(this.state.templates);
+
         }
 
         return <div>
