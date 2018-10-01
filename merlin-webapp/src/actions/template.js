@@ -82,6 +82,8 @@ export const runTemplate = (data) => dispatch => {
             return response.blob();
         })
         .then(blob => {
+            dispatch(succeedTemplateRun(data));
+
             const a = document.createElement('a');
             a.style = {
                 display: 'none'
@@ -93,7 +95,8 @@ export const runTemplate = (data) => dispatch => {
             a.click();
             URL.revokeObjectURL(a.href);
             a.remove();
-        });
+        })
+        .catch(error => dispatch(failedTemplateRun(data, error)));
 };
 
 export const listTemplates = () => dispatch => {

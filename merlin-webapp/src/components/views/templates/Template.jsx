@@ -1,8 +1,6 @@
 import React from 'react';
-import {Button, Glyphicon, Modal, Tab, Tabs} from 'react-bootstrap';
+import {Button, ControlLabel, FormControl, FormGroup, Glyphicon, Modal, Tab, Tabs} from 'react-bootstrap';
 import './templateStyle.css';
-import ConfigurationField from '../../general/configuration/Field';
-import ConfigurationFieldLabel from '../../general/configuration/FieldLabel';
 
 class Template extends React.Component {
 
@@ -10,7 +8,11 @@ class Template extends React.Component {
     state = {
         editing: false,
         run: false,
-        runTab: 1
+        runTab: 1,
+        runConfiguration: this.props.variableDefinitions.reduce((accumulator, current) => ({
+            ...accumulator,
+            [current.name]: current.allowedValuesList.length === 0 ? '' : current.allowedValuesList[0]
+        }), {})
     };
 
     handleRunTabSelect = key => {
@@ -50,12 +52,15 @@ class Template extends React.Component {
         this.props.runTemplate({
             templateDefinitionId: this.props.id,
             templateId: this.props.name,
-            variables: {
-                Employee: 'Berta Smith',
-                WeeklyHours: 40,
-                Gender: 'female',
-                NumberOfLeaveDays: 30,
-                Data: 1538303576721
+            variables: this.state.runConfiguration
+        });
+    };
+
+    handleRunVariableChange = (name) => (event) => {
+        this.setState({
+            runConfiguration: {
+                ...this.state.runConfiguration,
+                [name]: event.target.value
             }
         });
     };
@@ -73,61 +78,6 @@ class Template extends React.Component {
                 </span>
             </div>
         </div>
-
-        <Modal
-            show={this.state.editing}
-            onHide={this.closeEditingModal}
-            className={'template-configuration-modal'}
-            bsSize={'large'}
-        >
-            <Modal.Header closeButton>
-                <Modal.Title>{this.props.name} - Edit</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-                {/* TODO ADD updateValue Method */}
-                <ConfigurationField
-                    title={'Name'}
-                    value={this.props.name}
-                    type={'text'}
-                />
-                <ConfigurationField
-                    title={'Description'}
-                    value={this.props.description}
-                    type={'text'}
-                />
-                <ConfigurationField
-                    title={'File Name Pattern'}
-                    value={this.props.filenamePattern}
-                    type={'text'}
-                />
-
-                <ConfigurationFieldLabel title={'Variables:'}/>
-                {this.props.variableDefinitions.map(item => <div
-                    key={item.id}
-                    className={'variable'}
-                >
-                    <ConfigurationField
-                        title={'Name'}
-                        value={item.name}
-                        type={'text'}
-                    />
-                    <ConfigurationField
-                        title={'Options'}
-                        value={{
-                            'Required': item.required,
-                            'Unique': item.unique
-                        }}
-                        type={'checkbox-group'}
-                    />
-                    <ConfigurationField
-                        title={'Allowed Values'}
-                        value={item.allowedValuesList}
-                        type={'list'}
-                    />
-                </div>)}
-
-            </Modal.Body>
-        </Modal>
 
         <Modal
             show={this.state.run}
@@ -148,6 +98,40 @@ class Template extends React.Component {
                         title={'Single'}
                         // TODO SINGLE CONFIGURATION
                     >
+                        <form>
+                            {this.props.variableDefinitions.map(item => {
+
+                                const controlProps = {
+                                    id: `run-template-variable-${item.refId}`,
+                                    placeholder: item.name,
+                                    value: this.state.runConfiguration[item.name],
+                                    onChange: this.handleRunVariableChange(item.name)
+                                };
+
+                                return <FormGroup
+                                    key={`run-${item.refId}`}
+                                >
+                                    <ControlLabel>{item.name}</ControlLabel>
+                                    {item.allowedValuesList.length === 0 ?
+                                        <FormControl
+                                            type={'text'}
+                                            {...controlProps}
+                                        /> :
+                                        <FormControl
+                                            componentClass={'select'}
+                                            {...controlProps}
+                                        >
+                                            {item.allowedValuesList.map(value => <option
+                                                key={`run-template-variable-option-${value}`}
+                                                value={value}
+                                            >
+                                                {value}
+                                            </option>)}
+                                        </FormControl>
+                                    }
+                                </FormGroup>;
+                            })}
+                        </form>
                     </Tab>
                     <Tab
                         eventKey={2}
@@ -170,6 +154,7 @@ class Template extends React.Component {
         this.closeRunModal = this.closeRunModal.bind(this);
         this.handleRunTabSelect = this.handleRunTabSelect.bind(this);
         this.runTemplate = this.runTemplate.bind(this);
+        this.handleRunVariableChange = this.handleRunVariableChange.bind(this);
     }
 }
 
