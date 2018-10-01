@@ -1,5 +1,5 @@
 import React from 'react';
-import {Glyphicon, Modal} from 'react-bootstrap';
+import {Button, Glyphicon, Modal, Tab, Tabs} from 'react-bootstrap';
 import './templateStyle.css';
 import ConfigurationField from '../../general/configuration/Field';
 import ConfigurationFieldLabel from '../../general/configuration/FieldLabel';
@@ -8,19 +8,21 @@ class Template extends React.Component {
 
     // TODO ADD DIRECT URL SUPPORT
     state = {
-        editing: false
+        editing: false,
+        run: false,
+        runTab: 1
     };
 
-    constructor(props) {
-        super(props);
-
-        this.openEditingModal = this.openEditingModal.bind(this);
-        this.closeEditingModal = this.closeEditingModal.bind(this);
-    }
+    handleRunTabSelect = key => {
+        this.setState({
+            runTab: key
+        });
+    };
 
     openEditingModal = () => {
         this.setState({
-            editing: true
+            // TODO CHANGE BACK TO EDITING WHEN EDITING PANE IS NEEDED
+            run: true
         });
     };
 
@@ -29,13 +31,44 @@ class Template extends React.Component {
             editing: false
         });
     };
+    openRunModal = (event) => {
+        if (event) {
+            event.stopPropagation();
+        }
+
+        this.setState({
+            run: true
+        });
+    };
+    closeRunModal = () => {
+        this.setState({
+            run: false
+        });
+    };
+
+    runTemplate = () => {
+        this.props.runTemplate({
+            templateDefinitionId: this.props.id,
+            templateId: this.props.name,
+            variables: {
+                Employee: 'Berta Smith',
+                WeeklyHours: 40,
+                Gender: 'female',
+                NumberOfLeaveDays: 30,
+                Data: 1538303576721
+            }
+        });
+    };
 
     render = () => <div className={'template-container'}>
         <div className={'template'} onClick={this.openEditingModal}>
             <span className={'name'}>{this.props.name}</span>
             <span className={'description'}>{this.props.description}</span>
             <div className={'icons'}>
-                <span className={'play'}>
+                <span
+                    className={'play'}
+                    onClick={this.openRunModal}
+                >
                     <Glyphicon glyph={'play'}/>
                 </span>
             </div>
@@ -45,9 +78,10 @@ class Template extends React.Component {
             show={this.state.editing}
             onHide={this.closeEditingModal}
             className={'template-configuration-modal'}
+            bsSize={'large'}
         >
             <Modal.Header closeButton>
-                <Modal.Title>{this.props.name}</Modal.Title>
+                <Modal.Title>{this.props.name} - Edit</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 {/* TODO ADD updateValue Method */}
@@ -94,7 +128,49 @@ class Template extends React.Component {
 
             </Modal.Body>
         </Modal>
+
+        <Modal
+            show={this.state.run}
+            onHide={this.closeRunModal}
+            bsSize={'large'}
+        >
+            <Modal.Header closeButton>
+                <Modal.Title>{this.props.name} - Run</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <Tabs
+                    activeKey={this.state.runTab}
+                    onSelect={this.handleRunTabSelect}
+                    id={'run-tabs'}
+                >
+                    <Tab
+                        eventKey={1}
+                        title={'Single'}
+                        // TODO SINGLE CONFIGURATION
+                    >
+                    </Tab>
+                    <Tab
+                        eventKey={2}
+                        title={'Bulk'}
+                        disabled
+                        // TODO BULK CONFIGURATION
+                    />
+                </Tabs>
+                <Button onClick={this.runTemplate}>Run</Button>
+            </Modal.Body>
+        </Modal>
     </div>;
+
+    constructor(props) {
+        super(props);
+
+        this.openEditingModal = this.openEditingModal.bind(this);
+        this.closeEditingModal = this.closeEditingModal.bind(this);
+        this.openRunModal = this.openRunModal.bind(this);
+        this.closeRunModal = this.closeRunModal.bind(this);
+        this.handleRunTabSelect = this.handleRunTabSelect.bind(this);
+        this.runTemplate = this.runTemplate.bind(this);
+    }
 }
 
 export default Template;

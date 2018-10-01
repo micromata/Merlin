@@ -1,7 +1,7 @@
 import React from 'react';
 import {PageHeader} from 'react-bootstrap';
 import {connect} from 'react-redux'
-import {listTemplatesIfNeeded} from '../../../actions';
+import {listTemplatesIfNeeded, runTemplate} from '../../../actions';
 import TemplateListFailed from './TemplateListFailed';
 import Template from './Template';
 
@@ -23,6 +23,7 @@ class TemplateListView extends React.Component {
                                 key={key}
                                 id={key}
                                 {...this.props.templates.list[key]}
+                                runTemplate={this.props.runTemplate}
                             />
                         ) : <i>Loading...</i>)
                 }
@@ -36,6 +37,7 @@ const mapStateToProps = state => ({
 });
 
 const actions = {
+    runTemplate,
     listTemplates: listTemplatesIfNeeded
 };
 

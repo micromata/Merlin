@@ -4,7 +4,10 @@ import {
     TEMPLATE_LIST_REQUESTED,
     TEMPLATE_RECEIVED,
     TEMPLATE_REQUEST_FAILED,
-    TEMPLATE_REQUESTED
+    TEMPLATE_REQUESTED,
+    TEMPLATE_RUN_FAILED,
+    TEMPLATE_RUN_REQUESTED,
+    TEMPLATE_RUN_SUCCESS
 } from './types';
 
 const path = 'http://localhost:8042/rest/templates/';
@@ -43,6 +46,21 @@ const failedTemplateRequest = (id, error) => ({
     }
 });
 
+const requestTemplateRun = (data) => ({
+    type: TEMPLATE_RUN_REQUESTED,
+    payload: {...data}
+});
+
+const succeedTemplateRun = (data) => ({
+    type: TEMPLATE_RUN_SUCCESS,
+    payload: {...data}
+});
+
+const failedTemplateRun = (data, error) => ({
+    type: TEMPLATE_RUN_FAILED,
+    payload: {...data, error}
+});
+
 const getHeader = () => ({
     method: 'GET',
     headers: {
@@ -50,10 +68,38 @@ const getHeader = () => ({
     }
 });
 
+export const runTemplate = (data) => dispatch => {
+    dispatch(requestTemplateRun(data));
+
+    return fetch(`${path}run`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+        .then(response => {
+            return response.blob();
+        })
+        .then(blob => {
+            const a = document.createElement('a');
+            a.style = {
+                display: 'none'
+            };
+            a.href = URL.createObjectURL(blob);
+            a.download = `${data.templateId}.xlsx`;
+
+            document.body.appendChild(a);
+            a.click();
+            URL.revokeObjectURL(a.href);
+            a.remove();
+        });
+};
+
 export const listTemplates = () => dispatch => {
     dispatch(requestTemplateList());
 
-    return fetch(`${path}list`, getHeader())
+    return fetch(`${path}definition-list`, getHeader())
         .then(response => response.json())
         .then(json => dispatch(receivedTemplateList(json)))
         .catch(error => dispatch(failedTemplateListRequest(error)));
