@@ -1,7 +1,5 @@
 package de.reinhard.merlin.word.templating;
 
-import de.reinhard.merlin.word.ConditionalType;
-
 public enum VariableType {
     STRING, INT, FLOAT, DATE;
 
