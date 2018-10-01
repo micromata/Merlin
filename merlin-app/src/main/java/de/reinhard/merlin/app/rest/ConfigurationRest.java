@@ -36,4 +36,17 @@ public class ConfigurationRest {
         config.copyFrom(srcConfig);
         configurationHandler.save();
     }
+
+    /**
+     * Resets the settings to default values (deletes all settings).
+     */
+    @GET
+    @Path("reset")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String resetConfig(@QueryParam("IKnowWhatImDoing") boolean securityQuestion) {
+        if (securityQuestion) {
+            ConfigurationHandler.getInstance().removeAllSettings();
+        }
+        return getConfig(false);
+    }
 }

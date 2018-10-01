@@ -22,6 +22,7 @@ class MyConfigForm extends React.Component {
         this.removeDirectoryItem = this.removeDirectoryItem.bind(this);
         this.onSave = this.onSave.bind(this);
         this.onCancel = this.onCancel.bind(this);
+        this.onResetConfiguration = this.onResetConfiguration.bind(this);
     }
 
     componentDidMount() {
@@ -29,7 +30,7 @@ class MyConfigForm extends React.Component {
             method: "GET",
             dataType: "JSON",
             headers: {
-                "Content-Type": "text/plain; charset=utf-8",
+                "Content-Type": "text/plain; charset=utf-8"
             }
         })
             .then((resp) => {
@@ -105,6 +106,19 @@ class MyConfigForm extends React.Component {
         this.setRedirect();
     }
 
+    onResetConfiguration() {
+        if (window.confirm('Are you sure you want to reset all settings? All settings will be deleted on server.')) {
+            fetch(getRestServiceUrl("configuration/reset?IKnowWhatImDoing=true"), {
+                method: "GET",
+                dataType: "JSON",
+                headers: {
+                    "Content-Type": "text/plain; charset=utf-8"
+                }
+            })
+            this.setRedirect();
+        }
+    }
+
     onCancel() {
         this.setRedirect();
     }
@@ -162,6 +176,13 @@ class MyConfigForm extends React.Component {
                                        id="inputPort"
                                        value={this.state.port} name="port" onChange={this.handleTextChange}
                                        placeholder="Enter port"/>
+                            </div>
+                        </div>
+                        <div className="form-group row">
+                            <div className="col-sm-2"></div>
+                            <div className="col-sm-10">
+                                <button type="button" onClick={this.onResetConfiguration} className="btn btn-danger"
+                                        title="Add new Template directory row">Delete all settings</button>
                             </div>
                         </div>
                     </fieldset>

@@ -67,7 +67,7 @@ public class ConfigurationHandler {
         preferences.putInt(WEBSERVER_PORT_PREF, configuration.getPort());
         preferences.put(LANGUAGE_PREF, configuration.getLanguage());
         if (CollectionUtils.isNotEmpty(configuration.getTemplatesDirs())) {
-            String  json = JsonUtils.toJson(configuration.getTemplatesDirs());
+            String json = JsonUtils.toJson(configuration.getTemplatesDirs());
             preferences.put(TEMPLATES_DIRS, json);
         } else {
             preferences.remove(TEMPLATES_DIRS);
@@ -77,5 +77,18 @@ public class ConfigurationHandler {
         } catch (BackingStoreException ex) {
             log.error("Couldn't flush user preferences: " + ex.getMessage(), ex);
         }
+    }
+
+    public void removeAllSettings() {
+        log.warn("Removes all configuration settings from user prefs.");
+        preferences.remove(WEBSERVER_PORT_PREF);
+        preferences.remove(LANGUAGE_PREF);
+        preferences.remove(TEMPLATES_DIRS);
+        try {
+            preferences.flush();
+        } catch (BackingStoreException ex) {
+            log.error("Couldn't flush user preferences: " + ex.getMessage(), ex);
+        }
+        load();
     }
 }
