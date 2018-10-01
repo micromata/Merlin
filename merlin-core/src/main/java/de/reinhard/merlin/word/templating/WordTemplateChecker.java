@@ -21,18 +21,19 @@ public class WordTemplateChecker {
         this.document = document;
         Set<String> variables = document.getVariables();
         template = new Template();
-        template.setConditionals(document.getConditionals());
-        if (template.getConditionals() != null) {
-            for (AbstractConditional conditional : template.getConditionals().getConditionalsSet()) {
+        TemplateStatistics statistics = template.getStatistics();
+        statistics.setConditionals(document.getConditionals());
+        if (statistics.getConditionals() != null) {
+            for (AbstractConditional conditional : statistics.getConditionals().getConditionalsSet()) {
                 variables.add(conditional.getVariable());
             }
         }
-        template.setAllUsedVariables(new ArrayList<>());
-        template.getAllUsedVariables().addAll(variables);
-        template.getUsedVariables().addAll(variables);
-        Collections.sort(template.getAllUsedVariables(), String.CASE_INSENSITIVE_ORDER);
+        statistics.setAllUsedVariables(new ArrayList<>());
+        statistics.getAllUsedVariables().addAll(variables);
+        statistics.getUsedVariables().addAll(variables);
+        Collections.sort(statistics.getAllUsedVariables(), String.CASE_INSENSITIVE_ORDER);
         if (log.isDebugEnabled()) {
-            for (String variable : template.getAllUsedVariables()) {
+            for (String variable : statistics.getAllUsedVariables()) {
                 log.debug("Used variable: " + variable);
             }
         }

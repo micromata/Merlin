@@ -119,7 +119,7 @@ public class DirectoryScanner {
                 continue;
             }
             WordTemplateChecker templateChecker = new WordTemplateChecker(doc);
-            if (CollectionUtils.isEmpty(templateChecker.getTemplate().getAllUsedVariables())) {
+            if (CollectionUtils.isEmpty(templateChecker.getTemplate().getStatistics().getAllUsedVariables())) {
                 log.debug("Skipping Word document: '" + file.getAbsolutePath()
                         + "'. It's seemd to be not a Merlin template. No variables and conditionals found.");
                 continue;
