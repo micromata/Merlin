@@ -22,6 +22,7 @@ errors.
 ### Glossar
 * Templates (or template files) are Word files containing variables and conditionals such as
   > This is an example word content for __${user}__.
+  >
   > __{if fox = "lazy"}__ The __${color}__ fox is lazy.__{endif}__
 
   See [ContractTemplate.docx](https://github.com/kreinhard/merlin/raw/master/examples/ContractTemplate.docx)
@@ -52,6 +53,7 @@ You may run a template with the following settings:
 * Customized variables (gender, name of receiver, etc.)
 * A template file. This template file may contain a reference to an existing template definition:
   > ${template.id = "JZpnpojeSuN5JDqtm9KZ"} (template definition referenced by id)
+  >
   > ${template.name = "ContractTemplate"} (template definition referenced by name)
     
   Template definitions are automatically assigned if they have the same file name (without file extension) as the template
