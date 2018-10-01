@@ -1,5 +1,5 @@
 import React from 'react';
-import {Modal} from 'react-bootstrap';
+import {ControlLabel, FormControl, FormGroup, HelpBlock, Modal} from 'react-bootstrap';
 import './style.css';
 
 class Template extends React.Component {
@@ -42,7 +42,43 @@ class Template extends React.Component {
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <h4>Modal Content follows here</h4>
+                <form>
+                    {this.props.variableDefinitions.map(item => {
+                        let formControl;
+
+                        console.log(item);
+
+                        if (item.allowedValuesList && item.allowedValuesList.length !== 0) {
+                            formControl = <FormControl
+                                componentClass={'select'}
+                            >
+                                {item.allowedValuesList.map(option => <option
+                                    key={`template-run-variable-${item.refId}-select-${option}`}
+                                    value={option}
+                                >
+                                    {option}
+                                </option>)}
+                            </FormControl>
+                        } else {
+                            formControl = <FormControl
+                                type={item.type}
+                            />;
+                        }
+
+                        return <FormGroup
+                            key={`template-run-variable-${item.refId}`}
+                        >
+                            <ControlLabel>
+                                {item.name}
+                            </ControlLabel>
+                            {formControl}
+                            {item.description ?
+                                <HelpBlock>{item.description}</HelpBlock> :
+                                undefined
+                            }
+                        </FormGroup>;
+                    })}
+                </form>
             </Modal.Body>
         </Modal>
     </div>;
