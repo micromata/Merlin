@@ -181,7 +181,6 @@ public class VariableDefinition {
         return this;
     }
 
-    @Transient
     public VariableDefinition setType(String typeString) {
         if (typeString == null) {
             type = null;
