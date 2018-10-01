@@ -34,7 +34,7 @@ class RestServices extends React.Component {
     }
 
     componentDidMount() {
-        fetch(getRestServiceUrl("templates/list"), {
+        fetch(getRestServiceUrl("templates/example-definitions"), {
             method: "GET",
             dataType: "JSON",
             headers: {
@@ -45,13 +45,9 @@ class RestServices extends React.Component {
                 return resp.json()
             })
             .then((data) => {
-                if (data.templateDefinitions[0]) {
-                    this.setState({templateDefinitionId: data.templateDefinitions[0].id});
-                    this.setState({templateDefinitionName: data.templateDefinitions[0].name});
-                }
-                if (data.templates[0]) {
-                    this.setState({templateCanonicalPath: data.templates[0].fileDescriptor.canonicalPath});
-                }
+                this.setState({templateDefinitionId: data.templateDefinitionId});
+                this.setState({templateDefinitionName: data.templateDefinitionName});
+                this.setState({templateCanonicalPath: data.templateCanonicalPath});
             })
             .catch((error) => {
                 console.log(error, "Oups, what's happened?")
@@ -69,7 +65,7 @@ class RestServices extends React.Component {
                     <li><RestUrlLink service='templates/list'/></li>
                     <li><RestUrlLink service='templates/definition-list'/></li>
                     <li><RestUrlLink service={'templates/definition/' + this.state.templateDefinitionId}/> (by id)</li>
-                    <li><RestUrlLink service='templates/definition/Letter-Template'/> (by name)</li>
+                    <li><RestUrlLink service={'templates/definition/' + this.state.templateDefinitionName}/> (by name)</li>
                 </ul>
                 <h4>How to get and run a template:</h4>
                 <ol>

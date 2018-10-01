@@ -1,6 +1,9 @@
 package de.reinhard.merlin.app.rest;
 
 import de.reinhard.merlin.app.json.JsonUtils;
+import de.reinhard.merlin.app.storage.Storage;
+import de.reinhard.merlin.word.templating.Template;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,6 +16,7 @@ import java.util.Date;
 @Path("/templates")
 public class TemplateRunnerRest {
     private Logger log = LoggerFactory.getLogger(FilesServiceRest.class);
+
     @POST
     @Path("run")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
@@ -63,5 +67,52 @@ public class TemplateRunnerRest {
         return json;
     }
 
+    @GET
+    @Path("example-definitions")
+    @Produces(MediaType.APPLICATION_JSON)
+    /**
+     * Only for development purposes in RestServices.jsx.
+     * @return canonicalPath of the first found template with assigned template definition including name and id
+     * of the assigned template definition.
+     */
+    public String getExampleDefinition() {
+        ExampleData data = new ExampleData();
+        boolean found = false;
+        for (Template template : Storage.getInstance().getTemplates()) {
+            if (template.getTemplateDefinition() != null
+                    && StringUtils.isNotBlank(template.getTemplateDefinition().getName())) {
+                // found template with template definition:
+                data.templateCanonicalPath = template.getFileDescriptor().getCanonicalPath();
+                data.templateDefinitionId = template.getTemplateDefinitionId();
+                data.templateDefinitionName = template.getTemplateDefinition().getName();
+                found = true;
+                break;
+            }
+        }
+        if (!found) {
+            data.templateCanonicalPath = "Oups, no template with assigned template definiton found (reset settings)!";
+            data.templateDefinitionName = "No template definition found (reset settings)!";
+            data.templateDefinitionId = "No template definition found (reset settings)!";
+        }
+        String json = JsonUtils.toJson(data, false);
+        return json;
+    }
 
+    public class ExampleData {
+        String templateDefinitionId;
+        String templateDefinitionName;
+        String templateCanonicalPath;
+
+        public String getTemplateDefinitionId() {
+            return templateDefinitionId;
+        }
+
+        public String getTemplateCanonicalPath() {
+            return templateCanonicalPath;
+        }
+
+        public String getTemplateDefinitionName() {
+            return templateDefinitionName;
+        }
+    }
 }
