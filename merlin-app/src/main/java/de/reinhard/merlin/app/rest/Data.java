@@ -1,10 +1,12 @@
 package de.reinhard.merlin.app.rest;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import de.reinhard.merlin.word.templating.Template;
 import de.reinhard.merlin.word.templating.TemplateDefinition;
 
 import java.util.List;
 
+@JsonPropertyOrder({"templateDefinitions", "templates"})
 public class Data {
     private List<TemplateDefinition> templateDefinitions;
     private List<Template> templates;
