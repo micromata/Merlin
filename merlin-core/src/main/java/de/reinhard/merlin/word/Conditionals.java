@@ -1,5 +1,7 @@
 package de.reinhard.merlin.word;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang.builder.ToStringStyle;
 import org.apache.poi.xwpf.usermodel.IBodyElement;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.slf4j.Logger;
@@ -124,5 +126,12 @@ public class Conditionals {
 
     public SortedSet<AbstractConditional> getConditionalsSet() {
         return conditionals;
+    }
+
+    @Override
+    public String toString() {
+        ToStringBuilder tos = new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE);
+        tos.append("conditionals", conditionals);
+        return tos.toString();
     }
 }

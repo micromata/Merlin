@@ -49,7 +49,13 @@ errors.
 ### Running a template
 * You may run a template with the following settings:
   * Customized variables (gender, name of receiver, etc.)
-  * A template file. This template file may contain a reference to an existing template definition.
+  * A template file. This template file may contain a reference to an existing template definition:
+  
+    > ${template.id = "JZpnpojeSuN5JDqtm9KZ"} (template definition referenced by id)
+    > ${template.name = "ContractTemplate"} (template definition referenced by name)
+    
+    Template definitions are automatically assigned if they have the same file name (without file extension) as the template
+     file, e. g. a template named ContractTemplate.docx matches a definition file named ContractTemplate.xlsx.
   * Optional a template definition file containing dependent variables.
 * You may run a template with the following settings:
   * Serial definition file containg variables. The template and template definition file may be specified

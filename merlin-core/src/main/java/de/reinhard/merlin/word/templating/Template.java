@@ -2,6 +2,8 @@ package de.reinhard.merlin.word.templating;
 
 import de.reinhard.merlin.word.Conditionals;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang.builder.ToStringStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,8 +20,7 @@ public class Template {
     private List<String> usedVariables = new ArrayList<>();
     private Conditionals conditionals;
     private TemplateDefinition templateDefinition;
-    private String directory;
-    private String file;
+    private FileDescriptor fileDescriptor;
     private Collection<String> allDefinedVariables; // All variables defined in TemplateDefinition.
     private List<String> allUsedVariables;          // All variables used in the Word template.
     private Collection<String> unusedVariables;     // Variables defined but not used in the Word template.
@@ -37,8 +38,31 @@ public class Template {
         return templateDefinition;
     }
 
-    public void assignTemplateDefinition(TemplateDefinition templateDefinition) {
+    /**
+     * Please use {@link #assignTemplateDefinition(TemplateDefinition)} for updating statistics (unused variables etc.) or
+     * don't forget to call {@link #updateStatistics()}.
+     * @param templateDefinition
+     */
+    public void setTemplateDefinition(TemplateDefinition templateDefinition) {
         this.templateDefinition = templateDefinition;
+    }
+
+    public void assignTemplateDefinition(TemplateDefinition templateDefinition) {
+        setTemplateDefinition(templateDefinition);
+        updateStatistics();
+    }
+
+    /**
+     * Analyzes used variables by this template and compares it to the defined variables in the given templateDefinition.
+     */
+    public void updateStatistics() {
+        if (templateDefinition == null) {
+            log.debug("No templateDefinition given. Can't update statistics. Clearing statistics.");
+            this.allDefinedVariables = null;
+            this.unusedVariables = null;
+            this.undefinedVariables = null;
+            return;
+        }
         this.allDefinedVariables = templateDefinition.getAllDefinedVariableNames();
         if (log.isDebugEnabled()) {
             for (String variable : this.allDefinedVariables) {
@@ -59,20 +83,12 @@ public class Template {
         }
     }
 
-    public String getDirectory() {
-        return directory;
+    public FileDescriptor getFileDescriptor() {
+        return fileDescriptor;
     }
 
-    public void setDirectory(String directory) {
-        this.directory = directory;
-    }
-
-    public String getFile() {
-        return file;
-    }
-
-    public void setFile(String file) {
-        this.file = file;
+    public void setFileDescriptor(FileDescriptor fileDescriptor) {
+        this.fileDescriptor = fileDescriptor;
     }
 
     public Conditionals getConditionals() {
@@ -113,5 +129,20 @@ public class Template {
 
     public void setUndefinedVariables(Collection<String> undefinedVariables) {
         this.undefinedVariables = undefinedVariables;
+    }
+
+    public String getTemplateDefinitionId() {
+        return templateDefinition != null ? templateDefinition.getId() : null;
+    }
+
+    @Override
+    public String toString() {
+        ToStringBuilder tos = new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE);
+        tos.append("allUsedVariables", allUsedVariables);
+        tos.append("usedVariables", usedVariables);
+        tos.append("unusedVariables", unusedVariables);
+        tos.append("undefinedVariables", undefinedVariables);
+        tos.append("conditionals", conditionals);
+        return tos.toString();
     }
 }

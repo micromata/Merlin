@@ -1,6 +1,6 @@
 import React from 'react';
 import {Redirect} from 'react-router-dom'
-import {PageHeader} from 'react-bootstrap';
+import {PageHeader, Collapse} from 'react-bootstrap';
 import DirectoryItemsFieldset from "./DirectoryItemsFieldset";
 import {getRestServiceUrl} from "../../../actions/global";
 
@@ -13,7 +13,8 @@ class MyConfigForm extends React.Component {
             port: 8042,
             language: 'en',
             directoryItems: [],
-            redirect: false
+            redirect: false,
+            expertSettingsOpen: false
         }
         this.handleTextChange = this.handleTextChange.bind(this);
         this.handleCheckboxChange = this.handleCheckboxChange.bind(this);
@@ -130,14 +131,6 @@ class MyConfigForm extends React.Component {
         return (
             <form>
                 <div className="form-group row">
-                    <label className="col-sm-2 col-form-label" htmlFor="inputPort">Port</label>
-                    <div className="col-sm-2">
-                        <input type="number" min="0" max="65535" step="1" className="form-control" id="inputPort"
-                               value={this.state.port} name="port" onChange={this.handleTextChange}
-                               placeholder="Enter port"/>
-                    </div>
-                </div>
-                <div className="form-group row">
                     <label className="col-sm-2 col-form-label" htmlFor="selectLanguage">Language</label>
                     <div className="col-sm-2">
                         <select className="form-control" id="selectLanguage" value={this.state.language} name="language"
@@ -151,6 +144,28 @@ class MyConfigForm extends React.Component {
                                         removeItem={this.removeDirectoryItem}
                                         onDirectoryChange={this.handleDirectoryChange}
                                         onRecursiveFlagChange={this.handleRecursiveFlagChange}/>
+                <div className="form-group row">
+                    <div className="col-sm-2"></div>
+                    <div className="col-sm-10">
+                        <a onClick={() => this.setState({expertSettingsOpen: !this.state.expertSettingsOpen})}>
+                            For experts only
+                        </a>
+                    </div>
+                </div>
+                <Collapse in={this.state.expertSettingsOpen}>
+                    <fieldset className="form-group">
+                        <legend>Expert settings</legend>
+                        <div className="form-group row">
+                            <label className="col-sm-2 col-form-label" htmlFor="inputPort">Port</label>
+                            <div className="col-sm-2">
+                                <input type="number" min="0" max="65535" step="1" className="form-control"
+                                       id="inputPort"
+                                       value={this.state.port} name="port" onChange={this.handleTextChange}
+                                       placeholder="Enter port"/>
+                            </div>
+                        </div>
+                    </fieldset>
+                </Collapse>
                 <div className="form-group row">
                     <div className="col-sm-12">
                         <button type="button" onClick={this.onCancel} className="btn btn-danger"

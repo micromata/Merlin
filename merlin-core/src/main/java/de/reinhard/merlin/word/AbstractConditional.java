@@ -1,10 +1,13 @@
 package de.reinhard.merlin.word;
 
 import org.apache.commons.lang.builder.CompareToBuilder;
+import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang.builder.ToStringStyle;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.beans.Transient;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -75,6 +78,7 @@ public abstract class AbstractConditional implements Comparable<AbstractConditio
         this.endConditionalExpressionRange = endConditionalExpressionRange;
     }
 
+    @Transient
     public AbstractConditional getParent() {
         return parent;
     }
@@ -95,14 +99,17 @@ public abstract class AbstractConditional implements Comparable<AbstractConditio
         return childConditionals;
     }
 
+    @Transient
     public DocumentRange getConditionalExpressionRange() {
         return conditionalExpressionRange;
     }
 
+    @Transient
     public DocumentRange getEndConditionalExpressionRange() {
         return endConditionalExpressionRange;
     }
 
+    @Transient
     public DocumentRange getRange() {
         if (range == null && endConditionalExpressionRange != null) {
             range = new DocumentRange(conditionalExpressionRange.getStartPosition(), endConditionalExpressionRange.getEndPosition());
@@ -126,5 +133,15 @@ public abstract class AbstractConditional implements Comparable<AbstractConditio
     public int compareTo(AbstractConditional o) {
         return new CompareToBuilder()
                 .append(conditionalExpressionRange.getStartPosition(), o.conditionalExpressionRange.getStartPosition()).toComparison();
+    }
+
+    @Override
+    public String toString() {
+        ToStringBuilder tos = new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE);
+        tos.append("conditionalStatement", conditionalStatement);
+        tos.append("variable", variable);
+        tos.append("type", type);
+        tos.append("childConditionals", childConditionals);
+        return tos.toString();
     }
 }

@@ -20,6 +20,7 @@ public class TemplateDefinition {
     private String name;
     private String description;
     private String filenamePattern;
+    private FileDescriptor fileDescriptor;
 
     public TemplateDefinition() {
         this.id = RandomStringUtils.random(20, true, true);
@@ -80,6 +81,9 @@ public class TemplateDefinition {
         return this;
     }
 
+    /**
+     * @return Filename pattern for generating result files. Important e. g. for serial letters.
+     */
     public String getFilenamePattern() {
         return filenamePattern;
     }
@@ -88,6 +92,14 @@ public class TemplateDefinition {
         this.filenamePattern = filenamePattern;
         return this;
 
+    }
+
+    public FileDescriptor getFileDescriptor() {
+        return fileDescriptor;
+    }
+
+    public void setFileDescriptor(FileDescriptor fileDescriptor) {
+        this.fileDescriptor = fileDescriptor;
     }
 
     public List<VariableDefinition> getVariableDefinitions() {

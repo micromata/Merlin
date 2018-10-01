@@ -5,7 +5,7 @@ import java.util.Map;
 
 public class TemplateRunnerData {
     private String templateDefinitionId;
-    private String templateId;
+    private String templateCanonicalPath;
     private Map<String, Object> variables;
 
     public String getTemplateDefinitionId() {
@@ -16,12 +16,12 @@ public class TemplateRunnerData {
         this.templateDefinitionId = templateDefinitionId;
     }
 
-    public String getTemplateId() {
-        return templateId;
+    public String getTemplateCanonicalPath() {
+        return templateCanonicalPath;
     }
 
-    public void setTemplateId(String templateId) {
-        this.templateId = templateId;
+    public void setTemplateCanonicalPath(String templateCanonicalPath) {
+        this.templateCanonicalPath = templateCanonicalPath;
     }
 
     public Map<String, Object> getVariables() {
