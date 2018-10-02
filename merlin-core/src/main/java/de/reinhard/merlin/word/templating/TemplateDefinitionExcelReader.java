@@ -102,7 +102,7 @@ public class TemplateDefinitionExcelReader {
             boolean unique = getStringAsBoolean(PoiHelper.getValueAsString(sheet.getCell(row, uniqueCol)));
             VariableDefinition variable = new VariableDefinition();
             variable.setName(name);
-            variable.setType(typeString);
+            variable.setTypeFromString(typeString);
             variable.setDescription(description);
             variable.setRequired(required);
             variable.setUnique(unique);

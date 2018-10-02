@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.beans.Transient;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -168,6 +167,11 @@ public class VariableDefinition {
         return type;
     }
 
+    public VariableDefinition setType(VariableType type) {
+        this.type = type;
+        return this;
+    }
+
     @Transient
     public String getTypeAsString() {
         if (type == null) {
@@ -176,12 +180,7 @@ public class VariableDefinition {
         return type.toString().toLowerCase();
     }
 
-    public VariableDefinition setType(VariableType type) {
-        this.type = type;
-        return this;
-    }
-
-    public VariableDefinition setType(String typeString) {
+    public VariableDefinition setTypeFromString(String typeString) {
         if (typeString == null) {
             type = null;
         } else {
@@ -193,22 +192,5 @@ public class VariableDefinition {
             }
         }
         return this;
-    }
-
-    private void setType(Object value) {
-        if (value == null) {
-            return; // Nothing to do.
-        }
-        if (value instanceof String) {
-            type = VariableType.STRING;
-        } else if (value instanceof Integer || value instanceof Long) {
-            type = VariableType.INT;
-        } else if (value instanceof Float || value instanceof Double) {
-            type = VariableType.FLOAT;
-        } else if (value instanceof LocalDate) {
-            type = VariableType.DATE;
-        } else {
-            log.error("Variable value of type " + value.getClass().getCanonicalName() + " not yet supported.");
-        }
     }
 }
