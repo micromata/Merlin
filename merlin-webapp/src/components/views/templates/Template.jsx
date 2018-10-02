@@ -1,11 +1,19 @@
 import React from 'react';
-import {ControlLabel, FormControl, FormGroup, HelpBlock, Modal} from 'react-bootstrap';
+import {Button, ControlLabel, FormControl, FormGroup, HelpBlock, Modal} from 'react-bootstrap';
 import './style.css';
+import {getRestServiceUrl} from "../../../actions/global";
+import downloadFile from "../../../utilities/download";
 
 class Template extends React.Component {
 
+    path = getRestServiceUrl('templates');
     state = {
-        showRunModal: false
+        showRunModal: false,
+        runConfiguration: this.props.variableDefinitions.reduce((accumulator, current) => ({
+            ...accumulator,
+            [current.name]: current.allowedValuesList && current.allowedValuesList.length !== 0 ?
+                current.allowedValuesList[0] : ''
+        }), {})
     };
 
     showRunModal = () => {
@@ -18,6 +26,30 @@ class Template extends React.Component {
         this.setState({
             showRunModal: false
         });
+    };
+
+    handleRunConfigurationChange = (name) => (event) => {
+        this.setState({
+            runConfiguration: {
+                ...this.state.runConfiguration,
+                [name]: event.target.value
+            }
+        });
+    };
+
+    runTemplate = () => {
+        fetch(`${this.path}/run`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                templateCanonicalPath: this.props.fileDescriptor.canonicalPath,
+                variables: this.state.runConfiguration
+            })
+        })
+            .then(response => response.blob())
+            .then(blob => downloadFile(blob, this.props.fileDescriptor.filename));
     };
 
     render = () => <div
@@ -45,11 +77,14 @@ class Template extends React.Component {
                 <form>
                     {this.props.variableDefinitions.map(item => {
                         let formControl;
-
-                        console.log(item);
+                        const formControlProps = {
+                            value: this.state.runConfiguration[item.name],
+                            onChange: this.handleRunConfigurationChange(item.name)
+                        };
 
                         if (item.allowedValuesList && item.allowedValuesList.length !== 0) {
                             formControl = <FormControl
+                                {...formControlProps}
                                 componentClass={'select'}
                             >
                                 {item.allowedValuesList.map(option => <option
@@ -61,6 +96,7 @@ class Template extends React.Component {
                             </FormControl>
                         } else {
                             formControl = <FormControl
+                                {...formControlProps}
                                 type={item.type}
                             />;
                         }
@@ -79,6 +115,12 @@ class Template extends React.Component {
                         </FormGroup>;
                     })}
                 </form>
+                <Button
+                    bsStyle={'success'}
+                    onClick={this.runTemplate}
+                >
+                    Run
+                </Button>
             </Modal.Body>
         </Modal>
     </div>;
@@ -88,6 +130,7 @@ class Template extends React.Component {
 
         this.showRunModal = this.showRunModal.bind(this);
         this.closeRunModal = this.closeRunModal.bind(this);
+        this.handleRunConfigurationChange = this.handleRunConfigurationChange.bind(this);
     }
 }
 
