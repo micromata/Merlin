@@ -1,6 +1,7 @@
 import React from 'react';
 import {PageHeader} from 'react-bootstrap';
 import {getRestServiceUrl} from "../../../actions/global";
+import downloadFile from "../../../utilities/download";
 
 class RestUrlLink extends React.Component {
     render() {
@@ -31,6 +32,7 @@ class RestServices extends React.Component {
             templateDefinitionName: '',
             templateCanonicalPath: ''
         }
+        this.onRun = this.onRun.bind(this);
     }
 
     componentDidMount() {
@@ -54,6 +56,35 @@ class RestServices extends React.Component {
             })
     }
 
+    onRun() {
+        fetch(getRestServiceUrl('templates/example?templateCanonicalPath='
+            + this.state.templateCanonicalPath + '&templateDefinitionId='
+            + this.state.templateDefinitionId), {
+            method: "GET",
+            dataType: "JSON",
+            headers: {
+                "Content-Type": "text/plain; charset=utf-8"
+            }
+        })
+            .then((resp) => {
+                return resp.json()
+            })
+            .then((data) => {
+                fetch(getRestServiceUrl("templates/run"), {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                })
+                    .then(response => response.blob())
+                    .then(blob => downloadFile(blob, 'result.doc'));
+            })
+            .catch((error) => {
+                console.log(error, "Oups, what's happened?")
+            })
+    }
+
     render() {
         return (
             <div>
@@ -65,7 +96,8 @@ class RestServices extends React.Component {
                     <li><RestUrlLink service='templates/list'/></li>
                     <li><RestUrlLink service='templates/definition-list'/></li>
                     <li><RestUrlLink service={'templates/definition/' + this.state.templateDefinitionId}/> (by id)</li>
-                    <li><RestUrlLink service={'templates/definition/' + this.state.templateDefinitionName}/> (by name)</li>
+                    <li><RestUrlLink service={'templates/definition/' + this.state.templateDefinitionName}/> (by name)
+                    </li>
                 </ul>
                 <h4>How to get and run a template:</h4>
                 <ol>
@@ -77,10 +109,11 @@ class RestServices extends React.Component {
                                      params={'canonicalPath=' + encodeURIComponent(this.state.templateCanonicalPath)}/>
                     </li>
                     <li>You will receive a template including its template definition if assigned.</li>
-                    <li>Run template with json post parameter for service<br/>
-                        <a href={getRestServiceUrl('templates/example') + '?prettyPrinter=true&templateCanonicalPath='
+                    <li>Run template with <a
+                        href={getRestServiceUrl('templates/example') + '?prettyPrinter=true&templateCanonicalPath='
                         + this.state.templateCanonicalPath + '&templateDefinitionId='
-                        + this.state.templateDefinitionId}>rest/templates/run</a> (links shows post json as an example)
+                        + this.state.templateDefinitionId}>json post parameter</a> for service<br/>
+                        <a onClick={this.onRun}>rest/templates/run</a>
                     </li>
                 </ol>
                 <h3>

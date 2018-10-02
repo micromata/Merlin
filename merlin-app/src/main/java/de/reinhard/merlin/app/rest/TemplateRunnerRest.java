@@ -37,6 +37,9 @@ public class TemplateRunnerRest {
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     public Response runTemplate(String json) {
         TemplateRunnerData data = JsonUtils.fromJson(TemplateRunnerData.class, json);
+        if (data == null) {
+            return get404Response("No valid data json object given. TemplateRunnerData expected.");
+        }
         log.info("Running template: definition=" + data.getTemplateDefinitionId() + ", template=" + data.getTemplateCanonicalPath());
         File file = new File(data.getTemplateCanonicalPath());
         if (!file.exists()) {
@@ -50,7 +53,7 @@ public class TemplateRunnerRest {
         try {
             WordTemplateRunner runner = new WordTemplateRunner(templateDefinition, new WordDocument(file));
             WordDocument result = runner.run(data.getVariables());
-            Response.ResponseBuilder builder = Response.ok(result);
+            Response.ResponseBuilder builder = Response.ok(result.getAsByteArrayOutputStream().toByteArray());
             builder.header("Content-Disposition", "attachment; filename=" + file.getName());
             response = builder.build();
             log.info("Downloading file '" + file + "', length: " + file.length());
