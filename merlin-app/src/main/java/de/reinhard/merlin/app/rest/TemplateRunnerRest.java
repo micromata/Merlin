@@ -52,14 +52,15 @@ public class TemplateRunnerRest {
         try {
             WordTemplateRunner runner = new WordTemplateRunner(templateDefinition, new WordDocument(file));
             WordDocument result = runner.run(data.getVariables());
+            String filename = runner.createFilename(file.getName(), data.getVariables());
             //ZipUtil zipUtil = new ZipUtil("result.zip");
             //zipUtil.addZipEntry("result/" + file.getName(), result.getAsByteArrayOutputStream().toByteArray());
             Response.ResponseBuilder builder = Response.ok(result.getAsByteArrayOutputStream().toByteArray());
-            builder.header("Content-Disposition", "attachment; filename=" + file.getName());
+            builder.header("Content-Disposition", "attachment; filename=" + filename);
             // Needed to get the Content-Disposition by client:
             builder.header("Access-Control-Expose-Headers", "Content-Disposition");
             response = builder.build();
-            log.info("Downloading file '" + file + "', length: " + file.length());
+            log.info("Downloading file '" + filename + "', length: " + file.length());
             return response;
         } catch (Exception ex) {
             String errorMsg = "Error while try to running template '" + data.getTemplateCanonicalPath() + "'.";
