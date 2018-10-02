@@ -1,5 +1,5 @@
 import React from 'react'
-import {PageHeader} from 'react-bootstrap';
+import {Glyphicon, PageHeader} from 'react-bootstrap';
 import {getRestServiceUrl} from "../../../actions/global";
 import ErrorAlert from "../../general/ErrorAlert";
 import Template from "./Template";
@@ -78,6 +78,12 @@ class TemplateListView extends React.Component {
         } else if (this.state.templates) {
 
             content = <div>
+                <div
+                    className={'template-list-refresh'}
+                    onClick={this.fetchTemplates}
+                >
+                    <Glyphicon glyph={'refresh'}/> Refresh
+                </div>
                 {this.state.templates.map(template => {
                     const definition = this.state.definitions[template.templateDefinition];
 

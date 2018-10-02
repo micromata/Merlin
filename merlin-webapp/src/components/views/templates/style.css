@@ -1,3 +1,13 @@
+div.template-list-refresh {
+    cursor: pointer;
+    color: #555;
+    text-align: right;
+}
+
+div.template-list-refresh:hover {
+    color: #337ab7;
+}
+
 div.template-container {
     display: inline-block;
     width: 100%;
