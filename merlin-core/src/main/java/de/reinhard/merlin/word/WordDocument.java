@@ -1,6 +1,7 @@
 package de.reinhard.merlin.word;
 
 import de.reinhard.merlin.word.templating.TemplateDefinitionReference;
+import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.openxml4j.opc.OPCPackage;
 import org.apache.poi.xwpf.usermodel.*;
@@ -120,6 +121,18 @@ public class WordDocument {
         }
         return variables;
     }
+
+    public org.apache.commons.io.output.ByteArrayOutputStream getAsByteArrayOutputStream() {
+        org.apache.commons.io.output.ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        try {
+            document.write(bos);
+        } catch (IOException ex) {
+            log.error(ex.getMessage(), ex);
+            throw new RuntimeException(ex);
+        }
+        return bos;
+    }
+
 
     private void replaceVariables(Map<String, Object> variables) {
         for (IBodyElement element : document.getBodyElements()) {
