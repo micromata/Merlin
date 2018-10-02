@@ -81,7 +81,7 @@ public class Template {
         templateDefinition.setName(this.getFileDescriptor().getFilename());
         if (CollectionUtils.isNotEmpty(statistics.getUsedVariables())) {
             for (String variable : statistics.getUsedVariables()) {
-                if (templateDefinition.getVariableDefinition(variable) == null) {
+                if (templateDefinition.getVariableDefinition(variable, false) == null) {
                     // Not yet registered.
                     templateDefinition.add(new VariableDefinition(VariableType.STRING, variable));
                 }

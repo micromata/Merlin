@@ -119,6 +119,15 @@ public class TemplateDefinition {
     }
 
     public VariableDefinition getVariableDefinition(String variableName) {
+        return getVariableDefinition(variableName, true);
+    }
+
+    /**
+     * @param variableName
+     * @param logErrors    If true and a variable definition isn't found, an error message will be logged. Default is false.
+     * @return
+     */
+    public VariableDefinition getVariableDefinition(String variableName, boolean logErrors) {
         if (variableDefinitions == null) {
             log.error("Variable named '" + variableName + "' not found in template '" + getName() + "'. No variables defined.");
             return null;
@@ -128,7 +137,9 @@ public class TemplateDefinition {
                 return variableDefinition;
             }
         }
-        log.error("Variable named '" + variableName + "' not found in template '" + getName() + "'.");
+        if (logErrors) {
+            log.error("Variable named '" + variableName + "' not found in template '" + getName() + "'.");
+        }
         return null;
     }
 
