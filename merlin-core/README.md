@@ -25,13 +25,13 @@ errors.
   >
   > __{if fox = "lazy"}__ The __${color}__ fox is lazy.__{endif}__
 
-  See [ContractTemplate.docx](https://github.com/kreinhard/merlin/raw/master/examples/ContractTemplate.docx)
-  in the [examples](https://github.com/kreinhard/merlin/tree/master/examples) directory.
+  See [ContractTemplate.docx](https://github.com/kreinhard/merlin/raw/master/examples/templates/ContractTemplate.docx)
+  in the [examples](https://github.com/kreinhard/merlin/tree/master/examples/templates) directory.
 * Template definitions (optional) describes variables and also so called dependent variables.
   An template can be assigned to a template definition for more functionality.
 
-  See [ContractDefinition.xlsx](https://github.com/kreinhard/merlin/raw/master/examples/ContractDefinition.xlsx)
-  in the [examples](https://github.com/kreinhard/merlin/tree/master/examples) directory.
+  See [ContractDefinition.xlsx](https://github.com/kreinhard/merlin/raw/master/examples/templates/ContractDefinition.xlsx)
+  in the [examples](https://github.com/kreinhard/merlin/tree/master/examples/templates) directory.
 * Variables are customizable by the end-user running a template process. All variables in
   the template file will be replaced by the customized values and all conditionals will be executed
   by applying the variables.
@@ -43,8 +43,8 @@ errors.
 * Serial letters: You may run templates multiple times for different sets of variables (such as letters for
   many receivers.) The variables are given in a table, each set of variables for a single run per row.
   
-  See [Contract-Serial.xlsx](https://github.com/kreinhard/merlin/raw/master/examples/Contract-Serial.xlsx)
-  in the [examples](https://github.com/kreinhard/merlin/tree/master/examples) directory.
+  See [Contract-Serial.xlsx](https://github.com/kreinhard/merlin/raw/master/examples/templates/Contract-Serial.xlsx)
+  in the [examples](https://github.com/kreinhard/merlin/tree/master/examples/templates) directory.
 
 
 ### Running a template

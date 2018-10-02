@@ -12,7 +12,7 @@ import java.io.File;
 public class TestData {
     private static Logger log = LoggerFactory.getLogger(TestData.class);
 
-    private static final String TEST_TEMPLATES_DIR = "merlin-app/test/templates/";
+    private static final String TEST_TEMPLATES_DIR = "examples/templates";
 
     public static void create(File parent) {
         File dir = new File(parent, TEST_TEMPLATES_DIR);
