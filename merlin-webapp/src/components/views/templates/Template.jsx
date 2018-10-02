@@ -1,9 +1,9 @@
 import React from 'react';
 import {Button, ControlLabel, FormControl, FormGroup, HelpBlock, Modal} from 'react-bootstrap';
 import './style.css';
-import {getRestServiceUrl} from "../../../actions/global";
-import downloadFile from "../../../utilities/download";
-import DropArea from "../../general/droparea/Component";
+import {getRestServiceUrl} from '../../../actions/global';
+import downloadFile from '../../../utilities/download';
+import DropArea from '../../general/droparea/Component';
 
 class Template extends React.Component {
 
