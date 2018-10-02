@@ -5,7 +5,6 @@ import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.util.Map;
 
 /**
@@ -53,13 +52,7 @@ public class WordTemplateRunner {
     }
 
     public WordDocument run(Map<String, Object> variables) {
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        try {
-            srcDocument.getDocument().write(bos);
-        } catch (IOException ex) {
-            log.error(ex.getMessage(), ex);
-            throw new RuntimeException(ex);
-        }
+        ByteArrayOutputStream bos = srcDocument.getAsByteArrayOutputStream();
         WordDocument newDocument = new WordDocument(bos.toInputStream());
         newDocument.setFilename(srcDocument.getFilename());
         if (templateDefinition != null && templateDefinition.getDependentVariableDefinitions() != null) {
