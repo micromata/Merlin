@@ -80,7 +80,7 @@ class RestServices extends React.Component {
                         this.setState({downloadFilename: filename});
                         return response.blob();
                     })
-                    .then(blob => downloadFile(blob, this.state.downloadFilename));//getISOTimestamp(new Date()) + '_result.zip'));
+                    .then(blob => downloadFile(blob, this.state.downloadFilename));
             })
             .catch((error) => {
                 console.log(error, "Oups, what's happened?")
