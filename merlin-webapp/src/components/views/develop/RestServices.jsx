@@ -31,7 +31,6 @@ class RestServices extends React.Component {
             templateDefinitionId: '',
             templateDefinitionName: '',
             templateCanonicalPath: '',
-            downloadFilename : ''
         }
         this.onRun = this.onRun.bind(this);
     }
@@ -48,16 +47,28 @@ class RestServices extends React.Component {
                 return resp.json()
             })
             .then((data) => {
-                this.setState({templateDefinitionId: data.templateDefinitionId});
-                this.setState({templateDefinitionName: data.templateDefinitionName});
-                this.setState({templateCanonicalPath: data.templateCanonicalPath});
-            })
-            .catch((error) => {
-                console.log(error, "Oups, what's happened?")
-            })
+                    this.setState({
+                        templateDefinitionId: data.templateDefinitionId,
+                        templateDefinitionName: data.templateDefinitionName,
+                        templateCanonicalPath: data.templateCanonicalPath
+                    });
+                }
+            )
+            .catch(
+                (
+                    error
+                ) => {
+                    console
+                        .log(error,
+
+                            "Oups, what's happened?"
+                        )
+                }
+            )
     }
 
     onRun() {
+        let filename;
         fetch(getRestServiceUrl('templates/example?templateCanonicalPath='
             + this.state.templateCanonicalPath + '&templateDefinitionId='
             + this.state.templateDefinitionId), {
@@ -76,11 +87,11 @@ class RestServices extends React.Component {
                     body: JSON.stringify(data)
                 })
                     .then(response => {
-                        var filename = getResponseHeaderFilename(response.headers.get("Content-Disposition"));
-                        this.setState({downloadFilename: filename});
+                        filename = getResponseHeaderFilename(response.headers.get("Content-Disposition"));
+                        //this.setState({downloadFilename: filename});
                         return response.blob();
                     })
-                    .then(blob => downloadFile(blob, this.state.downloadFilename));
+                    .then(blob => downloadFile(blob, filename));
             })
             .catch((error) => {
                 console.log(error, "Oups, what's happened?")
