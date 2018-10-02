@@ -30,7 +30,7 @@ errors.
 * Template definitions (optional) describes variables and also so called dependent variables.
   An template can be assigned to a template definition for more functionality.
 
-  See [ContractTemplate.xlsx](https://github.com/kreinhard/merlin/raw/master/examples/templates/ContractDefinition.xlsx)
+  See [ContractTemplate.xlsx](https://github.com/kreinhard/merlin/raw/master/examples/templates/ContractTemplate.xlsx)
   in the [examples](https://github.com/kreinhard/merlin/tree/master/examples/templates) directory.
 * Variables are customizable by the end-user running a template process. All variables in
   the template file will be replaced by the customized values and all conditionals will be executed
