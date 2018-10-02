@@ -3,6 +3,7 @@ import {Button, ControlLabel, FormControl, FormGroup, HelpBlock, Modal} from 're
 import './style.css';
 import {getRestServiceUrl} from "../../../actions/global";
 import downloadFile from "../../../utilities/download";
+import DropArea from "../../general/droparea/Component";
 
 class Template extends React.Component {
 
@@ -52,6 +53,10 @@ class Template extends React.Component {
             .then(blob => downloadFile(blob, this.props.fileDescriptor.filename));
     };
 
+    runSerialTemplate = (file) => {
+        // TODO CALL REST URL
+    };
+
     render = () => <div
         className={'template-container'}
     >
@@ -74,6 +79,10 @@ class Template extends React.Component {
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
+                <DropArea
+                    upload={this.runSerialTemplate}
+                />
+                <br/>
                 <form>
                     {this.props.variableDefinitions.map(item => {
                         let formControl;
@@ -131,6 +140,8 @@ class Template extends React.Component {
         this.showRunModal = this.showRunModal.bind(this);
         this.closeRunModal = this.closeRunModal.bind(this);
         this.handleRunConfigurationChange = this.handleRunConfigurationChange.bind(this);
+        this.runTemplate = this.runTemplate.bind(this);
+        this.runSerialTemplate = this.runSerialTemplate.bind(this);
     }
 }
 
