@@ -57,6 +57,8 @@ See the examples folder with the template file ```Contract-template.docx``` and 
 Merlin will create a Word document for each row.
 This feature is under construction.
 
+[Read more and see examples](./merlin-core)
+
 ## Merlin desktop app
 The Merlin desktop app is a standalone app which contains an embedded web server and a modern React single page app.
 Simply press the Start button to open the merlin app in your standard browser.
