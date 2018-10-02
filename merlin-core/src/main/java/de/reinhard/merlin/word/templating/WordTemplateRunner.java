@@ -17,7 +17,7 @@ public class WordTemplateRunner {
     private WordDocument srcDocument;
 
     /**
-     * @param templateDefinition Bind this Template to this Word document. Any template definition read inside the
+     * @param templateDefinition Bind this Template definition to this Word document. Any template definition read inside the
      *                           Word document will be ignored.
      * @param document
      */
@@ -53,10 +53,6 @@ public class WordTemplateRunner {
     }
 
     public WordDocument run(Map<String, Object> variables) {
-        if (templateDefinition == null) {
-            log.error("No TemplateDefinition given. Can't process Word document.");
-            return srcDocument;
-        }
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         try {
             srcDocument.getDocument().write(bos);
@@ -66,7 +62,7 @@ public class WordTemplateRunner {
         }
         WordDocument newDocument = new WordDocument(bos.toInputStream());
         newDocument.setFilename(srcDocument.getFilename());
-        if (templateDefinition.getDependentVariableDefinitions() != null) {
+        if (templateDefinition != null && templateDefinition.getDependentVariableDefinitions() != null) {
             for (DependentVariableDefinition depVar : templateDefinition.getDependentVariableDefinitions()) {
                 variables.put(depVar.getName(), depVar.getMappedValue(variables));
             }
