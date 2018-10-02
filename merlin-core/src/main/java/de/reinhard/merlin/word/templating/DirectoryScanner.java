@@ -77,6 +77,10 @@ public class DirectoryScanner {
             }
             TemplateDefinitionExcelReader templateReader = new TemplateDefinitionExcelReader();
             TemplateDefinition templateDefinition = templateReader.readFromWorkbook(workbook);
+            if (templateDefinition == null) {
+                log.info("Skipping file '" + file.getPath() + "', no template definition (OK).");
+                continue;
+            }
             templateDefinition.setFileDescriptor(fileDescriptor);
             if (!templateReader.isValidTemplate()) {
                 log.info("Skipping '" + file.getAbsolutePath() + "'. It's not a valid Merlin template file.");
