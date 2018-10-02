@@ -14,7 +14,6 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.File;
-import java.util.Date;
 
 @Path("/templates")
 public class TemplateRunnerRest {
@@ -85,7 +84,8 @@ public class TemplateRunnerRest {
         data.setTemplateCanonicalPath(templateCanonicalPath);
         data.put("Gender", "female");
         data.put("Employee", "Berta Smith");
-        data.put("Date", new Date());
+        data.put("Date", "2018/01/01");
+        data.put("BeginDate", "2018/11/01");
         data.put("WeeklyHours", 40);
         data.put("NumberOfLeaveDays", 30);
         String json = JsonUtils.toJson(data, prettyPrinter);
