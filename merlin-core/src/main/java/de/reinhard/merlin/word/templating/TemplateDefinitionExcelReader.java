@@ -4,7 +4,7 @@ import de.reinhard.merlin.I18n;
 import de.reinhard.merlin.csv.CSVStringUtils;
 import de.reinhard.merlin.data.PropertiesStorage;
 import de.reinhard.merlin.excel.*;
-import de.reinhard.merlin.word.RunsProcessor;
+import de.reinhard.merlin.utils.ReplaceUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.ss.usermodel.Row;
 import org.slf4j.Logger;
@@ -75,7 +75,7 @@ public class TemplateDefinitionExcelReader {
             return;
         }
         ExcelColumnDef variableCol = sheet.registerColumn("Variable",
-                new ExcelColumnPatternValidator(RunsProcessor.IDENTIFIER_REGEXP).setRequired().setUnique());
+                new ExcelColumnPatternValidator(ReplaceUtils.IDENTIFIER_REGEXP).setRequired().setUnique());
         ExcelColumnDef descriptionCol = sheet.registerColumn("Description");
         ExcelColumnDef requiredCol = sheet.registerColumn("required");
         ExcelColumnDef uniqueCol = sheet.registerColumn("unique");
@@ -124,7 +124,7 @@ public class TemplateDefinitionExcelReader {
             return;
         }
         ExcelColumnDef variableCol = sheet.registerColumn("Variable",
-                new ExcelColumnPatternValidator(RunsProcessor.IDENTIFIER_REGEXP).setRequired().setUnique());
+                new ExcelColumnPatternValidator(ReplaceUtils.IDENTIFIER_REGEXP).setRequired().setUnique());
         ExcelColumnDef dependsOnCol = sheet.registerColumn("Depends on variable");
         ExcelColumnDef mappingCol = sheet.registerColumn("Mapping values");
         sheet.analyze(true);

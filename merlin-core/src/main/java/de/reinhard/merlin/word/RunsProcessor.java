@@ -1,6 +1,8 @@
 package de.reinhard.merlin.word;
 
 import de.reinhard.merlin.csv.CSVStringUtils;
+import de.reinhard.merlin.utils.ReplaceEntry;
+import de.reinhard.merlin.utils.ReplaceUtils;
 import de.reinhard.merlin.word.templating.TemplateDefinitionReference;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
@@ -17,10 +19,8 @@ import java.util.regex.Pattern;
  */
 public class RunsProcessor {
     private static Logger log = LoggerFactory.getLogger(RunsProcessor.class);
-    public static final String IDENTIFIER_REGEXP = "[a-zA-Z_][a-zA-Z\\d_]*";
-    static final Pattern defaultVariablePattern = Pattern.compile("\\$\\{\\s*(" + IDENTIFIER_REGEXP + ")\\s*\\}");
     // {template.id="JZpnpojeSuN5JDqtm9KZ"} or {template.name="Letter"}:
-    static final Pattern templateDefinitionReferencePattern = Pattern.compile("\\{\\s*template\\.(id?|name?)\\s*=\\s*([^\\}]*)\\s*\\}");
+    static final Pattern TEMPLATE_DEFINITION_REFERENCE_PATTERN = Pattern.compile("\\{\\s*template\\.(id?|name?)\\s*=\\s*([^\\}]*)\\s*\\}");
     private int[] runSizes;
     private Pattern variablePattern;
     private XWPFParagraph paragraph;
@@ -41,7 +41,7 @@ public class RunsProcessor {
      */
     RunsProcessor(List<XWPFRun> runs) {
         this.runs = runs;
-        this.variablePattern = defaultVariablePattern;
+        this.variablePattern = ReplaceUtils.VARIABLE_PATTERN;
     }
 
     /**
@@ -55,20 +55,8 @@ public class RunsProcessor {
         replaceEntries = new ArrayList<>();
         String runsText = getText();
         removeTemplateReference();
-        Matcher matcher = variablePattern.matcher(runsText);
         //log.debug("Start pos: " + lastPos);
-        while (matcher.find()) {
-            String variableName = matcher.group(1);
-            Object objectValue = variables.get(variableName);
-            if (objectValue == null) {
-                continue; // Variable not found. Ignore this finding.
-            }
-            String value = objectValue.toString();
-            int start = matcher.start();
-            int end = matcher.end();
-            replaceEntries.add(new ReplaceEntry(start, end, value));
-        }
-        Collections.sort(replaceEntries, Collections.reverseOrder());
+        ReplaceUtils.createReplaceEntries(runsText, replaceEntries, variables);
         for (ReplaceEntry entry : replaceEntries) {
             DocumentPosition startPos = getRunIdxAndPosition(-1, entry.start);
             replaceText(startPos, getRunIdxAndPosition(-1, entry.end - 1), entry.newText);
@@ -79,7 +67,7 @@ public class RunsProcessor {
      * Removes any occurence of {template.id = "..."} or { template.name = "..." }.
      */
     private void removeTemplateReference() {
-        Matcher matcher = templateDefinitionReferencePattern.matcher(runsText);
+        Matcher matcher = TEMPLATE_DEFINITION_REFERENCE_PATTERN.matcher(runsText);
         while (matcher.find()) {
             int start = matcher.start();
             int end = matcher.end();
@@ -104,7 +92,7 @@ public class RunsProcessor {
             return null;
         }
         String runsText = getText();
-        Matcher matcher = templateDefinitionReferencePattern.matcher(runsText);
+        Matcher matcher = TEMPLATE_DEFINITION_REFERENCE_PATTERN.matcher(runsText);
         if (matcher.find()) {
             String variable = matcher.group(1);
             String quotedValue = matcher.group(2);
@@ -142,7 +130,7 @@ public class RunsProcessor {
         text = firstRun.getText(0);
         StringBuilder sb = new StringBuilder();
         sb.append(text.substring(0, startPos.getRunCharAt())).append(newValue);
-        if (startPos.getRunIndex() == endPos.getRunIndex()) { // Variable substitution in one signle run.
+        if (startPos.getRunIndex() == endPos.getRunIndex()) { // Variable substitution in one single run.
             if (endPos.getRunCharAt() + 1 < text.length()) {
                 // Append the tail after ${var}:
                 sb.append(text.substring(endPos.getRunCharAt() + 1));
@@ -221,14 +209,6 @@ public class RunsProcessor {
         // if (log.isDebugEnabled()) { log.debug(text); }
     }
 
-    public Pattern getVariablePattern() {
-        return variablePattern;
-    }
-
-    public void setVariablePattern(Pattern variablePattern) {
-        this.variablePattern = variablePattern;
-    }
-
     private void logDebugRuns(String prefix) {
         int i = 0;
         StringBuilder sb = new StringBuilder();
@@ -236,27 +216,5 @@ public class RunsProcessor {
             sb.append(i++).append("=[").append(run.getText(0)).append("]");
         }
         log.debug(prefix + sb.toString());
-    }
-
-    private class ReplaceEntry implements Comparable<ReplaceEntry> {
-        int start;
-        int end;
-        String newText;
-
-        ReplaceEntry(int start, int end, String newText) {
-            this.start = start;
-            this.end = end;
-            this.newText = newText;
-        }
-
-        @Override
-        public int compareTo(ReplaceEntry o) {
-            if (start == o.start) {
-                return 0;
-            } else if (start < o.start) {
-                return -1;
-            }
-            return 1;
-        }
     }
 }

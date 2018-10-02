@@ -1,5 +1,6 @@
 package de.reinhard.merlin.word;
 
+import de.reinhard.merlin.utils.ReplaceUtils;
 import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
@@ -26,7 +27,7 @@ public abstract class AbstractConditional implements Comparable<AbstractConditio
     protected String variable;
     protected ConditionalType type;
 
-    static Pattern beginIfPattern = Pattern.compile("\\{if\\s+(" + RunsProcessor.IDENTIFIER_REGEXP + ")\\s*(!?=|!?\\s*in|<=?|>=?)\\s*([^\\}]*)\\s*\\}");
+    static Pattern beginIfPattern = Pattern.compile("\\{if\\s+(" + ReplaceUtils.IDENTIFIER_REGEXP + ")\\s*(!?=|!?\\s*in|<=?|>=?)\\s*([^\\}]*)\\s*\\}");
     static Pattern notInComparatorPattern = Pattern.compile("!?\\s*in");
     static Pattern endIfPattern = Pattern.compile("\\{endif\\}");
 

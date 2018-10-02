@@ -1,12 +1,16 @@
 package de.reinhard.merlin.word;
 
+import de.reinhard.merlin.utils.ReplaceUtils;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -42,7 +46,7 @@ public class WordDocumentTest {
     }
 
     private void assertVariablePatternMatch(boolean expected, String str) {
-        Matcher matcher = RunsProcessor.defaultVariablePattern.matcher(str);
+        Matcher matcher = ReplaceUtils.VARIABLE_PATTERN.matcher(str);
         assertEquals(expected, matcher.find());
     }
 

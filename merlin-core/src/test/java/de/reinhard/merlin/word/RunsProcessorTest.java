@@ -26,7 +26,7 @@ public class RunsProcessorTest {
     }
 
     private void assertMatcher(String str, String variable, String quotedValue) {
-        Matcher matcher = RunsProcessor.templateDefinitionReferencePattern.matcher(str);
+        Matcher matcher = RunsProcessor.TEMPLATE_DEFINITION_REFERENCE_PATTERN.matcher(str);
         if (matcher.find()) {
             assertEquals(variable, matcher.group(1));
             assertEquals(quotedValue, matcher.group(2));
