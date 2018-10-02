@@ -44,6 +44,7 @@ class TemplateListView extends React.Component {
                     }
 
                     return {
+                        templateDefinitionId: template.templateDefinitionId,
                         templateDefinition: template.templateDefinition,
                         fileDescriptor: template.fileDescriptor
                     };
@@ -89,6 +90,8 @@ class TemplateListView extends React.Component {
 
                     return <Template
                         key={template.fileDescriptor.canonicalPath}
+                        templateDefinitionId={template.templateDefinitionId}
+                        canonicalPath={template.fileDescriptor.canonicalPath}
                         {...definition}
                     />;
                 })}

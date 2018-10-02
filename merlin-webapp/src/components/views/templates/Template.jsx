@@ -1,7 +1,7 @@
 import React from 'react';
 import {Button, ControlLabel, FormControl, FormGroup, HelpBlock, Modal} from 'react-bootstrap';
 import './style.css';
-import {getRestServiceUrl} from '../../../actions/global';
+import {getResponseHeaderFilename, getRestServiceUrl} from '../../../actions/global';
 import downloadFile from '../../../utilities/download';
 import DropArea from '../../general/droparea/Component';
 
@@ -39,18 +39,28 @@ class Template extends React.Component {
     };
 
     runTemplate = () => {
+        let filename;
+
         fetch(`${this.path}/run`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                templateCanonicalPath: this.props.fileDescriptor.canonicalPath,
+                templateDefinitionId: this.props.templateDefinitionId,
+                templateCanonicalPath: this.props.canonicalPath,
                 variables: this.state.runConfiguration
             })
         })
-            .then(response => response.blob())
-            .then(blob => downloadFile(blob, this.props.fileDescriptor.filename));
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(response.statusText);
+                }
+
+                filename = getResponseHeaderFilename(response.headers.get('Content-Disposition'));
+                return response.blob();
+            })
+            .then(blob => downloadFile(blob, filename));
     };
 
     runSerialTemplate = (file) => {
