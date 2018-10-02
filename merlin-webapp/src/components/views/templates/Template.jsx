@@ -57,82 +57,111 @@ class Template extends React.Component {
         // TODO CALL REST URL
     };
 
-    render = () => <div
-        className={'template-container'}
-    >
-        <div
-            className={'template'}
-            onClick={this.showRunModal}
-        >
-            <span className={'template-name'}>{this.props.name}</span>
-            <span className={'template-description'}>{this.props.description}</span>
-            <span className={'hint'}>Click to run.</span>
-        </div>
+    render = () => {
+        let valid = true;
 
-        <Modal
-            show={this.state.showRunModal}
-            onHide={this.closeRunModal}
-        >
-            <Modal.Header>
-                <Modal.Title>
-                    Run {this.props.name}
-                </Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-                <DropArea
-                    upload={this.runSerialTemplate}
-                />
-                <br/>
-                <form>
-                    {this.props.variableDefinitions.map(item => {
-                        let formControl;
-                        const formControlProps = {
-                            value: this.state.runConfiguration[item.name],
-                            onChange: this.handleRunConfigurationChange(item.name)
-                        };
+        return <div className={'template-container'}>
+            <div
+                className={'template'}
+                onClick={this.showRunModal}
+            >
+                <span className={'template-name'}>{this.props.name}</span>
+                <span className={'template-description'}>{this.props.description}</span>
+                <span className={'hint'}>Click to run.</span>
+            </div>
 
-                        if (item.allowedValuesList && item.allowedValuesList.length !== 0) {
-                            formControl = <FormControl
-                                {...formControlProps}
-                                componentClass={'select'}
-                            >
-                                {item.allowedValuesList.map(option => <option
-                                    key={`template-run-variable-${item.refId}-select-${option}`}
-                                    value={option}
+            <Modal
+                show={this.state.showRunModal}
+                onHide={this.closeRunModal}
+            >
+                <Modal.Header>
+                    <Modal.Title>
+                        Run {this.props.name}
+                    </Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <h4>Generation from File:</h4>
+                    <DropArea
+                        upload={this.runSerialTemplate}
+                    />
+                    <br/>
+                    <h4>Single Generation:</h4>
+                    <form>
+                        {this.props.variableDefinitions.map(item => {
+                            let formControl;
+                            const currentValue = this.state.runConfiguration[item.name];
+                            let validationState;
+                            const formControlProps = {
+                                value: currentValue,
+                                onChange: this.handleRunConfigurationChange(item.name)
+                            };
+
+                            if (item.allowedValuesList && item.allowedValuesList.length !== 0) {
+                                formControl = <FormControl
+                                    {...formControlProps}
+                                    componentClass={'select'}
                                 >
-                                    {option}
-                                </option>)}
-                            </FormControl>
-                        } else {
-                            formControl = <FormControl
-                                {...formControlProps}
-                                type={item.type}
-                            />;
-                        }
+                                    {item.allowedValuesList.map(option => <option
+                                        key={`template-run-variable-${item.refId}-select-${option}`}
+                                        value={option}
+                                    >
+                                        {option}
+                                    </option>)}
+                                </FormControl>
+                            } else {
 
-                        return <FormGroup
-                            key={`template-run-variable-${item.refId}`}
-                        >
-                            <ControlLabel>
-                                {item.name}
-                            </ControlLabel>
-                            {formControl}
-                            {item.description ?
-                                <HelpBlock>{item.description}</HelpBlock> :
-                                undefined
+                                if ((item.required && currentValue.trim() === '') ||
+                                    (item.type === 'INT' && isNaN(currentValue)) ||
+                                    (item.minimumValue && item.minimumValue > Number(currentValue)) ||
+                                    (item.maximumValue && item.maximumValue < Number(currentValue))) {
+                                    validationState = 'error';
+                                    valid = false;
+                                }
+
+                                if (item.minimumValue) {
+                                    formControlProps.min = item.minimumValue;
+                                }
+
+                                if (item.maximumValue) {
+                                    formControlProps.max = item.maximumValue;
+                                }
+
+                                if (item.type === 'INT') {
+                                    item.type = 'number';
+                                }
+
+                                formControl = <FormControl
+                                    {...formControlProps}
+                                    type={item.type}
+                                />;
                             }
-                        </FormGroup>;
-                    })}
-                </form>
-                <Button
-                    bsStyle={'success'}
-                    onClick={this.runTemplate}
-                >
-                    Run
-                </Button>
-            </Modal.Body>
-        </Modal>
-    </div>;
+
+                            return <FormGroup
+                                key={`template-run-variable-${item.refId}`}
+                                validationState={validationState}
+                            >
+                                <ControlLabel>
+                                    {item.name}
+                                </ControlLabel>
+                                {formControl}
+                                {item.description ?
+                                    <HelpBlock>{item.description}</HelpBlock> :
+                                    undefined
+                                }
+                            </FormGroup>;
+                        })}
+                    </form>
+                    <Button
+                        bsStyle={'success'}
+                        onClick={this.runTemplate}
+                        disabled={!valid}
+                    >
+                        Run
+                    </Button>
+                </Modal.Body>
+            </Modal>
+        </div>;
+    };
 
     constructor(props) {
         super(props);
