@@ -1,8 +1,8 @@
 import React from 'react'
 import {Glyphicon, PageHeader} from 'react-bootstrap';
-import {getRestServiceUrl} from "../../../actions/global";
-import ErrorAlert from "../../general/ErrorAlert";
-import Template from "./Template";
+import {getRestServiceUrl} from '../../../actions/global';
+import ErrorAlert from '../../general/ErrorAlert';
+import Template from './Template';
 
 class TemplateListView extends React.Component {
 
@@ -89,7 +89,7 @@ class TemplateListView extends React.Component {
                     const definition = this.state.definitions[template.templateDefinition];
 
                     return <Template
-                        key={template.fileDescriptor.canonicalPath}
+                        key={`template-${template.fileDescriptor.canonicalPath}-${template.templateDefinitionId}`}
                         templateDefinitionId={template.templateDefinitionId}
                         canonicalPath={template.fileDescriptor.canonicalPath}
                         {...definition}

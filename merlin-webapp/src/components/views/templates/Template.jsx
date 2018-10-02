@@ -8,6 +8,7 @@ import DropArea from '../../general/droparea/Component';
 class Template extends React.Component {
 
     path = getRestServiceUrl('templates');
+    filePath = getRestServiceUrl('files');
     state = {
         showRunModal: false,
         runConfiguration: this.props.variableDefinitions.reduce((accumulator, current) => ({
@@ -38,19 +39,29 @@ class Template extends React.Component {
         });
     };
 
-    runTemplate = () => {
+    runSingleTemplate = () => this.runTemplate(`${this.path}/run`, {
+            'Content-Type': 'application/json'
+        },
+        JSON.stringify({
+            templateDefinitionId: this.props.templateDefinitionId,
+            templateCanonicalPath: this.props.canonicalPath,
+            variables: this.state.runConfiguration
+        }));
+
+    runSerialTemplate = (file) => {
+        const formData = new FormData();
+        formData.append('file', file);
+
+        this.runTemplate(`${this.filePath}/upload`, undefined, formData);
+    };
+
+    runTemplate = (endpoint, headers, body) => {
         let filename;
 
-        fetch(`${this.path}/run`, {
+        fetch(endpoint, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                templateDefinitionId: this.props.templateDefinitionId,
-                templateCanonicalPath: this.props.canonicalPath,
-                variables: this.state.runConfiguration
-            })
+            headers,
+            body: body
         })
             .then(response => {
                 if (!response.ok) {
@@ -60,11 +71,8 @@ class Template extends React.Component {
                 filename = getResponseHeaderFilename(response.headers.get('Content-Disposition'));
                 return response.blob();
             })
-            .then(blob => downloadFile(blob, filename));
-    };
-
-    runSerialTemplate = (file) => {
-        // TODO CALL REST URL
+            .then(blob => downloadFile(blob, filename))
+            .catch(alert);
     };
 
     render = () => {
@@ -163,7 +171,7 @@ class Template extends React.Component {
                     </form>
                     <Button
                         bsStyle={'success'}
-                        onClick={this.runTemplate}
+                        onClick={this.runSingleTemplate}
                         disabled={!valid}
                     >
                         Run
