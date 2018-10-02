@@ -2,7 +2,10 @@ package de.reinhard.merlin.app.rest;
 
 import de.reinhard.merlin.app.json.JsonUtils;
 import de.reinhard.merlin.app.storage.Storage;
+import de.reinhard.merlin.word.WordDocument;
 import de.reinhard.merlin.word.templating.Template;
+import de.reinhard.merlin.word.templating.TemplateDefinition;
+import de.reinhard.merlin.word.templating.WordTemplateRunner;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,30 +21,43 @@ public class TemplateRunnerRest {
     private Logger log = LoggerFactory.getLogger(FilesServiceRest.class);
 
     @POST
+    @Path("check")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String checkTemplate(String json) {
+        TemplateRunnerData data = JsonUtils.fromJson(TemplateRunnerData.class, json);
+        log.info("Checking template: definition=" + data.getTemplateDefinitionId() + ", template=" + data.getTemplateCanonicalPath());
+        TemplateRunnerCheckData check = new TemplateRunnerCheckData();
+        check.setStatus("Not yet implemented");
+        String result = JsonUtils.toJson(check);
+        return result;
+    }
+
+    @POST
     @Path("run")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     public Response runTemplate(String json) {
         TemplateRunnerData data = JsonUtils.fromJson(TemplateRunnerData.class, json);
         log.info("Running template: definition=" + data.getTemplateDefinitionId() + ", template=" + data.getTemplateCanonicalPath());
-        String fileLocation = "Test.xlsx";
+        File file = new File(data.getTemplateCanonicalPath());
+        if (!file.exists()) {
+            return get404Response("Template file not found by canonical path: " + data.getTemplateCanonicalPath());
+        }
+        TemplateDefinition templateDefinition = Storage.getInstance().getTemplateDefinition(data.getTemplateDefinitionId());
+        if (templateDefinition == null) {
+            log.info("Template definition with id '" + data.getTemplateDefinitionId() + "' not found. Proceeding without template definition.");
+        }
         Response response = null;
-
-        File file = new File(fileLocation);
-        log.info(file.getAbsolutePath());
-        if (file.exists()) {
-            Response.ResponseBuilder builder = Response.ok(file);
+        try {
+            WordTemplateRunner runner = new WordTemplateRunner(templateDefinition, new WordDocument(file));
+            WordDocument result = runner.run(data.getVariables());
+            Response.ResponseBuilder builder = Response.ok(result);
             builder.header("Content-Disposition", "attachment; filename=" + file.getName());
             response = builder.build();
             log.info("Downloading file '" + file + "', length: " + file.length());
-        } else {
-            log.error("File not found: " + file.getAbsolutePath());
-            response = Response.status(404).
-                    entity("FILE NOT FOUND: " + file.getName()).
-                    type("text/plain").
-                    build();
+            return response;
+        } catch (Exception ex) {
+            return get404Response("Error while try to running template '" + data.getTemplateCanonicalPath() + "'.");
         }
-
-        return response;
     }
 
     @GET
@@ -53,7 +69,7 @@ public class TemplateRunnerRest {
      * @see JsonUtils#toJson(Object, boolean)
      */
     public String getConfig(@QueryParam("templateCanonicalPath") String templateCanonicalPath,
-                            @QueryParam("prettyPrinter") String templateDefinitionId,
+                            @QueryParam("templateDefinitionId") String templateDefinitionId,
                             @QueryParam("prettyPrinter") boolean prettyPrinter) {
         TemplateRunnerData data = new TemplateRunnerData();
         data.setTemplateDefinitionId(templateDefinitionId);
@@ -114,5 +130,14 @@ public class TemplateRunnerRest {
         public String getTemplateDefinitionName() {
             return templateDefinitionName;
         }
+    }
+
+    private Response get404Response(String errorMessage) {
+        log.error(errorMessage);
+        Response response = Response.status(404).
+                entity(errorMessage).
+                type("text/plain").
+                build();
+        return response;
     }
 }
