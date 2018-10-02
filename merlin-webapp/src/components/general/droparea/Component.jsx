@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, Glyphicon} from 'react-bootstrap';
+import {Glyphicon} from 'react-bootstrap';
 import './style.css';
 
 class DropArea extends React.Component {
@@ -77,6 +77,8 @@ class DropArea extends React.Component {
         this.setState({
             files: [fileList[0]]
         });
+
+        this.props.upload(fileList[0]);
     }
 
     uploadFiles(event) {
@@ -132,22 +134,6 @@ class DropArea extends React.Component {
                         </span>
                     </div>
                 </div>
-                {
-                    this.state.files.map((file, index) => <p key={index}>{file.name}</p>)
-                }
-                {
-                    this.props.upload ?
-                        <div>
-                            <br/>
-                            <Button
-                                bsStyle={'success'}
-                                onClick={this.uploadFiles}
-                            >
-                                Upload
-                            </Button>
-                        </div> :
-                        <div/>
-                }
             </div>
         );
     }

@@ -1,43 +1,114 @@
-import React from 'react';
-import {PageHeader} from 'react-bootstrap';
-import {connect} from 'react-redux'
-import {listTemplatesIfNeeded} from '../../../actions';
-import TemplateListFailed from './TemplateListFailed';
-import Template from './Template';
+import React from 'react'
+import {Glyphicon, PageHeader} from 'react-bootstrap';
+import {getRestServiceUrl} from "../../../actions/global";
+import ErrorAlert from "../../general/ErrorAlert";
+import Template from "./Template";
 
 class TemplateListView extends React.Component {
 
-    render() {
 
-        this.props.listTemplates();
+    path = getRestServiceUrl('templates');
+    state = {
+        isFetching: false
+    };
 
-        return (
-            <div>
-                <PageHeader>Templates</PageHeader>
+    componentDidMount = () => {
+        this.fetchTemplates();
+    };
 
-                {
-                    this.props.templates.failed ?
-                        <TemplateListFailed/> :
-                        (this.props.templates.loaded ? Object.keys(this.props.templates.list).map(key =>
-                            <Template
-                                key={key}
-                                id={key}
-                                name={this.props.templates.list[key].name}
-                                description={this.props.templates.list[key].description}
-                            />
-                        ) : <i>Loading...</i>)
-                }
-            </div>
-        );
+    fetchTemplates = () => {
+        this.setState({
+            isFetching: true,
+            failed: false,
+            definitions: undefined,
+            templates: undefined
+        });
+
+        fetch(`${this.path}/list`, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json'
+            }
+        })
+            .then(response => response.json())
+            .then(json => {
+                const definitions = json.templateDefinitions.reduce((accumulator, current) => ({
+                    ...accumulator,
+                    [current.refId]: current
+                }), {});
+
+                const templates = json.templates.map(template => {
+                    if (typeof template.templateDefinition === 'object') {
+                        definitions[template.templateDefinition.refId] = template.templateDefinition;
+                        template.templateDefinition = template.templateDefinition.refId;
+                    }
+
+                    return {
+                        templateDefinition: template.templateDefinition,
+                        fileDescriptor: template.fileDescriptor
+                    };
+                });
+
+                this.setState({
+                    isFetching: false,
+                    definitions, templates
+                })
+            })
+            .catch(() => this.setState({isFetching: false, failed: true}));
+    };
+
+    render = () => {
+        let content = undefined;
+
+        if (this.state.isFetching) {
+
+            content = <i>Loading...</i>;
+
+        } else if (this.state.failed) {
+
+            content = <ErrorAlert
+                title={'Cannot load Templates'}
+                description={'Something went wrong during contacting the rest api.'}
+                action={{
+                    handleClick: this.fetchTemplates,
+                    title: 'Try again'
+                }}
+            />;
+
+        } else if (this.state.templates) {
+
+            content = <div>
+                <div
+                    className={'template-list-refresh'}
+                    onClick={this.fetchTemplates}
+                >
+                    <Glyphicon glyph={'refresh'}/> Refresh
+                </div>
+                {this.state.templates.map(template => {
+                    const definition = this.state.definitions[template.templateDefinition];
+
+                    return <Template
+                        key={template.fileDescriptor.canonicalPath}
+                        {...definition}
+                    />;
+                })}
+            </div>;
+
+        }
+
+        return <div>
+            <PageHeader>
+                Templates
+            </PageHeader>
+            {content}
+        </div>;
+    };
+
+    constructor(props) {
+        super(props);
+
+        this.fetchTemplates = this.fetchTemplates.bind(this);
     }
 }
 
-const mapStateToProps = state => ({
-    templates: state.templates
-});
-
-const actions = {
-    listTemplates: listTemplatesIfNeeded
-};
-
-export default connect(mapStateToProps, actions)(TemplateListView);
+export default TemplateListView;
