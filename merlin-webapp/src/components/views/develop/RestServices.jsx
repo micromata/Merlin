@@ -1,6 +1,6 @@
 import React from 'react';
 import {PageHeader} from 'react-bootstrap';
-import {getRestServiceUrl} from "../../../actions/global";
+import {getRestServiceUrl, getResponseHeaderFilename} from "../../../actions/global";
 import downloadFile from "../../../utilities/download";
 
 class RestUrlLink extends React.Component {
@@ -30,7 +30,8 @@ class RestServices extends React.Component {
         this.state = {
             templateDefinitionId: '',
             templateDefinitionName: '',
-            templateCanonicalPath: ''
+            templateCanonicalPath: '',
+            downloadFilename : ''
         }
         this.onRun = this.onRun.bind(this);
     }
@@ -72,13 +73,14 @@ class RestServices extends React.Component {
             .then((data) => {
                 fetch(getRestServiceUrl("templates/run"), {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
                     body: JSON.stringify(data)
                 })
-                    .then(response => response.blob())
-                    .then(blob => downloadFile(blob, 'result.doc'));
+                    .then(response => {
+                        var filename = getResponseHeaderFilename(response.headers.get("Content-Disposition"));
+                        this.setState({downloadFilename: filename});
+                        return response.blob();
+                    })
+                    .then(blob => downloadFile(blob, this.state.downloadFilename));//getISOTimestamp(new Date()) + '_result.zip'));
             })
             .catch((error) => {
                 console.log(error, "Oups, what's happened?")

@@ -53,13 +53,19 @@ public class TemplateRunnerRest {
         try {
             WordTemplateRunner runner = new WordTemplateRunner(templateDefinition, new WordDocument(file));
             WordDocument result = runner.run(data.getVariables());
+            //ZipUtil zipUtil = new ZipUtil("result.zip");
+            //zipUtil.addZipEntry("result/" + file.getName(), result.getAsByteArrayOutputStream().toByteArray());
             Response.ResponseBuilder builder = Response.ok(result.getAsByteArrayOutputStream().toByteArray());
             builder.header("Content-Disposition", "attachment; filename=" + file.getName());
+            // Needed to get the Content-Disposition by client:
+            builder.header("Access-Control-Expose-Headers", "Content-Disposition");
             response = builder.build();
             log.info("Downloading file '" + file + "', length: " + file.length());
             return response;
         } catch (Exception ex) {
-            return get404Response("Error while try to running template '" + data.getTemplateCanonicalPath() + "'.");
+            String errorMsg = "Error while try to running template '" + data.getTemplateCanonicalPath() + "'.";
+            log.error(errorMsg + " " + ex.getMessage(), ex);
+            return get404Response(errorMsg);
         }
     }
 
