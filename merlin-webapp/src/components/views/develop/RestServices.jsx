@@ -17,7 +17,6 @@ class RestUrlLink extends React.Component {
         } else {
             url = getRestServiceUrl(service) + '?prettyPrinter=true';
         }
-
         return (
             <a href={url}>rest/{service}{params ? '?' + params : ''}</a>
         )
@@ -54,15 +53,8 @@ class RestServices extends React.Component {
                     });
                 }
             )
-            .catch(
-                (
-                    error
-                ) => {
-                    console
-                        .log(error,
-
-                            "Oups, what's happened?"
-                        )
+            .catch((error) => {
+                    console.log(error, "Oups, what's happened?")
                 }
             )
     }
