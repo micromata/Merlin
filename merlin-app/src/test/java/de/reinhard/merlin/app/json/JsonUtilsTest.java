@@ -22,7 +22,7 @@ public class JsonUtilsTest {
         TemplateDefinition t1 = new TemplateDefinition();
         t1.setName("Test template").setDescription("This is a test.").setFilenamePattern("Contract");
         assertEquals("{\"refId\":1,\"variableDefinitions\":[],\"dependentVariableDefinitions\":[],\"id\":\"" + t1.getId()
-                + "\",\"name\":\"Test template\",\"description\":\"This is a test.\",\"filenamePattern\":\"Contract\"}", JsonUtils.toJson(t1));
+                + "\",\"name\":\"Test template\",\"description\":\"This is a test.\",\"filenamePattern\":\"Contract\",\"stronglyRestrictedFilenames\":true}", JsonUtils.toJson(t1));
         assertEquals(20, t1.getId().length());
         t1.add(createVar("Name", true, true));
         t1.add(createVar("Gender", true, false));
