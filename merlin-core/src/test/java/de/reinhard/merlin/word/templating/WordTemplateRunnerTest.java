@@ -30,7 +30,7 @@ public class WordTemplateRunnerTest {
         TemplateDefinitionReference ref = runner.scanForTemplateDefinitionReference();
         assertNotNull(ref);
         assertEquals("Employment contract template", ref.getTemplateDefinitionName());
-        runDocument(runner, "Kai Reinhard", "male", "3/16/2001",
+        runDocument(runner, "Stéph Ciçá", "male", "3/16/2001",
                 "4/1/2001", "25", "30");
         runDocument(runner, "Bärta Üßten", "female", "8/14/2017",
                 "19/1/2017", "40", "30");
