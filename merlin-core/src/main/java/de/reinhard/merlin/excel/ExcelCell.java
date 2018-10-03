@@ -1,5 +1,6 @@
 package de.reinhard.merlin.excel;
 
+import de.reinhard.merlin.word.templating.TemplateRunContext;
 import org.apache.poi.ss.usermodel.BuiltinFormats;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -42,6 +43,16 @@ public class ExcelCell {
     }
 
     /**
+     * @param workbook Needed for creating int DataFormat.
+     * @param booleanValue
+     * @return this for chaining.
+     */
+    public ExcelCell setCellValue(ExcelWorkbook workbook, boolean booleanValue) {
+        setCellValue(workbook, cell, booleanValue);
+        return this;
+    }
+
+    /**
      * @param workbook    Needed for creating int DataFormat.
      * @param doubleValue
      * @return this for chaining.
@@ -69,6 +80,13 @@ public class ExcelCell {
 
     public static void setCellValue(ExcelWorkbook workbook, Cell cell, int intValue) {
         cell.setCellValue((double) intValue);
+        CellStyle cellStyle = workbook.createOrGetCellStyle("DataFormat.int");
+        cellStyle.setDataFormat((short) BuiltinFormats.getBuiltinFormat("0"));
+        cell.setCellStyle(cellStyle);
+    }
+
+    public static void setCellValue(ExcelWorkbook workbook, Cell cell, boolean booleanValue) {
+        cell.setCellValue(TemplateRunContext.getBooleanAsString(booleanValue));
         CellStyle cellStyle = workbook.createOrGetCellStyle("DataFormat.int");
         cellStyle.setDataFormat((short) BuiltinFormats.getBuiltinFormat("0"));
         cell.setCellStyle(cellStyle);
