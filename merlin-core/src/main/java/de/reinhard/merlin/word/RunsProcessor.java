@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
  */
 public class RunsProcessor {
     private static Logger log = LoggerFactory.getLogger(RunsProcessor.class);
-    // {template.id="JZpnpojeSuN5JDqtm9KZ"} or {template.name="Letter"}:
+    // {templateDefinition.id="JZpnpojeSuN5JDqtm9KZ"} or {templateDefinition.name="Letter"}:
     static final Pattern TEMPLATE_DEFINITION_REFERENCE_PATTERN = Pattern.compile("\\{\\s*templateDefinition\\.(id?|name?)\\s*=\\s*([^\\}]*)\\s*\\}");
     private int[] runSizes;
     private Pattern variablePattern;
