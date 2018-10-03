@@ -50,7 +50,7 @@ Examples for if-expressions:
 * variable < value, variable <= value, variable > value, variable >= value. Integers and doubles as values are supported.
 
 ### Example
-See the examples folder with the template file ```Contract-template.docx``` and the result file after processed by Merlin ```Contract.docx```.
+See the [examples](https://github.com/kreinhard/merlin/tree/master/examples/templates) with the template file [EmploymentContractTemplate.docx](https://github.com/kreinhard/merlin/raw/master/examples/templates/EmploymentContractTemplate.docx) and the result file after processed by Merlin [EmploymentContractTemplate.docx](https://github.com/kreinhard/merlin/raw/master/examples/templates/EmploymentContract-Berta.docx).
 
 ## Word templates and serial letters
 * Supports serial document function: Define your variables for a given Word template in Excel columns and

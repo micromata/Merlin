@@ -25,12 +25,12 @@ errors.
   >
   > __{if fox = "lazy"}__ The __${color}__ fox is lazy.__{endif}__
 
-  See [ContractTemplate.docx](https://github.com/kreinhard/merlin/raw/master/examples/templates/ContractTemplate.docx)
+  See [EmploymentContractTemplate.docx](https://github.com/kreinhard/merlin/raw/master/examples/templates/EmploymentContractTemplate.docx)
   in the [examples](https://github.com/kreinhard/merlin/tree/master/examples/templates) directory.
 * Template definitions (optional) describes variables and also so called dependent variables.
   An template can be assigned to a template definition for more functionality.
 
-  See [ContractTemplate.xlsx](https://github.com/kreinhard/merlin/raw/master/examples/templates/ContractTemplate.xlsx)
+  See [EmploymentContractTemplate.xlsx](https://github.com/kreinhard/merlin/raw/master/examples/templates/EmploymentContractTemplate.xlsx)
   in the [examples](https://github.com/kreinhard/merlin/tree/master/examples/templates) directory.
 * Variables are customizable by the end-user running a template process. All variables in
   the template file will be replaced by the customized values and all conditionals will be executed
@@ -43,7 +43,7 @@ errors.
 * Serial letters: You may run templates multiple times for different sets of variables (such as letters for
   many receivers.) The variables are given in a table, each set of variables for a single run per row.
   
-  See [Contract-Serial.xlsx](https://github.com/kreinhard/merlin/raw/master/examples/templates/Contract-Serial.xlsx)
+  See [EmploymentContract-Serial.xlsx](https://github.com/kreinhard/merlin/raw/master/examples/templates/EmploymentContract-Serial.xlsx)
   in the [examples](https://github.com/kreinhard/merlin/tree/master/examples/templates) directory.
 
 
@@ -52,12 +52,12 @@ errors.
 You may run a template with the following settings:
 * Customized variables (gender, name of receiver, etc.)
 * A template file. This template file may contain a reference to an existing template definition:
-  > ${template.id = "JZpnpojeSuN5JDqtm9KZ"} (template definition referenced by id)
+  > ${templateDefinition.id = "JZpnpojeSuN5JDqtm9KZ"} (template definition referenced by id)
   >
-  > ${template.name = "ContractTemplate"} (template definition referenced by name)
+  > ${templateDefinition.name = "Employment contract template"} (template definition referenced by name)
     
   Template definitions are automatically assigned if they have the same file name (without file extension) as the template
-   file, e. g. a template named ContractTemplate.docx matches a definition file named ContractTemplate.xlsx.
+   file, e. g. a template named EmploymentContractTemplate.docx matches a definition file named EmploymentContractTemplate.xlsx.
 * Optional a template definition file containing dependent variables.
   * You may give the template definition file directly or, if not
   * in the template file itself.
