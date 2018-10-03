@@ -76,7 +76,7 @@ public class DirectoryScanner {
                 continue;
             }
             TemplateDefinitionExcelReader templateReader = new TemplateDefinitionExcelReader();
-            TemplateDefinition templateDefinition = templateReader.readFromWorkbook(workbook);
+            TemplateDefinition templateDefinition = templateReader.readFromWorkbook(workbook, false);
             if (templateDefinition == null) {
                 log.info("Skipping file '" + file.getPath() + "', no template definition (OK).");
                 continue;

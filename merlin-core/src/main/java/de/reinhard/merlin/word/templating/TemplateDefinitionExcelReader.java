@@ -25,9 +25,22 @@ public class TemplateDefinitionExcelReader {
     }
 
     public TemplateDefinition readFromWorkbook(ExcelWorkbook workbook) {
+        return readFromWorkbook(workbook, true);
+    }
+
+    /**
+     * @param workbook
+     * @param templateDefinitionRequired if true, a templateDefinition is required (default) and an error message will be logged
+     *                                   if no valid template definition found. If false, you may check, if an Excel
+     *                                   file is a template definition file (used by DirectoryScanner).
+     * @return
+     */
+    public TemplateDefinition readFromWorkbook(ExcelWorkbook workbook, boolean templateDefinitionRequired) {
         template = readConfigFromWorkbook(workbook);
         if (template == null) {
-            log.error("No template definition found. Not a valid Merlin template.");
+            if (templateDefinitionRequired) {
+                log.error("No template definition found. Not a valid Merlin template.");
+            }
             validTemplate = false;
             return null;
         }
