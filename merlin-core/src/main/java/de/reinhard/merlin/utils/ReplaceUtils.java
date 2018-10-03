@@ -9,6 +9,7 @@ import java.util.regex.Pattern;
 public class ReplaceUtils {
     public static final String IDENTIFIER_REGEXP = "[a-zA-Z_][a-zA-Z\\d_]*";
     public static final Pattern VARIABLE_PATTERN = Pattern.compile("\\$\\{\\s*(" + IDENTIFIER_REGEXP + ")\\s*\\}");
+    public static final Pattern COMMENT_PATTERN = Pattern.compile("\\{\\*[^\\}]*\\}");
     public static final String ALLOWED_FILENAME_CHARS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789._-";
     public static final String PRESERVED_FILENAME_CHARS = "\"*/:<>?\\|";
     public static final char FILENAME_REPLACE_CHAR = '_';
@@ -32,6 +33,13 @@ public class ReplaceUtils {
         return replaceEntries;
     }
 
+    /**
+     * Creates replace entries for variables and comments.
+     *
+     * @param text
+     * @param replaceEntries
+     * @param variables
+     */
     public static void createReplaceEntries(String text, List<ReplaceEntry> replaceEntries, Map<String, ?> variables) {
         Matcher matcher = VARIABLE_PATTERN.matcher(text);
         while (matcher.find()) {
@@ -45,9 +53,22 @@ public class ReplaceUtils {
             int end = matcher.end();
             replaceEntries.add(new ReplaceEntry(start, end, value));
         }
+        matcher = COMMENT_PATTERN.matcher(text);
+        while (matcher.find()) {
+            int start = matcher.start();
+            int end = matcher.end();
+            replaceEntries.add(new ReplaceEntry(start, end, ""));
+        }
         Collections.sort(replaceEntries, Collections.reverseOrder());
     }
 
+    /**
+     * Replaces all occurrences.
+     *
+     * @param text
+     * @param replaceEntries
+     * @return
+     */
     public static String replace(String text, List<ReplaceEntry> replaceEntries) {
         for (ReplaceEntry entry : replaceEntries) {
             StringBuilder sb = new StringBuilder();

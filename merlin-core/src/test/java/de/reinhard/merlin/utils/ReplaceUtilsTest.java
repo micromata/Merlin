@@ -17,7 +17,7 @@ public class ReplaceUtilsTest {
         assertEquals("", ReplaceUtils.replace("", variables));
         assertEquals("A", ReplaceUtils.replace("${a}", variables));
         assertEquals("Berta", ReplaceUtils.replace("${b}", variables));
-        assertEquals("hurz, A, Berta", ReplaceUtils.replace("${name}, ${a}, ${b}", variables));
+        assertEquals("hurz, A, Berta", ReplaceUtils.replace("${name},{* comment } ${a}, ${b}", variables));
     }
 
     @Test
