@@ -25,9 +25,6 @@ errors.
   >
   > __{if fox = "lazy"}__ The __${color}__ fox is lazy.__{endif}__
 
-  You may place comments in your word template document as well (such comments will be removed automatically). This is
-  useful for documenting your template. Comments are enclosed in __{* ...}__. You may optional end with __*}__.
-  > __{if fox = "lazy"}__ The fox is lazy. {* here ends the lazy fox part. *}__{endif}__
 
   See [EmploymentContractTemplate.docx](https://github.com/kreinhard/merlin/raw/master/examples/templates/EmploymentContractTemplate.docx)
   in the [examples](https://github.com/kreinhard/merlin/tree/master/examples/templates) directory.
@@ -49,6 +46,17 @@ errors.
   
   See [EmploymentContract-Serial.xlsx](https://github.com/kreinhard/merlin/raw/master/examples/templates/EmploymentContract-Serial.xlsx)
   in the [examples](https://github.com/kreinhard/merlin/tree/master/examples/templates) directory.
+* You may place comments in your word template document as well (such comments will be removed automatically). This is
+  useful for documenting your template. Comments are enclosed in __{* ...}__. You may optional end with __*}__.
+  > __{if fox = "lazy"}__ The fox is lazy. {* here ends the lazy fox part. *}__{endif}__
+    
+  Please note: Comments are only inside single paragraphs supported. Comments starting in one word paragraph and ending
+  in a following one doesn't work. If you want to have comments in several paragraphs, please try this:
+  > Here is my text.
+  > {* Here is my comment, which will be removed automatically. *}
+  > {* But I have to say it in more than one paragraph. *}
+  
+  Please note: Comments containing hyperlinks aren't supported.
 
 
 ### Running a template
