@@ -160,7 +160,7 @@ public class TemplateDefinitionExcelReader {
         String lower = value.toLowerCase();
         if (lower.startsWith("x") ||
                 lower.startsWith("y") || // yes
-                lower.startsWith("j")) { // ja - German yers.
+                lower.startsWith("j")) { // ja - German yes.
             return true;
         }
         return false;
