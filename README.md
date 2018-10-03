@@ -51,7 +51,7 @@ Examples for if-expressions:
 
 ### Example
 See the [examples](https://github.com/kreinhard/merlin/tree/master/examples/templates) with the template file [EmploymentContractTemplate.docx](https://github.com/kreinhard/merlin/raw/master/examples/templates/EmploymentContractTemplate.docx)
-and the result file after processed by Merlin [EmploymentContractTemplate.docx](https://github.com/kreinhard/merlin/raw/master/examples/templates/EmploymentContract-Berta.docx).
+and the result file after processed by Merlin [EmploymentContract-Berta.docx](https://github.com/kreinhard/merlin/raw/master/examples/templates/EmploymentContract-Berta.docx).
 
 ## Word templates and serial letters
 * Supports serial document function: Define your variables for a given Word template in Excel columns and
