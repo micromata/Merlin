@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class ReplaceUtilsTest {
     @Test
@@ -29,6 +30,8 @@ public class ReplaceUtilsTest {
         assertEquals("__", ReplaceUtils.encodeFilename("  ", true));
         assertEquals("Kai_Oester__Test", ReplaceUtils.encodeFilename("Kai Öster:,Test", true));
         assertEquals("AeOeUeaeoeuess", ReplaceUtils.encodeFilename("ÄÖÜäöüß", true));
+        assertEquals("Stephanie", ReplaceUtils.encodeFilename("Stéphanie", true));
+        assertEquals("AGOOacae", ReplaceUtils.encodeFilename("ĂĠÒǬåçä", true));
 
         assertEquals("Ä____.___.__", ReplaceUtils.encodeFilename("Ä\"*/:.<>?.\\|", false));
         StringBuilder sb = new StringBuilder();
@@ -43,5 +46,12 @@ public class ReplaceUtilsTest {
             sb.append("1234567890");
         }
         assertEquals(255, ReplaceUtils.encodeFilename(sb.toString(), false).length());
+    }
+
+    @Test
+    public void replaceGermanUmlauteAndAccents() {
+        assertNull(ReplaceUtils.replaceGermanUmlauteAndAccents(null));
+        assertEquals("", ReplaceUtils.replaceGermanUmlauteAndAccents(""));
+        assertEquals("AGOOacAeaeOeoeUeuessnormal_ .", ReplaceUtils.replaceGermanUmlauteAndAccents("ĂĠÒǬåçÄäÖöÜüßnormal_ ."));
     }
 }

@@ -1,6 +1,6 @@
 package de.reinhard.merlin.utils;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -104,13 +104,15 @@ public class ReplaceUtils {
         if (StringUtils.isEmpty(filename)) {
             return "file";
         }
+        if (reducedCharsOnly) {
+            filename = replaceGermanUmlauteAndAccents(filename);
+        }
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < filename.length(); i++) {
-            char ch = filename.charAt(i);
+        char[] charArray = filename.toCharArray();
+        for (int i = 0; i < charArray.length; i++) {
+            char ch = charArray[i];
             if (reducedCharsOnly) {
-                if (umlautReplacementMap.containsKey(ch)) {
-                    sb.append(umlautReplacementMap.get(ch));
-                } else if (ALLOWED_FILENAME_CHARS.indexOf(ch) >= 0) {
+                if (ALLOWED_FILENAME_CHARS.indexOf(ch) >= 0) {
                     sb.append(ch);
                 } else {
                     sb.append(FILENAME_REPLACE_CHAR);
@@ -132,5 +134,22 @@ public class ReplaceUtils {
             return result.substring(0, 255);
         }
         return result;
+    }
+
+    public static String replaceGermanUmlauteAndAccents(String text) {
+        if (text == null) {
+            return null;
+        }
+        StringBuilder sb = new StringBuilder();
+        char[] charArray = text.toCharArray();
+        for (int i = 0; i < charArray.length; i++) {
+            char ch = charArray[i];
+            if (umlautReplacementMap.containsKey(ch)) {
+                sb.append(umlautReplacementMap.get(ch));
+            } else {
+                sb.append(ch);
+            }
+        }
+        return StringUtils.stripAccents(sb.toString());
     }
 }
