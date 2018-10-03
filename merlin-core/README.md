@@ -25,6 +25,10 @@ errors.
   >
   > __{if fox = "lazy"}__ The __${color}__ fox is lazy.__{endif}__
 
+  You may place comments in your word template document as well (such comments will be removed automatically). This is
+  useful for documenting your template. Comments are enclosed in __{* ...}__. You may optional end with __*}__.
+  > __{if fox = "lazy"}__ The fox is lazy. {* here ends the lazy fox part. *}__{endif}__
+
   See [EmploymentContractTemplate.docx](https://github.com/kreinhard/merlin/raw/master/examples/templates/EmploymentContractTemplate.docx)
   in the [examples](https://github.com/kreinhard/merlin/tree/master/examples/templates) directory.
 * Template definitions (optional) describes variables and also so called dependent variables.
