@@ -6,7 +6,7 @@ import de.reinhard.merlin.word.WordDocument;
 import de.reinhard.merlin.word.templating.Template;
 import de.reinhard.merlin.word.templating.TemplateDefinition;
 import de.reinhard.merlin.word.templating.WordTemplateRunner;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

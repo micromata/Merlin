@@ -3,7 +3,7 @@ package de.reinhard.merlin.app.rest;
 import de.reinhard.merlin.app.javafx.FileSystemBrowser;
 import de.reinhard.merlin.app.javafx.RunningMode;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.glassfish.jersey.media.multipart.ContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
