@@ -25,7 +25,7 @@ package de.reinhard.merlin.excel.importer;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
-import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang3.ObjectUtils;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;

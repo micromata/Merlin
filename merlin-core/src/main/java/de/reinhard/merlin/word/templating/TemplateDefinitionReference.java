@@ -1,6 +1,6 @@
 package de.reinhard.merlin.word.templating;
 
-import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
  * Only a reference to a TemplateDefinition by id or name.

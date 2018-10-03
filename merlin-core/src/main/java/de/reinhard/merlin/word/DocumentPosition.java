@@ -1,6 +1,6 @@
 package de.reinhard.merlin.word;
 
-import org.apache.commons.lang.builder.CompareToBuilder;
+import org.apache.commons.lang3.builder.CompareToBuilder;
 
 /**
  * Localizes an object inside a word document.

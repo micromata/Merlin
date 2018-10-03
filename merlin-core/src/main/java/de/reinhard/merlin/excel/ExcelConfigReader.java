@@ -1,7 +1,7 @@
 package de.reinhard.merlin.excel;
 
 import de.reinhard.merlin.data.PropertiesStorage;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Row;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

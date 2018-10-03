@@ -2,7 +2,7 @@ package de.reinhard.merlin.word.templating;
 
 import de.reinhard.merlin.excel.ExcelSheet;
 import de.reinhard.merlin.excel.ExcelWorkbook;
-import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
