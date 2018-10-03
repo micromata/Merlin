@@ -1,7 +1,7 @@
 package de.reinhard.merlin.smarthome.examples.openhab_knx.data;
 
 import de.reinhard.merlin.data.Data;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 public class KnxThing extends Data {
     public KnxThing() {

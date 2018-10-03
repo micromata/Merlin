@@ -1,6 +1,6 @@
 package de.reinhard.merlin.smarthome.examples.openhab_knx.data;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
