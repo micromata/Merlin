@@ -65,12 +65,16 @@ public class AbstractExcelWriter {
         return row;
     }
 
-    protected ExcelCell addConfigRow(String variable, String value, String descriptionKey) {
+    protected ExcelCell addConfigRow(String variable, Object value, String descriptionKey) {
         ExcelRow row = currentSheet.createRow();
         // Variable
         row.createCell().setCellValue(variable);
         // Value
-        row.createCell().setCellValue(value);
+        if (value instanceof Boolean) {
+            row.createCell().setCellValue(workbook, (Boolean)value);
+        } else {
+            row.createCell().setCellValue(value == null ? "" : String.valueOf(value));
+        }
         // Description
         ExcelCell cell = row.createCell();
         if (descriptionKey != null) {
