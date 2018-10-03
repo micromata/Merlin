@@ -164,7 +164,7 @@ public class TemplateRunContext {
         return null;
     }
 
-    public String getBooleanAsString(boolean value) {
+    public static String getBooleanAsString(boolean value) {
         return value ? "X" : "";
     }
 
