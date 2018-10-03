@@ -44,8 +44,8 @@ public class WordTemplateRunner {
     /**
      * Scans the Word file for template definition, such as:
      * <ul>
-     * <li>{template.id="of84r3orn3w0jo"} or</li>
-     * <li>{template.name="Employee Contract"} or</li>
+     * <li>{templateDefinition.id="of84r3orn3w0jo"} or</li>
+     * <li>{templateDefinition.name="Employee contract template"} or</li>
      * </ul>
      *
      * @return TemplateDefinition only with fields id and or name.
