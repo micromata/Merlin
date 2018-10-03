@@ -81,7 +81,7 @@ public class WordTemplateRunner {
             String pattern = FilenameUtils.getBaseName(templateDefinition.getFilenamePattern());
             if (StringUtils.isNotBlank(pattern)) {
                 String filename = ReplaceUtils.replace(pattern, variables);
-                return ReplaceUtils.encodeFilename(filename) + ".docx";
+                return ReplaceUtils.encodeFilename(filename, templateDefinition.isStronglyRestrictedFilenames()) + ".docx";
             }
         }
         return FilenameUtils.getBaseName(defaultFilename) + "-generated." + FilenameUtils.getExtension(defaultFilename);

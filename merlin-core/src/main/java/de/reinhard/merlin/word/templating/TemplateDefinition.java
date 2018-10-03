@@ -21,7 +21,7 @@ public class TemplateDefinition {
     private String description;
     private String filenamePattern;
     private FileDescriptor fileDescriptor;
-    private boolean restrictedFilenames = true;
+    private boolean stronglyRestrictedFilenames = true;
 
     public TemplateDefinition() {
         this.id = RandomStringUtils.random(20, true, true);
@@ -100,12 +100,12 @@ public class TemplateDefinition {
      * Not allowed characters (Windows and Unix, such as '/', '\'. '|' are replaced by underscores independent on this flag.
      * @see de.reinhard.merlin.utils.ReplaceUtils#encodeFilename(String, boolean)
      */
-    public boolean isRestrictedFilenames() {
-        return restrictedFilenames;
+    public boolean isStronglyRestrictedFilenames() {
+        return stronglyRestrictedFilenames;
     }
 
-    public TemplateDefinition setRestrictedFilenames(boolean restrictedFilenames) {
-        this.restrictedFilenames = restrictedFilenames;
+    public TemplateDefinition setStronglyRestrictedFilenames(boolean stronglyRestrictedFilenames) {
+        this.stronglyRestrictedFilenames = stronglyRestrictedFilenames;
         return this;
     }
 

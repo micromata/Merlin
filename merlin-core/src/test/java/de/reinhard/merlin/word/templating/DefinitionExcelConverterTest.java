@@ -34,6 +34,7 @@ public class DefinitionExcelConverterTest {
         assertEquals(originalTemplate.getName(), template.getName());
         assertEquals(originalTemplate.getDescription(), template.getDescription());
         assertEquals(originalTemplate.getFilenamePattern(), template.getFilenamePattern());
+        assertEquals(originalTemplate.isStronglyRestrictedFilenames(), template.isStronglyRestrictedFilenames());
         assertEquals(originalTemplate.getVariableDefinitions().size(), template.getVariableDefinitions().size());
         for (int i = 0; i < originalTemplate.getVariableDefinitions().size(); i++) {
             assertVariable(originalTemplate.getVariableDefinitions().get(i), template.getVariableDefinitions().get(i));
@@ -74,7 +75,7 @@ public class DefinitionExcelConverterTest {
 
     static TemplateDefinition create() {
         TemplateDefinition template = new TemplateDefinition();
-        template.setName("Employment contract").setFilenamePattern("employment-contract-${Employee}").setDescription("This template is used for the generation of emloyee contracts.");
+        template.setName("Employment contract").setFilenamePattern("employment-contract-${Employee}").setStronglyRestrictedFilenames(true).setDescription("This template is used for the generation of emloyee contracts.");
         VariableDefinition gender = createStringVariable("Gender", "Gender of the employee.", true, true).addAllowedValues("male", "female");
         template.add(gender);
         template.add(createStringVariable("Employee", "Name of the employee.", true, true));
