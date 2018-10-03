@@ -96,7 +96,6 @@ public class FileDescriptor {
         return this;
     }
 
-    @Transient
     public String getCanonicalPath() {
         File path= new File(directory, relativePath);
         File file = new File(path, filename);
