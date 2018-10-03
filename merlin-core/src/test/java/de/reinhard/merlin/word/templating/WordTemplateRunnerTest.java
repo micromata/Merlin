@@ -24,7 +24,7 @@ public class WordTemplateRunnerTest {
     @Test
     public void readWordTest() throws Exception {
         TemplateDefinition templateDefinition = DefinitionExcelConverterTest.create();
-        WordDocument templateDocument = new WordDocument(new File(Definitions.EXAMPLES_TEST_DIR, "ContractTemplate.docx"));
+        WordDocument templateDocument = new WordDocument(new File(Definitions.EXAMPLES_TEMPLATES_TEST_DIR, "ContractTemplate.docx"));
         WordTemplateRunner runner = new WordTemplateRunner(templateDefinition, templateDocument);
         TemplateDefinitionReference ref = runner.scanForTemplateDefinitionReference();
         assertNotNull(ref);

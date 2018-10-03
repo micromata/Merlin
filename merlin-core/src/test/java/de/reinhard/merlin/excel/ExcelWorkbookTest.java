@@ -22,7 +22,7 @@ public class ExcelWorkbookTest {
     @Test
     public void configReaderValidationTest() {
         I18n i18n = I18n.setDefault(Locale.ROOT);
-        ExcelWorkbook excelWorkbook = new ExcelWorkbook(new File(Definitions.EXAMPLES_TEST_DIR, "Test.xlsx"));
+        ExcelWorkbook excelWorkbook = new ExcelWorkbook(new File(Definitions.EXAMPLES_EXCEL_TEST_DIR, "Test.xlsx"));
         ExcelConfigReader configReader = new ExcelConfigReader(excelWorkbook.getSheet("Config"),
                 "Property", "Value");
         PropertiesStorage props = configReader.readConfig(excelWorkbook);
@@ -43,7 +43,7 @@ public class ExcelWorkbookTest {
     }
 
     private void validationexcelResponseTest(I18n i18n, String fileSuffix) throws IOException {
-        ExcelWorkbook excelWorkbook = new ExcelWorkbook("examples/tests/Test.xlsx");
+        ExcelWorkbook excelWorkbook = new ExcelWorkbook(new File(Definitions.EXAMPLES_EXCEL_TEST_DIR, "Test.xlsx"));
         ExcelConfigReader configReader = new ExcelConfigReader(excelWorkbook.getSheet("Config"),
                 "Property", "Value");
         PropertiesStorage props = configReader.readConfig(excelWorkbook);

@@ -3,7 +3,8 @@ package de.reinhard.merlin;
 import java.io.File;
 
 public class Definitions {
-    public static final File EXAMPLES_TEST_DIR = new File("examples/tests");
+    public static final File EXAMPLES_EXCEL_TEST_DIR = new File("../examples/Excel");
+    public static final File EXAMPLES_TEMPLATES_TEST_DIR = new File("../examples/templates");
 
     public static final File OUTPUT_DIR = new File("out");
 

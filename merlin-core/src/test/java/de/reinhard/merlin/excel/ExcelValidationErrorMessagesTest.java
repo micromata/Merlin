@@ -14,7 +14,7 @@ public class ExcelValidationErrorMessagesTest {
     @Test
     public void validationErrorsTest() {
         I18n i18n = I18n.setDefault(Locale.ROOT);
-        ExcelWorkbook excelWorkbook = new ExcelWorkbook(new File(Definitions.EXAMPLES_TEST_DIR, "Test.xlsx"));
+        ExcelWorkbook excelWorkbook = new ExcelWorkbook(new File(Definitions.EXAMPLES_EXCEL_TEST_DIR, "Test.xlsx"));
         ExcelSheet sheet = excelWorkbook.getSheet("Config");
         ExcelColumnValidator val1 = new ExcelColumnValidator();
         val1.setColumnDef(new ExcelColumnDef(0, "cell-head1"));

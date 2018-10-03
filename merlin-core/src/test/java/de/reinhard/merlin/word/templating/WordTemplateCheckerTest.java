@@ -14,7 +14,7 @@ public class WordTemplateCheckerTest {
     @Test
     public void readWordTest() throws Exception {
         TemplateDefinition templateDefinition = DefinitionExcelConverterTest.create();
-        WordDocument templateDocument = new WordDocument(new File(Definitions.EXAMPLES_TEST_DIR, "ContractTemplate.docx"));
+        WordDocument templateDocument = new WordDocument(new File(Definitions.EXAMPLES_TEMPLATES_TEST_DIR, "ContractTemplate.docx"));
         VariableDefinition variableDefinition = templateDefinition.getVariableDefinitions().get(0);
         variableDefinition.setName("New_variable");
         WordTemplateChecker checker = new WordTemplateChecker(templateDocument);
