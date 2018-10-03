@@ -140,7 +140,7 @@ public class DirectoryScanner {
                     if (id != null) {
                         id = id.trim().toLowerCase();
                     }
-                    String name = templateDefinitionReference.getTemplateName();
+                    String name = templateDefinitionReference.getTemplateDefinitionName();
                     if (name != null) {
                         name = name.trim();
                     }

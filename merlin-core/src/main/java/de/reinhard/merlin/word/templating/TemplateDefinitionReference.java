@@ -7,7 +7,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
  */
 public class TemplateDefinitionReference {
     private String templateDefinitionId;
-    private String templateName;
+    private String templateDefinitionName;
 
     public String getTemplateDefinitionId() {
         return templateDefinitionId;
@@ -17,19 +17,19 @@ public class TemplateDefinitionReference {
         this.templateDefinitionId = templateDefinitionId;
     }
 
-    public String getTemplateName() {
-        return templateName;
+    public String getTemplateDefinitionName() {
+        return templateDefinitionName;
     }
 
-    public void setTemplateName(String templateName) {
-        this.templateName = templateName;
+    public void setTemplateDefinitionName(String templateDefinitionName) {
+        this.templateDefinitionName = templateDefinitionName;
     }
 
     @Override
     public String toString() {
         ToStringBuilder tos = new ToStringBuilder(this);
         tos.append("templateDefinitionId", templateDefinitionId);
-        tos.append("templateName", templateName);
+        tos.append("templateDefinitionName", templateDefinitionName);
         return tos.toString();
     }
 }
