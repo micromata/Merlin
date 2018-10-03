@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class WordTemplateRunnerTest {
@@ -29,9 +30,9 @@ public class WordTemplateRunnerTest {
         TemplateDefinitionReference ref = runner.scanForTemplateDefinitionReference();
         assertNotNull(ref);
         assertEquals("Employment contract template", ref.getTemplateDefinitionName());
-        runDocument(runner, "kai", "Kai Reinhard", "male", "3/16/2001",
+        runDocument(runner, "Kai Reinhard", "male", "3/16/2001",
                 "4/1/2001", "25", "30");
-        runDocument(runner, "berta", "Berta Charlson", "female", "8/14/2017",
+        runDocument(runner, "Bärta Üßten", "female", "8/14/2017",
                 "19/1/2017", "40", "30");
         runMyFiles();
     }
@@ -60,19 +61,17 @@ public class WordTemplateRunnerTest {
         variables.put("Urlaubstage", "30");
         variables.put("Position", "Legalmitarbeiter");
         variables.put("Aufgaben", "- Rechtliche Fragen rund um lorem epsum\n- Rechtliche Belange im Allgemeinen\n- Rechtliches im Speziellen.");
-        File file = new File(Definitions.OUTPUT_DIR, "Arbeitsvertrag-Markus.docx");
-        runDocument(runner, file, variables);
-        file = new File(Definitions.OUTPUT_DIR, "Arbeitsvertrag-Sandra.docx");
+        runDocument(runner, variables);
         variables.put("Mitarbeiter", "Sandra Schmidt");
         variables.put("Geschlecht", "weiblich");
         variables.put("Wochenstunden", "20");
         variables.put("Vertragstyp", "befristet");
         variables.put("Vertragsende", "31.08.2017");
         variables.put("Position", "Legalmitarbeiterin");
-        runDocument(runner, file, variables);
+        runDocument(runner, variables);
     }
 
-    private void runDocument(WordTemplateRunner runner, String filenamepart, String employee, String gender, String date,
+    private void runDocument(WordTemplateRunner runner, String employee, String gender, String date,
                              String beginDate, String weeklyHours, String numberOfLeaveDays) throws Exception {
         Map<String, Object> variables = new HashMap<>();
         variables.put("Employee", employee);
@@ -83,13 +82,15 @@ public class WordTemplateRunnerTest {
         variables.put("BeginDate", beginDate);
         variables.put("WeeklyHours", weeklyHours);
         variables.put("NumberOfLeaveDays", numberOfLeaveDays);
-        File file = new File(Definitions.OUTPUT_DIR, "Contract-" + filenamepart + ".docx");
-        runDocument(runner, file, variables);
+        runDocument(runner, variables);
     }
 
-    private void runDocument(WordTemplateRunner runner, File file, Map<String, Object> variables) throws Exception {
+    private void runDocument(WordTemplateRunner runner, Map<String, Object> variables) throws Exception {
+        String filename = runner.createFilename("file", variables);
+        assertNotEquals("file", filename, "Filename pattern of template definition doesn't work, why?");
         WordDocument document = runner.run(variables);
         XWPFDocument doc = document.getDocument();
+        File file = new File(Definitions.OUTPUT_DIR, filename);
         log.info("Writing modified MS Word file: " + file.getAbsolutePath());
         doc.write(new FileOutputStream(file));
     }
