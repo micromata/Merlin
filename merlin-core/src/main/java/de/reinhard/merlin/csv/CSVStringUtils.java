@@ -31,8 +31,9 @@ public class CSVStringUtils {
         StringBuilder value = null;
         QuotationStyle quotation = null;
         boolean separatorCharExpected = false;
-        for (int i = 0; i < str.length(); i++) {
-            char ch = str.charAt(i);
+        char[] charArray = str.toCharArray();
+        for (int i = 0; i < charArray.length; i++) {
+            char ch = charArray[i];
             if (value == null) {
                 // Parsing for next value.
                 if (Character.isWhitespace(ch)) {
