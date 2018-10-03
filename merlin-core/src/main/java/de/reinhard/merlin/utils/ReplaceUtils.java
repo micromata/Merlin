@@ -10,6 +10,8 @@ public class ReplaceUtils {
     public static final String IDENTIFIER_REGEXP = "[a-zA-Z_][a-zA-Z\\d_]*";
     public static final Pattern VARIABLE_PATTERN = Pattern.compile("\\$\\{\\s*(" + IDENTIFIER_REGEXP + ")\\s*\\}");
     public static final String ALLOWED_FILENAME_CHARS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789._-";
+    public static final String PRESERVED_FILENAME_CHARS = "\"*/:<>?\\|";
+    public static final char FILENAME_REPLACE_CHAR = '_';
 
     private static Map<Character, String> umlautReplacementMap;
 
@@ -64,21 +66,50 @@ public class ReplaceUtils {
         return replace(text, replaceEntries);
     }
 
-    public static String encodeFilename(String filename) {
+    /**
+     * Preserved characters (Windows): 0x00-0x1F 0x7F " * / : < > ? \ |
+     * Preserved characters (Mac OS): ':'
+     * Preserved characters (Unix): '/'
+     * Max length: 255
+     *
+     * @param filename
+     * @param reducedCharsOnly if true, only {@link #ALLOWED_FILENAME_CHARS} are allowed and German Umlaute are replaced
+     *                         'Ä'->'Ae' etc. If not, all characters excluding {@link #PRESERVED_FILENAME_CHARS} are allowed and
+     *                         all white spaces will be replaced by ' ' char.
+     * @return
+     */
+
+    public static String encodeFilename(String filename, boolean reducedCharsOnly) {
         if (StringUtils.isEmpty(filename)) {
             return "file";
         }
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < filename.length(); i++) {
             char ch = filename.charAt(i);
-            if (umlautReplacementMap.containsKey(ch)) {
-                sb.append(umlautReplacementMap.get(ch));
-            } else if (ALLOWED_FILENAME_CHARS.indexOf(ch) >= 0) {
-                sb.append(ch);
+            if (reducedCharsOnly) {
+                if (umlautReplacementMap.containsKey(ch)) {
+                    sb.append(umlautReplacementMap.get(ch));
+                } else if (ALLOWED_FILENAME_CHARS.indexOf(ch) >= 0) {
+                    sb.append(ch);
+                } else {
+                    sb.append(FILENAME_REPLACE_CHAR);
+                }
             } else {
-                sb.append('_');
+                if (ch <= 31 || ch == 127) { // Not 0x00-0x1F and not 0x7F
+                    sb.append(FILENAME_REPLACE_CHAR);
+                } else if (PRESERVED_FILENAME_CHARS.indexOf(ch) >= 0) {
+                    sb.append(FILENAME_REPLACE_CHAR);
+                } else if (Character.isWhitespace(ch)) {
+                    sb.append(' ');
+                } else {
+                    sb.append(ch);
+                }
             }
         }
-        return sb.toString();
+        String result = sb.toString();
+        if (result.length() > 255) {
+            return result.substring(0, 255);
+        }
+        return result;
     }
 }

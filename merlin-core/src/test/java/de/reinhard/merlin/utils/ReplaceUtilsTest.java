@@ -22,12 +22,26 @@ public class ReplaceUtilsTest {
 
     @Test
     public void encodeFilenameTest() {
-        assertEquals("file", ReplaceUtils.encodeFilename(null));
+        assertEquals("file", ReplaceUtils.encodeFilename(null, true));
         assertEquals("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789._-",
-                ReplaceUtils.encodeFilename("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789._-"));
-        assertEquals("_", ReplaceUtils.encodeFilename(" "));
-        assertEquals("__", ReplaceUtils.encodeFilename("  "));
-        assertEquals("Kai_Oester__Test", ReplaceUtils.encodeFilename("Kai Öster:,Test"));
-        assertEquals("AeOeUeaeoeuess", ReplaceUtils.encodeFilename("ÄÖÜäöüß"));
+                ReplaceUtils.encodeFilename("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789._-", true));
+        assertEquals("_", ReplaceUtils.encodeFilename(" ", true));
+        assertEquals("__", ReplaceUtils.encodeFilename("  ", true));
+        assertEquals("Kai_Oester__Test", ReplaceUtils.encodeFilename("Kai Öster:,Test", true));
+        assertEquals("AeOeUeaeoeuess", ReplaceUtils.encodeFilename("ÄÖÜäöüß", true));
+
+        assertEquals("Ä____.___.__", ReplaceUtils.encodeFilename("Ä\"*/:.<>?.\\|", false));
+        StringBuilder sb = new StringBuilder();
+        for (char ch = 0; ch <= 31; ch++) {
+            sb.append(ch);
+        }
+        sb.append("xxx").append((char)127);
+        assertEquals("________________________________xxx_", ReplaceUtils.encodeFilename(sb.toString(), false));
+        assertEquals("Ä é", ReplaceUtils.encodeFilename("Ä é", false));
+        sb = new StringBuilder();
+        for (int i = 0; i < 100; i++) {
+            sb.append("1234567890");
+        }
+        assertEquals(255, ReplaceUtils.encodeFilename(sb.toString(), false).length());
     }
 }
