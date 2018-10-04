@@ -24,11 +24,20 @@ public class AbstractI18n {
     }
 
     /**
+     * Throws an error if messageId not found.
      * @param messageId
      * @return localized message.
      */
     public String getMessage(String messageId) {
         return resourceBundle.getString(messageId);
+    }
+
+    /**
+     * @param messageId
+     * @return true, if the messageId is found in the bundle, otherwise false.
+     */
+    public boolean containsMessage(String messageId) {
+        return resourceBundle.containsKey(messageId);
     }
 
     /**
