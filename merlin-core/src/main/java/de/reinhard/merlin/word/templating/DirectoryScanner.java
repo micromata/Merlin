@@ -133,30 +133,20 @@ public class DirectoryScanner {
                 continue;
             }
             templateChecker.getTemplate().setFileDescriptor(fileDescriptor);
-            TemplateDefinitionReference templateDefinitionReference = doc.scanForTemplateDefinitionReference();
-            if (templateDefinitionReference != null) {
-                log.debug("Template definition reference found: " + templateDefinitionReference);
+            String templateDefinitionId = doc.scanForTemplateDefinitionReference();
+            if (templateDefinitionId != null) {
+                log.debug("Template definition reference found: " + templateDefinitionId);
                 TemplateDefinition templateDefinition = null;
                 if (CollectionUtils.isEmpty(templateDefinitions)) {
-                    log.warn("No templateDefinitions given, can't look for reference: " + templateDefinitionReference);
+                    log.warn("No templateDefinitions given, can't look for reference: " + templateDefinitionId);
                 } else {
-                    String id = templateDefinitionReference.getTemplateDefinitionId();
+                    String id = templateDefinitionId;
                     if (id != null) {
                         id = id.trim().toLowerCase();
-                    }
-                    String name = templateDefinitionReference.getTemplateDefinitionName();
-                    if (name != null) {
-                        name = name.trim();
                     }
                     for (TemplateDefinition def : templateDefinitions) {
                         if (id != null) {
                             if (id.equals(def.getId())) {
-                                templateDefinition = def;
-                                break;
-                            }
-                        }
-                        if (name != null) {
-                            if (name.equals(def.getName())) {
                                 templateDefinition = def;
                                 break;
                             }
@@ -166,7 +156,7 @@ public class DirectoryScanner {
                 if (templateDefinition != null) {
                     templateChecker.getTemplate().assignTemplateDefinition(templateDefinition);
                 } else {
-                    log.warn("Template definition not found: " + templateDefinitionReference);
+                    log.warn("Template definition not found: " + templateDefinitionId);
                 }
             } else {
                 for (TemplateDefinition templateDefinition : templateDefinitions) {
@@ -222,9 +212,6 @@ public class DirectoryScanner {
         String search = idOrName.trim().toLowerCase();
         for (TemplateDefinition templateDefinition : templateDefinitions) {
             if (search.equals(templateDefinition.getId().trim().toLowerCase())) {
-                return templateDefinition;
-            }
-            if (search.equals(templateDefinition.getName().trim().toLowerCase())) {
                 return templateDefinition;
             }
         }

@@ -64,9 +64,7 @@ errors.
 You may run a template with the following settings:
 * Customized variables (gender, name of receiver, etc.)
 * A template file. This template file may contain a reference to an existing template definition:
-  > ${templateDefinition.id = "JZpnpojeSuN5JDqtm9KZ"} (template definition referenced by id)
-  >
-  > ${templateDefinition.name = "Employment contract template"} (template definition referenced by name)
+  > ${templateDefinition.id = "Employment contract template"} (template definition referenced by id)
     
   Template definitions are automatically assigned if they have the same file name (without file extension) as the template
    file, e. g. a template named EmploymentContractTemplate.docx matches a definition file named EmploymentContractTemplate.xlsx.

@@ -3,13 +3,15 @@ package de.reinhard.merlin.word;
 import de.reinhard.merlin.csv.CSVStringUtils;
 import de.reinhard.merlin.utils.ReplaceEntry;
 import de.reinhard.merlin.utils.ReplaceUtils;
-import de.reinhard.merlin.word.templating.TemplateDefinitionReference;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -19,8 +21,8 @@ import java.util.regex.Pattern;
  */
 public class RunsProcessor {
     private static Logger log = LoggerFactory.getLogger(RunsProcessor.class);
-    // {templateDefinition.id="JZpnpojeSuN5JDqtm9KZ"} or {templateDefinition.name="Letter"}:
-    static final Pattern TEMPLATE_DEFINITION_REFERENCE_PATTERN = Pattern.compile("\\{\\s*templateDefinition\\.(id?|name?)\\s*=\\s*([^\\}]*)\\s*\\}");
+    // {templateDefinition.id="Letter template"}:
+    static final Pattern TEMPLATE_DEFINITION_REFERENCE_PATTERN = Pattern.compile("\\{\\s*templateDefinition\\.(id)\\s*=\\s*([^\\}]*)\\s*\\}");
     private int[] runSizes;
     private Pattern variablePattern;
     private XWPFParagraph paragraph;
@@ -64,7 +66,7 @@ public class RunsProcessor {
     }
 
     /**
-     * Removes any occurence of {template.id = "..."} or { template.name = "..." }.
+     * Removes any occurence of <tt>{template.id = "..."}</tt>.
      */
     private void removeTemplateReference() {
         Matcher matcher = TEMPLATE_DEFINITION_REFERENCE_PATTERN.matcher(runsText);
@@ -87,7 +89,7 @@ public class RunsProcessor {
         }
     }
 
-    public TemplateDefinitionReference scanForTemplateDefinitionReference() {
+    public String scanForTemplateDefinitionReference() {
         if (runs == null || runs.size() == 0) {
             return null;
         }
@@ -102,13 +104,7 @@ public class RunsProcessor {
                 return null;
             }
             String value = strArray[0];
-            TemplateDefinitionReference ref = new TemplateDefinitionReference();
-            if ("id".equals(variable)) {
-                ref.setTemplateDefinitionId(value);
-            } else {
-                ref.setTemplateDefinitionName(value);
-            }
-            return ref;
+            return value;
         }
         return null;
     }

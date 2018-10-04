@@ -31,7 +31,6 @@ public class DefinitionExcelConverterTest {
         TemplateDefinitionExcelReader reader = new TemplateDefinitionExcelReader();
         TemplateDefinition template = reader.readFromWorkbook(workbook);
         assertEquals(originalTemplate.getId(), template.getId());
-        assertEquals(originalTemplate.getName(), template.getName());
         assertEquals(originalTemplate.getDescription(), template.getDescription());
         assertEquals(originalTemplate.getFilenamePattern(), template.getFilenamePattern());
         assertEquals(originalTemplate.isStronglyRestrictedFilenames(), template.isStronglyRestrictedFilenames());
@@ -75,7 +74,7 @@ public class DefinitionExcelConverterTest {
 
     static TemplateDefinition create() {
         TemplateDefinition template = new TemplateDefinition();
-        template.setName("Employment contract").setFilenamePattern("employment-contract-${Employee}").setStronglyRestrictedFilenames(true).setDescription("This template is used for the generation of emloyee contracts.");
+        template.setId("Employment contract").setFilenamePattern("employment-contract-${Employee}").setStronglyRestrictedFilenames(true).setDescription("This template is used for the generation of emloyee contracts.");
         VariableDefinition gender = createStringVariable("Gender", "Gender of the employee.", true, true).addAllowedValues("male", "female");
         template.add(gender);
         template.add(createStringVariable("Employee", "Name of the employee.", true, true));

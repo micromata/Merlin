@@ -11,11 +11,11 @@ public class DirectoryScannerTest {
         DirectoryScanner directoryScanner = new DirectoryScanner(Definitions.EXAMPLES_TEMPLATES_TEST_DIR, false);
         directoryScanner.process();
         assertEquals(2, directoryScanner.getTemplateDefinitions().size());
-        assertEquals("9MJdzFN2v2PKMJ9erj59", directoryScanner.getTemplateDefinitions().get(0).getId());
-        assertEquals("JZpnpojeSuN5JDqtm9KZ", directoryScanner.getTemplateDefinitions().get(1).getId());
+        assertEquals("Letter-Template", directoryScanner.getTemplateDefinitions().get(0).getId());
+        assertEquals("Employment contract template", directoryScanner.getTemplateDefinitions().get(1).getId());
         assertEquals("LetterTemplate.xlsx",
-                directoryScanner.getTemplateDefinition("9MJdzFN2v2PKMJ9erj59").getFileDescriptor().getFilename());
+                directoryScanner.getTemplateDefinition("Letter-Template").getFileDescriptor().getFilename());
         assertEquals("EmploymentContractTemplate.xlsx",
-                directoryScanner.getTemplateDefinition("JZpnpojeSuN5JDqtm9KZ").getFileDescriptor().getFilename());
+                directoryScanner.getTemplateDefinition("Employment contract template").getFileDescriptor().getFilename());
     }
 }

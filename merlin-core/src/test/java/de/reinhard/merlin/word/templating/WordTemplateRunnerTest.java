@@ -27,9 +27,9 @@ public class WordTemplateRunnerTest {
         TemplateDefinition templateDefinition = DefinitionExcelConverterTest.create();
         WordDocument templateDocument = new WordDocument(new File(Definitions.EXAMPLES_TEMPLATES_TEST_DIR, "EmploymentContractTemplate.docx"));
         WordTemplateRunner runner = new WordTemplateRunner(templateDefinition, templateDocument);
-        TemplateDefinitionReference ref = runner.scanForTemplateDefinitionReference();
+        String ref = runner.scanForTemplateDefinitionReference();
         assertNotNull(ref);
-        assertEquals("Employment contract template", ref.getTemplateDefinitionName());
+        assertEquals("Employment contract template", ref);
         runDocument(runner, "Stéph Ciçá", "male", "3/16/2001",
                 "4/1/2001", "25", "30");
         runDocument(runner, "Bärta Üßten", "female", "8/14/2017",

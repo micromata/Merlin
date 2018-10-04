@@ -1,7 +1,6 @@
 package de.reinhard.merlin.word.templating;
 
 import de.reinhard.merlin.I18n;
-import de.reinhard.merlin.excel.ExcelCell;
 import de.reinhard.merlin.excel.ExcelRow;
 import de.reinhard.merlin.excel.ExcelWorkbook;
 import org.apache.commons.collections4.CollectionUtils;
@@ -22,12 +21,10 @@ public class TemplateDefinitionExcelWriter extends AbstractExcelWriter {
         createVariablesSheet();
         createDependentVariablesSheet();
         createConfigurationSheet();
-        addConfigRow("Name", template.getName(), "merlin.word.templating.definition.config.name");
+        addConfigRow("Id", template.getId(), "merlin.word.templating.definition.config.id");
         addConfigRow("Description", template.getDescription(), "merlin.word.templating.definition.config.description");
         addConfigRow("FilenamePattern", template.getFilenamePattern(), "merlin.word.templating.definition.config.filenamePattern");
         addConfigRow("StronglyRestrictedFilenames", template.isStronglyRestrictedFilenames(), "merlin.word.templating.definition.config.stronglyRestrictedFilenames");
-        ExcelCell cell = addConfigRow("Id", template.getId(), "merlin.word.templating.please_do_not_modify_id");
-        cell.setCellStyle(warningCellStyle);
         currentSheet.autosize();
         return workbook;
     }

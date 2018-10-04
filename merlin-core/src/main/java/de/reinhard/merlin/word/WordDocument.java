@@ -1,6 +1,5 @@
 package de.reinhard.merlin.word;
 
-import de.reinhard.merlin.word.templating.TemplateDefinitionReference;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.openxml4j.opc.OPCPackage;
@@ -73,11 +72,11 @@ public class WordDocument {
         replaceVariables(variables);
     }
 
-    public TemplateDefinitionReference scanForTemplateDefinitionReference() {
+    public String scanForTemplateDefinitionReference() {
         for (IBodyElement element : document.getBodyElements()) {
             if (element instanceof XWPFParagraph) {
                 XWPFParagraph paragraph = (XWPFParagraph) element;
-                TemplateDefinitionReference ref = new RunsProcessor(paragraph).scanForTemplateDefinitionReference();
+                String ref = new RunsProcessor(paragraph).scanForTemplateDefinitionReference();
                 if (ref != null) {
                     return ref;
                 }

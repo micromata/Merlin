@@ -33,8 +33,7 @@ public class TemplateDefinitionExcelReader {
             return false;
         }
         templateDefinition = readConfigFromWorkbook(workbook);
-        if (templateDefinition == null ||
-                (StringUtils.isBlank(templateDefinition.getId()) && StringUtils.isBlank(templateDefinition.getName()))) {
+        if (templateDefinition == null || StringUtils.isBlank(templateDefinition.getId())) {
             return false;
         }
         return true;
@@ -81,13 +80,11 @@ public class TemplateDefinitionExcelReader {
         }
         PropertiesStorage props = excelConfigReader.readConfig(workbook);
         templateDefinition.setId(props.getConfigString("Id"));
-        templateDefinition.setName(props.getConfigString("Name"));
         templateDefinition.setDescription(props.getConfigString("Description"));
         templateDefinition.setFilenamePattern(props.getConfigString("FilenamePattern"));
-        if (StringUtils.isBlank(templateDefinition.getId()) ||
-                StringUtils.isBlank(templateDefinition.getName())) {
+        if (StringUtils.isBlank(templateDefinition.getId())) {
             validTemplateDefinition = false;
-            log.error("Sheet Configuration doesn't contain id and name. Not a valid Merlin template.");
+            log.error("Sheet Configuration doesn't contain Id. Not a valid Merlin template definition.");
         } else if (!excelConfigReader.isValid()) {
             validTemplateDefinition = false;
             log.error("Sheet Configuration isn't valid. Not a valid Merlin template:");

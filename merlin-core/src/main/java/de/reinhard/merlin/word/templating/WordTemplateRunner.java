@@ -42,15 +42,11 @@ public class WordTemplateRunner {
     }
 
     /**
-     * Scans the Word file for template definition, such as:
-     * <ul>
-     * <li>{templateDefinition.id="of84r3orn3w0jo"} or</li>
-     * <li>{templateDefinition.name="Employee contract template"} or</li>
-     * </ul>
+     * Scans the Word file for template definition, such as: <tt>{templateDefinition.id="Employee contract template"}</tt>.
      *
-     * @return TemplateDefinition only with fields id and or name.
+     * @return Id of the referenced template definition.
      */
-    public TemplateDefinitionReference scanForTemplateDefinitionReference() {
+    public String scanForTemplateDefinitionReference() {
         return srcDocument.scanForTemplateDefinitionReference();
     }
 
