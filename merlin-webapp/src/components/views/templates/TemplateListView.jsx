@@ -39,6 +39,7 @@ class TemplateListView extends React.Component {
 
                 const templates = json.templates.map(template => {
                     if (typeof template.templateDefinition === 'object') {
+                        console.log('refId: ' + template.templateDefinition.refId + ', templateDefinition: ' + JSON.stringify(template.templateDefinition))
                         definitions[template.templateDefinition.refId] = template.templateDefinition;
                         template.templateDefinition = template.templateDefinition.refId;
                     }

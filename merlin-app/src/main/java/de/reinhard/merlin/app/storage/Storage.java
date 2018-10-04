@@ -46,17 +46,17 @@ public class Storage {
         return templateDefinitions;
     }
 
-    public TemplateDefinition getTemplateDefinition(String idOrName) {
-        if (idOrName == null) {
+    public TemplateDefinition getTemplateDefinition(String id) {
+        if (id == null) {
             return null;
         }
         for (DirectoryScanner directoryScanner : directoryScannerMap.values()) {
-            TemplateDefinition templateDefinition = directoryScanner.getTemplateDefinition(idOrName);
+            TemplateDefinition templateDefinition = directoryScanner.getTemplateDefinition(id);
             if (templateDefinition != null) {
                 return templateDefinition;
             }
         }
-        log.info("Template definition with id or name '" + idOrName + "' not found.");
+        log.info("Template definition with id '" + id + "' not found.");
         return null;
     }
 

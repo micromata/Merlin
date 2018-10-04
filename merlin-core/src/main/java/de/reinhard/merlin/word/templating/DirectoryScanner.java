@@ -140,13 +140,10 @@ public class DirectoryScanner {
                 if (CollectionUtils.isEmpty(templateDefinitions)) {
                     log.warn("No templateDefinitions given, can't look for reference: " + templateDefinitionId);
                 } else {
-                    String id = templateDefinitionId;
-                    if (id != null) {
-                        id = id.trim().toLowerCase();
-                    }
+                    String id = templateDefinitionId.trim().toLowerCase();
                     for (TemplateDefinition def : templateDefinitions) {
                         if (id != null) {
-                            if (id.equals(def.getId())) {
+                            if (id.equals(def.getId().trim().toLowerCase())) {
                                 templateDefinition = def;
                                 break;
                             }
