@@ -22,9 +22,9 @@ public class SerialDataExcelWriter extends AbstractExcelWriter {
         super.init();
         createVariablesSheet();
         createConfigurationSheet();
-        addConfigRow("Template", serialData.getCanonicalTemplatePath(), null);
+        addConfigRow("Template", serialData.getCanonicalTemplatePath(), "merlin.word.templating.config.template");
         addConfigRow("TemplateDefinition", serialData.getTemplateDefinitionId(), serialData.getTemplateDefinitionName());
-        addConfigRow("Filename", serialData.getFilenamePattern(), null);
+        addConfigRow("FilenamePattern", serialData.getFilenamePattern(), "merlin.word.templating.serial.config.filenamePattern");
         currentSheet.autosize();
         return workbook;
     }

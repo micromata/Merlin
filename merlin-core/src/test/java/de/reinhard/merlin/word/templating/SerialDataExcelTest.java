@@ -47,7 +47,10 @@ public class SerialDataExcelTest {
         SerialData serialData = new SerialData();
         serialData.add(createEntry("female", "Berta Smith", "09/14/2018", "01/01/2008", 40, 30));
         serialData.add(createEntry("male", "Kai Reinhard", "09/14/2018", "08/01/2001", 30, 30));
+        serialData.setFilenamePattern("contract-${Employee}");
         Template template = new Template();
+        template.setFileDescriptor(new FileDescriptor());
+        template.getFileDescriptor().setDirectory(Definitions.OUTPUT_DIR).setRelativePath(".").setFilename("ContractTemplate.doc");
         template.setTemplateDefinition(DefinitionExcelConverterTest.create());
         serialData.setTemplate(template);
         return serialData;
