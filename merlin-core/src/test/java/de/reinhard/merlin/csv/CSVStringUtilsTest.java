@@ -17,5 +17,7 @@ public class CSVStringUtilsTest {
         assertArrayEquals(new String[]{"A", "B", "", "D"}, CSVStringUtils.parseStringList("„A“, „B\", '', D"));
         assertArrayEquals(new String[]{"A", "B", "", "D"}, CSVStringUtils.parseStringList("„A“, „B\"  '' D"));
         assertArrayEquals(new String[]{"A', „B", "", "D"}, CSVStringUtils.parseStringList("„A', „B\"  '' D"));
+        assertArrayEquals(new String[]{"lazy"}, CSVStringUtils.parseStringList("”lazy”"));
+        assertArrayEquals(new String[]{"lazy"}, CSVStringUtils.parseStringList("’lazy’"));
     }
 }
