@@ -76,6 +76,10 @@ public class DirectoryScanner {
                 continue;
             }
             TemplateDefinitionExcelReader templateReader = new TemplateDefinitionExcelReader();
+            if (!templateReader.isMerlinTemplateDefinition(workbook)) {
+                log.info("Skipping file '" + file.getPath() + "', no template definition (OK).");
+                continue;
+            }
             TemplateDefinition templateDefinition = templateReader.readFromWorkbook(workbook, false);
             if (templateDefinition == null) {
                 log.info("Skipping file '" + file.getPath() + "', no template definition (OK).");

@@ -19,9 +19,25 @@ public class TemplateDefinitionExcelReader {
     private TemplateDefinition templateDefinition;
     private TemplateRunContext templateRunContext = new TemplateRunContext();
     private boolean validTemplateDefinition = true;
+    private ExcelConfigReader excelConfigReader;
 
     public TemplateRunContext getTemplateRunContext() {
         return templateRunContext;
+    }
+
+    public boolean isMerlinTemplateDefinition(ExcelWorkbook workbook) {
+        if (workbook.getSheet("Variables") == null) {
+            return false;
+        }
+        if (workbook.getSheet("Configuration") == null) {
+            return false;
+        }
+        templateDefinition = readConfigFromWorkbook(workbook);
+        if (templateDefinition == null ||
+                (StringUtils.isBlank(templateDefinition.getId()) && StringUtils.isBlank(templateDefinition.getName()))) {
+            return false;
+        }
+        return true;
     }
 
     public TemplateDefinition readFromWorkbook(ExcelWorkbook workbook) {
@@ -56,12 +72,14 @@ public class TemplateDefinitionExcelReader {
             return null;
         }
         templateDefinition = new TemplateDefinition();
-        ExcelConfigReader configReader = new ExcelConfigReader(sheet,
-                "Variable", "Value");
-        for (ExcelValidationErrorMessage msg : configReader.getSheet().getAllValidationErrors()) {
+        if (excelConfigReader == null) {
+            excelConfigReader = new ExcelConfigReader(sheet,
+                    "Variable", "Value");
+        }
+        for (ExcelValidationErrorMessage msg : excelConfigReader.getSheet().getAllValidationErrors()) {
             log.error(msg.getMessageWithAllDetails(I18n.getDefault()));
         }
-        PropertiesStorage props = configReader.readConfig(workbook);
+        PropertiesStorage props = excelConfigReader.readConfig(workbook);
         templateDefinition.setId(props.getConfigString("Id"));
         templateDefinition.setName(props.getConfigString("Name"));
         templateDefinition.setDescription(props.getConfigString("Description"));
@@ -70,10 +88,10 @@ public class TemplateDefinitionExcelReader {
                 StringUtils.isBlank(templateDefinition.getName())) {
             validTemplateDefinition = false;
             log.error("Sheet Configuration doesn't contain id and name. Not a valid Merlin template.");
-        } else if (!configReader.isValid()) {
+        } else if (!excelConfigReader.isValid()) {
             validTemplateDefinition = false;
             log.error("Sheet Configuration isn't valid. Not a valid Merlin template:");
-            for (ExcelValidationErrorMessage errorMessage : configReader.getSheet().getAllValidationErrors()) {
+            for (ExcelValidationErrorMessage errorMessage : excelConfigReader.getSheet().getAllValidationErrors()) {
                 log.error(errorMessage.getMessageWithAllDetails(templateRunContext.getI18n()));
             }
         }

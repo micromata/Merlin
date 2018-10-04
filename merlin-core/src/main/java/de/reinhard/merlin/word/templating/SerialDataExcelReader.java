@@ -23,6 +23,21 @@ public class SerialDataExcelReader {
         return templateRunContext;
     }
 
+    public boolean isMerlinSerialTemplateData(ExcelWorkbook workbook) {
+        if (workbook.getSheet("Serial") == null) {
+            return false;
+        }
+        if (workbook.getSheet("Configuration") == null) {
+            return false;
+        }
+        SerialData serialData = readConfigFromWorkbook();
+        if (serialData == null || serialData.getTemplateCanonicalPath() == null) {
+            return false;
+        }
+        return true;
+    }
+
+
     public TemplateDefinition readTemplateReference(ExcelWorkbook workbook) {
         TemplateDefinitionExcelReader templateDefinitionExcelReader = new TemplateDefinitionExcelReader();
         TemplateDefinition templateDefinition = templateDefinitionExcelReader.readConfigFromWorkbook(workbook);

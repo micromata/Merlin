@@ -118,7 +118,7 @@ public class TemplateRunnerRest {
                     return get404Response("Template definition with id or name '" + templateDefinitionId + "' not found.");
                 }
             }
-            SerialDataExcelWriter writer = new SerialDataExcelWriter(null);
+            SerialDataExcelWriter writer = new SerialDataExcelWriter(null, null);
             ExcelWorkbook workbook = null;//writer.writeToWorkbook(templateDefinition, origSerialData);
             File file = new File( "ContractSerialData.xlsx");
             log.info("Writing modified Excel file: " + file.getAbsolutePath());
