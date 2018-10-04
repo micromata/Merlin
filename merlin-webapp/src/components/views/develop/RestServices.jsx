@@ -61,9 +61,7 @@ class RestServices extends React.Component {
 
     onRun() {
         let filename;
-        fetch(getRestServiceUrl('templates/example?templateCanonicalPath='
-            + this.state.templateCanonicalPath + '&templateDefinitionId='
-            + this.state.templateDefinitionId), {
+        fetch(getRestServiceUrl('templates/example-run-data'), {
             method: "GET",
             dataType: "JSON",
             headers: {
