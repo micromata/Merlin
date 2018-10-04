@@ -1,85 +1,135 @@
 package de.reinhard.merlin.app.storage;
 
-import de.reinhard.merlin.word.templating.DirectoryScanner;
-import de.reinhard.merlin.word.templating.Template;
-import de.reinhard.merlin.word.templating.TemplateDefinition;
+import de.reinhard.merlin.word.templating.*;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Storage {
+public class Storage extends AbstractStorage {
     private Logger log = LoggerFactory.getLogger(Storage.class);
     private static final Storage instance = new Storage();
 
-    private Map<String, DirectoryScanner> directoryScannerMap = new HashMap<>();
+    private Map<String, Map<String, TemplateDefinition>> templateDefinitionsByDirectoryAndId;
+
+    private Map<String, Template> templatesByCanonicalPath;
 
     public static Storage getInstance() {
         return instance;
     }
 
     private Storage() {
-    }
-
-    public void add(File directory, boolean recursive) {
-        DirectoryScanner directoryScanner = new DirectoryScanner(directory, recursive);
-        directoryScanner.process();
-        directoryScannerMap.put(directory.getAbsolutePath(), directoryScanner);
+        templateDefinitionsByDirectoryAndId = new HashMap<>();
+        templatesByCanonicalPath = new HashMap<>();
     }
 
     public void add(DirectoryScanner directoryScanner) {
-        directoryScannerMap.put(directoryScanner.getDir().getAbsolutePath(), directoryScanner);
+        String directory = directoryScanner.getDir().getAbsolutePath();
+        for (Template template : directoryScanner.getTemplates()) {
+            templatesByCanonicalPath.put(template.getFileDescriptor().getCanonicalPath(), template);
+        }
+        Map<String, TemplateDefinition> templateDefinitionMap = templateDefinitionsByDirectoryAndId.get(directory);
+        if (templateDefinitionMap == null) {
+            templateDefinitionMap = new HashMap<>();
+            templateDefinitionsByDirectoryAndId.put(directory, templateDefinitionMap);
+        }
+        for (TemplateDefinition templateDefinition : directoryScanner.getTemplateDefinitions()) {
+            templateDefinitionMap.put(normalizeTemplateId(templateDefinition.getId()), templateDefinition);
+        }
     }
 
-    public List<TemplateDefinition> getTemplateDefinitions() {
+    public List<TemplateDefinition> getAllTemplateDefinitions() {
         List<TemplateDefinition> templateDefinitions = new ArrayList<>();
-        for (DirectoryScanner directoryScanner : directoryScannerMap.values()) {
-            if (CollectionUtils.isNotEmpty(directoryScanner.getTemplateDefinitions())) {
-                templateDefinitions.addAll(directoryScanner.getTemplateDefinitions());
+        List<Template> templates = new ArrayList<>();
+        for (Map<String, TemplateDefinition> templateDefinitionsMap : templateDefinitionsByDirectoryAndId.values()) {
+            for (TemplateDefinition templateDefinition : templateDefinitionsMap.values()) {
+                templateDefinitions.add(templateDefinition);
             }
         }
         return templateDefinitions;
     }
 
-    public TemplateDefinition getTemplateDefinition(String id) {
-        if (id == null) {
-            return null;
+    @Override
+    public List<TemplateDefinition> getTemplateDefinition(FileDescriptor descriptor, String templateDefinitionId) {
+        Validate.notNull(templateDefinitionId);
+        templateDefinitionId = normalizeTemplateId(templateDefinitionId);
+        List<TemplateDefinition> list = new ArrayList<>();
+        if (templateDefinitionId == null) {
+            return list;
         }
-        for (DirectoryScanner directoryScanner : directoryScannerMap.values()) {
-            TemplateDefinition templateDefinition = directoryScanner.getTemplateDefinition(id);
-            if (templateDefinition != null) {
-                return templateDefinition;
+        for (Map.Entry<String, Map<String, TemplateDefinition>> entry : templateDefinitionsByDirectoryAndId.entrySet()) {
+            if (descriptor != null && StringUtils.isNotEmpty(descriptor.getDirectory())) {
+                String directory = entry.getKey();
+                if (!descriptor.getDirectory().equals(directory)) {
+                    // Directory doesn't match directory of the FileDescriptor.
+                    continue;
+                }
             }
-        }
-        log.info("Template definition with id '" + id + "' not found.");
-        return null;
-    }
-
-    public List<Template> getTemplates() {
-        List<Template> templates = new ArrayList<>();
-        for (DirectoryScanner directoryScanner : directoryScannerMap.values()) {
-            if (CollectionUtils.isNotEmpty(directoryScanner.getTemplates())) {
-                templates.addAll(directoryScanner.getTemplates());
+            Map<String, TemplateDefinition> templateDefinitionsMap = entry.getValue();
+            TemplateDefinition templateDefinition = templateDefinitionsMap.get(templateDefinitionId);
+            if (templateDefinition == null) {
+                continue;
             }
-        }
-        return templates;
-    }
-
-    public Template getTemplate(String canonicalPath) {
-        for (DirectoryScanner directoryScanner : directoryScannerMap.values()) {
-            if (CollectionUtils.isNotEmpty(directoryScanner.getTemplates())) {
-                for (Template template : directoryScanner.getTemplates()) {
-                    if(canonicalPath.equals(template.getFileDescriptor().getCanonicalPath())) {
-                        return template;
+            if (descriptor == null || descriptor.getRelativePath() == null) {
+                if (templateDefinitionId.equals(normalizeTemplateId(templateDefinition.getId()))) {
+                    list.add(templateDefinition);
+                }
+            } else {
+                if (templateDefinition.getFileDescriptor() == null) {
+                    log.error("FileDescriptor of TemplateDefinition is null: " + templateDefinitionId);
+                } else if (descriptor.getRelativePath().equals(templateDefinition.getFileDescriptor().getRelativePath())) {
+                    if (templateDefinitionId.equals(normalizeTemplateId(templateDefinition.getId()))) {
+                        list.add(templateDefinition);
                     }
                 }
             }
         }
-        return null;
+        if (CollectionUtils.isEmpty(list)) {
+            log.info("Template definition with id '" + templateDefinitionId + "' not found for file descriptor: " + descriptor + ".");
+        }
+        return list;
+    }
+
+    @Override
+    public void putTemplateDefinition(FileDescriptor fileDescriptor, TemplateDefinition templateDefinition) {
+        String directory = "/";
+        if (fileDescriptor != null && StringUtils.isNotEmpty(fileDescriptor.getDirectory())) {
+            directory = fileDescriptor.getDirectory();
+        }
+        Map<String, TemplateDefinition> templateDefinitionsMap = templateDefinitionsByDirectoryAndId.get(directory);
+        if (templateDefinitionsMap == null) {
+            templateDefinitionsMap = new HashMap<>();
+            templateDefinitionsByDirectoryAndId.put(directory, templateDefinitionsMap);
+        }
+        templateDefinitionsMap.put(normalizeTemplateId(templateDefinition.getId()), templateDefinition);
+    }
+
+    @Override
+    public void putTemplate(String canonicalPath, Template template) {
+        templatesByCanonicalPath.put(normalizeCanonicalPath(canonicalPath), template);
+    }
+
+    public List<Template> getAllTemplates() {
+        List<Template> templates = new ArrayList<>();
+        templates.addAll(templatesByCanonicalPath.values());
+        return templates;
+    }
+
+    public Template getTemplate(String canonicalPath) {
+        return templatesByCanonicalPath.get(normalizeCanonicalPath(canonicalPath));
+    }
+
+    private String normalizeTemplateId(String templateId) {
+        return templateId != null ? templateId.trim().toLowerCase() : null;
+    }
+
+    private String normalizeCanonicalPath(String canonicalPath) {
+        return canonicalPath != null ? canonicalPath.trim().toLowerCase() : null;
     }
 }

@@ -4,7 +4,11 @@ import de.reinhard.merlin.app.json.JsonUtils;
 import de.reinhard.merlin.app.storage.Storage;
 import de.reinhard.merlin.excel.ExcelWorkbook;
 import de.reinhard.merlin.word.WordDocument;
-import de.reinhard.merlin.word.templating.*;
+import de.reinhard.merlin.word.templating.SerialDataExcelWriter;
+import de.reinhard.merlin.word.templating.Template;
+import de.reinhard.merlin.word.templating.TemplateDefinition;
+import de.reinhard.merlin.word.templating.WordTemplateRunner;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +18,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.List;
 
 @Path("/templates")
 public class TemplateRunnerRest {
@@ -44,9 +49,15 @@ public class TemplateRunnerRest {
         if (!file.exists()) {
             return get404Response("Template file not found by canonical path: " + data.getTemplateCanonicalPath());
         }
-        TemplateDefinition templateDefinition = Storage.getInstance().getTemplateDefinition(data.getTemplateDefinitionId());
-        if (templateDefinition == null) {
+        List<TemplateDefinition> templateDefinitions = Storage.getInstance().getTemplateDefinition(null, data.getTemplateDefinitionId());
+        TemplateDefinition templateDefinition = null;
+        if (CollectionUtils.isEmpty(templateDefinitions)) {
             log.info("Template definition with id '" + data.getTemplateDefinitionId() + "' not found. Proceeding without template definition.");
+        } else {
+            if (templateDefinitions.size() > 1) {
+                log.warn("Multiple template definition files found with id '" + data.getTemplateDefinitionId() + "'.");
+            }
+            templateDefinition = templateDefinitions.get(0);
         }
         Response response = null;
         try {
@@ -102,7 +113,7 @@ public class TemplateRunnerRest {
      * @see JsonUtils#toJson(Object, boolean)
      */
     public Response getExampleSerialRundata(@QueryParam("templateCanonicalPath") String templateCanonicalPath,
-                                          @QueryParam("templateDefinitionId") String templateDefinitionId) {
+                                            @QueryParam("templateDefinitionId") String templateDefinitionId) {
         log.info("Getting Excel template for serial run: template=" + templateCanonicalPath + ", templateDefinition="
                 + templateDefinitionId);
         Response response = null;
@@ -113,14 +124,19 @@ public class TemplateRunnerRest {
             }
             TemplateDefinition templateDefinition = null;
             if (StringUtils.isNotBlank(templateDefinitionId)) {
-                 templateDefinition = Storage.getInstance().getTemplateDefinition(templateDefinitionId);
-                if (templateDefinition == null) {
+                List<TemplateDefinition> templateDefinitions = Storage.getInstance().getTemplateDefinition(null, templateDefinitionId);
+                if (CollectionUtils.isEmpty(templateDefinitions)) {
                     return get404Response("Template definition with id or name '" + templateDefinitionId + "' not found.");
+                } else {
+                    if (templateDefinitions.size() > 1) {
+                        log.warn("Multiple template definitions found under id '" + templateDefinitionId + "'.");
+                    }
+                    templateDefinition = templateDefinitions.get(0);
                 }
             }
             SerialDataExcelWriter writer = new SerialDataExcelWriter(null, null);
             ExcelWorkbook workbook = null;//writer.writeToWorkbook(templateDefinition, origSerialData);
-            File file = new File( "ContractSerialData.xlsx");
+            File file = new File("ContractSerialData.xlsx");
             log.info("Writing modified Excel file: " + file.getAbsolutePath());
             workbook.getPOIWorkbook().write(new FileOutputStream(file));
 
@@ -132,7 +148,8 @@ public class TemplateRunnerRest {
             response = builder.build();
             //log.info("Downloading file '" + filename + "', length: " + file.length());
             return response;
-        } catch (Exception ex) {
+        } catch (
+                Exception ex) {
             String errorMsg = "Error while try to create Excel template for a serial run for template '" + templateCanonicalPath + "'.";
             log.error(errorMsg + " " + ex.getMessage(), ex);
             return get404Response(errorMsg);
@@ -156,9 +173,9 @@ public class TemplateRunnerRest {
     private static ExampleData createExampleData() {
         ExampleData data = new ExampleData();
         boolean found = false;
-        for (Template template : Storage.getInstance().getTemplates()) {
+        for (Template template : Storage.getInstance().getAllTemplates()) {
             if (template.getTemplateDefinition() != null
-                    && StringUtils.isNotBlank(template.getTemplateDefinition().getId())) {
+                    && "Employment contract template".equals(template.getTemplateDefinition().getId())) {
                 // found template with template definition:
                 data.templateCanonicalPath = template.getFileDescriptor().getCanonicalPath();
                 data.templateDefinitionId = template.getTemplateDefinitionId();

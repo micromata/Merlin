@@ -2,8 +2,10 @@ package de.reinhard.merlin.app.rest;
 
 import de.reinhard.merlin.app.json.JsonUtils;
 import de.reinhard.merlin.app.storage.Storage;
+import de.reinhard.merlin.word.templating.FileDescriptor;
 import de.reinhard.merlin.word.templating.Template;
 import de.reinhard.merlin.word.templating.TemplateDefinition;
+import org.apache.commons.collections4.CollectionUtils;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -21,20 +23,25 @@ public class TemplatesRest {
      * @see JsonUtils#toJson(Object, boolean)
      */
     public String getTemplateDefinitionsList(@QueryParam("prettyPrinter") boolean prettyPrinter) {
-        List<TemplateDefinition> templateDefinitionsList = Storage.getInstance().getTemplateDefinitions();
+        List<TemplateDefinition> templateDefinitionsList = Storage.getInstance().getAllTemplateDefinitions();
         return JsonUtils.toJson(templateDefinitionsList, prettyPrinter);
     }
 
     @GET
-    @Path("definition/{id}")
+    @Path("definition")
     @Produces(MediaType.APPLICATION_JSON)
     /**
      *
      * @param prettyPrinter If true then the json output will be in pretty format.
      * @see JsonUtils#toJson(Object, boolean)
      */
-    public String getTemplateDefinition(@PathParam("id") String id, @QueryParam("prettyPrinter") boolean prettyPrinter) {
-        TemplateDefinition templateDefinition = Storage.getInstance().getTemplateDefinition(id);
+    public String getTemplateDefinition(@QueryParam("directory") String directory, @QueryParam("relativePath") String relativePath,
+                                        @QueryParam("id") String id, @QueryParam("prettyPrinter") boolean prettyPrinter) {
+        FileDescriptor descriptor = new FileDescriptor();
+        descriptor.setDirectory(directory);
+        descriptor.setRelativePath(relativePath);
+        List<TemplateDefinition> templateDefinitions = Storage.getInstance().getTemplateDefinition(descriptor, id);
+        TemplateDefinition templateDefinition = CollectionUtils.isNotEmpty(templateDefinitions) ? templateDefinitions.get(0) : null;
         return JsonUtils.toJson(templateDefinition, prettyPrinter);
     }
 
@@ -61,8 +68,8 @@ public class TemplatesRest {
      */
     public String getList(@QueryParam("prettyPrinter") boolean prettyPrinter) {
         Data data = new Data();
-        List<TemplateDefinition> templateDefinitionsList = Storage.getInstance().getTemplateDefinitions();
-        List<Template> templates = Storage.getInstance().getTemplates();
+        List<TemplateDefinition> templateDefinitionsList = Storage.getInstance().getAllTemplateDefinitions();
+        List<Template> templates = Storage.getInstance().getAllTemplates();
         List<Template> resultTemplates = new ArrayList<>();
         for (Template template : templates) {
             resultTemplates.add(ensureTemplateDefinition(template));

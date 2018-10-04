@@ -96,7 +96,7 @@ class RestServices extends React.Component {
                 <ul>
                     <li><RestUrlLink service='templates/list'/></li>
                     <li><RestUrlLink service='templates/definition-list'/></li>
-                    <li><RestUrlLink service={'templates/definition/' + this.state.templateDefinitionId}/> (by id)</li>
+                    <li><RestUrlLink service={'templates/definition'} params={`id=${this.state.templateDefinitionId}`}/> (by id)</li>
                 </ul>
                 <h4>How to get and run a template:</h4>
                 <ol>
