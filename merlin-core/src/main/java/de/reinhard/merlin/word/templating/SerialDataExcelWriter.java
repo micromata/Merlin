@@ -10,31 +10,34 @@ import org.slf4j.LoggerFactory;
 public class SerialDataExcelWriter extends AbstractExcelWriter {
     private Logger log = LoggerFactory.getLogger(SerialDataExcelWriter.class);
 
-    private TemplateDefinition templateDefinition;
+    private SerialData serialData;
+    private Template template;
 
-    public ExcelWorkbook writeToWorkbook(TemplateDefinition templateDefinition) {
-        return writeToWorkbook(templateDefinition, null);
+    public SerialDataExcelWriter(SerialData serialData) {
+        this.serialData = serialData;
+        this.template = serialData.getTemplate();
     }
 
-    public ExcelWorkbook writeToWorkbook(TemplateDefinition templateDefinition, SerialData serialData) {
-        this.templateDefinition = templateDefinition;
+    public ExcelWorkbook writeToWorkbook() {
         super.init();
-        createVariablesSheet(serialData);
+        createVariablesSheet();
         createConfigurationSheet();
-        addConfigRow("Name", templateDefinition.getName(), null);
-        addConfigRow("Description", templateDefinition.getDescription(), null);
-        addConfigRow("Filename", templateDefinition.getFilenamePattern(), null);
-        ExcelCell cell = addConfigRow("Id", templateDefinition.getId(), "merlin.word.templating.please_do_not_modify_id");
-        cell.setCellStyle(warningCellStyle);
+        addConfigRow("Template", serialData.getCanonicalTemplatePath(), null);
+        addConfigRow("TemplateDefinition", serialData.getTemplateDefinitionId(), serialData.getTemplateDefinitionName());
+        addConfigRow("Filename", serialData.getFilenamePattern(), null);
         currentSheet.autosize();
         return workbook;
     }
 
-    private void createVariablesSheet(SerialData serialData) {
+    private void createVariablesSheet() {
         currentSheet = workbook.createOrGetSheet("Variables");
         ExcelRow row = addDescriptionRow("merlin.word.templating.sheet_serial_variables_description", -1, false);
         row = currentSheet.createRow();
         int numberOfColumns = 0;
+        TemplateDefinition templateDefinition = template.getTemplateDefinition();
+        if (templateDefinition == null) {
+            templateDefinition = template.createAutoTemplateDefinition();
+        }
         for (VariableDefinition variableDefinition : templateDefinition.getVariableDefinitions()) {
             row.createCells(headRowStyle, variableDefinition.getName());
             numberOfColumns++;

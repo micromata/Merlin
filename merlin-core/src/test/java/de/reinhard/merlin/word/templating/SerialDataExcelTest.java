@@ -21,9 +21,9 @@ public class SerialDataExcelTest {
     @Test
     public void writeReadExcelTest() throws Exception {
         TemplateDefinition templateDefinition = DefinitionExcelConverterTest.create();
-        SerialDataExcelWriter writer = new SerialDataExcelWriter();
         SerialData origSerialData = createSerialData();
-        ExcelWorkbook workbook = writer.writeToWorkbook(templateDefinition, origSerialData);
+        SerialDataExcelWriter writer = new SerialDataExcelWriter(origSerialData);
+        ExcelWorkbook workbook = writer.writeToWorkbook();
         File file = new File(Definitions.OUTPUT_DIR, "ContractSerialData.xlsx");
         log.info("Writing modified Excel file: " + file.getAbsolutePath());
         workbook.getPOIWorkbook().write(new FileOutputStream(file));
@@ -47,6 +47,9 @@ public class SerialDataExcelTest {
         SerialData serialData = new SerialData();
         serialData.add(createEntry("female", "Berta Smith", "09/14/2018", "01/01/2008", 40, 30));
         serialData.add(createEntry("male", "Kai Reinhard", "09/14/2018", "08/01/2001", 30, 30));
+        Template template = new Template();
+        template.setTemplateDefinition(DefinitionExcelConverterTest.create());
+        serialData.setTemplate(template);
         return serialData;
     }
 

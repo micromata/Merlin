@@ -10,7 +10,8 @@ public class SerialData {
     private static Logger log = LoggerFactory.getLogger(SerialData.class);
 
     private List<SerialDataEntry> entries = new ArrayList<>();
-    private TemplateDefinition templateDefinition;
+    private String filenamePattern;
+    private Template template;
 
     public SerialData() {
     }
@@ -19,15 +20,54 @@ public class SerialData {
         entries.add(data);
     }
 
-    public TemplateDefinition getTemplateDefinition() {
-        return templateDefinition;
-    }
-
-    public void setTemplateDefinition(TemplateDefinition templateDefinition) {
-        this.templateDefinition = templateDefinition;
-    }
-
     public List<SerialDataEntry> getEntries() {
         return entries;
+    }
+
+    public void setEntries(List<SerialDataEntry> entries) {
+        this.entries = entries;
+    }
+
+    public String getFilenamePattern() {
+        return filenamePattern;
+    }
+
+    public void setFilenamePattern(String filenamePattern) {
+        this.filenamePattern = filenamePattern;
+    }
+
+    public Template getTemplate() {
+        return template;
+    }
+
+    public void setTemplate(Template template) {
+        this.template = template;
+    }
+
+    public String getCanonicalTemplatePath() {
+        if (template == null) {
+            return null;
+        }
+        if (template.getFileDescriptor() == null) {
+            return null;
+        }
+        return template.getFileDescriptor().getCanonicalPath();
+    }
+
+    public String getTemplateDefinitionId() {
+        if (template == null) {
+            return null;
+        }
+        if (template.getTemplateDefinition() == null) {
+            return null;
+        }
+        return template.getTemplateDefinition().getId();
+    }
+
+    public String getTemplateDefinitionName() {
+        if (template.getTemplateDefinition() == null) {
+            return null;
+        }
+        return template.getTemplateDefinition().getName();
     }
 }

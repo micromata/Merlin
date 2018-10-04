@@ -17,6 +17,7 @@ public class SerialDataExcelReader {
 
     private ExcelWorkbook workbook;
     private TemplateRunContext templateRunContext = new TemplateRunContext();
+    private SerialData serialData;
 
     public TemplateRunContext getTemplateRunContext() {
         return templateRunContext;
@@ -32,7 +33,7 @@ public class SerialDataExcelReader {
         this.workbook = workbook;
         TemplateDefinitionExcelReader templateDefinitionExcelReader = new TemplateDefinitionExcelReader();
         SerialData serialData = new SerialData();
-        serialData.setTemplateDefinition(templateDefinition);
+        //serialData.setTemplateDefinition(templateDefinition);
         readVariables(templateDefinition, serialData);
         return serialData;
     }
