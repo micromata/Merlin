@@ -65,20 +65,30 @@ public class AbstractExcelWriter {
         return row;
     }
 
-    protected ExcelCell addConfigRow(String variable, Object value, String descriptionKey) {
+    /**
+     * @param variable
+     * @param value
+     * @param description If i18n key, the translation will be used, otherwise the description itself.
+     * @return
+     */
+    protected ExcelCell addConfigRow(String variable, Object value, String description) {
         ExcelRow row = currentSheet.createRow();
         // Variable
         row.createCell().setCellValue(variable);
         // Value
         if (value instanceof Boolean) {
-            row.createCell().setCellValue(workbook, (Boolean)value);
+            row.createCell().setCellValue(workbook, (Boolean) value);
         } else {
             row.createCell().setCellValue(value == null ? "" : String.valueOf(value));
         }
         // Description
         ExcelCell cell = row.createCell();
-        if (descriptionKey != null) {
-            cell.setCellValue(I18n.getDefault().getMessage(descriptionKey));
+        if (description != null) {
+            if (I18n.getDefault().containsMessage(description)) {
+                cell.setCellValue(I18n.getDefault().getMessage(description));
+            } else {
+                cell.setCellValue(description);
+            }
         } else {
             cell.setCellValue("");
         }
