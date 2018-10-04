@@ -23,7 +23,7 @@ import java.util.Date;
  * If the template files and definition files aren't stored in a local file system this class can also be used.
  * Directory may represent the area, the relative path the sub area for clustering template files.
  */
-public class FileDescriptor {
+public class FileDescriptor implements Cloneable {
     private Logger log = LoggerFactory.getLogger(FileDescriptor.class);
     private String directory;
     private String relativePath;
@@ -172,6 +172,15 @@ public class FileDescriptor {
             return file.getCanonicalPath();
         } catch (IOException ex) {
             return file.getAbsolutePath();
+        }
+    }
+
+    @Override
+    public Object clone() {
+        try {
+            return super.clone();
+        } catch (CloneNotSupportedException ex) {
+            throw new UnsupportedOperationException(this.getClass().getCanonicalName() + " isn't cloneable: " + ex.getMessage(), ex);
         }
     }
 }

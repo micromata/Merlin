@@ -12,7 +12,7 @@ import java.util.*;
 /**
  * A template definition defines variabled usable by templates as well as dependent variables.
  */
-public class TemplateDefinition {
+public class TemplateDefinition implements Cloneable {
     private Logger log = LoggerFactory.getLogger(TemplateDefinition.class);
     private List<VariableDefinition> variableDefinitions = new ArrayList<>();
     private List<DependentVariableDefinition> dependentVariableDefinitions = new ArrayList<>();
@@ -174,5 +174,34 @@ public class TemplateDefinition {
         result.addAll(variables);
         Collections.sort(result, String.CASE_INSENSITIVE_ORDER);
         return result;
+    }
+
+    /**
+     * Makes a deep copy, also of the variable lists (the items will be cloned as well).
+     *
+     * @return
+     */
+    @Override
+    public Object clone() {
+        TemplateDefinition templateDefinition = null;
+        try {
+            templateDefinition = (TemplateDefinition) super.clone();
+        } catch (CloneNotSupportedException ex) {
+            throw new UnsupportedOperationException(this.getClass().getCanonicalName() + " isn't cloneable: " + ex.getMessage(), ex);
+        }
+        if (this.variableDefinitions != null) {
+            templateDefinition.variableDefinitions = new ArrayList<>();
+            for (VariableDefinition variableDefinition : this.variableDefinitions) {
+                templateDefinition.variableDefinitions.add((VariableDefinition)variableDefinition.clone());
+            }
+        }
+        if (this.dependentVariableDefinitions != null) {
+            templateDefinition.dependentVariableDefinitions = new ArrayList<>();
+            for (DependentVariableDefinition dependentVariableDefinition : this.dependentVariableDefinitions) {
+                templateDefinition.dependentVariableDefinitions.add((DependentVariableDefinition)dependentVariableDefinition.clone());
+            }
+        }
+        templateDefinition.dependentVariableDefinitions = new ArrayList<>();
+        return templateDefinition;
     }
 }

@@ -6,7 +6,7 @@ import java.util.*;
 /**
  * Defines a variable which is dependent of another variable (master variable).
  */
-public class DependentVariableDefinition {
+public class DependentVariableDefinition implements Cloneable {
     private String name;
     private VariableDefinition dependsOn;
     private Map<Object, Object> mapping;
@@ -100,4 +100,17 @@ public class DependentVariableDefinition {
         sb.append("}");
         return sb.toString();
     }
+
+    /**
+     * @return Returns a shallow copy of this instance: the keys and values themselves of {@link #getMapping()} are not cloned.)
+     */
+    @Override
+    public Object clone() {
+        try {
+            return super.clone();
+        } catch (CloneNotSupportedException ex) {
+            throw new UnsupportedOperationException(this.getClass().getCanonicalName() + " isn't cloneable: " + ex.getMessage(), ex);
+        }
+    }
+
 }

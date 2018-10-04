@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * Some statistics for templates
  */
-public class TemplateStatistics {
+public class TemplateStatistics implements Cloneable {
     private Logger log = LoggerFactory.getLogger(TemplateStatistics.class);
     private List<String> usedVariables = new ArrayList<>();
     private Conditionals conditionals;
@@ -117,4 +117,14 @@ public class TemplateStatistics {
         tos.append("conditionals", conditionals);
         return tos.toString();
     }
+
+    @Override
+    public Object clone() {
+        try {
+            return super.clone();
+        } catch (CloneNotSupportedException ex) {
+            throw new UnsupportedOperationException(this.getClass().getCanonicalName() + " isn't cloneable: " + ex.getMessage(), ex);
+        }
+    }
+
 }

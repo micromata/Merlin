@@ -7,7 +7,7 @@ import java.beans.Transient;
 import java.util.ArrayList;
 import java.util.List;
 
-public class VariableDefinition {
+public class VariableDefinition implements Cloneable {
     private static Logger log = LoggerFactory.getLogger(VariableDefinition.class);
     private String name;
     private String description;
@@ -192,5 +192,19 @@ public class VariableDefinition {
             }
         }
         return this;
+    }
+
+    /**
+     * @return A shallow copy of this instance.  (The objects of {@link #getAllowedValuesList()} themselves are not copied.)
+     */
+    @Override
+    public Object clone() {
+        VariableDefinition variableDefinition = null;
+        try {
+            variableDefinition = (VariableDefinition) super.clone();
+        } catch (CloneNotSupportedException ex) {
+            throw new UnsupportedOperationException(this.getClass().getCanonicalName() + " isn't cloneable: " + ex.getMessage(), ex);
+        }
+        return variableDefinition;
     }
 }
