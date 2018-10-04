@@ -158,11 +158,10 @@ public class TemplateRunnerRest {
         boolean found = false;
         for (Template template : Storage.getInstance().getTemplates()) {
             if (template.getTemplateDefinition() != null
-                    && StringUtils.isNotBlank(template.getTemplateDefinition().getName())) {
+                    && StringUtils.isNotBlank(template.getTemplateDefinition().getId())) {
                 // found template with template definition:
                 data.templateCanonicalPath = template.getFileDescriptor().getCanonicalPath();
                 data.templateDefinitionId = template.getTemplateDefinitionId();
-                data.templateDefinitionName = template.getTemplateDefinition().getName();
                 found = true;
                 break;
             }
