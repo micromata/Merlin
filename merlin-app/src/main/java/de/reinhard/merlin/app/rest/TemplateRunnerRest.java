@@ -2,10 +2,9 @@ package de.reinhard.merlin.app.rest;
 
 import de.reinhard.merlin.app.json.JsonUtils;
 import de.reinhard.merlin.app.storage.Storage;
+import de.reinhard.merlin.excel.ExcelWorkbook;
 import de.reinhard.merlin.word.WordDocument;
-import de.reinhard.merlin.word.templating.Template;
-import de.reinhard.merlin.word.templating.TemplateDefinition;
-import de.reinhard.merlin.word.templating.WordTemplateRunner;
+import de.reinhard.merlin.word.templating.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +13,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.File;
+import java.io.FileOutputStream;
 
 @Path("/templates")
 public class TemplateRunnerRest {
@@ -63,26 +63,25 @@ public class TemplateRunnerRest {
             log.info("Downloading file '" + filename + "', length: " + file.length());
             return response;
         } catch (Exception ex) {
-            String errorMsg = "Error while try to running template '" + data.getTemplateCanonicalPath() + "'.";
+            String errorMsg = "Error while try to run template '" + data.getTemplateCanonicalPath() + "'.";
             log.error(errorMsg + " " + ex.getMessage(), ex);
             return get404Response(errorMsg);
         }
     }
 
     @GET
-    @Path("example")
+    @Path("example-run-data")
     @Produces(MediaType.APPLICATION_JSON)
     /**
      *
      * @param prettyPrinter If true then the json output will be in pretty format.
      * @see JsonUtils#toJson(Object, boolean)
      */
-    public String getConfig(@QueryParam("templateCanonicalPath") String templateCanonicalPath,
-                            @QueryParam("templateDefinitionId") String templateDefinitionId,
-                            @QueryParam("prettyPrinter") boolean prettyPrinter) {
+    public String getExampleRundata(@QueryParam("prettyPrinter") boolean prettyPrinter) {
+        ExampleData exampleData = createExampleData();
         TemplateRunnerData data = new TemplateRunnerData();
-        data.setTemplateDefinitionId(templateDefinitionId);
-        data.setTemplateCanonicalPath(templateCanonicalPath);
+        data.setTemplateDefinitionId(exampleData.templateDefinitionId);
+        data.setTemplateCanonicalPath(exampleData.templateCanonicalPath);
         data.put("Gender", "female");
         data.put("Employee", "Berta Smith");
         data.put("Date", "2018/01/01");
@@ -94,6 +93,53 @@ public class TemplateRunnerRest {
     }
 
     @GET
+    @Path("serial-run-excel-template")
+    @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    /**
+     *
+     * @param templateCanonicalPath Canonical path of the template to run.
+     * @param templateDefinitionId Id or name of the template defintion (if exist)
+     * @see JsonUtils#toJson(Object, boolean)
+     */
+    public Response getExampleSerialRundata(@QueryParam("templateCanonicalPath") String templateCanonicalPath,
+                                          @QueryParam("templateDefinitionId") String templateDefinitionId) {
+        log.info("Getting Excel template for serial run: template=" + templateCanonicalPath + ", templateDefinition="
+                + templateDefinitionId);
+        Response response = null;
+        try {
+            Template template = Storage.getInstance().getTemplate(templateCanonicalPath);
+            if (template == null) {
+                return get404Response("Template with canonical path '" + templateCanonicalPath + "' not found.");
+            }
+            TemplateDefinition templateDefinition = null;
+            if (StringUtils.isNotBlank(templateDefinitionId)) {
+                 templateDefinition = Storage.getInstance().getTemplateDefinition(templateDefinitionId);
+                if (templateDefinition == null) {
+                    return get404Response("Template definition with id or name '" + templateDefinitionId + "' not found.");
+                }
+            }
+            SerialDataExcelWriter writer = new SerialDataExcelWriter(null);
+            ExcelWorkbook workbook = null;//writer.writeToWorkbook(templateDefinition, origSerialData);
+            File file = new File( "ContractSerialData.xlsx");
+            log.info("Writing modified Excel file: " + file.getAbsolutePath());
+            workbook.getPOIWorkbook().write(new FileOutputStream(file));
+
+            String filename = "serial.xlsx";//runner.createFilename(file.getName(), data.getVariables());
+            Response.ResponseBuilder builder = Response.ok(null);//result.getAsByteArrayOutputStream().toByteArray());
+            builder.header("Content-Disposition", "attachment; filename=" + filename);
+            // Needed to get the Content-Disposition by client:
+            builder.header("Access-Control-Expose-Headers", "Content-Disposition");
+            response = builder.build();
+            //log.info("Downloading file '" + filename + "', length: " + file.length());
+            return response;
+        } catch (Exception ex) {
+            String errorMsg = "Error while try to create Excel template for a serial run for template '" + templateCanonicalPath + "'.";
+            log.error(errorMsg + " " + ex.getMessage(), ex);
+            return get404Response(errorMsg);
+        }
+    }
+
+    @GET
     @Path("example-definitions")
     @Produces(MediaType.APPLICATION_JSON)
     /**
@@ -102,6 +148,12 @@ public class TemplateRunnerRest {
      * of the assigned template definition.
      */
     public String getExampleDefinition() {
+        ExampleData data = createExampleData();
+        String json = JsonUtils.toJson(data, false);
+        return json;
+    }
+
+    private static ExampleData createExampleData() {
         ExampleData data = new ExampleData();
         boolean found = false;
         for (Template template : Storage.getInstance().getTemplates()) {
@@ -120,11 +172,10 @@ public class TemplateRunnerRest {
             data.templateDefinitionName = "No template definition found (reset settings)!";
             data.templateDefinitionId = "No template definition found (reset settings)!";
         }
-        String json = JsonUtils.toJson(data, false);
-        return json;
+        return data;
     }
 
-    public class ExampleData {
+    public static class ExampleData {
         String templateDefinitionId;
         String templateDefinitionName;
         String templateCanonicalPath;
@@ -140,6 +191,7 @@ public class TemplateRunnerRest {
         public String getTemplateDefinitionName() {
             return templateDefinitionName;
         }
+
     }
 
     private Response get404Response(String errorMessage) {

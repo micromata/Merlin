@@ -7,6 +7,7 @@ import de.reinhard.merlin.word.templating.TemplateDefinition;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.util.ArrayList;
 import java.util.List;
 
 @Path("/templates")
@@ -62,11 +63,30 @@ public class TemplatesRest {
         Data data = new Data();
         List<TemplateDefinition> templateDefinitionsList = Storage.getInstance().getTemplateDefinitions();
         List<Template> templates = Storage.getInstance().getTemplates();
+        List<Template> resultTemplates = new ArrayList<>();
         for (Template template : templates) {
-            template.createDummyTemplateDefinitionIfNotExist();
+            resultTemplates.add(ensureTemplateDefinition(template));
         }
         data.setTemplateDefinitions(templateDefinitionsList);
-        data.setTemplates(templates);
+        data.setTemplates(resultTemplates);
         return JsonUtils.toJson(data, prettyPrinter);
+    }
+
+    /**
+     * Method ensures a template definition without modifiing the original template object.
+     *
+     * @param template
+     * @return If the given template has a template definition, the template itself is returned. If not a clone of the tmeplate
+     * will be returned including an auto generated template definition.
+     * @see Template#createAutoTemplateDefinition()
+     */
+    private Template ensureTemplateDefinition(Template template) {
+        Template resultTemplate = template;
+        if (template.getTemplateDefinition() == null) {
+            TemplateDefinition templateDefinition = template.createAutoTemplateDefinition();
+            resultTemplate = (Template)template.clone();
+            resultTemplate.setTemplateDefinition(templateDefinition);
+        }
+        return resultTemplate;
     }
 }
