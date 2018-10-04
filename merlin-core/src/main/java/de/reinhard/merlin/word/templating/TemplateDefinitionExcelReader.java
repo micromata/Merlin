@@ -75,9 +75,9 @@ public class TemplateDefinitionExcelReader {
         if (excelConfigReader == null) {
             excelConfigReader = new ExcelConfigReader(sheet,
                     "Variable", "Value");
-        }
-        for (ExcelValidationErrorMessage msg : excelConfigReader.getSheet().getAllValidationErrors()) {
-            log.error(msg.getMessageWithAllDetails(I18n.getDefault()));
+            for (ExcelValidationErrorMessage msg : excelConfigReader.getSheet().getAllValidationErrors()) {
+                log.error(msg.getMessageWithAllDetails(I18n.getDefault()));
+            }
         }
         PropertiesStorage props = excelConfigReader.readConfig(workbook);
         templateDefinition.setId(props.getConfigString("Id"));

@@ -18,6 +18,7 @@ public class SerialDataExcelReader {
 
     private ExcelWorkbook workbook;
     private TemplateRunContext templateRunContext = new TemplateRunContext();
+    private ExcelConfigReader excelConfigReader;
 
     public TemplateRunContext getTemplateRunContext() {
         return templateRunContext;
@@ -58,12 +59,14 @@ public class SerialDataExcelReader {
             return null;
         }
         SerialData serialData = new SerialData();
-        ExcelConfigReader configReader = new ExcelConfigReader(sheet,
-                "Variable", "Value");
-        for (ExcelValidationErrorMessage msg : configReader.getSheet().getAllValidationErrors()) {
-            log.error(msg.getMessageWithAllDetails(I18n.getDefault()));
+        if (excelConfigReader == null) {
+            excelConfigReader = new ExcelConfigReader(sheet,
+                    "Variable", "Value");
+            for (ExcelValidationErrorMessage msg : excelConfigReader.getSheet().getAllValidationErrors()) {
+                log.error(msg.getMessageWithAllDetails(I18n.getDefault()));
+            }
         }
-        PropertiesStorage props = configReader.readConfig(workbook);
+        PropertiesStorage props = excelConfigReader.readConfig(workbook);
         serialData.setTemplateCanonicalPath(props.getConfigString("Template"));
         serialData.setTemplateDefinitionId(props.getConfigString("TemplateDefinition"));
         serialData.setFilenamePattern(props.getConfigString("FilenamePattern"));
