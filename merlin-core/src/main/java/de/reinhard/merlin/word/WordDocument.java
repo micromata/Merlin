@@ -122,8 +122,8 @@ public class WordDocument {
         return variables;
     }
 
-    public org.apache.commons.io.output.ByteArrayOutputStream getAsByteArrayOutputStream() {
-        org.apache.commons.io.output.ByteArrayOutputStream bos = new ByteArrayOutputStream();
+    public ByteArrayOutputStream getAsByteArrayOutputStream() {
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
         try {
             document.write(bos);
         } catch (IOException ex) {
