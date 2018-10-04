@@ -8,12 +8,36 @@ import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ConditionalsTest {
     private Logger log = LoggerFactory.getLogger(ConditionalsTest.class);
+
+    @Test
+    public void conditionalStringMatchTest() {
+        checkResult("lazy", "First paragraph",
+                "The lazy fox jumps over the water.",
+                "The lazy fox jumps over the water.");
+    }
+
+    private void checkResult(String lazyValue, String... expectedParagraphs) {
+        XWPFDocument poiDoc = new XWPFDocument();
+        TestHelper.createParagraph(poiDoc, "First paragraph"); // 0
+        TestHelper.createParagraph(poiDoc, "The{if fox=”lazy”} lazy{endif} fox jumps over the water."); // 1
+        TestHelper.createParagraph(poiDoc, "The{if fox in `lazy´, 'very lazy'} lazy{endif} fox jumps over the water."); // 1
+        Conditionals conditionals = new Conditionals(new WordDocument(poiDoc));
+        WordDocument doc = new WordDocument(poiDoc);
+        Map<String, Object> variables = new HashMap<>();
+        variables.put("lazy", lazyValue);
+        doc.process(variables);
+        List<XWPFParagraph> paragraphs = poiDoc.getParagraphs();
+        for (int i = 0; i < expectedParagraphs.length; i++) {
+            assertEquals(expectedParagraphs[i], paragraphs.get(i).getText());
+        }
+    }
 
     @Test
     public void conditionalSimpleReadTest() {
@@ -74,7 +98,7 @@ public class ConditionalsTest {
     private void testRuns(XWPFParagraph paragraph, String... runs) {
         assertEquals(runs.length, paragraph.getRuns().size());
         int i = 0;
-        for (String run:runs) {
+        for (String run : runs) {
             assertEquals(run, paragraph.getRuns().get(i).getText(0));
             i++;
         }
@@ -84,7 +108,7 @@ public class ConditionalsTest {
                       int endifBodyElementNumber, String... values) {
         assertEquals(variable, conditional.getVariable(), "Variable name.");
         assertEquals(type, conditional.getType(), "AbstractConditional type");
-        assertArrayEquals(values, ((ConditionalString)conditional).getValues(), "Values");
+        assertArrayEquals(values, ((ConditionalString) conditional).getValues(), "Values");
         assertEquals(ifBodyElementNumber, conditional.getConditionalExpressionRange().getStartPosition().getBodyElementNumber(), "body-number of if-statement.");
         assertEquals(endifBodyElementNumber, conditional.getEndConditionalExpressionRange().getStartPosition().getBodyElementNumber(), "body-number of endif-statement");
     }
@@ -93,7 +117,7 @@ public class ConditionalsTest {
                       int endifBodyElementNumber, double number) {
         assertEquals(variable, conditional.getVariable(), "Variable name.");
         assertEquals(type, conditional.getType(), "AbstractConditional type");
-        assertTrue(ConditionalComparator.equals(number, ((ConditionalComparator)conditional).getDoubleValue()), "double value.");
+        assertTrue(ConditionalComparator.equals(number, ((ConditionalComparator) conditional).getDoubleValue()), "double value.");
         assertEquals(ifBodyElementNumber, conditional.getConditionalExpressionRange().getStartPosition().getBodyElementNumber(), "body-number of if-statement.");
         assertEquals(endifBodyElementNumber, conditional.getEndConditionalExpressionRange().getStartPosition().getBodyElementNumber(), "body-number of endif-statement");
     }

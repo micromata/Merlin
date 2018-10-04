@@ -44,7 +44,7 @@ public class RunsProcessorTest {
         assertRunIdx(1, 12, 13, "$", "{Mitarbeiter}");
     }
 
-    private XWPFRun createRun(String text) {
+    static XWPFRun createRun(String text) {
         XWPFRun run = mock(XWPFRun.class);
         when(run.getText(0)).thenReturn(text);
         return run;
