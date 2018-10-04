@@ -22,10 +22,10 @@ public class TemplateDefinitionExcelWriter extends AbstractExcelWriter {
         createVariablesSheet();
         createDependentVariablesSheet();
         createConfigurationSheet();
-        addConfigRow("Name", template.getName(), null);
-        addConfigRow("Description", template.getDescription(), null);
-        addConfigRow("Filename", template.getFilenamePattern(), null);
-        addConfigRow("StronglyRestrictedFilenames", template.isStronglyRestrictedFilenames(), "merlin.word.templating.stronglyRestrictedFilenames");
+        addConfigRow("Name", template.getName(), "merlin.word.templating.definition.config.name");
+        addConfigRow("Description", template.getDescription(), "merlin.word.templating.definition.config.description");
+        addConfigRow("FilenamePattern", template.getFilenamePattern(), "merlin.word.templating.definition.config.filenamePattern");
+        addConfigRow("StronglyRestrictedFilenames", template.isStronglyRestrictedFilenames(), "merlin.word.templating.definition.config.stronglyRestrictedFilenames");
         ExcelCell cell = addConfigRow("Id", template.getId(), "merlin.word.templating.please_do_not_modify_id");
         cell.setCellStyle(warningCellStyle);
         currentSheet.autosize();

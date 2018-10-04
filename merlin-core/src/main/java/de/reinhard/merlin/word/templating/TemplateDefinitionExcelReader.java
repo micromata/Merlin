@@ -65,7 +65,7 @@ public class TemplateDefinitionExcelReader {
         template.setId(props.getConfigString("Id"));
         template.setName(props.getConfigString("Name"));
         template.setDescription(props.getConfigString("Description"));
-        template.setFilenamePattern(props.getConfigString("Filename"));
+        template.setFilenamePattern(props.getConfigString("FilenamePattern"));
         if (StringUtils.isBlank(template.getId()) ||
                 StringUtils.isBlank(template.getName())) {
             validTemplate = false;
