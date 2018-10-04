@@ -83,7 +83,7 @@ class Template extends React.Component {
                 className={'template'}
                 onClick={this.showRunModal}
             >
-                <span className={'template-name'}>{this.props.name}</span>
+                <span className={'template-name'}>{this.props.id}</span>
                 <span className={'template-description'}>{this.props.description}</span>
                 <span className={'hint'}>Click to run.</span>
             </div>
@@ -94,7 +94,7 @@ class Template extends React.Component {
             >
                 <Modal.Header>
                     <Modal.Title>
-                        Run {this.props.name}
+                        Run {this.props.id}
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
