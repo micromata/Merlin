@@ -12,18 +12,44 @@ public class SerialDataExcelWriter extends AbstractExcelWriter {
 
     private SerialData serialData;
     private Template template;
+    private TemplateDefinition templateDefinition;
 
-    public SerialDataExcelWriter(SerialData serialData) {
+    /**
+     * The properties in template are overwriting any settings in serialData.
+     *
+     * @param serialData
+     * @param template
+     */
+    public SerialDataExcelWriter(SerialData serialData, Template template) {
+        this(serialData, template, null);
+    }
+
+    /**
+     * The properties in template are overwriting any settings in serialData.
+     *
+     * @param serialData
+     * @param template
+     * @param templateDefinition Any setting in template concerning template definition is ignored. This parameter is used instead.
+     */
+    public SerialDataExcelWriter(SerialData serialData, Template template, TemplateDefinition templateDefinition) {
         this.serialData = serialData;
-        this.template = serialData.getTemplate();
+        this.template = template;
+        if (templateDefinition != null) {
+            this.templateDefinition = templateDefinition;
+        } else {
+            this.templateDefinition = template.getTemplateDefinition();
+            if (this.templateDefinition == null) {
+                this.templateDefinition = template.createAutoTemplateDefinition();
+            }
+        }
     }
 
     public ExcelWorkbook writeToWorkbook() {
         super.init();
         createVariablesSheet();
         createConfigurationSheet();
-        addConfigRow("Template", serialData.getCanonicalTemplatePath(), "merlin.word.templating.config.template");
-        addConfigRow("TemplateDefinition", serialData.getTemplateDefinitionId(), serialData.getTemplateDefinitionName());
+        addConfigRow("Template", template.getFileDescriptor().getCanonicalPath(), "merlin.word.templating.config.template");
+        addConfigRow("TemplateDefinition", templateDefinition.getId(), templateDefinition.getDescription());
         addConfigRow("FilenamePattern", serialData.getFilenamePattern(), "merlin.word.templating.serial.config.filenamePattern");
         currentSheet.autosize();
         return workbook;
@@ -34,10 +60,6 @@ public class SerialDataExcelWriter extends AbstractExcelWriter {
         ExcelRow row = addDescriptionRow("merlin.word.templating.sheet_serial_variables_description", -1, false);
         row = currentSheet.createRow();
         int numberOfColumns = 0;
-        TemplateDefinition templateDefinition = template.getTemplateDefinition();
-        if (templateDefinition == null) {
-            templateDefinition = template.createAutoTemplateDefinition();
-        }
         for (VariableDefinition variableDefinition : templateDefinition.getVariableDefinitions()) {
             row.createCells(headRowStyle, variableDefinition.getName());
             numberOfColumns++;

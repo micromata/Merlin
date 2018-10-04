@@ -16,9 +16,9 @@ public class TemplateDefinitionExcelReader {
     private Logger log = LoggerFactory.getLogger(TemplateDefinitionExcelReader.class);
 
     private ExcelWorkbook workbook;
-    private TemplateDefinition template;
+    private TemplateDefinition templateDefinition;
     private TemplateRunContext templateRunContext = new TemplateRunContext();
-    private boolean validTemplate = true;
+    private boolean validTemplateDefinition = true;
 
     public TemplateRunContext getTemplateRunContext() {
         return templateRunContext;
@@ -36,17 +36,17 @@ public class TemplateDefinitionExcelReader {
      * @return
      */
     public TemplateDefinition readFromWorkbook(ExcelWorkbook workbook, boolean templateDefinitionRequired) {
-        template = readConfigFromWorkbook(workbook);
-        if (template == null) {
+        templateDefinition = readConfigFromWorkbook(workbook);
+        if (templateDefinition == null) {
             if (templateDefinitionRequired) {
                 log.error("No template definition found. Not a valid Merlin template.");
             }
-            validTemplate = false;
+            validTemplateDefinition = false;
             return null;
         }
         readVariables();
         readDependentVariables();
-        return template;
+        return templateDefinition;
     }
 
     public TemplateDefinition readConfigFromWorkbook(ExcelWorkbook workbook) {
@@ -55,36 +55,36 @@ public class TemplateDefinitionExcelReader {
         if (sheet == null) {
             return null;
         }
-        template = new TemplateDefinition();
+        templateDefinition = new TemplateDefinition();
         ExcelConfigReader configReader = new ExcelConfigReader(sheet,
                 "Variable", "Value");
         for (ExcelValidationErrorMessage msg : configReader.getSheet().getAllValidationErrors()) {
             log.error(msg.getMessageWithAllDetails(I18n.getDefault()));
         }
         PropertiesStorage props = configReader.readConfig(workbook);
-        template.setId(props.getConfigString("Id"));
-        template.setName(props.getConfigString("Name"));
-        template.setDescription(props.getConfigString("Description"));
-        template.setFilenamePattern(props.getConfigString("FilenamePattern"));
-        if (StringUtils.isBlank(template.getId()) ||
-                StringUtils.isBlank(template.getName())) {
-            validTemplate = false;
+        templateDefinition.setId(props.getConfigString("Id"));
+        templateDefinition.setName(props.getConfigString("Name"));
+        templateDefinition.setDescription(props.getConfigString("Description"));
+        templateDefinition.setFilenamePattern(props.getConfigString("FilenamePattern"));
+        if (StringUtils.isBlank(templateDefinition.getId()) ||
+                StringUtils.isBlank(templateDefinition.getName())) {
+            validTemplateDefinition = false;
             log.error("Sheet Configuration doesn't contain id and name. Not a valid Merlin template.");
         } else if (!configReader.isValid()) {
-            validTemplate = false;
+            validTemplateDefinition = false;
             log.error("Sheet Configuration isn't valid. Not a valid Merlin template:");
             for (ExcelValidationErrorMessage errorMessage : configReader.getSheet().getAllValidationErrors()) {
                 log.error(errorMessage.getMessageWithAllDetails(templateRunContext.getI18n()));
             }
         }
-        return template;
+        return templateDefinition;
     }
 
     private void readVariables() {
         ExcelSheet sheet = workbook.getSheet("Variables");
         if (sheet == null) {
             log.info("Sheet 'Variables' not found. Not a valid Merlin template.");
-            validTemplate = false;
+            validTemplateDefinition = false;
             return;
         }
         ExcelColumnDef variableCol = sheet.registerColumn("Variable",
@@ -127,7 +127,7 @@ public class TemplateDefinitionExcelReader {
             if (values != null) {
                 variable.addAllowedValues((Object[]) values);
             }
-            template.add(variable);
+            templateDefinition.add(variable);
         }
     }
 
@@ -153,7 +153,7 @@ public class TemplateDefinitionExcelReader {
             String valuesString = PoiHelper.getValueAsString(sheet.getCell(row, mappingCol));
             String[] values = CSVStringUtils.parseStringList(valuesString);
             String dependsOnString = PoiHelper.getValueAsString(sheet.getCell(row, dependsOnCol));
-            VariableDefinition master = template.getVariableDefinition(dependsOnString);
+            VariableDefinition master = templateDefinition.getVariableDefinition(dependsOnString);
             DependentVariableDefinition variable = new DependentVariableDefinition();
             variable.setName(name);
             variable.setDependsOn(master);
@@ -162,7 +162,7 @@ public class TemplateDefinitionExcelReader {
                     variable.addMapping(master.getAllowedValuesList().get(i), values[i]);
                 }
             }
-            template.add(variable);
+            templateDefinition.add(variable);
         }
     }
 
@@ -182,7 +182,7 @@ public class TemplateDefinitionExcelReader {
     /**
      * @return false, if any required settings are missed.
      */
-    public boolean isValidTemplate() {
-        return validTemplate;
+    public boolean isValidTemplateDefinition() {
+        return validTemplateDefinition;
     }
 }

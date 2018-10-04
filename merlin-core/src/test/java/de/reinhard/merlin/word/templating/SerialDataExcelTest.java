@@ -21,8 +21,12 @@ public class SerialDataExcelTest {
     @Test
     public void writeReadExcelTest() throws Exception {
         TemplateDefinition templateDefinition = DefinitionExcelConverterTest.create();
+        Template template = new Template();
+        template.setFileDescriptor(new FileDescriptor());
+        template.getFileDescriptor().setDirectory(Definitions.OUTPUT_DIR).setRelativePath(".").setFilename("ContractTemplate.doc");
+        template.setTemplateDefinition(templateDefinition);
         SerialData origSerialData = createSerialData();
-        SerialDataExcelWriter writer = new SerialDataExcelWriter(origSerialData);
+        SerialDataExcelWriter writer = new SerialDataExcelWriter(origSerialData, template);
         ExcelWorkbook workbook = writer.writeToWorkbook();
         File file = new File(Definitions.OUTPUT_DIR, "ContractSerialData.xlsx");
         log.info("Writing modified Excel file: " + file.getAbsolutePath());
@@ -31,6 +35,9 @@ public class SerialDataExcelTest {
         workbook = new ExcelWorkbook(file);
         SerialDataExcelReader reader = new SerialDataExcelReader();
         SerialData serialData = reader.readFromWorkbook(workbook, templateDefinition);
+        assertEquals(template.getFileDescriptor().getCanonicalPath(), serialData.getTemplateCanonicalPath());
+        assertEquals(origSerialData.getFilenamePattern(), serialData.getFilenamePattern());
+        assertEquals(templateDefinition.getId(), serialData.getTemplateDefinitionId());
         assertEquals(origSerialData.getEntries().size(), serialData.getEntries().size());
         for (int i = 0; i < origSerialData.getEntries().size(); i++) {
             Map<String, Object> origMap = origSerialData.getEntries().get(i).getVariables();
@@ -48,11 +55,6 @@ public class SerialDataExcelTest {
         serialData.add(createEntry("female", "Berta Smith", "09/14/2018", "01/01/2008", 40, 30));
         serialData.add(createEntry("male", "Kai Reinhard", "09/14/2018", "08/01/2001", 30, 30));
         serialData.setFilenamePattern("contract-${Employee}");
-        Template template = new Template();
-        template.setFileDescriptor(new FileDescriptor());
-        template.getFileDescriptor().setDirectory(Definitions.OUTPUT_DIR).setRelativePath(".").setFilename("ContractTemplate.doc");
-        template.setTemplateDefinition(DefinitionExcelConverterTest.create());
-        serialData.setTemplate(template);
         return serialData;
     }
 

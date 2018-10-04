@@ -82,7 +82,7 @@ public class DirectoryScanner {
                 continue;
             }
             templateDefinition.setFileDescriptor(fileDescriptor);
-            if (!templateReader.isValidTemplate()) {
+            if (!templateReader.isValidTemplateDefinition()) {
                 log.info("Skipping '" + file.getAbsolutePath() + "'. It's not a valid Merlin template file.");
                 continue;
             }

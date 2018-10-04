@@ -14,6 +14,7 @@ public class Template implements Cloneable {
     private Logger log = LoggerFactory.getLogger(Template.class);
     private TemplateStatistics statistics;
     private TemplateDefinition templateDefinition;
+    private TemplateDefinitionReference templateDefinitionReference;
     private FileDescriptor fileDescriptor;
 
     public Template() {
@@ -59,7 +60,22 @@ public class Template implements Cloneable {
     }
 
     public String getTemplateDefinitionId() {
-        return templateDefinition != null ? templateDefinition.getId() : null;
+        if (templateDefinition != null) {
+            return templateDefinition.getId();
+        }
+        if (templateDefinitionReference != null) {
+            return templateDefinitionReference.getTemplateDefinitionId() != null ? templateDefinitionReference.getTemplateDefinitionId()
+                    : templateDefinitionReference.getTemplateDefinitionName();
+        }
+        return null;
+    }
+
+    public TemplateDefinitionReference getTemplateDefinitionReference() {
+        return templateDefinitionReference;
+    }
+
+    public void setTemplateDefinitionReference(TemplateDefinitionReference templateDefinitionReference) {
+        this.templateDefinitionReference = templateDefinitionReference;
     }
 
     @Override

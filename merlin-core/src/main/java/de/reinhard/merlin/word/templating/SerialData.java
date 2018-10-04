@@ -11,7 +11,8 @@ public class SerialData {
 
     private List<SerialDataEntry> entries = new ArrayList<>();
     private String filenamePattern;
-    private Template template;
+    private String templateCanonicalPath;
+    private String templateDefinitionId;
 
     public SerialData() {
     }
@@ -36,38 +37,19 @@ public class SerialData {
         this.filenamePattern = filenamePattern;
     }
 
-    public Template getTemplate() {
-        return template;
+    public String getTemplateCanonicalPath() {
+        return templateCanonicalPath;
     }
 
-    public void setTemplate(Template template) {
-        this.template = template;
-    }
-
-    public String getCanonicalTemplatePath() {
-        if (template == null) {
-            return null;
-        }
-        if (template.getFileDescriptor() == null) {
-            return null;
-        }
-        return template.getFileDescriptor().getCanonicalPath();
+    public void setTemplateCanonicalPath(String templateCanonicalPath) {
+        this.templateCanonicalPath = templateCanonicalPath;
     }
 
     public String getTemplateDefinitionId() {
-        if (template == null) {
-            return null;
-        }
-        if (template.getTemplateDefinition() == null) {
-            return null;
-        }
-        return template.getTemplateDefinition().getId();
+        return templateDefinitionId;
     }
 
-    public String getTemplateDefinitionName() {
-        if (template.getTemplateDefinition() == null) {
-            return null;
-        }
-        return template.getTemplateDefinition().getName();
+    public void setTemplateDefinitionId(String templateDefinitionId) {
+        this.templateDefinitionId = templateDefinitionId;
     }
 }

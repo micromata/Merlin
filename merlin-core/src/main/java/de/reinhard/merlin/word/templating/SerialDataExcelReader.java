@@ -1,6 +1,7 @@
 package de.reinhard.merlin.word.templating;
 
 import de.reinhard.merlin.I18n;
+import de.reinhard.merlin.data.PropertiesStorage;
 import de.reinhard.merlin.excel.*;
 import de.reinhard.merlin.utils.Converter;
 import org.apache.commons.collections4.CollectionUtils;
@@ -17,7 +18,6 @@ public class SerialDataExcelReader {
 
     private ExcelWorkbook workbook;
     private TemplateRunContext templateRunContext = new TemplateRunContext();
-    private SerialData serialData;
 
     public TemplateRunContext getTemplateRunContext() {
         return templateRunContext;
@@ -32,11 +32,29 @@ public class SerialDataExcelReader {
     public SerialData readFromWorkbook(ExcelWorkbook workbook, TemplateDefinition templateDefinition) {
         this.workbook = workbook;
         TemplateDefinitionExcelReader templateDefinitionExcelReader = new TemplateDefinitionExcelReader();
-        SerialData serialData = new SerialData();
-        //serialData.setTemplateDefinition(templateDefinition);
+        SerialData serialData = readConfigFromWorkbook();
         readVariables(templateDefinition, serialData);
         return serialData;
     }
+
+    private SerialData readConfigFromWorkbook() {
+        ExcelSheet sheet = workbook.getSheet("Configuration");
+        if (sheet == null) {
+            return null;
+        }
+        SerialData serialData = new SerialData();
+        ExcelConfigReader configReader = new ExcelConfigReader(sheet,
+                "Variable", "Value");
+        for (ExcelValidationErrorMessage msg : configReader.getSheet().getAllValidationErrors()) {
+            log.error(msg.getMessageWithAllDetails(I18n.getDefault()));
+        }
+        PropertiesStorage props = configReader.readConfig(workbook);
+        serialData.setTemplateCanonicalPath(props.getConfigString("Template"));
+        serialData.setTemplateDefinitionId(props.getConfigString("TemplateDefinition"));
+        serialData.setFilenamePattern(props.getConfigString("FilenamePattern"));
+        return serialData;
+    }
+
 
     private void readVariables(TemplateDefinition templateDefinition, SerialData serialData) {
         ExcelSheet sheet = workbook.getSheet("Variables");
