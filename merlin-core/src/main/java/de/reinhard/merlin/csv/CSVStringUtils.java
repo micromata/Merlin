@@ -13,8 +13,8 @@ public class CSVStringUtils {
 
     ;
 
-    private static final String VALUE_SINGLE_START_QUOTS = "‚'’";
-    private static final String VALUE_SINGLE_END_QUOTS = "‘'’";
+    private static final String VALUE_SINGLE_START_QUOTS = "‚'’`´";
+    private static final String VALUE_SINGLE_END_QUOTS = "‘'’`´";
     private static final String VALUE_DOUBLE_START_QUOTS = "„\"“”";
     private static final String VALUE_DOUBLE_END_QUOTS = "“”\"";
     private static final String VALUE_SEPARATOR_CHARS = ",;,:";

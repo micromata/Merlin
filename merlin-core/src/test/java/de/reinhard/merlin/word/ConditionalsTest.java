@@ -31,11 +31,11 @@ public class ConditionalsTest {
         Conditionals conditionals = new Conditionals(new WordDocument(poiDoc));
         WordDocument doc = new WordDocument(poiDoc);
         Map<String, Object> variables = new HashMap<>();
-        variables.put("lazy", lazyValue);
+        variables.put("fox", lazyValue);
         doc.process(variables);
         List<XWPFParagraph> paragraphs = poiDoc.getParagraphs();
         for (int i = 0; i < expectedParagraphs.length; i++) {
-            assertEquals(expectedParagraphs[i], paragraphs.get(i).getText());
+            assertEquals(expectedParagraphs[i], paragraphs.get(i).getText(), "Unexpected in paragraph #" + i);
         }
     }
 
