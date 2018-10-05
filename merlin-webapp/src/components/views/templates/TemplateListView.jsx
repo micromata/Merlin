@@ -16,6 +16,16 @@ class TemplateListView extends React.Component {
         this.fetchTemplates();
     };
 
+    onRefresh = () => {
+        fetch(`${this.path}/refresh`, {
+            method: 'GET',
+            headers: {
+                'Accept': 'text/plain'
+            }
+        });
+        //this.fetchTemplates;
+    };
+
     fetchTemplates = () => {
         this.setState({
             isFetching: true,
@@ -23,7 +33,6 @@ class TemplateListView extends React.Component {
             definitions: undefined,
             templates: undefined
         });
-
         fetch(`${this.path}/list`, {
             method: 'GET',
             headers: {
@@ -82,7 +91,7 @@ class TemplateListView extends React.Component {
             content = <div>
                 <div
                     className={'template-list-refresh'}
-                    onClick={this.fetchTemplates}
+                    onClick={this.onRefresh}
                 >
                     <Glyphicon glyph={'refresh'}/> Refresh
                 </div>

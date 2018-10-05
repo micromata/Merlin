@@ -35,10 +35,6 @@ public class Main extends Application {
     public void start(Stage stage) {
         this.stage = stage;
         log.info("Starting Java FX application in mode: " + RunningMode.getMode());
-        if (RunningMode.getMode() == RunningMode.Mode.TemplatesTest) {
-            // Creating data for testing.
-            TestData.create(RunningMode.getBaseDir());
-        }
         main = this;
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(Main.class.getResource("/Main.fxml"));

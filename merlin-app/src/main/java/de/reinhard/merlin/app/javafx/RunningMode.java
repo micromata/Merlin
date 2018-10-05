@@ -46,7 +46,7 @@ public class RunningMode {
         RunningMode.running = running;
     }
 
-    static File getBaseDir() {
+    public static File getBaseDir() {
         if (baseDir == null) {
             baseDir = new File(System.getProperty("user.dir")); // Merlin base dir.
         }

@@ -15,6 +15,18 @@ import java.util.List;
 @Path("/templates")
 public class TemplatesRest {
     @GET
+    @Path("refresh")
+    @Produces(MediaType.TEXT_PLAIN)
+    /**
+     * Reloads all templates on the server.
+     * @return "OK"
+     */
+    public String refresh() {
+        Storage.getInstance().refresh();
+        return "OK";
+    }
+
+    @GET
     @Path("definition-list")
     @Produces(MediaType.APPLICATION_JSON)
     /**

@@ -1,5 +1,6 @@
 package de.reinhard.merlin.app.storage;
 
+import de.reinhard.merlin.app.javafx.RunningMode;
 import de.reinhard.merlin.word.templating.*;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -20,11 +21,17 @@ public class Storage extends AbstractStorage {
 
     private Map<String, Template> templatesByCanonicalPath;
 
+    private boolean dirty = true;
+
     public static Storage getInstance() {
         return instance;
     }
 
     private Storage() {
+        clear();
+    }
+
+    private void clear() {
         templateDefinitionsByDirectoryAndId = new HashMap<>();
         templatesByCanonicalPath = new HashMap<>();
     }
@@ -125,11 +132,27 @@ public class Storage extends AbstractStorage {
         return templatesByCanonicalPath.get(normalizeCanonicalPath(canonicalPath));
     }
 
+    public synchronized void refresh() {
+        log.info("(Re-loading storage.");
+        clear();
+        dirty = false;
+        if (RunningMode.getMode() == RunningMode.Mode.TemplatesTest) {
+            // Creating data for testing.
+            TestData.create(RunningMode.getBaseDir());
+        }
+    }
+
     private String normalizeTemplateId(String templateId) {
         return templateId != null ? templateId.trim().toLowerCase() : null;
     }
 
     private String normalizeCanonicalPath(String canonicalPath) {
         return canonicalPath != null ? canonicalPath.trim().toLowerCase() : null;
+    }
+
+    private synchronized void checkRefresh() {
+        if (!dirty) {
+            return;
+        }
     }
 }
