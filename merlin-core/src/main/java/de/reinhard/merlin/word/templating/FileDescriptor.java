@@ -24,7 +24,7 @@ import java.util.Date;
  * Directory may represent the area, the relative path the sub area for clustering template files.
  */
 public class FileDescriptor implements Cloneable {
-    private Logger log = LoggerFactory.getLogger(FileDescriptor.class);
+    private static Logger log = LoggerFactory.getLogger(FileDescriptor.class);
     private String directory;
     private String relativePath;
     private String filename;
@@ -171,6 +171,7 @@ public class FileDescriptor implements Cloneable {
         try {
             return file.getCanonicalPath();
         } catch (IOException ex) {
+            log.error("Can't get canonical path for dir '" + file.getAbsolutePath() + "': " + ex.getMessage(), ex);
             return file.getAbsolutePath();
         }
     }

@@ -15,13 +15,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Storage extends AbstractStorage {
+public class Storage implements StorageInterface {
     private Logger log = LoggerFactory.getLogger(Storage.class);
     private static final Storage instance = new Storage();
 
-    private Map<String, Map<String, TemplateDefinition>> templateDefinitionsByDirectoryAndId;
-
-    private Map<String, Template> templatesByCanonicalPath;
+    // Key is the canonical path of the directory.
+    private Map<String, DirectoryScanner> directoryScannerMap;
 
     private boolean dirty = true;
 
@@ -30,36 +29,18 @@ public class Storage extends AbstractStorage {
     }
 
     private Storage() {
-        clear();
-    }
-
-    private void clear() {
-        templateDefinitionsByDirectoryAndId = new HashMap<>();
-        templatesByCanonicalPath = new HashMap<>();
+        directoryScannerMap = new HashMap<>();
     }
 
     public void add(DirectoryScanner directoryScanner) {
-        String directory = directoryScanner.getDir().getAbsolutePath();
-        for (Template template : directoryScanner.getTemplates()) {
-            templatesByCanonicalPath.put(template.getFileDescriptor().getCanonicalPath(), template);
-        }
-        Map<String, TemplateDefinition> templateDefinitionMap = templateDefinitionsByDirectoryAndId.get(directory);
-        if (templateDefinitionMap == null) {
-            templateDefinitionMap = new HashMap<>();
-            templateDefinitionsByDirectoryAndId.put(directory, templateDefinitionMap);
-        }
-        for (TemplateDefinition templateDefinition : directoryScanner.getTemplateDefinitions()) {
-            templateDefinitionMap.put(normalizeTemplateId(templateDefinition.getId()), templateDefinition);
-        }
+        directoryScannerMap.put(directoryScanner.getCanonicalPath(), directoryScanner);
     }
 
     public List<TemplateDefinition> getAllTemplateDefinitions() {
+        checkRefresh();
         List<TemplateDefinition> templateDefinitions = new ArrayList<>();
-        List<Template> templates = new ArrayList<>();
-        for (Map<String, TemplateDefinition> templateDefinitionsMap : templateDefinitionsByDirectoryAndId.values()) {
-            for (TemplateDefinition templateDefinition : templateDefinitionsMap.values()) {
-                templateDefinitions.add(templateDefinition);
-            }
+        for (DirectoryScanner directoryScanner : directoryScannerMap.values()) {
+            templateDefinitions.addAll(directoryScanner.getTemplateDefinitions());
         }
         return templateDefinitions;
     }
@@ -67,21 +48,21 @@ public class Storage extends AbstractStorage {
     @Override
     public List<TemplateDefinition> getTemplateDefinition(FileDescriptor descriptor, String templateDefinitionId) {
         Validate.notNull(templateDefinitionId);
+        checkRefresh();
         templateDefinitionId = normalizeTemplateId(templateDefinitionId);
         List<TemplateDefinition> list = new ArrayList<>();
         if (templateDefinitionId == null) {
             return list;
         }
-        for (Map.Entry<String, Map<String, TemplateDefinition>> entry : templateDefinitionsByDirectoryAndId.entrySet()) {
+        for (DirectoryScanner directoryScanner : directoryScannerMap.values()) {
             if (descriptor != null && StringUtils.isNotEmpty(descriptor.getDirectory())) {
-                String directory = entry.getKey();
+                String directory = directoryScanner.getCanonicalPath();
                 if (!descriptor.getDirectory().equals(directory)) {
                     // Directory doesn't match directory of the FileDescriptor.
                     continue;
                 }
             }
-            Map<String, TemplateDefinition> templateDefinitionsMap = entry.getValue();
-            TemplateDefinition templateDefinition = templateDefinitionsMap.get(templateDefinitionId);
+            TemplateDefinition templateDefinition = directoryScanner.getTemplateDefinition(templateDefinitionId);
             if (templateDefinition == null) {
                 continue;
             }
@@ -107,6 +88,7 @@ public class Storage extends AbstractStorage {
     }
 
     private void reloadIfModified(List<TemplateDefinition> templateDefinitions) {
+        checkRefresh();
         if (CollectionUtils.isEmpty(templateDefinitions)) {
             // Nothing to do;
             return;
@@ -117,6 +99,7 @@ public class Storage extends AbstractStorage {
     }
 
     private void reloadIfModified(TemplateDefinition templateDefinition) {
+        checkRefresh();
         FileDescriptor descriptor = templateDefinition.getFileDescriptor();
         if (descriptor == null) {
             log.warn("No file descriptor given, can't check modification of template definition: '" + templateDefinition.getId() + "'.");
@@ -128,15 +111,15 @@ public class Storage extends AbstractStorage {
             return;
         }
         if (descriptor.isModified(file)) {
-            log.info("Template definition file '"  + templateDefinition.getId() + "' modified. Reload from file: " + file.getAbsolutePath());
+            log.info("Template definition file '" + templateDefinition.getId() + "' modified. Reload from file: " + file.getAbsolutePath());
             TemplateDefinitionExcelReader reader = new TemplateDefinitionExcelReader();
             ExcelWorkbook workbook = new ExcelWorkbook(file);
             templateDefinition = reader.readFromWorkbook(workbook);
-    //templateDefinitionsByDirectoryAndId.put()
+            //templateDefinitionsByDirectoryAndId.put()
         }
     }
 
-    @Override
+   /* @Override
     public void putTemplateDefinition(FileDescriptor fileDescriptor, TemplateDefinition templateDefinition) {
         String directory = "/";
         if (fileDescriptor != null && StringUtils.isNotEmpty(fileDescriptor.getDirectory())) {
@@ -153,21 +136,42 @@ public class Storage extends AbstractStorage {
     @Override
     public void putTemplate(String canonicalPath, Template template) {
         templatesByCanonicalPath.put(normalizeCanonicalPath(canonicalPath), template);
-    }
+    }*/
 
     public List<Template> getAllTemplates() {
+        checkRefresh();
         List<Template> templates = new ArrayList<>();
-        templates.addAll(templatesByCanonicalPath.values());
+        for (DirectoryScanner directoryScanner : directoryScannerMap.values()) {
+            templates.addAll(directoryScanner.getTemplates());
+        }
         return templates;
     }
 
     public Template getTemplate(String canonicalPath) {
-        return templatesByCanonicalPath.get(normalizeCanonicalPath(canonicalPath));
+        Validate.notNull(canonicalPath);
+        checkRefresh();
+        boolean directoryScannerFound = false;
+        for (DirectoryScanner directoryScanner : directoryScannerMap.values()) {
+            if (!canonicalPath.startsWith(directoryScanner.getCanonicalPath())) {
+                // canonicalPath is not part of this directory scanner.
+                continue;
+            }
+            directoryScannerFound = true;
+            Template template = directoryScanner.getTemplate(canonicalPath);
+            if (template != null) {
+                return template;
+            }
+        }
+        if (directoryScannerFound == false) {
+            log.info("No directory scanner matching parent directory of canonical path '" + canonicalPath + "' registered. Can't find template.");
+        } else {
+            log.info("No template with canonical path '" + canonicalPath + "' found.");
+        }
+        return null;
     }
 
     public synchronized void refresh() {
         log.info("(Re-loading storage.");
-        clear();
         dirty = false;
         if (RunningMode.getMode() == RunningMode.Mode.TemplatesTest) {
             // Creating data for testing.
@@ -179,13 +183,10 @@ public class Storage extends AbstractStorage {
         return templateId != null ? templateId.trim().toLowerCase() : null;
     }
 
-    private String normalizeCanonicalPath(String canonicalPath) {
-        return canonicalPath != null ? canonicalPath.trim().toLowerCase() : null;
-    }
-
     private synchronized void checkRefresh() {
         if (!dirty) {
             return;
         }
+        refresh();
     }
 }

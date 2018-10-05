@@ -27,9 +27,13 @@ public class DirectoryScanner {
      * @param recursive If true, the directory will be searched recursively for Merlin templates. Default is false.
      */
     public DirectoryScanner(File dir, boolean recursive) {
-        this.dir = dir;
+        this.dir = new File(FileDescriptor.getCanonicalPath(dir));
         this.recursive = recursive;
         clear();
+    }
+
+    public String getCanonicalPath() {
+        return this.dir.toString();
     }
 
     public void clear() {
@@ -181,8 +185,12 @@ public class DirectoryScanner {
     }
 
     public Template getTemplate(FileDescriptor descriptor) {
+        return getTemplate(descriptor.getCanonicalPath());
+    }
+
+    public Template getTemplate(String canonicalPath) {
         for (Template template : templates) {
-            if (descriptor.equals(template.getFileDescriptor())) {
+            if (canonicalPath.equals(template.getFileDescriptor().getCanonicalPath())) {
                 return template;
             }
         }
@@ -199,14 +207,14 @@ public class DirectoryScanner {
     }
 
     /**
-     * @param idOrName Id or name of the template definition to search for.
+     * @param id Id or name of the template definition to search for.
      * @return
      */
-    public TemplateDefinition getTemplateDefinition(String idOrName) {
-        if (idOrName == null) {
+    public TemplateDefinition getTemplateDefinition(String id) {
+        if (id == null) {
             return null;
         }
-        String search = idOrName.trim().toLowerCase();
+        String search = id.trim().toLowerCase();
         for (TemplateDefinition templateDefinition : templateDefinitions) {
             if (search.equals(templateDefinition.getId().trim().toLowerCase())) {
                 return templateDefinition;
