@@ -16,16 +16,6 @@ class TemplateListView extends React.Component {
         this.fetchTemplates();
     };
 
-    onRefresh = () => {
-        fetch(`${this.path}/refresh`, {
-            method: 'GET',
-            headers: {
-                'Accept': 'text/plain'
-            }
-        });
-        //this.fetchTemplates;
-    };
-
     fetchTemplates = () => {
         this.setState({
             isFetching: true,
@@ -48,7 +38,7 @@ class TemplateListView extends React.Component {
 
                 const templates = json.templates.map(template => {
                     if (typeof template.templateDefinition === 'object') {
-                        console.log('refId: ' + template.templateDefinition.refId + ', templateDefinition: ' + JSON.stringify(template.templateDefinition))
+                        //console.log('refId: ' + template.templateDefinition.refId + ', templateDefinition: ' + JSON.stringify(template.templateDefinition))
                         definitions[template.templateDefinition.refId] = template.templateDefinition;
                         template.templateDefinition = template.templateDefinition.refId;
                     }
@@ -91,7 +81,7 @@ class TemplateListView extends React.Component {
             content = <div>
                 <div
                     className={'template-list-refresh'}
-                    onClick={this.onRefresh}
+                    onClick={this.fetchTemplates}
                 >
                     <Glyphicon glyph={'refresh'}/> Refresh
                 </div>
