@@ -1,6 +1,7 @@
 package de.reinhard.merlin.app.storage;
 
 import de.reinhard.merlin.app.javafx.RunningMode;
+import de.reinhard.merlin.excel.ExcelWorkbook;
 import de.reinhard.merlin.word.templating.*;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -8,6 +9,7 @@ import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -100,7 +102,38 @@ public class Storage extends AbstractStorage {
         if (CollectionUtils.isEmpty(list)) {
             log.info("Template definition with id '" + templateDefinitionId + "' not found for file descriptor: " + descriptor + ".");
         }
+        reloadIfModified(list);
         return list;
+    }
+
+    private void reloadIfModified(List<TemplateDefinition> templateDefinitions) {
+        if (CollectionUtils.isEmpty(templateDefinitions)) {
+            // Nothing to do;
+            return;
+        }
+        for (TemplateDefinition templateDefinition : templateDefinitions) {
+            reloadIfModified(templateDefinition);
+        }
+    }
+
+    private void reloadIfModified(TemplateDefinition templateDefinition) {
+        FileDescriptor descriptor = templateDefinition.getFileDescriptor();
+        if (descriptor == null) {
+            log.warn("No file descriptor given, can't check modification of template definition: '" + templateDefinition.getId() + "'.");
+            return;
+        }
+        File file = new File(descriptor.getCanonicalPath());
+        if (!file.exists()) {
+            log.warn("File '" + file.getAbsolutePath() + "' doesn't exist, can't check modification of template definition: '" + templateDefinition.getId() + "'.");
+            return;
+        }
+        if (descriptor.isModified(file)) {
+            log.info("Template definition file '"  + templateDefinition.getId() + "' modified. Reload from file: " + file.getAbsolutePath());
+            TemplateDefinitionExcelReader reader = new TemplateDefinitionExcelReader();
+            ExcelWorkbook workbook = new ExcelWorkbook(file);
+            templateDefinition = reader.readFromWorkbook(workbook);
+    //templateDefinitionsByDirectoryAndId.put()
+        }
     }
 
     @Override
