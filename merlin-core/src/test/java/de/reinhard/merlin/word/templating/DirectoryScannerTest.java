@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class DirectoryScannerTest {
     @Test
     public void scanTest() {
-        DirectoryScanner directoryScanner = new DirectoryScanner(Definitions.EXAMPLES_TEMPLATES_TEST_DIR, false);
+        DirectoryScanner directoryScanner = new DirectoryScanner(Definitions.EXAMPLES_TEMPLATES_TEST_DIR.toPath(), false);
         directoryScanner.process();
         assertEquals(2, directoryScanner.getTemplateDefinitions().size());
         assertEquals("Letter-Template", directoryScanner.getTemplateDefinitions().get(0).getId());

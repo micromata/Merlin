@@ -1,5 +1,6 @@
 package de.reinhard.merlin.word;
 
+import de.reinhard.merlin.persistency.PersistencyRegistry;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.openxml4j.opc.OPCPackage;
@@ -7,15 +8,29 @@ import org.apache.poi.xwpf.usermodel.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class WordDocument {
+public class WordDocument implements AutoCloseable {
     private Logger log = LoggerFactory.getLogger(WordDocument.class);
     XWPFDocument document;
     private String filename;
+    private File file;
+    private InputStream inputStream;
+
+    public static WordDocument create(Path path) {
+        File file = PersistencyRegistry.getDefault().getFile(path);
+        if (file != null) {
+            return new WordDocument(file);
+        }
+        String filename = path.getFileName().toString();
+        return new WordDocument(PersistencyRegistry.getDefault().getInputStream(path), filename);
+    }
 
     /**
      * @param document
@@ -32,33 +47,51 @@ public class WordDocument {
     }
 
     public WordDocument(File wordFile) {
-        FileInputStream inputStream;
-        try {
-            inputStream = new FileInputStream(wordFile);
-        } catch (FileNotFoundException ex) {
-            log.error("Couldn't open File '" + wordFile.getAbsolutePath() + "': ", ex);
-            throw new RuntimeException(ex);
-        }
+        this.file = wordFile;
         this.filename = wordFile.getAbsolutePath();
-        init(inputStream);
-    }
-
-    /**
-     * @param inputStream
-     */
-    public WordDocument(InputStream inputStream) {
-        init(inputStream);
-    }
-
-    private void init(InputStream inputStream) {
         try {
-            document = new XWPFDocument(OPCPackage.open(inputStream));
+            document = new XWPFDocument(OPCPackage.open(filename));
         } catch (IOException ex) {
             log.error("Couldn't open File '" + filename + "': " + ex.getMessage(), ex);
             throw new RuntimeException(ex);
         } catch (InvalidFormatException ex) {
             log.error("Unsupported file format '" + filename + "': " + ex.getMessage(), ex);
             throw new RuntimeException(ex);
+        }
+    }
+
+    /**
+     * @param inputStream
+     * @param filename    Only for logging purposes if any error occurs.
+     */
+    public WordDocument(InputStream inputStream, String filename) {
+        this.inputStream = inputStream;
+        this.filename = filename;
+        try {
+            document = new XWPFDocument(inputStream);
+        } catch (IOException ex) {
+            log.error("Couldn't open File '" + filename + "': " + ex.getMessage(), ex);
+            throw new RuntimeException(ex);
+        }
+    }
+
+    @Override
+    public void close() {
+        try {
+            if (inputStream != null) {
+                inputStream.close();
+            }
+        } catch (final IOException ioe) {
+            // ignore
+        }
+    }
+
+    @Override
+    public void finalize() throws Throwable {
+        try {
+            close();
+        } finally {
+            super.finalize();
         }
     }
 
@@ -132,7 +165,6 @@ public class WordDocument {
         return bos;
     }
 
-
     private void replaceVariables(Map<String, Object> variables) {
         for (IBodyElement element : document.getBodyElements()) {
             if (element instanceof XWPFParagraph) {
@@ -159,5 +191,12 @@ public class WordDocument {
 
     public void setFilename(String filename) {
         this.filename = filename;
+    }
+
+    public Long getLength() {
+        if (this.file != null) {
+            return file.length();
+        }
+        return null;
     }
 }

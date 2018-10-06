@@ -1,26 +1,41 @@
 package de.reinhard.merlin.excel;
 
+import de.reinhard.merlin.persistency.PersistencyRegistry;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.*;
+import java.io.InputStream;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Wraps and enhances a POI workbook.
  */
-public class ExcelWorkbook {
+public class ExcelWorkbook implements AutoCloseable {
     private Logger log = LoggerFactory.getLogger(ExcelWorkbook.class);
 
     private Workbook workbook;
     private List<ExcelSheet> sheetList;
     private Map<String, CellStyle> cellStyleMap = new HashMap<>();
     private Map<String, Font> fontMap = new HashMap<>();
+    private InputStream inputStream;
+
+    public static ExcelWorkbook create(Path path) {
+        File file = PersistencyRegistry.getDefault().getFile(path);
+        if (file != null) {
+            return new ExcelWorkbook(file);
+        }
+        String filename = path.getFileName().toString();
+        return new ExcelWorkbook(PersistencyRegistry.getDefault().getInputStream(path), filename);
+    }
+
 
     public ExcelWorkbook(Workbook workbook) {
         this.workbook = workbook;
@@ -31,15 +46,8 @@ public class ExcelWorkbook {
     }
 
     public ExcelWorkbook(File excelFile) {
-        FileInputStream inputStream;
         try {
-            inputStream = new FileInputStream(excelFile);
-        } catch (FileNotFoundException ex) {
-            log.error("Couldn't open File '" + excelFile.getAbsolutePath() + "': ", ex);
-            throw new RuntimeException(ex);
-        }
-        try {
-            workbook = WorkbookFactory.create(inputStream);
+            workbook = WorkbookFactory.create(excelFile);
         } catch (IOException ex) {
             log.error("Couldn't open File '" + excelFile.getAbsolutePath() + "': " + ex.getMessage(), ex);
             throw new RuntimeException(ex);
@@ -49,6 +57,23 @@ public class ExcelWorkbook {
         }
     }
 
+    /**
+     *
+     * @param inputStream
+     * @param filename Only for logging purposes if any error occurs.
+     */
+    public ExcelWorkbook(InputStream inputStream, String filename) {
+        this.inputStream = inputStream;
+        try {
+            workbook = WorkbookFactory.create(inputStream);
+        } catch (IOException ex) {
+            log.error("Couldn't open File '" + filename + "': " + ex.getMessage(), ex);
+            throw new RuntimeException(ex);
+        } catch (InvalidFormatException ex) {
+            log.error("Unsupported file format '" + filename + "': " + ex.getMessage(), ex);
+            throw new RuntimeException(ex);
+        }
+    }
 
     public ExcelSheet getSheet(String sheetName) {
         initializeSheetList();
@@ -136,5 +161,25 @@ public class ExcelWorkbook {
             fontMap.put(id, font);
         }
         return font;
+    }
+
+    @Override
+    public void close() {
+        try {
+            if (inputStream != null) {
+                inputStream.close();
+            }
+        } catch (final IOException ioe) {
+            // ignore
+        }
+    }
+
+    @Override
+    public void finalize() throws Throwable {
+        try {
+            close();
+        } finally {
+            super.finalize();
+        }
     }
 }

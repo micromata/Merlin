@@ -52,46 +52,46 @@ public class FileDescriptorTest {
         FileUtils.write(file, "Test", Charset.defaultCharset());
         Date now = new Date();
         FileDescriptor descriptor = new FileDescriptor();
-        assertTrue(descriptor.isModified(file)); // last update not set.
+        assertTrue(descriptor.isModified(file.toPath())); // last update not set.
         descriptor.setLastUpdate(new Date(now.getTime() + 1000));
-        assertFalse(descriptor.isModified(file)); // last update is 1s in the future.
+        assertFalse(descriptor.isModified(file.toPath())); // last update is 1s in the future.
         descriptor.setLastUpdate(new Date(now.getTime() - 1000));
         FileUtils.write(file, "Test", Charset.defaultCharset());
-        assertTrue(descriptor.isModified(file)); // last update is 1s in the past.
+        assertTrue(descriptor.isModified(file.toPath())); // last update is 1s in the past.
     }
 
     @Test
     public void relativizePathTest() {
         File dir = new File("/Users/kai/Documents");
         FileDescriptor fileDescriptor = new FileDescriptor();
-        fileDescriptor.setDirectory(dir);
+        fileDescriptor.setDirectory(dir.toPath());
         File file = new File("/Users/kai/Documents/templates/template.xls");
-        fileDescriptor.setRelativePath(file);
+        fileDescriptor.setRelativePath(file.toPath());
         assertEquals("templates", fileDescriptor.getRelativePath());
         file = new File("/Users/kai/template.xls");
-        fileDescriptor.setRelativePath(file);
+        fileDescriptor.setRelativePath(file.toPath());
         assertEquals("..", fileDescriptor.getRelativePath());
         file = new File("/Users/kai/templates/template.xls");
-        fileDescriptor.setRelativePath(file);
+        fileDescriptor.setRelativePath(file.toPath());
         assertEquals("../templates", fileDescriptor.getRelativePath());
         file = new File("/Users/kai/Documents/template.xls");
-        fileDescriptor.setRelativePath(file);
-        assertEquals(".", fileDescriptor.getRelativePath());
+        fileDescriptor.setRelativePath(file.toPath());
+        assertEquals("", fileDescriptor.getRelativePath());
     }
 
     @Test
     public void canonicalPathTest() {
         File dir = new File("/Users/kai/Documents");
         FileDescriptor fileDescriptor = new FileDescriptor();
-        fileDescriptor.setDirectory(dir);
+        fileDescriptor.setDirectory(dir.toPath());
         File file = new File("/Users/kai/Documents/templates/template.xls");
-        fileDescriptor.setRelativePath(file);
-        assertEquals("/Users/kai/Documents/templates/template.xls", fileDescriptor.getCanonicalPath());
+        fileDescriptor.setRelativePath(file.toPath());
+        assertEquals("/Users/kai/Documents/templates/template.xls", fileDescriptor.getCanonicalPathString());
         file = new File("/Users/kai/Documents/template.xls");
-        fileDescriptor.setRelativePath(file);
-        assertEquals("/Users/kai/Documents/template.xls", fileDescriptor.getCanonicalPath());
+        fileDescriptor.setRelativePath(file.toPath());
+        assertEquals("/Users/kai/Documents/template.xls", fileDescriptor.getCanonicalPathString());
         file = new File("/Users/kai/tmp/template.xls");
-        fileDescriptor.setRelativePath(file);
-        assertEquals("/Users/kai/tmp/template.xls", fileDescriptor.getCanonicalPath());
+        fileDescriptor.setRelativePath(file.toPath());
+        assertEquals("/Users/kai/tmp/template.xls", fileDescriptor.getCanonicalPathString());
     }
 }

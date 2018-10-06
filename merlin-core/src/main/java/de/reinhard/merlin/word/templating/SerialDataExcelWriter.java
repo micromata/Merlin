@@ -48,7 +48,7 @@ public class SerialDataExcelWriter extends AbstractExcelWriter {
         super.init();
         createVariablesSheet();
         createConfigurationSheet();
-        addConfigRow("Template", template.getFileDescriptor().getCanonicalPath(), "merlin.word.templating.config.template");
+        addConfigRow("Template", template.getFileDescriptor().getCanonicalPathString(), "merlin.word.templating.config.template");
         addConfigRow("TemplateDefinition", templateDefinition.getId(), templateDefinition.getDescription());
         addConfigRow("FilenamePattern", serialData.getFilenamePattern(), "merlin.word.templating.serial.config.filenamePattern");
         currentSheet.autosize();

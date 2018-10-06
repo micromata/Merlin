@@ -23,7 +23,7 @@ public class SerialDataExcelTest {
         TemplateDefinition templateDefinition = DefinitionExcelConverterTest.create();
         Template template = new Template();
         template.setFileDescriptor(new FileDescriptor());
-        template.getFileDescriptor().setDirectory(Definitions.OUTPUT_DIR).setRelativePath(".").setFilename("ContractTemplate.doc");
+        template.getFileDescriptor().setDirectory(Definitions.OUTPUT_DIR.toPath()).setRelativePath(".").setFilename("ContractTemplate.doc");
         template.setTemplateDefinition(templateDefinition);
         SerialData origSerialData = createSerialData();
         SerialDataExcelWriter writer = new SerialDataExcelWriter(origSerialData, template);
@@ -35,7 +35,7 @@ public class SerialDataExcelTest {
         workbook = new ExcelWorkbook(file);
         SerialDataExcelReader reader = new SerialDataExcelReader();
         SerialData serialData = reader.readFromWorkbook(workbook, templateDefinition);
-        assertEquals(template.getFileDescriptor().getCanonicalPath(), serialData.getTemplateCanonicalPath());
+        assertEquals(template.getFileDescriptor().getCanonicalPathString(), serialData.getTemplateCanonicalPath());
         assertEquals(origSerialData.getFilenamePattern(), serialData.getFilenamePattern());
         assertEquals(templateDefinition.getId(), serialData.getTemplateDefinitionId());
         assertEquals(origSerialData.getEntries().size(), serialData.getEntries().size());

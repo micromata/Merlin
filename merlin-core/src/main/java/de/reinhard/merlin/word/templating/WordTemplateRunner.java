@@ -52,7 +52,7 @@ public class WordTemplateRunner {
 
     public WordDocument run(Map<String, Object> variables) {
         ByteArrayOutputStream bos = srcDocument.getAsByteArrayOutputStream();
-        WordDocument newDocument = new WordDocument(bos.toInputStream());
+        WordDocument newDocument = new WordDocument(bos.toInputStream(), srcDocument.getFilename());
         newDocument.setFilename(srcDocument.getFilename());
         if (templateDefinition != null && templateDefinition.getDependentVariableDefinitions() != null) {
             for (DependentVariableDefinition depVar : templateDefinition.getDependentVariableDefinitions()) {

@@ -60,7 +60,7 @@ public class TemplateExamplesRunnerRest {
             if (template.getTemplateDefinition() != null
                     && "Employment contract template".equals(template.getTemplateDefinition().getId())) {
                 // found template with template definition:
-                data.templateCanonicalPath = template.getFileDescriptor().getCanonicalPath();
+                data.templateCanonicalPath = template.getFileDescriptor().getCanonicalPathString();
                 data.templateDefinitionId = template.getTemplateDefinitionId();
                 found = true;
                 break;

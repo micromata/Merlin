@@ -2,6 +2,7 @@ package de.reinhard.merlin.app.rest;
 
 import de.reinhard.merlin.app.json.JsonUtils;
 import de.reinhard.merlin.app.storage.Storage;
+import de.reinhard.merlin.persistency.PersistencyRegistry;
 import de.reinhard.merlin.word.WordDocument;
 import de.reinhard.merlin.word.templating.TemplateDefinition;
 import de.reinhard.merlin.word.templating.WordTemplateRunner;
@@ -14,7 +15,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.File;
+import java.nio.file.Paths;
 import java.util.List;
 
 @Path("/templates")
@@ -42,8 +43,8 @@ public class TemplateRunnerRest {
             return RestUtils.get404Response(log, "No valid data json object given. TemplateRunnerData expected.");
         }
         log.info("Running template: definition=" + data.getTemplateDefinitionId() + ", template=" + data.getTemplateCanonicalPath());
-        File file = new File(data.getTemplateCanonicalPath());
-        if (!file.exists()) {
+        java.nio.file.Path path = Paths.get(data.getTemplateCanonicalPath());
+        if (!PersistencyRegistry.getDefault().exists(path)) {
             return RestUtils.get404Response(log, "Template file not found by canonical path: " + data.getTemplateCanonicalPath());
         }
         List<TemplateDefinition> templateDefinitions = Storage.getInstance().getTemplateDefinition(null, data.getTemplateDefinitionId());
@@ -58,9 +59,10 @@ public class TemplateRunnerRest {
         }
         Response response = null;
         try {
-            WordTemplateRunner runner = new WordTemplateRunner(templateDefinition, new WordDocument(file));
+            WordDocument doc = WordDocument.create(path);
+            WordTemplateRunner runner = new WordTemplateRunner(templateDefinition, doc);
             WordDocument result = runner.run(data.getVariables());
-            String filename = runner.createFilename(file.getName(), data.getVariables());
+            String filename = runner.createFilename(path.getFileName().toString(), data.getVariables());
             //ZipUtil zipUtil = new ZipUtil("result.zip");
             //zipUtil.addZipEntry("result/" + file.getName(), result.getAsByteArrayOutputStream().toByteArray());
             Response.ResponseBuilder builder = Response.ok(result.getAsByteArrayOutputStream().toByteArray());
@@ -68,7 +70,7 @@ public class TemplateRunnerRest {
             // Needed to get the Content-Disposition by client:
             builder.header("Access-Control-Expose-Headers", "Content-Disposition");
             response = builder.build();
-            log.info("Downloading file '" + filename + "', length: " + file.length());
+            log.info("Downloading file '" + filename + "', length: " + doc.getLength());
             return response;
         } catch (Exception ex) {
             String errorMsg = "Error while try to run template '" + data.getTemplateCanonicalPath() + "'.";

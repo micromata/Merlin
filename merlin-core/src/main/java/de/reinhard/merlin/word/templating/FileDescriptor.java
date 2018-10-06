@@ -1,5 +1,6 @@
 package de.reinhard.merlin.word.templating;
 
+import de.reinhard.merlin.persistency.PersistencyRegistry;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -10,8 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.beans.Transient;
-import java.io.File;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Date;
@@ -44,8 +43,8 @@ public class FileDescriptor implements Cloneable {
      * @param dir
      * @return this for chaining.
      */
-    public FileDescriptor setDirectory(File dir) {
-        directory = getCanonicalPath(dir);
+    public FileDescriptor setDirectory(Path dir) {
+        directory = PersistencyRegistry.getDefault().getCanonicalPathString(dir);
         return this;
     }
 
@@ -62,13 +61,18 @@ public class FileDescriptor implements Cloneable {
         return this;
     }
 
-    public FileDescriptor setRelativePath(File file) {
+    /**
+     *
+     * @param path path including file name.
+     * @return
+     */
+    public FileDescriptor setRelativePath(Path path) {
         Path dirPath = Paths.get(directory);
-        Path filePath = Paths.get(getCanonicalPath(file));
+        Path filePath = PersistencyRegistry.getDefault().getCanonicalPath(path);
         Path relPath = dirPath.relativize(filePath);
         Path parent = relPath.getParent();
-        this.relativePath = parent != null ? parent.toString() : ".";
-        this.filename = file.getName();
+        this.relativePath = parent != null ? parent.toString() : "";
+        this.filename = path.getFileName().toString();
         return this;
     }
 
@@ -96,14 +100,14 @@ public class FileDescriptor implements Cloneable {
         return this;
     }
 
-    public String getCanonicalPath() {
-        File path= new File(directory, relativePath);
-        File file = new File(path, filename);
-        try {
-            return file.getCanonicalPath();
-        } catch (IOException ex) {
-            return file.getAbsolutePath();
-        }
+    public String getCanonicalPathString() {
+        Path path = getCanonicalPath();
+        return PersistencyRegistry.getDefault().getCanonicalPathString(path);
+    }
+
+    public Path getCanonicalPath() {
+        Path path = Paths.get(directory, relativePath, filename);
+        return path;
     }
 
     /**
@@ -133,11 +137,11 @@ public class FileDescriptor implements Cloneable {
      * @param file
      * @return true, if the gifen file was modified after last update or if last update is not set.
      */
-    public boolean isModified(File file) {
+    public boolean isModified(Path file) {
         if (lastUpdate == null) {
             return true;
         }
-        Date lastModified = new Date(file.lastModified());
+        Date lastModified = new Date(PersistencyRegistry.getDefault().getLastModified(file));
         return lastModified.after(lastUpdate);
     }
 
@@ -165,15 +169,6 @@ public class FileDescriptor implements Cloneable {
         tos.append("relativePath", relativePath);
         tos.append("filename", filename);
         return tos.toString();
-    }
-
-    public static String getCanonicalPath(File file) {
-        try {
-            return file.getCanonicalPath();
-        } catch (IOException ex) {
-            log.error("Can't get canonical path for dir '" + file.getAbsolutePath() + "': " + ex.getMessage(), ex);
-            return file.getAbsolutePath();
-        }
     }
 
     @Override
