@@ -3,7 +3,7 @@ package de.reinhard.merlin.word.templating;
 import de.reinhard.merlin.excel.ExcelWorkbook;
 import de.reinhard.merlin.persistency.PersistencyInterface;
 import de.reinhard.merlin.persistency.PersistencyRegistry;
-import de.reinhard.merlin.utils.DirectoryWatchService;
+import de.reinhard.merlin.persistency.DirectoryWatchService;
 import de.reinhard.merlin.word.WordDocument;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
@@ -229,5 +229,9 @@ public class DirectoryScanner {
 
     public Path getDir() {
         return dir;
+    }
+
+    public boolean isRecursive() {
+        return recursive;
     }
 }
