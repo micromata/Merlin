@@ -11,6 +11,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import java.nio.file.Paths;
 
 @Path("/templates")
 public class TemplateExamplesRunnerRest {
@@ -60,15 +61,15 @@ public class TemplateExamplesRunnerRest {
             if (template.getTemplateDefinition() != null
                     && "Employment contract template".equals(template.getTemplateDefinition().getId())) {
                 // found template with template definition:
-                data.templateCanonicalPath = template.getFileDescriptor().getCanonicalPathString();
+                data.templateCanonicalPath = template.getFileDescriptor().getCanonicalPath();
                 data.templateDefinitionId = template.getTemplateDefinitionId();
                 found = true;
                 break;
             }
         }
         if (!found) {
-            data.templateCanonicalPath = "Oups, no template with assigned template definiton found (reset settings)!";
-            data.templateDefinitionName = "No template definition found (reset settings)!";
+            data.templateCanonicalPath = Paths.get("Oups, no template with assigned template definiton found (reset settings)!");
+            data.templateDefinitionName = Paths.get("No template definition found (reset settings)!");
             data.templateDefinitionId = "No template definition found (reset settings)!";
         }
         return data;
@@ -76,18 +77,18 @@ public class TemplateExamplesRunnerRest {
 
     public static class ExampleData {
         String templateDefinitionId;
-        String templateDefinitionName;
-        String templateCanonicalPath;
+        java.nio.file.Path templateDefinitionName;
+        java.nio.file.Path templateCanonicalPath;
 
         public String getTemplateDefinitionId() {
             return templateDefinitionId;
         }
 
-        public String getTemplateCanonicalPath() {
+        public java.nio.file.Path getTemplateCanonicalPath() {
             return templateCanonicalPath;
         }
 
-        public String getTemplateDefinitionName() {
+        public java.nio.file.Path getTemplateDefinitionName() {
             return templateDefinitionName;
         }
 

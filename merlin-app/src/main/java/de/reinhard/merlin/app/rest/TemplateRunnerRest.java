@@ -15,7 +15,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.nio.file.Paths;
 import java.util.List;
 
 @Path("/templates")
@@ -43,7 +42,7 @@ public class TemplateRunnerRest {
             return RestUtils.get404Response(log, "No valid data json object given. TemplateRunnerData expected.");
         }
         log.info("Running template: definition=" + data.getTemplateDefinitionId() + ", template=" + data.getTemplateCanonicalPath());
-        java.nio.file.Path path = Paths.get(data.getTemplateCanonicalPath());
+        java.nio.file.Path path = data.getTemplateCanonicalPath();
         if (!PersistencyRegistry.getDefault().exists(path)) {
             return RestUtils.get404Response(log, "Template file not found by canonical path: " + data.getTemplateCanonicalPath());
         }

@@ -2,7 +2,9 @@ package de.reinhard.merlin.app.json;
 
 import de.reinhard.merlin.app.storage.Storage;
 import de.reinhard.merlin.app.storage.TestData;
+import de.reinhard.merlin.persistency.PersistencyRegistry;
 import de.reinhard.merlin.word.templating.DependentVariableDefinition;
+import de.reinhard.merlin.word.templating.FileDescriptor;
 import de.reinhard.merlin.word.templating.TemplateDefinition;
 import de.reinhard.merlin.word.templating.VariableDefinition;
 import org.junit.jupiter.api.Test;
@@ -10,6 +12,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -75,5 +79,18 @@ public class JsonUtilsTest {
         for (Object entry : v1.getMapping().entrySet()) {
             assertEquals(v1.getMapping().get(entry), v2.getMapping().get(entry));
         }
+    }
+
+    @Test
+    public void fileDescriptorTest() {
+        FileDescriptor fileDescriptor = new FileDescriptor();
+        Path path = Paths.get("/Users/kai/Documents");
+        fileDescriptor.setDirectory(path);
+        path = Paths.get("/Users/kai/Documents/templates/test.xlsx");
+        fileDescriptor.setRelativePath(path);
+        String json = JsonUtils.toJson(fileDescriptor, true);
+        log.info(json);
+        assertEquals("/Users/kai/Documents/templates/test.xlsx", PersistencyRegistry.getDefault().getCanonicalPathString(path));
+
     }
 }
