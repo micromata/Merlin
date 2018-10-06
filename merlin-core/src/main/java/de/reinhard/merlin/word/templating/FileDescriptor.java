@@ -100,6 +100,7 @@ public class FileDescriptor implements Cloneable {
         return this;
     }
 
+    @Transient
     public String getCanonicalPathString() {
         Path path = getCanonicalPath();
         return PersistencyRegistry.getDefault().getCanonicalPathString(path);
