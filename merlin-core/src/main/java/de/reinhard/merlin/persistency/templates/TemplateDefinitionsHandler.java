@@ -10,11 +10,12 @@ import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
 
-class TemplateDefinitionHandler extends AbstractHandler<TemplateDefinition> {
-    private Logger log = LoggerFactory.getLogger(TemplateDefinitionHandler.class);
+class TemplateDefinitionsHandler extends AbstractHandler<TemplateDefinition> {
+    private Logger log = LoggerFactory.getLogger(TemplateDefinitionsHandler.class);
 
-    TemplateDefinitionHandler(DirectoryScanner directoryScanner) {
+    TemplateDefinitionsHandler(DirectoryScanner directoryScanner) {
         super(directoryScanner, "TemplateDefinition");
+        this.supportedFileExtensions = new String[]{"xlsx", "xls"};
     }
 
     @Override

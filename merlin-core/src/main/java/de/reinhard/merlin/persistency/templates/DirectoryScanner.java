@@ -18,8 +18,8 @@ public class DirectoryScanner {
 
     private PersistencyInterface persistency = PersistencyRegistry.getDefault();
     private AbstractDirectoryWatcher directoryWatcher;
-    private Map<Path, TemplateDefinition> templateDefinitionsMap = new HashMap<>();
-    private Map<Path, Template> templatesMap = new HashMap<>();
+    private TemplatesHandler templatesHandler;
+    private TemplateDefinitionsHandler templateDefinitionsHandler;
 
     /**
      * @param dir
@@ -29,6 +29,8 @@ public class DirectoryScanner {
         dir = persistency.getCanonicalPath(dir);
         directoryWatcher = PersistencyRegistry.getInstance().getPersistency().newInstance(dir, recursive, "docx", "xls", "xlsx");
         directoryWatcher.setIgnoreFilenamePatterns("^~\\$.*");
+        templatesHandler = new TemplatesHandler(this);
+        templateDefinitionsHandler = new TemplateDefinitionsHandler(this);
         clear();
     }
 
@@ -37,9 +39,9 @@ public class DirectoryScanner {
      * TODO: Return statistics object.
      */
     public void check() {
-        checkAll();
+        checkAndRefreshAllItems();
         Set<String> templateIdsSet = new HashSet<>();
-        for (TemplateDefinition definition : this.templateDefinitionsMap.values()) {
+        for (TemplateDefinition definition : templateDefinitionsHandler.getItems()) {
             String id = StringUtils.trim(definition.getId());
             if (StringUtils.isBlank(definition.getId())) {
                 log.warn("Template definition id is blank: " + definition.getFileDescriptor());
@@ -59,26 +61,31 @@ public class DirectoryScanner {
      * Deletes all content and reforce a full reload.
      */
     public void clear() {
-        templateDefinitionsMap.clear();
-        templatesMap.clear();
+        templateDefinitionsHandler.clear();
+        templateDefinitionsHandler.clear();
         directoryWatcher.clear();
+    }
+
+    public Collection<Template> getTemplates() {
+        checkAndRefreshAllItems();
+        return templatesHandler.getItems();
     }
 
     public Template getTemplate(FileDescriptor descriptor) {
         return getTemplate(descriptor.getCanonicalPathString());
     }
 
+    public Template getTemplate(String canonicalPath) {
+        checkAndRefreshAllItems();
+        return _getTemplate(canonicalPath);
+    }
+
     Template _getTemplate(FileDescriptor descriptor) {
         return _getTemplate(descriptor.getCanonicalPathString());
     }
 
-    public Template getTemplate(String canonicalPath) {
-        checkAll();
-        return _getTemplate(canonicalPath);
-    }
-
     private Template _getTemplate(String canonicalPath) {
-        for (Template template : templatesMap.values()) {
+        for (Template template : templatesHandler.getItems()) {
             if (canonicalPath.equals(template.getFileDescriptor().getCanonicalPathString())) {
                 return template;
             }
@@ -86,47 +93,18 @@ public class DirectoryScanner {
         return null;
     }
 
-    /**
-     * Gets the template definition by path. If item or file is updated since last update, the template definition file
-     * will be re-read.
-     *
-     * @param watchEntry
-     * @return Found or read template definition, otherwise null.
-     */
-    protected TemplateDefinition getTemplateDefinition(DirectoryWatchEntry watchEntry) {
-        Path path = directoryWatcher.getCanonicalPath(watchEntry);
-        TemplateDefinitionHandler handler = new TemplateDefinitionHandler(this);
-        TemplateDefinition templateDefinition = handler.get(watchEntry);
-        if (templateDefinition != null) {
-            templateDefinitionsMap.put(path, templateDefinition);
-        }
-        return templateDefinition;
-    }
-
-
-    protected Template getTemplate(DirectoryWatchEntry watchEntry) {
-        Path path = directoryWatcher.getCanonicalPath(watchEntry);
-        TemplateHandler handler = new TemplateHandler(this);
-        Template template = handler.get(watchEntry);
-        if (template != null) {
-            templatesMap.put(path, template);
-        }
-        return template;
-    }
-
     public Collection<TemplateDefinition> getTemplateDefinitions() {
-        checkTemplateDefinitions();
-        return templateDefinitionsMap.values();
+        templateDefinitionsHandler.checkAndRefreshItems();
+        return templateDefinitionsHandler.getItems();
     }
-
-
+    
     public TemplateDefinition getTemplateDefinition(FileDescriptor descriptor) {
-        checkTemplateDefinitions();
+        templateDefinitionsHandler.checkAndRefreshItems();
         return _getTemplateDefinition(descriptor);
     }
 
     TemplateDefinition _getTemplateDefinition(FileDescriptor descriptor) {
-        for (TemplateDefinition templateDefinition : templateDefinitionsMap.values()) {
+        for (TemplateDefinition templateDefinition : templateDefinitionsHandler.getItems()) {
             if (descriptor.equals(templateDefinition.getFileDescriptor())) {
                 return templateDefinition;
             }
@@ -142,13 +120,13 @@ public class DirectoryScanner {
         if (id == null) {
             return null;
         }
-        checkTemplateDefinitions();
+        templateDefinitionsHandler.checkAndRefreshItems();
         return _getTemplateDefinition(id);
     }
 
     TemplateDefinition _getTemplateDefinition(String id) {
         String search = id.trim().toLowerCase();
-        for (TemplateDefinition templateDefinition : templateDefinitionsMap.values()) {
+        for (TemplateDefinition templateDefinition : templateDefinitionsHandler.getItems()) {
             if (search.equals(templateDefinition.getId().trim().toLowerCase())) {
                 return templateDefinition;
             }
@@ -156,55 +134,13 @@ public class DirectoryScanner {
         return null;
     }
 
-    public Collection<Template> getTemplates() {
-        checkAll();
-        return templatesMap.values();
-    }
-
-
     public Path getDir() {
         return directoryWatcher.getRootDir();
     }
 
-    private void checkTemplateDefinitions() {
-        // Check for new, deleted and updated files:
-        List<DirectoryWatchEntry> watchEntries = directoryWatcher.listWatchEntries(true, "xlsx", "xls");
-        for (DirectoryWatchEntry watchEntry : watchEntries) {
-            TemplateDefinition templateDefinition = templateDefinitionsMap.get(directoryWatcher.getCanonicalPath(watchEntry));
-            if (templateDefinition == null) {
-                log.debug("Creating new template definition: " + directoryWatcher.getCanonicalPath(watchEntry));
-                templateDefinition = getTemplateDefinition(watchEntry);
-            }
-        }
-        Iterator<Map.Entry<Path, TemplateDefinition>> it = templateDefinitionsMap.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry<Path, TemplateDefinition> entry = it.next();
-            if (directoryWatcher.isDeleted(entry.getValue().getFileDescriptor().getCanonicalPath())) {
-                log.debug("Remove deleted template definition '" + entry.getValue().getId() + "': " + entry.getKey());
-                templateDefinitionsMap.remove(entry.getKey());
-            }
-        }
-    }
-
-    private void checkAll() {
-        checkTemplateDefinitions(); // Templates reference definitions.
-        // Check for new, deleted and updated files:
-        List<DirectoryWatchEntry> watchEntries = directoryWatcher.listWatchEntries(true, "docx");
-        for (DirectoryWatchEntry watchEntry : watchEntries) {
-            Template template = templatesMap.get(directoryWatcher.getCanonicalPath(watchEntry));
-            if (template == null) {
-                log.debug("Creating new template: " + directoryWatcher.getCanonicalPath(watchEntry));
-                template = getTemplate(watchEntry);
-            }
-        }
-        Iterator<Map.Entry<Path, Template>> it = templatesMap.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry<Path, Template> entry = it.next();
-            if (directoryWatcher.isDeleted(entry.getValue().getFileDescriptor().getCanonicalPath())) {
-                log.debug("Remove deleted template: " + entry.getKey());
-                templatesMap.remove(entry.getKey());
-            }
-        }
+    private void checkAndRefreshAllItems() {
+        templateDefinitionsHandler.checkAndRefreshItems();
+        templatesHandler.checkAndRefreshItems();
     }
 
     public AbstractDirectoryWatcher getDirectoryWatcher() {

@@ -5,7 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
-import java.util.Date;
+import java.util.*;
 
 /**
  * Handle items (template files, template definition files and serial data files.
@@ -17,11 +17,17 @@ abstract class AbstractHandler<T extends FileDescriptorInterface> {
     private AbstractDirectoryWatcher directoryWatcher;
     protected DirectoryScanner directoryScanner;
     private String itemName;
+    protected Map<Path, T> itemsMap = new HashMap<>();
+    protected String[] supportedFileExtensions;
 
     AbstractHandler(DirectoryScanner directoryScanner, String itemName) {
         this.directoryScanner = directoryScanner;
         this.directoryWatcher = directoryScanner.getDirectoryWatcher();
         this.itemName = itemName;
+    }
+
+    void clear() {
+        this.itemsMap.clear();
     }
 
     /**
@@ -31,7 +37,7 @@ abstract class AbstractHandler<T extends FileDescriptorInterface> {
      * @param watchEntry
      * @return Found or read item, otherwise null.
      */
-    T get(DirectoryWatchEntry watchEntry) {
+    T getItem(DirectoryWatchEntry watchEntry) {
         Date now = new Date();
         Path path = directoryWatcher.getCanonicalPath(watchEntry);
         FileDescriptor fileDescriptor = new FileDescriptor().setDirectory(directoryWatcher.getRootDir()).setRelativePath(path)
@@ -60,8 +66,33 @@ abstract class AbstractHandler<T extends FileDescriptorInterface> {
         }
         item.setFileDescriptor(fileDescriptor);
         watchEntry.setSupportedItem(true);
+        itemsMap.put(path, item);
         log.info("Valid Merlin " + itemName + ": " + path.toAbsolutePath());
         return item;
+    }
+
+    void checkAndRefreshItems() {
+        // Check for new, deleted and updated files:
+        List<DirectoryWatchEntry> watchEntries = directoryWatcher.listWatchEntries(true, supportedFileExtensions);
+        for (DirectoryWatchEntry watchEntry : watchEntries) {
+            T item = itemsMap.get(directoryWatcher.getCanonicalPath(watchEntry));
+            if (item == null) {
+                log.debug("Creating new " + itemName + ": " + directoryWatcher.getCanonicalPath(watchEntry));
+                item = getItem(watchEntry);
+            }
+        }
+        Iterator<Map.Entry<Path, T>> it = itemsMap.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry<Path, T> entry = it.next();
+            if (directoryWatcher.isDeleted(entry.getValue().getFileDescriptor().getCanonicalPath())) {
+                log.debug("Remove deleted " + itemName + ": " + entry.getKey());
+                itemsMap.remove(entry.getKey());
+            }
+        }
+    }
+
+    Collection<T> getItems() {
+        return itemsMap.values();
     }
 
     abstract T getItem(FileDescriptor descriptor);

@@ -12,11 +12,12 @@ import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
 
-class TemplateHandler extends AbstractHandler<Template> {
-    private Logger log = LoggerFactory.getLogger(TemplateHandler.class);
+class TemplatesHandler extends AbstractHandler<Template> {
+    private Logger log = LoggerFactory.getLogger(TemplatesHandler.class);
 
-    TemplateHandler(DirectoryScanner directoryScanner) {
+    TemplatesHandler(DirectoryScanner directoryScanner) {
         super(directoryScanner, "Template");
+        this.supportedFileExtensions = new String[]{"docx"};
     }
 
     @Override
