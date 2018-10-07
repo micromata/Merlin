@@ -3,7 +3,6 @@ package de.reinhard.merlin.word.templating;
 import de.reinhard.merlin.excel.ExcelWorkbook;
 import de.reinhard.merlin.persistency.PersistencyInterface;
 import de.reinhard.merlin.persistency.PersistencyRegistry;
-import de.reinhard.merlin.persistency.DirectoryWatchService;
 import de.reinhard.merlin.word.WordDocument;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
@@ -22,7 +21,6 @@ public class DirectoryScanner {
     private Path dir;
     private List<TemplateDefinition> templateDefinitions;
     private List<Template> templates;
-    private DirectoryWatchService directoryWatchService;
     private PersistencyInterface persistency = PersistencyRegistry.getDefault();
 
     /**
@@ -30,22 +28,9 @@ public class DirectoryScanner {
      * @param recursive If true, the directory will be searched recursively for Merlin templates. Default is false.
      */
     public DirectoryScanner(Path dir, boolean recursive) {
-        this(dir, recursive, null);
-    }
-
-    /**
-     * @param dir
-     * @param recursive             If true, the directory will be searched recursively for Merlin templates. Default is false.
-     * @param directoryWatchService If given, then this directory will be watched for any modifications.
-     */
-    public DirectoryScanner(Path dir, boolean recursive, DirectoryWatchService directoryWatchService) {
         this.dir = persistency.getCanonicalPath(dir);
         this.recursive = recursive;
         clear();
-        if (directoryWatchService != null) {
-            this.directoryWatchService = directoryWatchService;
-            directoryWatchService.register(dir, recursive);
-        }
     }
 
     public String getCanonicalPath() {

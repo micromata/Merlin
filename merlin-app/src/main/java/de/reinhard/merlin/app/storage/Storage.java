@@ -2,7 +2,6 @@ package de.reinhard.merlin.app.storage;
 
 import de.reinhard.merlin.app.javafx.RunningMode;
 import de.reinhard.merlin.excel.ExcelWorkbook;
-import de.reinhard.merlin.persistency.DirectoryWatchService;
 import de.reinhard.merlin.persistency.PersistencyRegistry;
 import de.reinhard.merlin.word.templating.*;
 import org.apache.commons.collections4.CollectionUtils;
@@ -20,7 +19,6 @@ import java.util.Map;
 public class Storage implements StorageInterface {
     private Logger log = LoggerFactory.getLogger(Storage.class);
     private static final Storage instance = new Storage();
-    DirectoryWatchService directoryWatchService;
 
     // Key is the canonical path of the directory.
     private Map<String, DirectoryScanner> directoryScannerMap;
@@ -33,13 +31,10 @@ public class Storage implements StorageInterface {
 
     private Storage() {
         directoryScannerMap = new HashMap<>();
-        directoryWatchService = new DirectoryWatchService();
-        directoryWatchService.start();
     }
 
     public void add(DirectoryScanner directoryScanner) {
         directoryScannerMap.put(directoryScanner.getCanonicalPath(), directoryScanner);
-        directoryWatchService.register(directoryScanner.getDir(), directoryScanner.isRecursive());
     }
 
     public List<TemplateDefinition> getAllTemplateDefinitions() {
