@@ -5,10 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -64,29 +61,22 @@ public abstract class AbstractDirectoryWatcher {
         long now = System.currentTimeMillis();
         DirectoryWatcherContext context = new DirectoryWatcherContext();
         walkTree(context);
-        for (DirectoryWatchEntry entry : directoriesMap.values()) {
-            if (!context.containsTouchedItem(entry.getPath())) {
-                // Deleted directory found:
-                entry.setType(ModificationType.DELETED);
-                deletedDirectoriesMap.put(entry.getPath(), entry);
-            }
-        }
-        for (DirectoryWatchEntry deletedEntry : deletedDirectoriesMap.values()) {
-            log.debug("Delete dir: " + deletedEntry.getPath());
-            directoriesMap.remove(deletedEntry.getPath());
-        }
-        for (DirectoryWatchEntry entry : filesMap.values()) {
-            if (!context.containsTouchedItem(entry.getPath())) {
-                // Deleted file found:
-                entry.setType(ModificationType.DELETED);
-                deletedFilesMap.put(entry.getPath(), entry);
-            }
-        }
-        for (DirectoryWatchEntry entry : deletedFilesMap.values()) {
-            log.debug("Delete file: " + entry.getPath());
-            filesMap.remove(entry.getPath());
-        }
+        remove(directoriesMap, deletedDirectoriesMap, context);
+        remove(filesMap, deletedFilesMap, context);
         lastCheck = now;
+    }
+
+    private void remove(Map<Path, DirectoryWatchEntry> map, Map<Path, DirectoryWatchEntry> deletedMap, DirectoryWatcherContext context) {
+        Iterator<Map.Entry<Path, DirectoryWatchEntry>> it = map.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry<Path, DirectoryWatchEntry> entry = it.next();
+            if (!context.containsTouchedItem(entry.getKey())) {
+                // Deleted directory found:
+                entry.getValue().setType(ModificationType.DELETED);
+                deletedMap.put(entry.getKey(), entry.getValue());
+                it.remove();
+            }
+        }
     }
 
     /**

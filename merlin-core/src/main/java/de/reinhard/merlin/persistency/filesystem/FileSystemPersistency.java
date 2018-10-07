@@ -31,7 +31,7 @@ public class FileSystemPersistency implements PersistencyInterface {
         } catch (IOException ex) {
             log.error("Can't check last modification of file '" + getCanonicalPath(path) + "': " + ex.getMessage(), ex);
         }
-        return null;
+        return System.currentTimeMillis();
     }
 
     public Path getCanonicalPath(Path path) {

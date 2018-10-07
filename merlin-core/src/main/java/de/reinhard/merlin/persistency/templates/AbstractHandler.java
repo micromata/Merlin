@@ -19,6 +19,8 @@ abstract class AbstractHandler<T extends FileDescriptorInterface> {
     private String itemName;
     protected Map<Path, T> itemsMap = new HashMap<>();
     protected String[] supportedFileExtensions;
+    // Stores the time of last check. If unsupported files are modified, they will be checked for Merlin files again in walkTree.
+    private Map<Path, Long> unsupportedFilesMap = new HashMap<>();
 
     AbstractHandler(DirectoryScanner directoryScanner, String itemName) {
         this.directoryScanner = directoryScanner;
@@ -28,6 +30,7 @@ abstract class AbstractHandler<T extends FileDescriptorInterface> {
 
     void clear() {
         this.itemsMap.clear();
+        this.unsupportedFilesMap.clear();
     }
 
     /**
@@ -37,24 +40,27 @@ abstract class AbstractHandler<T extends FileDescriptorInterface> {
      * @param watchEntry
      * @return Found or read item, otherwise null.
      */
-    T getItem(DirectoryWatchEntry watchEntry) {
+    void processItem(DirectoryWatchEntry watchEntry) {
         Date now = new Date();
         Path path = directoryWatcher.getCanonicalPath(watchEntry);
-        FileDescriptor fileDescriptor = new FileDescriptor().setDirectory(directoryWatcher.getRootDir()).setRelativePath(path)
-                .setLastUpdate(now);
-
+        FileDescriptor fileDescriptor = new FileDescriptor().setDirectory(directoryWatcher.getRootDir()).setRelativePath(path).setLastUpdate(now);
         T item = getItem(fileDescriptor);
         if (item != null && !item.getFileDescriptor().isModified(path)) {
             log.debug("Skipping file '" + path + "'. It's not modified since last scan.");
-            return item;
+            return;
         }
         if (!persistency.exists(path)) {
             log.error("Can't read " + itemName + ". Path '" + path + "' doesn't exist.");
-            return null;
+            return;
         }
-        if (!watchEntry.isSupportedItem() && !watchEntry.isModified(directoryWatcher)) {
-            log.debug("Unsupported item '" + path + "' not modified. Skipping again.");
-            return null;
+        if (!watchEntry.isSupportedItem()) {
+            Long lastCheck = unsupportedFilesMap.get(watchEntry.getPath());
+            if (lastCheck == null) {
+                log.error("lastCheck shouldn't be null, path: " + path);
+            } else if (watchEntry.getLastModified() < lastCheck) {
+                log.debug("Unsupported item '" + path + "' not modified. Skipping again.");
+                return;
+            }
         }
 
         log.info("Scanning file '" + path + "'.");
@@ -62,23 +68,28 @@ abstract class AbstractHandler<T extends FileDescriptorInterface> {
         if (item == null) {
             log.info("Skipping file '" + path.toAbsolutePath() + "', no " + itemName + " (OK).");
             watchEntry.setSupportedItem(false);
-            return null;
+            unsupportedFilesMap.put(watchEntry.getPath(), now.getTime());
+            return;
         }
-        item.setFileDescriptor(fileDescriptor);
+        if (item.getFileDescriptor() == null) {
+            item.setFileDescriptor(fileDescriptor);
+        }
         watchEntry.setSupportedItem(true);
         itemsMap.put(path, item);
         log.info("Valid Merlin " + itemName + ": " + path.toAbsolutePath());
-        return item;
     }
 
     void checkAndRefreshItems() {
         // Check for new, deleted and updated files:
         List<DirectoryWatchEntry> watchEntries = directoryWatcher.listWatchEntries(true, supportedFileExtensions);
         for (DirectoryWatchEntry watchEntry : watchEntries) {
-            T item = itemsMap.get(directoryWatcher.getCanonicalPath(watchEntry));
-            if (item == null) {
-                log.debug("Creating new " + itemName + ": " + directoryWatcher.getCanonicalPath(watchEntry));
-                item = getItem(watchEntry);
+            if (watchEntry.getType() == ModificationType.DELETED) {
+                if (unsupportedFilesMap.containsKey(watchEntry.getPath())) {
+                    log.debug("Remove unsupported file from register: " + watchEntry.getPath());
+                    unsupportedFilesMap.remove(watchEntry.getPath());
+                }
+            } else {
+                processItem(watchEntry);
             }
         }
         Iterator<Map.Entry<Path, T>> it = itemsMap.entrySet().iterator();
@@ -86,7 +97,7 @@ abstract class AbstractHandler<T extends FileDescriptorInterface> {
             Map.Entry<Path, T> entry = it.next();
             if (directoryWatcher.isDeleted(entry.getValue().getFileDescriptor().getCanonicalPath())) {
                 log.debug("Remove deleted " + itemName + ": " + entry.getKey());
-                itemsMap.remove(entry.getKey());
+                it.remove();
             }
         }
     }

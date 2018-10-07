@@ -22,7 +22,7 @@ public class TestData {
         created = true;
         File dir = new File(parent, TEST_TEMPLATES_DIR).getAbsoluteFile();
         log.info("Creating test data from '" + dir.toPath());
-        DirectoryScanner directoryScanner = new DirectoryScanner(dir.toPath(), false);
+        DirectoryScanner directoryScanner = new DirectoryScanner(dir.toPath(), true);
         if (directoryScanner.getTemplateDefinitions() == null) {
             log.error("Can't scan directory '" + dir.getAbsolutePath() + "' for test template files.");
             return;

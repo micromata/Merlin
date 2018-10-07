@@ -29,7 +29,6 @@ class TemplatesHandler extends AbstractHandler<Template> {
                     + "'. It's seemd to be not a Merlin template. No variables and conditionals found.");
             return null;
         }
-        templateChecker.getTemplate().setFileDescriptor(fileDescriptor);
         String templateDefinitionId = doc.scanForTemplateDefinitionReference();
         if (templateDefinitionId != null) {
             log.debug("Template definition reference found: " + templateDefinitionId);
@@ -41,7 +40,7 @@ class TemplatesHandler extends AbstractHandler<Template> {
             }
         } else {
             TemplateDefinition templateDefinition = directoryScanner.getTemplateDefinitionsHandler()
-                    .getItem(templateChecker.getTemplate().getFileDescriptor());
+                    .getItem(fileDescriptor);
             if (templateDefinition != null) {
                 templateChecker.getTemplate().assignTemplateDefinition(templateDefinition);
                 log.info("Found matching template definition: " + templateDefinition.getFileDescriptor());

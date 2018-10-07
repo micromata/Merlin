@@ -43,6 +43,9 @@ public class DirectoryWatchEntry {
         this.type = type;
     }
 
+    /**
+     * @return lastModified of the item/file representing by this watch entry in milliseconds, since the epoch (1970-01-01T00:00:00Z)
+     */
     public long getLastModified() {
         return lastModified;
     }
@@ -62,13 +65,5 @@ public class DirectoryWatchEntry {
      */
     public boolean isSupportedItem() {
         return supportedItem;
-    }
-
-    public boolean isModified(AbstractDirectoryWatcher watcher) {
-        Long itemModified = PersistencyRegistry.getDefault().getLastModified(watcher.getCanonicalPath(this));
-        if (itemModified == null) {
-            return true;
-        }
-        return itemModified > lastModified;
     }
 }
