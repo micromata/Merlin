@@ -1,4 +1,4 @@
-package de.reinhard.merlin.word.templating;
+package de.reinhard.merlin.persistency;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.Test;

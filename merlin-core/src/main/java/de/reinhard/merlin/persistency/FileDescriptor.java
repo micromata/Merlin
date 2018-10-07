@@ -1,6 +1,5 @@
-package de.reinhard.merlin.word.templating;
+package de.reinhard.merlin.persistency;
 
-import de.reinhard.merlin.persistency.PersistencyRegistry;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;

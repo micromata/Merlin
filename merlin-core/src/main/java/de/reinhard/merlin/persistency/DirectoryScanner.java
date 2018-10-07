@@ -1,11 +1,8 @@
-package de.reinhard.merlin.word.templating;
+package de.reinhard.merlin.persistency;
 
 import de.reinhard.merlin.excel.ExcelWorkbook;
-import de.reinhard.merlin.persistency.AbstractDirectoryWatcher;
-import de.reinhard.merlin.persistency.DirectoryWatchEntry;
-import de.reinhard.merlin.persistency.PersistencyInterface;
-import de.reinhard.merlin.persistency.PersistencyRegistry;
 import de.reinhard.merlin.word.WordDocument;
+import de.reinhard.merlin.word.templating.*;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;

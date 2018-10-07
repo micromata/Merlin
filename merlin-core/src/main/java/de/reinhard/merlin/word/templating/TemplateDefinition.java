@@ -2,6 +2,7 @@ package de.reinhard.merlin.word.templating;
 
 import de.reinhard.merlin.excel.ExcelSheet;
 import de.reinhard.merlin.excel.ExcelWorkbook;
+import de.reinhard.merlin.persistency.FileDescriptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

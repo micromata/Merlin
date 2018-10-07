@@ -1,6 +1,7 @@
-package de.reinhard.merlin.word.templating;
+package de.reinhard.merlin.persistency;
 
 import de.reinhard.merlin.Definitions;
+import de.reinhard.merlin.persistency.DirectoryScanner;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

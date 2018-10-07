@@ -4,7 +4,7 @@ import de.reinhard.merlin.app.storage.Storage;
 import de.reinhard.merlin.app.storage.TestData;
 import de.reinhard.merlin.persistency.PersistencyRegistry;
 import de.reinhard.merlin.word.templating.DependentVariableDefinition;
-import de.reinhard.merlin.word.templating.FileDescriptor;
+import de.reinhard.merlin.persistency.FileDescriptor;
 import de.reinhard.merlin.word.templating.TemplateDefinition;
 import de.reinhard.merlin.word.templating.VariableDefinition;
 import org.junit.jupiter.api.Test;

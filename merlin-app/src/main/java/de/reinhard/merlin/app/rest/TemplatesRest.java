@@ -2,7 +2,7 @@ package de.reinhard.merlin.app.rest;
 
 import de.reinhard.merlin.app.json.JsonUtils;
 import de.reinhard.merlin.app.storage.Storage;
-import de.reinhard.merlin.word.templating.FileDescriptor;
+import de.reinhard.merlin.persistency.FileDescriptor;
 import de.reinhard.merlin.word.templating.Template;
 import de.reinhard.merlin.word.templating.TemplateDefinition;
 import org.apache.commons.collections4.CollectionUtils;

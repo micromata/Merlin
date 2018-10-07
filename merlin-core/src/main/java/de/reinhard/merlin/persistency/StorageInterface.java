@@ -1,4 +1,6 @@
-package de.reinhard.merlin.word.templating;
+package de.reinhard.merlin.persistency;
+
+import de.reinhard.merlin.word.templating.TemplateDefinition;
 
 import java.util.List;
 
