@@ -1,5 +1,6 @@
-package de.reinhard.merlin.persistency;
+package de.reinhard.merlin.persistency.filesystem;
 
+import de.reinhard.merlin.persistency.PersistencyInterface;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

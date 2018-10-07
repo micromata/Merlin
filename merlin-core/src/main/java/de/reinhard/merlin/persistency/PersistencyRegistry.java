@@ -1,5 +1,7 @@
 package de.reinhard.merlin.persistency;
 
+import de.reinhard.merlin.persistency.filesystem.FileSystemPersistency;
+
 /**
  * Default persistency for files (such as template files and template definition files is {@link FileSystemPersistency}.
  * You may implement and register your own (e. g. for handling files in a database etc.).
