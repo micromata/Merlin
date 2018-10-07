@@ -33,24 +33,20 @@ class TemplatesHandler extends AbstractHandler<Template> {
         String templateDefinitionId = doc.scanForTemplateDefinitionReference();
         if (templateDefinitionId != null) {
             log.debug("Template definition reference found: " + templateDefinitionId);
-            TemplateDefinition templateDefinition = directoryScanner._getTemplateDefinition(templateDefinitionId);
+            TemplateDefinition templateDefinition = directoryScanner.getTemplateDefinitionsHandler().getTemplateDefinition(templateDefinitionId);
             if (templateDefinition != null) {
                 templateChecker.getTemplate().assignTemplateDefinition(templateDefinition);
             } else {
                 log.warn("Template definition not found: " + templateDefinitionId);
             }
         } else {
-            TemplateDefinition templateDefinition = directoryScanner._getTemplateDefinition(templateChecker.getTemplate().getFileDescriptor());
+            TemplateDefinition templateDefinition = directoryScanner.getTemplateDefinitionsHandler()
+                    .getItem(templateChecker.getTemplate().getFileDescriptor());
             if (templateDefinition != null) {
                 templateChecker.getTemplate().assignTemplateDefinition(templateDefinition);
                 log.info("Found matching template definition: " + templateDefinition.getFileDescriptor());
             }
         }
         return templateChecker.getTemplate();
-    }
-
-    @Override
-    Template getItem(FileDescriptor fileDescriptor) {
-        return directoryScanner._getTemplate(fileDescriptor);
     }
 }

@@ -35,8 +35,13 @@ class TemplateDefinitionsHandler extends AbstractHandler<TemplateDefinition> {
         return templateDefinition;
     }
 
-    @Override
-    TemplateDefinition getItem(FileDescriptor fileDescriptor) {
-        return directoryScanner._getTemplateDefinition(fileDescriptor);
+    TemplateDefinition getTemplateDefinition(String id) {
+        String search = id.trim().toLowerCase();
+        for (TemplateDefinition templateDefinition : getItems()) {
+            if (search.equals(templateDefinition.getId().trim().toLowerCase())) {
+                return templateDefinition;
+            }
+        }
+        return null;
     }
 }

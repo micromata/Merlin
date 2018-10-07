@@ -95,7 +95,23 @@ abstract class AbstractHandler<T extends FileDescriptorInterface> {
         return itemsMap.values();
     }
 
-    abstract T getItem(FileDescriptor descriptor);
+    T getItem(FileDescriptor descriptor) {
+        for (T item : getItems()) {
+            if (descriptor.equals(item.getFileDescriptor())) {
+                return item;
+            }
+        }
+        return null;
+    }
+
+    T getItem(String canonicalPath) {
+        for (T item : getItems()) {
+            if (canonicalPath.equals(item.getFileDescriptor().getCanonicalPathString())) {
+                return item;
+            }
+        }
+        return null;
+    }
 
     abstract T read(DirectoryWatchEntry watchEntry, Path path, FileDescriptor fileDescriptor);
 }

@@ -1,6 +1,10 @@
 package de.reinhard.merlin.persistency.templates;
 
-import de.reinhard.merlin.persistency.*;
+import de.reinhard.merlin.persistency.AbstractDirectoryWatcher;
+import de.reinhard.merlin.persistency.FileDescriptor;
+import de.reinhard.merlin.persistency.PersistencyInterface;
+import de.reinhard.merlin.persistency.PersistencyRegistry;
+import de.reinhard.merlin.word.templating.SerialData;
 import de.reinhard.merlin.word.templating.Template;
 import de.reinhard.merlin.word.templating.TemplateDefinition;
 import org.apache.commons.lang3.StringUtils;
@@ -8,7 +12,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Searches in directories for Merlin template definition files and template files.
@@ -20,6 +26,7 @@ public class DirectoryScanner {
     private AbstractDirectoryWatcher directoryWatcher;
     private TemplatesHandler templatesHandler;
     private TemplateDefinitionsHandler templateDefinitionsHandler;
+    private SerialDatasHandler serialDatasHandler;
 
     /**
      * @param dir
@@ -31,6 +38,7 @@ public class DirectoryScanner {
         directoryWatcher.setIgnoreFilenamePatterns("^~\\$.*");
         templatesHandler = new TemplatesHandler(this);
         templateDefinitionsHandler = new TemplateDefinitionsHandler(this);
+        serialDatasHandler = new SerialDatasHandler(this);
         clear();
     }
 
@@ -62,7 +70,8 @@ public class DirectoryScanner {
      */
     public void clear() {
         templateDefinitionsHandler.clear();
-        templateDefinitionsHandler.clear();
+        templatesHandler.clear();
+        serialDatasHandler.clear();
         directoryWatcher.clear();
     }
 
@@ -71,45 +80,19 @@ public class DirectoryScanner {
         return templatesHandler.getItems();
     }
 
-    public Template getTemplate(FileDescriptor descriptor) {
-        return getTemplate(descriptor.getCanonicalPathString());
-    }
-
     public Template getTemplate(String canonicalPath) {
         checkAndRefreshAllItems();
-        return _getTemplate(canonicalPath);
-    }
-
-    Template _getTemplate(FileDescriptor descriptor) {
-        return _getTemplate(descriptor.getCanonicalPathString());
-    }
-
-    private Template _getTemplate(String canonicalPath) {
-        for (Template template : templatesHandler.getItems()) {
-            if (canonicalPath.equals(template.getFileDescriptor().getCanonicalPathString())) {
-                return template;
-            }
-        }
-        return null;
+        return templatesHandler.getItem(canonicalPath);
     }
 
     public Collection<TemplateDefinition> getTemplateDefinitions() {
         templateDefinitionsHandler.checkAndRefreshItems();
         return templateDefinitionsHandler.getItems();
     }
-    
+
     public TemplateDefinition getTemplateDefinition(FileDescriptor descriptor) {
         templateDefinitionsHandler.checkAndRefreshItems();
-        return _getTemplateDefinition(descriptor);
-    }
-
-    TemplateDefinition _getTemplateDefinition(FileDescriptor descriptor) {
-        for (TemplateDefinition templateDefinition : templateDefinitionsHandler.getItems()) {
-            if (descriptor.equals(templateDefinition.getFileDescriptor())) {
-                return templateDefinition;
-            }
-        }
-        return null;
+        return templateDefinitionsHandler.getItem(descriptor);
     }
 
     /**
@@ -121,18 +104,23 @@ public class DirectoryScanner {
             return null;
         }
         templateDefinitionsHandler.checkAndRefreshItems();
-        return _getTemplateDefinition(id);
+        return templateDefinitionsHandler.getTemplateDefinition(id);
     }
 
-    TemplateDefinition _getTemplateDefinition(String id) {
-        String search = id.trim().toLowerCase();
-        for (TemplateDefinition templateDefinition : templateDefinitionsHandler.getItems()) {
-            if (search.equals(templateDefinition.getId().trim().toLowerCase())) {
-                return templateDefinition;
-            }
-        }
-        return null;
+    TemplateDefinitionsHandler getTemplateDefinitionsHandler() {
+        return templateDefinitionsHandler;
     }
+
+    public Collection<SerialData> getSerialDatas() {
+        checkAndRefreshAllItems();
+        return serialDatasHandler.getItems();
+    }
+
+    public SerialData getSerialData(String canonicalPath) {
+        checkAndRefreshAllItems();
+        return serialDatasHandler.getItem(canonicalPath);
+    }
+
 
     public Path getDir() {
         return directoryWatcher.getRootDir();

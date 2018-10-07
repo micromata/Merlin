@@ -1,18 +1,21 @@
 package de.reinhard.merlin.word.templating;
 
+import de.reinhard.merlin.persistency.FileDescriptor;
+import de.reinhard.merlin.persistency.FileDescriptorInterface;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SerialData {
+public class SerialData implements FileDescriptorInterface {
     private static Logger log = LoggerFactory.getLogger(SerialData.class);
 
     private List<SerialDataEntry> entries = new ArrayList<>();
     private String filenamePattern;
     private String templateCanonicalPath;
     private String templateDefinitionId;
+    private FileDescriptor fileDescriptor;
 
     public SerialData() {
     }
@@ -51,5 +54,13 @@ public class SerialData {
 
     public void setTemplateDefinitionId(String templateDefinitionId) {
         this.templateDefinitionId = templateDefinitionId;
+    }
+
+    public FileDescriptor getFileDescriptor() {
+        return fileDescriptor;
+    }
+
+    public void setFileDescriptor(FileDescriptor fileDescriptor) {
+        this.fileDescriptor = fileDescriptor;
     }
 }
