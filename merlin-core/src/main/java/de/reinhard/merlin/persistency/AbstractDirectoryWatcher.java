@@ -19,8 +19,8 @@ public abstract class AbstractDirectoryWatcher {
 
     private Map<Path, DirectoryWatchEntry> directoriesMap;
     private Map<Path, DirectoryWatchEntry> filesMap;
-    private Set<Path> deletedDirectoriesSet;
-    private Set<Path> deletedFilesSet;
+    private Map<Path, DirectoryWatchEntry> deletedDirectoriesMap;
+    private Map<Path, DirectoryWatchEntry> deletedFilesMap;
 
     /**
      * @param root
@@ -32,8 +32,8 @@ public abstract class AbstractDirectoryWatcher {
         this.fileExtensions = fileExtensions;
         this.directoriesMap = new HashMap<>();
         this.filesMap = new HashMap<>();
-        this.deletedDirectoriesSet = new HashSet<>();
-        this.deletedFilesSet = new HashSet<>();
+        this.deletedDirectoriesMap = new HashMap<>();
+        this.deletedFilesMap = new HashMap<>();
     }
 
     public synchronized void walkTree() {
@@ -42,22 +42,24 @@ public abstract class AbstractDirectoryWatcher {
         for (DirectoryWatchEntry entry : directoriesMap.values()) {
             if (!context.containsTouchedItem(entry.getPath())) {
                 // Deleted directory found:
-                deletedDirectoriesSet.add(entry.getPath());
+                entry.setType(ModificationType.DELETED);
+                deletedDirectoriesMap.put(entry.getPath(), entry);
             }
         }
-        for (Path path : deletedDirectoriesSet) {
-            log.debug("Delete dir: " + path);
-            directoriesMap.remove(path);
+        for (DirectoryWatchEntry deletedEntry : deletedDirectoriesMap.values()) {
+            log.debug("Delete dir: " + deletedEntry.getPath());
+            directoriesMap.remove(deletedEntry.getPath());
         }
         for (DirectoryWatchEntry entry : filesMap.values()) {
             if (!context.containsTouchedItem(entry.getPath())) {
                 // Deleted file found:
-                deletedFilesSet.add(entry.getPath());
+                entry.setType(ModificationType.DELETED);
+                deletedFilesMap.put(entry.getPath(), entry);
             }
         }
-        for (Path path : deletedFilesSet) {
-            log.debug("Delete file: " + path);
-            filesMap.remove(path);
+        for (DirectoryWatchEntry entry : deletedFilesMap.values()) {
+            log.debug("Delete file: " + entry.getPath());
+            filesMap.remove(entry.getPath());
         }
         lastCheck = System.currentTimeMillis();
     }
@@ -68,6 +70,8 @@ public abstract class AbstractDirectoryWatcher {
     public synchronized void clear() {
         this.directoriesMap.clear();
         this.filesMap.clear();
+        this.deletedFilesMap.clear();
+        this.deletedDirectoriesMap.clear();
         lastCheck = null;
         walkTree();
     }
@@ -90,7 +94,7 @@ public abstract class AbstractDirectoryWatcher {
         }
         Path relPath = getRelativePath(path);
         context.add(relPath);
-        DirectoryWatchEntry existingEntry = getEntry(relPath, itemType);
+        DirectoryWatchEntry existingEntry = getEntry(relPath);
         if (lastCheck == null) {
             // Initial run.
             if (existingEntry != null) {
@@ -132,19 +136,15 @@ public abstract class AbstractDirectoryWatcher {
         return true;
     }
 
-    public Set<Path> getDeletedDirectoriesSet() {
-        return deletedDirectoriesSet;
+    public Long getLastCheck() {
+        return lastCheck;
     }
 
-    public Set<Path> getDeletedFilesSet() {
-        return deletedFilesSet;
-    }
-
-    public DirectoryWatchEntry getDirectoryEntry(Path path) {
+    private DirectoryWatchEntry getDirectoryEntry(Path path) {
         return directoriesMap.get(getRelativePath(path));
     }
 
-    public DirectoryWatchEntry getFileEntry(Path path) {
+    private DirectoryWatchEntry getFileEntry(Path path) {
         Path relPath = getRelativePath(path);
         return filesMap.get(relPath);
     }
@@ -156,14 +156,36 @@ public abstract class AbstractDirectoryWatcher {
         return path;
     }
 
-    public DirectoryWatchEntry getEntry(Path path, ItemType type) {
+    /**
+     * Tries to get the DirectoryWatchEntry for this given path (directory or file).
+     *
+     * @param path
+     * @return
+     */
+    public DirectoryWatchEntry getEntry(Path path) {
         Validate.notNull(path);
-        Validate.notNull(type);
-        if (type == ItemType.DIR) {
-            return getDirectoryEntry(path);
-        } else {
-            return getFileEntry(path);
+        Path relPath = getRelativePath(path);
+        DirectoryWatchEntry entry = this.directoriesMap.get(relPath);
+        if (entry != null) {
+            return entry;
         }
+        entry = this.filesMap.get(relPath);
+        if (entry != null) {
+            return entry;
+        }
+        entry = this.deletedDirectoriesMap.get(relPath);
+        if (entry != null) {
+            return entry;
+        }
+        return this.deletedFilesMap.get(relPath);
+    }
+
+    public boolean isModified(Path path, long lastCheck) {
+        DirectoryWatchEntry entry = getEntry(path);
+        if (entry == null) {
+            return true;
+        }
+        return lastCheck < entry.getLastModified();
     }
 
     private void putEntry(Path path, ItemType type, DirectoryWatchEntry entry) {
