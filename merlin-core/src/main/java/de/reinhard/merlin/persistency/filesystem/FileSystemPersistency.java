@@ -79,7 +79,7 @@ public class FileSystemPersistency implements PersistencyInterface {
     }
 
     @Override
-    public AbstractDirectoryWatcher newInstance(Path root, String... fileExtensions) {
-        return new FileSystemDirectoryWatcher(root, fileExtensions);
+    public AbstractDirectoryWatcher newInstance(Path root, boolean recursive, String... fileExtensions) {
+        return new FileSystemDirectoryWatcher(root, recursive, fileExtensions);
     }
 }

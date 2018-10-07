@@ -18,7 +18,6 @@ import java.util.*;
 public class DirectoryScanner {
     private Logger log = LoggerFactory.getLogger(DirectoryScanner.class);
 
-    private boolean recursive;
     private Path dir;
     private List<TemplateDefinition> templateDefinitions;
     private List<Template> templates;
@@ -31,9 +30,7 @@ public class DirectoryScanner {
      */
     public DirectoryScanner(Path dir, boolean recursive) {
         this.dir = persistency.getCanonicalPath(dir);
-        this.recursive = recursive;
-        directoryWatcher = PersistencyRegistry.getInstance().getPersistency().newInstance(dir, "docx", "xls", "xlsx");
-        directoryWatcher.setRecursive(recursive);
+        directoryWatcher = PersistencyRegistry.getInstance().getPersistency().newInstance(dir, recursive,"docx", "xls", "xlsx");
         clear();
     }
 
@@ -219,9 +216,5 @@ public class DirectoryScanner {
 
     public Path getDir() {
         return dir;
-    }
-
-    public boolean isRecursive() {
-        return recursive;
     }
 }

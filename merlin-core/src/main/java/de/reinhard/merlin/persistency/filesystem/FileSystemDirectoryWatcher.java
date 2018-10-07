@@ -20,8 +20,8 @@ import java.nio.file.attribute.BasicFileAttributes;
 public class FileSystemDirectoryWatcher extends AbstractDirectoryWatcher {
     private Logger log = LoggerFactory.getLogger(FileSystemDirectoryWatcher.class);
 
-    public FileSystemDirectoryWatcher(Path root, String... fileExtensions) {
-        super(PersistencyRegistry.getDefault().getCanonicalPath(root), fileExtensions);
+    public FileSystemDirectoryWatcher(Path root, boolean recursive, String... fileExtensions) {
+        super(PersistencyRegistry.getDefault().getCanonicalPath(root), recursive, fileExtensions);
     }
 
     @Override

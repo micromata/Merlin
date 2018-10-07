@@ -20,15 +20,13 @@ public class FilesystemDirectoryWatcherTest {
             FileUtils.deleteDirectory(rootDir);
         }
         rootDir.mkdir();
-        FileSystemDirectoryWatcher recursiveWatcher = new FileSystemDirectoryWatcher(rootDir.toPath(), "xls", "xlsx", "docx");
-        recursiveWatcher.setRecursive(true);
-        FileSystemDirectoryWatcher watcher = new FileSystemDirectoryWatcher(rootDir.toPath(), "xls", "xlsx", "docx");
-        watcher.setRecursive(false);
+        FileSystemDirectoryWatcher recursiveWatcher = new FileSystemDirectoryWatcher(rootDir.toPath(), true, "xls", "xlsx", "docx");
+        FileSystemDirectoryWatcher watcher = new FileSystemDirectoryWatcher(rootDir.toPath(), false,"xls", "xlsx", "docx");
 
         File f1 = writeFile(rootDir, "test.xlsx");
         File f2 = writeFile(rootDir, "test2.docx");
-        recursiveWatcher.walkTree();
-        watcher.walkTree();
+        recursiveWatcher.forceRecheck();
+        watcher.forceRecheck();
         assertEntry(recursiveWatcher, f1, null);
         assertEntry(recursiveWatcher, f2, null);
         assertEntry(watcher, f1, null);
@@ -44,8 +42,8 @@ public class FilesystemDirectoryWatcherTest {
         File d_a_1 = mkdir(d_a, "a1");
         File d_a_2 = mkdir(d_a, "a2");
         File f_a_2 = writeFile(d_a_2, "test_a2.xlsx");
-        recursiveWatcher.walkTree();
-        watcher.walkTree();
+        recursiveWatcher.forceRecheck();
+        watcher.forceRecheck();
         assertEntry(recursiveWatcher, f1, null);
         assertEntry(watcher, f1, null);
         assertEntry(recursiveWatcher, d_a, ModificationType.CREATED);
@@ -55,14 +53,13 @@ public class FilesystemDirectoryWatcherTest {
         assertNull(watcher.getEntry(f_a_2.toPath()));
 
         FileUtils.deleteDirectory(d_a);
-        recursiveWatcher.walkTree();
+        recursiveWatcher.forceRecheck();
         assertEntry(recursiveWatcher, f_a_2, ModificationType.DELETED);
         assertEntry(recursiveWatcher, f1, null);
-        recursiveWatcher.clear();
 
         f1.delete();
-        recursiveWatcher.walkTree();
-        assertEntry(recursiveWatcher, f1, ModificationType.DELETED);
+        recursiveWatcher.clear();
+        assertNull(recursiveWatcher.getEntry(f1.toPath())); // is not there anymore, because clear of watcher was called.
         assertNull(recursiveWatcher.getEntry(f_a_2.toPath()));
         FileUtils.deleteDirectory(rootDir);
     }

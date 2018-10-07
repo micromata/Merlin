@@ -19,7 +19,10 @@ public abstract class AbstractDirectoryWatcher {
     protected Path root;
     protected String[] supportedFileExtensions;
     private Long lastCheck;
-    private boolean recursive = true;
+    private boolean recursive;
+    private long refreshRateInMillis = 10000; // 10 seconds as default.
+    private boolean dirty;
+    private boolean recheckInProgress;
 
     private Map<Path, DirectoryWatchEntry> directoriesMap;
     private Map<Path, DirectoryWatchEntry> filesMap;
@@ -31,8 +34,9 @@ public abstract class AbstractDirectoryWatcher {
      * @param supportedFileExtensions If null, all files will be proceeded, if given, only files with one of these extensions will
      *                                be proceeded. You may specify: {"docx", "xls", "xlsx"} as well as {".docx". ".xls", ".xlsx"}.
      */
-    public AbstractDirectoryWatcher(Path root, String... supportedFileExtensions) {
+    public AbstractDirectoryWatcher(Path root, boolean recursive, String... supportedFileExtensions) {
         this.root = root;
+        this.recursive = recursive;
         this.supportedFileExtensions = supportedFileExtensions;
         this.directoriesMap = new HashMap<>();
         this.filesMap = new HashMap<>();
@@ -40,7 +44,9 @@ public abstract class AbstractDirectoryWatcher {
         this.deletedFilesMap = new HashMap<>();
     }
 
-    public synchronized void walkTree() {
+    private synchronized void walkTree() {
+        log.debug("Walking through tree: " + root);
+        long now = System.currentTimeMillis();
         DirectoryWatcherContext context = new DirectoryWatcherContext();
         walkTree(context);
         for (DirectoryWatchEntry entry : directoriesMap.values()) {
@@ -65,11 +71,13 @@ public abstract class AbstractDirectoryWatcher {
             log.debug("Delete file: " + entry.getPath());
             filesMap.remove(entry.getPath());
         }
-        lastCheck = System.currentTimeMillis();
+        lastCheck = now;
     }
 
     /**
-     * Remove all directory and file entries and re-walk the directory.
+     * Remove all directories and file entries. Use this method only, if you want to re-read everything.
+     *
+     * @see #forceRecheck()
      */
     public synchronized void clear() {
         this.directoriesMap.clear();
@@ -77,7 +85,16 @@ public abstract class AbstractDirectoryWatcher {
         this.deletedFilesMap.clear();
         this.deletedDirectoriesMap.clear();
         lastCheck = null;
-        walkTree();
+    }
+
+    /**
+     * Causes to walk through the tree independent on the last check time. The walkTree is called, if any variable
+     * is accessed.
+     *
+     * @see #checkRefresh()
+     */
+    public void forceRecheck() {
+        this.dirty = true;
     }
 
     protected abstract void walkTree(DirectoryWatcherContext context);
@@ -145,28 +162,14 @@ public abstract class AbstractDirectoryWatcher {
     }
 
     /**
-     *
-     * @return true, if the directory is scanned recursively (including sub directories) or not. True is default.
+     * @return true, if the directory is scanned recursively (including sub directories) or not.
      */
     public boolean isRecursive() {
         return recursive;
     }
 
-    public void setRecursive(boolean recursive) {
-        this.recursive = recursive;
-    }
-
     public Long getLastCheck() {
         return lastCheck;
-    }
-
-    private DirectoryWatchEntry getDirectoryEntry(Path path) {
-        return directoriesMap.get(getRelativePath(path));
-    }
-
-    private DirectoryWatchEntry getFileEntry(Path path) {
-        Path relPath = getRelativePath(path);
-        return filesMap.get(relPath);
     }
 
     private Path getRelativePath(Path path) {
@@ -184,6 +187,7 @@ public abstract class AbstractDirectoryWatcher {
      */
     public DirectoryWatchEntry getEntry(Path path) {
         Validate.notNull(path);
+        checkRefresh();
         Path relPath = getRelativePath(path);
         DirectoryWatchEntry entry = this.directoriesMap.get(relPath);
         if (entry != null) {
@@ -200,9 +204,15 @@ public abstract class AbstractDirectoryWatcher {
         return this.deletedFilesMap.get(relPath);
     }
 
+    /**
+     * @param path
+     * @param lastCheck
+     * @return true, if the lastModified of the path is after lastCheck or if the path object is deleted.
+     */
     public boolean isModified(Path path, long lastCheck) {
+        checkRefresh();
         DirectoryWatchEntry entry = getEntry(path);
-        if (entry == null) {
+        if (entry == null || entry.getType() == ModificationType.DELETED) {
             return true;
         }
         return lastCheck < entry.getLastModified();
@@ -216,6 +226,7 @@ public abstract class AbstractDirectoryWatcher {
      * @return List might be empty.
      */
     public List<Path> listFiles(boolean absolutePath, String... fileExtensions) {
+        checkRefresh();
         List<Path> files = new ArrayList<>();
         for (DirectoryWatchEntry entry : this.filesMap.values()) {
             if (!matches(entry.getPath(), fileExtensions)) {
@@ -239,6 +250,29 @@ public abstract class AbstractDirectoryWatcher {
             this.directoriesMap.put(path, entry);
         } else {
             this.filesMap.put(path, entry);
+        }
+    }
+
+
+    /**
+     * Checks weather to walkTree or not. If {@link #forceRecheck()} is called before or if the last check is
+     * outdated, the walkTree is called.
+     *
+     * @see #walkTree()
+     */
+    protected synchronized void checkRefresh() {
+        if (recheckInProgress) {
+            return;
+        }
+        if (!dirty && lastCheck != null &&
+                lastCheck + this.refreshRateInMillis > System.currentTimeMillis()) {
+            return;
+        }
+        try {
+            recheckInProgress = true;
+            walkTree();
+        } finally {
+            recheckInProgress = false;
         }
     }
 }

@@ -43,5 +43,5 @@ public interface PersistencyInterface {
      */
     public File getFile(Path path);
 
-    public AbstractDirectoryWatcher newInstance(Path root, String... fileExtensions);
+    public AbstractDirectoryWatcher newInstance(Path root, boolean recursive, String... fileExtensions);
 }
