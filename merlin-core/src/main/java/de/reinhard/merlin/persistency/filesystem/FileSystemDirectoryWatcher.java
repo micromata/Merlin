@@ -2,6 +2,7 @@ package de.reinhard.merlin.persistency.filesystem;
 
 import de.reinhard.merlin.persistency.AbstractDirectoryWatcher;
 import de.reinhard.merlin.persistency.DirectoryWatcherContext;
+import de.reinhard.merlin.persistency.ItemType;
 import de.reinhard.merlin.persistency.PersistencyRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,14 +33,14 @@ public class FileSystemDirectoryWatcher extends AbstractDirectoryWatcher {
                 public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs)
                         throws IOException {
                     long lastModified = attrs.lastModifiedTime().toMillis();
-                    visitDirectory(dir, lastModified, context);
+                    visit(dir, ItemType.DIR, lastModified, context);
                     return FileVisitResult.CONTINUE;
                 }
 
                 @Override
                 public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
                     long lastModified = attrs.lastModifiedTime().toMillis();
-                    visitItem(file, lastModified, context);
+                    visit(file, ItemType.FILE, lastModified, context);
                     return FileVisitResult.CONTINUE;
                 }
             });

@@ -20,8 +20,8 @@ public class DirectoryWatcherContext {
         return time;
     }
 
-    public Set<Path> getTouchedItems() {
-        return touchedItems;
+    public boolean containsTouchedItem(Path path) {
+        return touchedItems.contains(path);
     }
 
     public void add(Path path) {
