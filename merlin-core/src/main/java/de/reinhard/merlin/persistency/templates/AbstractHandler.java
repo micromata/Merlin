@@ -84,10 +84,7 @@ abstract class AbstractHandler<T extends FileDescriptorInterface> {
         List<DirectoryWatchEntry> watchEntries = directoryWatcher.listWatchEntries(true, supportedFileExtensions);
         for (DirectoryWatchEntry watchEntry : watchEntries) {
             if (watchEntry.getType() == ModificationType.DELETED) {
-                if (unsupportedFilesMap.containsKey(watchEntry.getPath())) {
-                    log.debug("Remove unsupported file from register: " + watchEntry.getPath());
-                    unsupportedFilesMap.remove(watchEntry.getPath());
-                }
+                // Do nothing for now.
             } else {
                 processItem(watchEntry);
             }
