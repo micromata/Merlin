@@ -21,7 +21,7 @@ public class FileSystemDirectoryWatcher extends AbstractDirectoryWatcher {
     private Logger log = LoggerFactory.getLogger(FileSystemDirectoryWatcher.class);
 
     public FileSystemDirectoryWatcher(Path root, String... fileExtensions) {
-        super(PersistencyRegistry.getDefault().getCanonicalPath(root), fileExtensions);
+        super(root != null ? PersistencyRegistry.getDefault().getCanonicalPath(root): null, fileExtensions);
     }
 
     @Override
@@ -47,5 +47,10 @@ public class FileSystemDirectoryWatcher extends AbstractDirectoryWatcher {
         } catch (IOException ex) {
             log.error("Error while walking through file system on path '" + root + "': " + ex.getMessage(), ex);
         }
+    }
+
+    @Override
+    public AbstractDirectoryWatcher newInstance(Path root, String... fileExtensions) {
+        return new FileSystemDirectoryWatcher(root, fileExtensions);
     }
 }
