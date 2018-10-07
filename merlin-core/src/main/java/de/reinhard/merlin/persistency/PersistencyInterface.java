@@ -51,4 +51,6 @@ public interface PersistencyInterface {
      * @return File, if supported by the implementation, otherwise null (then use {@link #getInputStream(Path)} instead).
      */
     public File getFile(Path path);
+
+    public AbstractDirectoryWatcher newInstance(Path root, String... fileExtensions);
 }

@@ -1,20 +1,18 @@
 package de.reinhard.merlin.persistency;
 
-import de.reinhard.merlin.persistency.filesystem.FileSystemDirectoryWatcher;
 import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Abstract implementation for watching a directory (e. g. in the filesystem) for modifications.
  */
 public abstract class AbstractDirectoryWatcher {
     private Logger log = LoggerFactory.getLogger(AbstractDirectoryWatcher.class);
-
-    private static AbstractDirectoryWatcher factory = new FileSystemDirectoryWatcher(null, null);
 
     protected Path root;
     protected String[] fileExtensions;
@@ -200,11 +198,5 @@ public abstract class AbstractDirectoryWatcher {
         } else {
             this.filesMap.put(path, entry);
         }
-    }
-
-    public abstract AbstractDirectoryWatcher newInstance(Path root, String... fileExtensions);
-
-    public void setFactory(AbstractDirectoryWatcher factory) {
-        this.factory = factory;
     }
 }

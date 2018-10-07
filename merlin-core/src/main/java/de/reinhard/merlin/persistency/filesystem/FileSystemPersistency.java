@@ -1,5 +1,6 @@
 package de.reinhard.merlin.persistency.filesystem;
 
+import de.reinhard.merlin.persistency.AbstractDirectoryWatcher;
 import de.reinhard.merlin.persistency.PersistencyInterface;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
@@ -38,6 +39,9 @@ public class FileSystemPersistency implements PersistencyInterface {
     }
 
     public Path getCanonicalPath(Path path) {
+        if (path == null) {
+            return null;
+        }
         return Paths.get(getCanonicalPathString(path));
     }
 
@@ -83,5 +87,10 @@ public class FileSystemPersistency implements PersistencyInterface {
 
     public File getFile(Path path) {
         return path.toFile();
+    }
+
+    @Override
+    public AbstractDirectoryWatcher newInstance(Path root, String... fileExtensions) {
+        return new FileSystemDirectoryWatcher(root, fileExtensions);
     }
 }
