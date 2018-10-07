@@ -34,12 +34,7 @@ public class Storage implements StorageInterface {
     private Storage() {
         directoryScannerMap = new HashMap<>();
         directoryWatchService = new DirectoryWatchService();
-        new Thread() {
-            @Override
-            public void run() {
-                directoryWatchService.run();
-            }
-        }.start();
+        directoryWatchService.start();
     }
 
     public void add(DirectoryScanner directoryScanner) {

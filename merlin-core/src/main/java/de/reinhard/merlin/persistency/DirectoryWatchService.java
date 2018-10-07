@@ -41,55 +41,73 @@ public class DirectoryWatchService implements Runnable {
         return this.doStop == false;
     }
 
+    public void start() {
+        new Thread() {
+            @Override
+            public void run() {
+                try {
+                    DirectoryWatchService.this.run();
+                } catch (Exception ex) {
+                    log.error("Exception in thread running DirectoryWatchService: " + ex.getMessage(), ex);
+                }
+            }
+        }.start();
+    }
+
     /**
      * Process all events for watch keys queued to the watcher service.
      */
     @Override
     public void run() {
-        while (true) {
-            // wait for key to be signalled
-            WatchKey eventWatchKey;
-            try {
-                // Retrieves and removes next watch key, waiting if none are yet present.
-                eventWatchKey = this.watchService.take();
-            } catch (InterruptedException x) {
-                return;
-            }
-            WatchKeyEntry watchKeyEntry = watchKeyMap.get(eventWatchKey);
-            if (watchKeyEntry == null) {
-                log.error("Got watch key event, but it's not registered: " + watchKeyToString(eventWatchKey));
-                continue;
-            }
-            Path dir = watchKeyEntry.path;
-            for (WatchEvent<?> watchEvent : eventWatchKey.pollEvents()) {
-                WatchEvent.Kind kind = watchEvent.kind();
-                if (kind == OVERFLOW) {
-                    log.warn("Got OVERFLOW, don't know how to proceed it: " + watchEvent.toString());
+        log.info("Running watch service.");
+        try {
+            while (true) {
+                // wait for key to be signalled
+                WatchKey eventWatchKey;
+                try {
+                    // Retrieves and removes next watch key, waiting if none are yet present.
+                    eventWatchKey = this.watchService.take();
+                } catch (InterruptedException x) {
+                    return;
+                }
+                WatchKeyEntry watchKeyEntry = watchKeyMap.get(eventWatchKey);
+                if (watchKeyEntry == null) {
+                    log.error("Got watch key event, but it's not registered: " + watchKeyToString(eventWatchKey));
                     continue;
                 }
-                WatchEvent<Path> pathWatchEvent = (WatchEvent<Path>) watchEvent;
-                Path name = pathWatchEvent.context();
-                Path child = dir.resolve(name);
+                Path dir = watchKeyEntry.path;
+                for (WatchEvent<?> watchEvent : eventWatchKey.pollEvents()) {
+                    WatchEvent.Kind kind = watchEvent.kind();
+                    if (kind == OVERFLOW) {
+                        log.warn("Got OVERFLOW, don't know how to proceed it: " + watchEvent.toString());
+                        continue;
+                    }
+                    WatchEvent<Path> pathWatchEvent = (WatchEvent<Path>) watchEvent;
+                    Path name = pathWatchEvent.context();
+                    Path child = dir.resolve(name);
 
-                log.info("Got watch event of kind '" + kind + "' for child '" + child + "'");
+                    log.info("Got watch event of kind '" + kind + "' for child '" + child + "'");
 
-                // if directory is created, and watching recursively, then
-                // register it and its sub-directories
-                if (watchKeyEntry.recursive && (kind == ENTRY_CREATE)) {
-                    if (Files.isDirectory(child, LinkOption.NOFOLLOW_LINKS)) {
-                        registerAll(child);
+                    // if directory is created, and watching recursively, then
+                    // register it and its sub-directories
+                    if (watchKeyEntry.recursive && (kind == ENTRY_CREATE)) {
+                        if (Files.isDirectory(child, LinkOption.NOFOLLOW_LINKS)) {
+                            registerAll(child);
+                        }
                     }
                 }
+                // reset key and remove from set if directory no longer accessible
+                boolean valid = eventWatchKey.reset();
+                if (!valid) {
+                    watchKeyMap.remove(eventWatchKey);
+                    //if (watchKeyMap.isEmpty()) {
+                    // all directories are inaccessible
+                    //    break;
+                    //}
+                }
             }
-            // reset key and remove from set if directory no longer accessible
-            boolean valid = eventWatchKey.reset();
-            if (!valid) {
-                watchKeyMap.remove(eventWatchKey);
-                //if (watchKeyMap.isEmpty()) {
-                // all directories are inaccessible
-                //    break;
-                //}
-            }
+        } finally {
+            log.warn("Stopping watch service.");
         }
     }
 
@@ -105,9 +123,13 @@ public class DirectoryWatchService implements Runnable {
      * Register the given directory with the WatchService
      */
     private boolean _register(Path path, boolean recursive) {
+        path = PersistencyRegistry.getDefault().getCanonicalPath(path);
+        //if (path.is)
         WatchKey watchKey;
         try {
-            watchKey = path.register(watchService, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY);
+            //watchKey = path.register(watchService,  new WatchEvent.Kind[]{ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY, OVERFLOW},
+            //        SensitivityWatchEventModifier.HIGH);
+            watchKey = path.register(watchService,  ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY, OVERFLOW);
         } catch (IOException ex) {
             log.error("Can't register dir '" + path + "': " + ex.getMessage(), ex);
             return false;
@@ -135,7 +157,7 @@ public class DirectoryWatchService implements Runnable {
                 @Override
                 public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs)
                         throws IOException {
-                    register(dir, true);
+                    _register(dir, true);
                     return FileVisitResult.CONTINUE;
                 }
             });
