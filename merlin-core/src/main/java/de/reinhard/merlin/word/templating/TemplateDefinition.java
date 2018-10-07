@@ -3,6 +3,7 @@ package de.reinhard.merlin.word.templating;
 import de.reinhard.merlin.excel.ExcelSheet;
 import de.reinhard.merlin.excel.ExcelWorkbook;
 import de.reinhard.merlin.persistency.FileDescriptor;
+import de.reinhard.merlin.persistency.FileDescriptorInterface;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,7 +13,7 @@ import java.util.*;
 /**
  * A template definition defines variabled usable by templates as well as dependent variables.
  */
-public class TemplateDefinition implements Cloneable {
+public class TemplateDefinition implements Cloneable, FileDescriptorInterface {
     private Logger log = LoggerFactory.getLogger(TemplateDefinition.class);
     private List<VariableDefinition> variableDefinitions = new ArrayList<>();
     private List<DependentVariableDefinition> dependentVariableDefinitions = new ArrayList<>();

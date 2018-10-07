@@ -2,7 +2,7 @@ package de.reinhard.merlin.app.storage;
 
 import de.reinhard.merlin.app.javafx.RunningMode;
 import de.reinhard.merlin.excel.ExcelWorkbook;
-import de.reinhard.merlin.persistency.DirectoryScanner;
+import de.reinhard.merlin.persistency.templates.DirectoryScanner;
 import de.reinhard.merlin.persistency.FileDescriptor;
 import de.reinhard.merlin.persistency.PersistencyRegistry;
 import de.reinhard.merlin.persistency.StorageInterface;
@@ -24,7 +24,7 @@ public class Storage implements StorageInterface {
     private static final Storage instance = new Storage();
 
     // Key is the canonical path of the directory.
-    private Map<String, de.reinhard.merlin.persistency.DirectoryScanner> directoryScannerMap;
+    private Map<String, DirectoryScanner> directoryScannerMap;
 
     private boolean dirty = true;
 
@@ -36,14 +36,14 @@ public class Storage implements StorageInterface {
         directoryScannerMap = new HashMap<>();
     }
 
-    public void add(de.reinhard.merlin.persistency.DirectoryScanner directoryScanner) {
+    public void add(DirectoryScanner directoryScanner) {
         directoryScannerMap.put(directoryScanner.getCanonicalPath(), directoryScanner);
     }
 
     public List<TemplateDefinition> getAllTemplateDefinitions() {
         checkRefresh();
         List<TemplateDefinition> templateDefinitions = new ArrayList<>();
-        for (de.reinhard.merlin.persistency.DirectoryScanner directoryScanner : directoryScannerMap.values()) {
+        for (DirectoryScanner directoryScanner : directoryScannerMap.values()) {
             templateDefinitions.addAll(directoryScanner.getTemplateDefinitions());
         }
         return templateDefinitions;
@@ -58,7 +58,7 @@ public class Storage implements StorageInterface {
         if (templateDefinitionId == null) {
             return list;
         }
-        for (de.reinhard.merlin.persistency.DirectoryScanner directoryScanner : directoryScannerMap.values()) {
+        for (DirectoryScanner directoryScanner : directoryScannerMap.values()) {
             if (descriptor != null && StringUtils.isNotEmpty(descriptor.getDirectory())) {
                 String directory = directoryScanner.getCanonicalPath();
                 if (!descriptor.getDirectory().equals(directory)) {
@@ -145,7 +145,7 @@ public class Storage implements StorageInterface {
     public List<Template> getAllTemplates() {
         checkRefresh();
         List<Template> templates = new ArrayList<>();
-        for (de.reinhard.merlin.persistency.DirectoryScanner directoryScanner : directoryScannerMap.values()) {
+        for (DirectoryScanner directoryScanner : directoryScannerMap.values()) {
             templates.addAll(directoryScanner.getTemplates());
         }
         return templates;

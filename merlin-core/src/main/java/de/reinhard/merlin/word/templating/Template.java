@@ -1,6 +1,7 @@
 package de.reinhard.merlin.word.templating;
 
 import de.reinhard.merlin.persistency.FileDescriptor;
+import de.reinhard.merlin.persistency.FileDescriptorInterface;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -11,7 +12,7 @@ import org.slf4j.LoggerFactory;
  * A template refers a template file, optional a template definition file and contains some meta data (such as statistics
  * about variables and their usage).
  */
-public class Template implements Cloneable {
+public class Template implements Cloneable, FileDescriptorInterface {
     private Logger log = LoggerFactory.getLogger(Template.class);
     private TemplateStatistics statistics;
     private TemplateDefinition templateDefinition;

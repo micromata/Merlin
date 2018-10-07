@@ -1,7 +1,7 @@
 package de.reinhard.merlin.persistency;
 
 import de.reinhard.merlin.Definitions;
-import de.reinhard.merlin.persistency.DirectoryScanner;
+import de.reinhard.merlin.persistency.templates.DirectoryScanner;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -15,5 +15,6 @@ public class DirectoryScannerTest {
                 directoryScanner.getTemplateDefinition("Letter-Template").getFileDescriptor().getFilename());
         assertEquals("EmploymentContractTemplate.xlsx",
                 directoryScanner.getTemplateDefinition("Employment contract template").getFileDescriptor().getFilename());
+        assertEquals(3, directoryScanner.getTemplates().size());
     }
 }

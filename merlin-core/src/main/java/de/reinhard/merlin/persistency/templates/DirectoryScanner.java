@@ -1,10 +1,8 @@
-package de.reinhard.merlin.persistency;
+package de.reinhard.merlin.persistency.templates;
 
-import de.reinhard.merlin.excel.ExcelWorkbook;
-import de.reinhard.merlin.word.WordDocument;
-import de.reinhard.merlin.word.templating.*;
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.collections4.MapUtils;
+import de.reinhard.merlin.persistency.*;
+import de.reinhard.merlin.word.templating.Template;
+import de.reinhard.merlin.word.templating.TemplateDefinition;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,7 +68,7 @@ public class DirectoryScanner {
         return getTemplate(descriptor.getCanonicalPathString());
     }
 
-    private Template _getTemplate(FileDescriptor descriptor) {
+    Template _getTemplate(FileDescriptor descriptor) {
         return _getTemplate(descriptor.getCanonicalPathString());
     }
 
@@ -96,114 +94,24 @@ public class DirectoryScanner {
      * @return Found or read template definition, otherwise null.
      */
     protected TemplateDefinition getTemplateDefinition(DirectoryWatchEntry watchEntry) {
-        Date now = new Date();
         Path path = directoryWatcher.getCanonicalPath(watchEntry);
-        FileDescriptor fileDescriptor = new FileDescriptor().setDirectory(getDir()).setRelativePath(path)
-                .setLastUpdate(now);
-        TemplateDefinition existingTemplateDefinition = _getTemplateDefinition(fileDescriptor);
-        if (existingTemplateDefinition != null && !existingTemplateDefinition.getFileDescriptor().isModified(path)) {
-            log.debug("Skipping file '" + path + "'. It's not modified since last scan.");
-            return existingTemplateDefinition;
+        TemplateDefinitionHandler handler = new TemplateDefinitionHandler(this);
+        TemplateDefinition templateDefinition = handler.get(watchEntry);
+        if (templateDefinition != null) {
+            templateDefinitionsMap.put(path, templateDefinition);
         }
-        if (!persistency.exists(path)) {
-            log.error("Can't read template definition. Path '" + path + "' doesn't exist.");
-            return null;
-        }
-        if (!watchEntry.isSupportedItem() && !watchEntry.isModified(directoryWatcher)) {
-            log.debug("Unsupported item '" + path + "' not modified. Skipping again.");
-            return null;
-        }
-        log.info("Scanning file '" + path + "'.");
-        ExcelWorkbook workbook = ExcelWorkbook.create(path);
-        TemplateDefinitionExcelReader templateReader = new TemplateDefinitionExcelReader();
-        if (!templateReader.isMerlinTemplateDefinition(workbook)) {
-            log.info("Skipping file '" + path.toAbsolutePath() + "', no template definition (OK).");
-            watchEntry.setSupportedItem(false);
-            return null;
-        }
-        TemplateDefinition templateDefinition = templateReader.readFromWorkbook(workbook, false);
-        if (templateDefinition == null) {
-            log.info("Skipping file '" + path.toAbsolutePath() + "', no template definition (OK).");
-            watchEntry.setSupportedItem(false);
-            return null;
-        }
-        templateDefinition.setFileDescriptor(fileDescriptor);
-        if (!templateReader.isValidTemplateDefinition()) {
-            log.info("Skipping '" + path.toAbsolutePath() + "'. It's not a valid Merlin template file.");
-            watchEntry.setSupportedItem(false);
-            return null;
-        }
-        templateDefinitionsMap.put(path, templateDefinition);
-        watchEntry.setSupportedItem(true);
-        log.info("Valid Merlin template definition found: '" + templateDefinition.getId() + "': " + path.toAbsolutePath());
         return templateDefinition;
     }
 
 
     protected Template getTemplate(DirectoryWatchEntry watchEntry) {
-        Date now = new Date();
         Path path = directoryWatcher.getCanonicalPath(watchEntry);
-        FileDescriptor fileDescriptor = new FileDescriptor().setDirectory(getDir()).setRelativePath(path)
-                .setLastUpdate(now);
-        Template existingTemplate = _getTemplate(fileDescriptor);
-        if (existingTemplate != null && !existingTemplate.getFileDescriptor().isModified(path)) {
-            log.debug("Skipping file '" + path.toAbsolutePath() + "'. It's not modified since last scan.");
-            return existingTemplate;
+        TemplateHandler handler = new TemplateHandler(this);
+        Template template = handler.get(watchEntry);
+        if (template != null) {
+            templatesMap.put(path, template);
         }
-        if (!persistency.exists(path)) {
-            log.error("Can't read template. Path '" + path + "' doesn't exist.");
-            return null;
-        }
-        if (!watchEntry.isSupportedItem() && !watchEntry.isModified(directoryWatcher)) {
-            log.debug("Unsupported item '" + path + "' not modified. Skipping again.");
-            return null;
-        }
-        log.info("Scanning file '" + path + "'.");
-        WordDocument doc = WordDocument.create(path);
-        WordTemplateChecker templateChecker = new WordTemplateChecker(doc);
-        if (CollectionUtils.isEmpty(templateChecker.getTemplate().getStatistics().getAllUsedVariables())) {
-            log.debug("Skipping Word document: '" + path.toAbsolutePath()
-                    + "'. It's seemd to be not a Merlin template. No variables and conditionals found.");
-            watchEntry.setSupportedItem(false);
-            return null;
-        }
-        templateChecker.getTemplate().setFileDescriptor(fileDescriptor);
-        String templateDefinitionId = doc.scanForTemplateDefinitionReference();
-        if (templateDefinitionId != null) {
-            log.debug("Template definition reference found: " + templateDefinitionId);
-            TemplateDefinition templateDefinition = null;
-            if (MapUtils.isEmpty(templateDefinitionsMap)) {
-                log.warn("No templateDefinitions given, can't look for reference: " + templateDefinitionId);
-            } else {
-                String id = templateDefinitionId.trim().toLowerCase();
-                for (TemplateDefinition def : templateDefinitionsMap.values()) {
-                    if (id != null) {
-                        if (id.equals(def.getId().trim().toLowerCase())) {
-                            templateDefinition = def;
-                            break;
-                        }
-                    }
-                }
-            }
-            if (templateDefinition != null) {
-                templateChecker.getTemplate().assignTemplateDefinition(templateDefinition);
-            } else {
-                log.warn("Template definition not found: " + templateDefinitionId);
-            }
-        } else {
-            for (TemplateDefinition templateDefinition : templateDefinitionsMap.values()) {
-                if (templateChecker.getTemplate().getFileDescriptor().matches(templateDefinition.getFileDescriptor())) {
-                    templateChecker.getTemplate().assignTemplateDefinition(templateDefinition);
-                    log.info("Found matching template definition: " + templateDefinition.getFileDescriptor());
-                    templateChecker.getTemplate().assignTemplateDefinition(templateDefinition);
-                    break;
-                }
-            }
-        }
-        templatesMap.put(path, templateChecker.getTemplate());
-        watchEntry.setSupportedItem(true);
-        log.info("Valid Merlin template found: '" + path.toAbsolutePath() + "'.");
-        return templateChecker.getTemplate();
+        return template;
     }
 
     public Collection<TemplateDefinition> getTemplateDefinitions() {
@@ -217,7 +125,7 @@ public class DirectoryScanner {
         return _getTemplateDefinition(descriptor);
     }
 
-    private TemplateDefinition _getTemplateDefinition(FileDescriptor descriptor) {
+    TemplateDefinition _getTemplateDefinition(FileDescriptor descriptor) {
         for (TemplateDefinition templateDefinition : templateDefinitionsMap.values()) {
             if (descriptor.equals(templateDefinition.getFileDescriptor())) {
                 return templateDefinition;
@@ -235,6 +143,10 @@ public class DirectoryScanner {
             return null;
         }
         checkTemplateDefinitions();
+        return _getTemplateDefinition(id);
+    }
+
+    TemplateDefinition _getTemplateDefinition(String id) {
         String search = id.trim().toLowerCase();
         for (TemplateDefinition templateDefinition : templateDefinitionsMap.values()) {
             if (search.equals(templateDefinition.getId().trim().toLowerCase())) {
@@ -248,7 +160,6 @@ public class DirectoryScanner {
         checkAll();
         return templatesMap.values();
     }
-
 
 
     public Path getDir() {
@@ -296,4 +207,7 @@ public class DirectoryScanner {
         }
     }
 
+    public AbstractDirectoryWatcher getDirectoryWatcher() {
+        return directoryWatcher;
+    }
 }
