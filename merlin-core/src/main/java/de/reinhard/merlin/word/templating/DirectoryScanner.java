@@ -1,6 +1,7 @@
 package de.reinhard.merlin.word.templating;
 
 import de.reinhard.merlin.excel.ExcelWorkbook;
+import de.reinhard.merlin.persistency.AbstractDirectoryWatcher;
 import de.reinhard.merlin.persistency.PersistencyInterface;
 import de.reinhard.merlin.persistency.PersistencyRegistry;
 import de.reinhard.merlin.word.WordDocument;
@@ -22,6 +23,7 @@ public class DirectoryScanner {
     private List<TemplateDefinition> templateDefinitions;
     private List<Template> templates;
     private PersistencyInterface persistency = PersistencyRegistry.getDefault();
+    private AbstractDirectoryWatcher directoryWatcher;
 
     /**
      * @param dir
@@ -30,6 +32,8 @@ public class DirectoryScanner {
     public DirectoryScanner(Path dir, boolean recursive) {
         this.dir = persistency.getCanonicalPath(dir);
         this.recursive = recursive;
+        directoryWatcher = PersistencyRegistry.getInstance().getPersistency().newInstance(dir, "docx", "xls", "xlsx");
+        directoryWatcher.setRecursive(recursive);
         clear();
     }
 
@@ -40,6 +44,7 @@ public class DirectoryScanner {
     public void clear() {
         templateDefinitions = new ArrayList<>();
         templates = new ArrayList<>();
+        directoryWatcher.clear();
     }
 
     /**
@@ -59,13 +64,13 @@ public class DirectoryScanner {
         log.info("Scanning directory '" + dir.toAbsolutePath() + "' for Merlin template definitions (xls and xlsx).");
         Date now = new Date();
         Map<String, Path> templateDefintionFilenames = new HashMap<>();
-        List<Path> paths = persistency.listFiles(dir, recursive, "xls", "xlsx");
+        List<Path> paths = directoryWatcher.listFiles(true, "xls", "xlsx");
         for (Path path : paths) {
             if (path.getFileName().toString().startsWith("~$")) {
                 log.debug("Ignoring backup file '" + path.toAbsolutePath() + "'. Skipping.");
                 continue;
             }
-            log.info("Scanning file '" + path.toAbsolutePath() + "'.");
+            log.info("Scanning file '" + path + "'.");
             FileDescriptor fileDescriptor = new FileDescriptor().setDirectory(dir).setRelativePath(path)
                     .setLastUpdate(now);
             TemplateDefinition existingTemplateDefinition = getTemplateDefinition(fileDescriptor);
@@ -104,7 +109,7 @@ public class DirectoryScanner {
     private void processTemplates() {
         log.info("Scanning directory '" + dir.toAbsolutePath() + "' for Merlin templates (docx).");
         Date now = new Date();
-        List<Path> paths = persistency.listFiles(dir, recursive, "docx");
+        List<Path> paths = directoryWatcher.listFiles(true, "docx");
         for (Path path : paths) {
             if (path.getFileName().toString().startsWith("~$")) {
                 log.debug("Ignoring backup file '" + path.toAbsolutePath() + "'. Skipping.");

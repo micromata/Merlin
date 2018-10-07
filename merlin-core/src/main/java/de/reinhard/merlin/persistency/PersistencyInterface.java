@@ -3,7 +3,6 @@ package de.reinhard.merlin.persistency;
 import java.io.File;
 import java.io.InputStream;
 import java.nio.file.Path;
-import java.util.List;
 
 public interface PersistencyInterface {
     /**
@@ -29,14 +28,6 @@ public interface PersistencyInterface {
      * @return true, if the given path exists.
      */
     public boolean exists(Path path);
-
-    /**
-     *
-     * @param path
-     * @param recursive If recursive also all sub directories will be searched.
-     * @return The list of all found files (paths).
-     */
-    public List<Path> listFiles(Path path, boolean recursive, String... extensions);
 
     /**
      *

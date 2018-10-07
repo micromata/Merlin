@@ -5,7 +5,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -15,8 +17,9 @@ public abstract class AbstractDirectoryWatcher {
     private Logger log = LoggerFactory.getLogger(AbstractDirectoryWatcher.class);
 
     protected Path root;
-    protected String[] fileExtensions;
+    protected String[] supportedFileExtensions;
     private Long lastCheck;
+    private boolean recursive = true;
 
     private Map<Path, DirectoryWatchEntry> directoriesMap;
     private Map<Path, DirectoryWatchEntry> filesMap;
@@ -25,12 +28,12 @@ public abstract class AbstractDirectoryWatcher {
 
     /**
      * @param root
-     * @param fileExtensions If null, all files will be proceeded, if given, only files with one of these extensions will
-     *                       be proceeded. You may specify: {"docx", "xls", "xlsx"} as well as {".docx". ".xls", ".xlsx"}.
+     * @param supportedFileExtensions If null, all files will be proceeded, if given, only files with one of these extensions will
+     *                                be proceeded. You may specify: {"docx", "xls", "xlsx"} as well as {".docx". ".xls", ".xlsx"}.
      */
-    public AbstractDirectoryWatcher(Path root, String... fileExtensions) {
+    public AbstractDirectoryWatcher(Path root, String... supportedFileExtensions) {
         this.root = root;
-        this.fileExtensions = fileExtensions;
+        this.supportedFileExtensions = supportedFileExtensions;
         this.directoriesMap = new HashMap<>();
         this.filesMap = new HashMap<>();
         this.deletedDirectoriesMap = new HashMap<>();
@@ -125,16 +128,28 @@ public abstract class AbstractDirectoryWatcher {
      * @return
      */
     protected boolean ignoreFile(Path path) {
+        return !matches(path, supportedFileExtensions);
+    }
+
+    protected boolean matches(Path path, String... fileExtensions) {
         if (fileExtensions == null) {
-            return false;
+            return true;
         }
         for (String extension : fileExtensions) {
             String str = extension.startsWith(".") ? extension.toLowerCase() : "." + extension.toLowerCase();
             if (path.getFileName().toString().toLowerCase().endsWith(str)) {
-                return false;
+                return true;
             }
         }
-        return true;
+        return false;
+    }
+
+    public boolean isRecursive() {
+        return recursive;
+    }
+
+    public void setRecursive(boolean recursive) {
+        this.recursive = recursive;
     }
 
     public Long getLastCheck() {
@@ -187,6 +202,29 @@ public abstract class AbstractDirectoryWatcher {
             return true;
         }
         return lastCheck < entry.getLastModified();
+    }
+
+    /**
+     * Returning all files (not deleted ones), found by this watcher on last {@link #walkTree()}.
+     *
+     * @param absolutePath   If true, absolute pathes will be returned, otherwise relative pathes to the root directory of this watcher.
+     * @param fileExtensions File extension to match. If null, all files will returned.
+     * @return List might be empty.
+     */
+    public List<Path> listFiles(boolean absolutePath, String... fileExtensions) {
+        List<Path> files = new ArrayList<>();
+        for (DirectoryWatchEntry entry : this.filesMap.values()) {
+            if (!matches(entry.getPath(), fileExtensions)) {
+                continue;
+            }
+            Path path = absolutePath ? getFullPath(entry.getPath()) : entry.getPath();
+            files.add(path);
+        }
+        return files;
+    }
+
+    private Path getFullPath(Path path) {
+        return root.resolve(path);
     }
 
     private void putEntry(Path path, ItemType type, DirectoryWatchEntry entry) {

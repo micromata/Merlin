@@ -2,7 +2,6 @@ package de.reinhard.merlin.persistency.filesystem;
 
 import de.reinhard.merlin.persistency.AbstractDirectoryWatcher;
 import de.reinhard.merlin.persistency.PersistencyInterface;
-import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,9 +13,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.FileTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 public class FileSystemPersistency implements PersistencyInterface {
     private Logger log = LoggerFactory.getLogger(FileSystemPersistency.class);
@@ -58,13 +54,6 @@ public class FileSystemPersistency implements PersistencyInterface {
     public boolean exists(Path path) {
         File file = path.toFile();
         return file.exists();
-    }
-
-    public List<Path> listFiles(Path dir, boolean recursive, String... extensions) {
-        List<Path> list = new ArrayList<>();
-        Collection<File> files = FileUtils.listFiles(dir.toFile(), extensions, recursive);
-        files.forEach(file -> list.add(file.toPath()));
-        return list;
     }
 
     /**
