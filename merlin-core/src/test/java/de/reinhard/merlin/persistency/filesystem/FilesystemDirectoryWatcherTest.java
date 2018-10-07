@@ -21,7 +21,9 @@ public class FilesystemDirectoryWatcherTest {
         }
         rootDir.mkdir();
         FileSystemDirectoryWatcher recursiveWatcher = new FileSystemDirectoryWatcher(rootDir.toPath(), true, "xls", "xlsx", "docx");
+        recursiveWatcher.setIgnoreFilenamePatterns("^~\\$.*");
         FileSystemDirectoryWatcher watcher = new FileSystemDirectoryWatcher(rootDir.toPath(), false,"xls", "xlsx", "docx");
+        watcher.setIgnoreFilenamePatterns("^~\\$.*");
 
         File f1 = writeFile(rootDir, "test.xlsx");
         File f2 = writeFile(rootDir, "test2.docx");
@@ -38,12 +40,15 @@ public class FilesystemDirectoryWatcherTest {
         //Thread.sleep(2000); // For testing new modification time.
         touch(f1);
         File f3 = writeFile(rootDir, "ignore.java");
+        File f4 = writeFile(rootDir, "~$ignore.xlsx");
         File d_a = mkdir(rootDir, "a");
         File d_a_1 = mkdir(d_a, "a1");
         File d_a_2 = mkdir(d_a, "a2");
         File f_a_2 = writeFile(d_a_2, "test_a2.xlsx");
         recursiveWatcher.forceRecheck();
         watcher.forceRecheck();
+        assertNull(watcher.getEntry(f3.toPath()));
+        assertNull(watcher.getEntry(f4.toPath()));
         assertEntry(recursiveWatcher, f1, null);
         assertEntry(watcher, f1, null);
         assertEntry(recursiveWatcher, d_a, ModificationType.CREATED);

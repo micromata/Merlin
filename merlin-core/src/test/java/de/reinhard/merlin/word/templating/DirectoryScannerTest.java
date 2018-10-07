@@ -9,10 +9,7 @@ public class DirectoryScannerTest {
     @Test
     public void scanTest() {
         DirectoryScanner directoryScanner = new DirectoryScanner(Definitions.EXAMPLES_TEMPLATES_TEST_DIR.toPath(), false);
-        directoryScanner.process();
         assertEquals(2, directoryScanner.getTemplateDefinitions().size());
-        assertEquals("Employment contract template", directoryScanner.getTemplateDefinitions().get(0).getId());
-        assertEquals("Letter-Template", directoryScanner.getTemplateDefinitions().get(1).getId());
         assertEquals("LetterTemplate.xlsx",
                 directoryScanner.getTemplateDefinition("Letter-Template").getFileDescriptor().getFilename());
         assertEquals("EmploymentContractTemplate.xlsx",

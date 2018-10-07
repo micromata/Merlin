@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Abstract implementation for watching a directory (e. g. in the filesystem) for modifications.
@@ -16,8 +18,9 @@ import java.util.Map;
 public abstract class AbstractDirectoryWatcher {
     private Logger log = LoggerFactory.getLogger(AbstractDirectoryWatcher.class);
 
-    protected Path root;
+    protected Path rootDir;
     protected String[] supportedFileExtensions;
+    protected Pattern[] ignoreFilenamePatterns;
     private Long lastCheck;
     private boolean recursive;
     private long refreshRateInMillis = 10000; // 10 seconds as default.
@@ -30,12 +33,12 @@ public abstract class AbstractDirectoryWatcher {
     private Map<Path, DirectoryWatchEntry> deletedFilesMap;
 
     /**
-     * @param root
+     * @param rootDir
      * @param supportedFileExtensions If null, all files will be proceeded, if given, only files with one of these extensions will
      *                                be proceeded. You may specify: {"docx", "xls", "xlsx"} as well as {".docx". ".xls", ".xlsx"}.
      */
-    public AbstractDirectoryWatcher(Path root, boolean recursive, String... supportedFileExtensions) {
-        this.root = root;
+    public AbstractDirectoryWatcher(Path rootDir, boolean recursive, String... supportedFileExtensions) {
+        this.rootDir = PersistencyRegistry.getDefault().getCanonicalPath(rootDir);
         this.recursive = recursive;
         this.supportedFileExtensions = supportedFileExtensions;
         this.directoriesMap = new HashMap<>();
@@ -44,8 +47,20 @@ public abstract class AbstractDirectoryWatcher {
         this.deletedFilesMap = new HashMap<>();
     }
 
+    /**
+     * E. g. "^~\\$*"
+     *
+     * @param ignoreFilenameRegexps Java regexp for filenames to ignore.
+     */
+    public void setIgnoreFilenamePatterns(String... ignoreFilenameRegexps) {
+        this.ignoreFilenamePatterns = new Pattern[ignoreFilenameRegexps.length];
+        for (int i = 0; i < ignoreFilenameRegexps.length; i++) {
+            this.ignoreFilenamePatterns[i] = Pattern.compile(ignoreFilenameRegexps[i]);
+        }
+    }
+
     private synchronized void walkTree() {
-        log.debug("Walking through tree: " + root);
+        log.debug("Walking through tree: " + rootDir);
         long now = System.currentTimeMillis();
         DirectoryWatcherContext context = new DirectoryWatcherContext();
         walkTree(context);
@@ -107,7 +122,7 @@ public abstract class AbstractDirectoryWatcher {
         if (itemType == ItemType.DIR) {
             log.debug("Directory: " + path);
         } else {
-            if (ignoreFile(path)) {
+            if (!matches(path)) {
                 log.debug("Ignoring file: " + path);
                 return;
             }
@@ -144,11 +159,21 @@ public abstract class AbstractDirectoryWatcher {
      * @param path
      * @return
      */
-    protected boolean ignoreFile(Path path) {
-        return !matches(path, supportedFileExtensions);
+    protected boolean matches(Path path) {
+        return matches(path, supportedFileExtensions);
     }
 
     protected boolean matches(Path path, String... fileExtensions) {
+        String filename = path.getFileName().toString();
+        if (ignoreFilenamePatterns != null) {
+            for (Pattern pattern : ignoreFilenamePatterns) {
+                Matcher matcher = pattern.matcher(filename);
+                if (matcher.matches()) {
+                    log.debug("Ignore filename '" + filename + "'. It matches: " + pattern.toString());
+                    return false;
+                }
+            }
+        }
         if (fileExtensions == null) {
             return true;
         }
@@ -162,6 +187,14 @@ public abstract class AbstractDirectoryWatcher {
     }
 
     /**
+     * @return the root dir (canonical path).
+     * @see PersistencyInterface#getCanonicalPath(Path)
+     */
+    public Path getRootDir() {
+        return rootDir;
+    }
+
+    /**
      * @return true, if the directory is scanned recursively (including sub directories) or not.
      */
     public boolean isRecursive() {
@@ -172,9 +205,13 @@ public abstract class AbstractDirectoryWatcher {
         return lastCheck;
     }
 
+    public Path getCanonicalPath(DirectoryWatchEntry entry) {
+        return PersistencyRegistry.getDefault().getCanonicalPath(rootDir.resolve(entry.getPath()));
+    }
+
     private Path getRelativePath(Path path) {
         if (path.isAbsolute()) {
-            return root.relativize(path);
+            return rootDir.relativize(path);
         }
         return path;
     }
@@ -212,16 +249,20 @@ public abstract class AbstractDirectoryWatcher {
     public boolean isModified(Path path, long lastCheck) {
         checkRefresh();
         DirectoryWatchEntry entry = getEntry(path);
-        if (entry == null || entry.getType() == ModificationType.DELETED) {
-            return true;
-        }
-        return lastCheck < entry.getLastModified();
+        return entry == null || entry.getType() == ModificationType.DELETED
+                || lastCheck < entry.getLastModified();
+    }
+
+    public boolean isDeleted(Path path) {
+        checkRefresh();
+        DirectoryWatchEntry entry = getEntry(path);
+        return entry == null || entry.getType() == ModificationType.DELETED;
     }
 
     /**
      * Returning all files (not deleted ones), found by this watcher on last {@link #walkTree()}.
      *
-     * @param absolutePath   If true, absolute pathes will be returned, otherwise relative pathes to the root directory of this watcher.
+     * @param absolutePath   If true, absolute pathes will be returned, otherwise relative pathes to the rootDir directory of this watcher.
      * @param fileExtensions File extension to match. If null, all files will returned.
      * @return List might be empty.
      */
@@ -238,8 +279,27 @@ public abstract class AbstractDirectoryWatcher {
         return files;
     }
 
+    /**
+     * Returning all files (not deleted ones), found by this watcher on last {@link #walkTree()}.
+     *
+     * @param absolutePath   If true, absolute pathes will be returned, otherwise relative pathes to the rootDir directory of this watcher.
+     * @param fileExtensions File extension to match. If null, all files will returned.
+     * @return List might be empty.
+     */
+    public List<DirectoryWatchEntry> listWatchEntries(boolean absolutePath, String... fileExtensions) {
+        checkRefresh();
+        List<DirectoryWatchEntry> watchEntries = new ArrayList<>();
+        for (DirectoryWatchEntry entry : this.filesMap.values()) {
+            if (!matches(entry.getPath(), fileExtensions)) {
+                continue;
+            }
+            watchEntries.add(entry);
+        }
+        return watchEntries;
+    }
+
     private Path getFullPath(Path path) {
-        return root.resolve(path);
+        return rootDir.resolve(path);
     }
 
     private void putEntry(Path path, ItemType type, DirectoryWatchEntry entry) {

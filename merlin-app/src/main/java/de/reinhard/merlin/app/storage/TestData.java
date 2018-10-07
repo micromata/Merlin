@@ -17,7 +17,6 @@ public class TestData {
     public static void create(File parent) {
         File dir = new File(parent, TEST_TEMPLATES_DIR);
         DirectoryScanner directoryScanner = new DirectoryScanner(dir.toPath(), false);
-        directoryScanner.process();
         if (directoryScanner.getTemplateDefinitions() == null) {
             log.error("Can't scan directory '" + dir.getAbsolutePath() + "' for test template files.");
             return;

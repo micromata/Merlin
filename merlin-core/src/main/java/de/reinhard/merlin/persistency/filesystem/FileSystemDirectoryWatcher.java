@@ -27,14 +27,14 @@ public class FileSystemDirectoryWatcher extends AbstractDirectoryWatcher {
     @Override
     protected synchronized void walkTree(DirectoryWatcherContext context) {
         try {
-            log.debug("Walking through the file system: " + root);
-            Files.walkFileTree(root, new SimpleFileVisitor<Path>() {
+            log.debug("Walking through the file system: " + rootDir);
+            Files.walkFileTree(rootDir, new SimpleFileVisitor<Path>() {
                 @Override
                 public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs)
                         throws IOException {
                     long lastModified = attrs.lastModifiedTime().toMillis();
                     visit(dir, ItemType.DIR, lastModified, context);
-                    if (isRecursive() || dir.equals(root)) {
+                    if (isRecursive() || dir.equals(rootDir)) {
                         return FileVisitResult.CONTINUE;
                     }
                     return FileVisitResult.SKIP_SUBTREE;
@@ -48,7 +48,7 @@ public class FileSystemDirectoryWatcher extends AbstractDirectoryWatcher {
                 }
             });
         } catch (IOException ex) {
-            log.error("Error while walking through file system on path '" + root + "': " + ex.getMessage(), ex);
+            log.error("Error while walking through file system on path '" + rootDir + "': " + ex.getMessage(), ex);
         }
     }
 }
