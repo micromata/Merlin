@@ -144,6 +144,10 @@ public abstract class AbstractDirectoryWatcher {
         return false;
     }
 
+    /**
+     *
+     * @return true, if the directory is scanned recursively (including sub directories) or not. True is default.
+     */
     public boolean isRecursive() {
         return recursive;
     }

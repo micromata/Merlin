@@ -14,21 +14,28 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class FilesystemDirectoryWatcherTest {
     @Test
-    public void replaceTest() throws Exception {
+    public void watcherTest() throws Exception {
         File rootDir = new File(Definitions.OUTPUT_DIR, "directoryWatcherTest").getAbsoluteFile();
         if (rootDir.exists()) {
             FileUtils.deleteDirectory(rootDir);
         }
         rootDir.mkdir();
+        FileSystemDirectoryWatcher recursiveWatcher = new FileSystemDirectoryWatcher(rootDir.toPath(), "xls", "xlsx", "docx");
+        recursiveWatcher.setRecursive(true);
         FileSystemDirectoryWatcher watcher = new FileSystemDirectoryWatcher(rootDir.toPath(), "xls", "xlsx", "docx");
+        watcher.setRecursive(false);
+
         File f1 = writeFile(rootDir, "test.xlsx");
         File f2 = writeFile(rootDir, "test2.docx");
+        recursiveWatcher.walkTree();
         watcher.walkTree();
+        assertEntry(recursiveWatcher, f1, null);
+        assertEntry(recursiveWatcher, f2, null);
         assertEntry(watcher, f1, null);
         assertEntry(watcher, f2, null);
-        long lastCheck = watcher.getLastCheck();
-        assertFalse(watcher.isModified(f1.toPath(), lastCheck));
-        assertTrue(watcher.isModified(f1.toPath(), lastCheck - 1000));
+        long lastCheck = recursiveWatcher.getLastCheck();
+        assertFalse(recursiveWatcher.isModified(f1.toPath(), lastCheck));
+        assertTrue(recursiveWatcher.isModified(f1.toPath(), lastCheck - 1000));
 
         //Thread.sleep(2000); // For testing new modification time.
         touch(f1);
@@ -37,21 +44,26 @@ public class FilesystemDirectoryWatcherTest {
         File d_a_1 = mkdir(d_a, "a1");
         File d_a_2 = mkdir(d_a, "a2");
         File f_a_2 = writeFile(d_a_2, "test_a2.xlsx");
+        recursiveWatcher.walkTree();
         watcher.walkTree();
+        assertEntry(recursiveWatcher, f1, null);
         assertEntry(watcher, f1, null);
-        assertEntry(watcher, d_a, ModificationType.CREATED);
-        assertEntry(watcher, f_a_2, ModificationType.CREATED);
+        assertEntry(recursiveWatcher, d_a, ModificationType.CREATED);
+        assertEntry(recursiveWatcher, f_a_2, ModificationType.CREATED);
+        assertNull(watcher.getEntry(d_a_1.toPath()));
+        assertNull(watcher.getEntry(d_a_2.toPath()));
+        assertNull(watcher.getEntry(f_a_2.toPath()));
 
         FileUtils.deleteDirectory(d_a);
-        watcher.walkTree();
-        assertEntry(watcher, f_a_2, ModificationType.DELETED);
-        assertEntry(watcher, f1, null);
-        watcher.clear();
+        recursiveWatcher.walkTree();
+        assertEntry(recursiveWatcher, f_a_2, ModificationType.DELETED);
+        assertEntry(recursiveWatcher, f1, null);
+        recursiveWatcher.clear();
 
         f1.delete();
-        watcher.walkTree();
-        assertEntry(watcher, f1, ModificationType.DELETED);
-        assertNull(watcher.getEntry(f_a_2.toPath()));
+        recursiveWatcher.walkTree();
+        assertEntry(recursiveWatcher, f1, ModificationType.DELETED);
+        assertNull(recursiveWatcher.getEntry(f_a_2.toPath()));
         FileUtils.deleteDirectory(rootDir);
     }
 

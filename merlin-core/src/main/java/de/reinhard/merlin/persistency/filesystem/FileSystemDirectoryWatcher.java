@@ -34,7 +34,10 @@ public class FileSystemDirectoryWatcher extends AbstractDirectoryWatcher {
                         throws IOException {
                     long lastModified = attrs.lastModifiedTime().toMillis();
                     visit(dir, ItemType.DIR, lastModified, context);
-                    return FileVisitResult.CONTINUE;
+                    if (isRecursive() || dir.equals(root)) {
+                        return FileVisitResult.CONTINUE;
+                    }
+                    return FileVisitResult.SKIP_SUBTREE;
                 }
 
                 @Override
