@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-
 class FormLabelField extends React.Component {
     render() {
         return (
@@ -13,24 +12,37 @@ class FormLabelField extends React.Component {
         );
     }
 };
-
 FormLabelField.propTypes = {
     label: PropTypes.node,
     field: PropTypes.node,
-    htmlFor: PropTypes.node,
+    htmlFor: PropTypes.string,
     labelLength: PropTypes.string,
     fieldLength: PropTypes.string
-    //onClick: PropTypes.func
 };
-
 FormLabelField.defaultProps = {
     label: '',
     labelLength: '2',
     fieldLength: '10',
     htmlFor: ''
-    //  onClick: function () {
-    //      alert("Hello");
-    //  }
 };
 
-export default FormLabelField;
+class FormFieldset extends React.Component {
+    render() {
+        return (
+            <fieldset className="form-group" id={this.props.id}>
+                <legend>{this.props.text}</legend>
+                {this.props.content}
+            </fieldset>
+        );
+    }
+};
+FormFieldset.propTypes = {
+    text: PropTypes.string,
+    id: PropTypes.string,
+    content: PropTypes.node
+};
+FormFieldset.defaultProps = {
+    id: ''
+};
+
+export {FormLabelField, FormFieldset};
