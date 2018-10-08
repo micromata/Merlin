@@ -4,6 +4,7 @@ import './style.css';
 import {getResponseHeaderFilename, getRestServiceUrl} from '../../../actions/global';
 import downloadFile from '../../../utilities/download';
 import DropArea from '../../general/droparea/Component';
+import {FormLabelField} from "../../general/forms/FormComponents";
 
 class Template extends React.Component {
 
@@ -153,20 +154,11 @@ class Template extends React.Component {
                                     type={item.type}
                                 />;
                             }
-
-                            return <FormGroup
-                                key={`template-run-variable-${item.refId}`}
-                                validationState={validationState}
-                            >
-                                <ControlLabel>
-                                    {item.name}
-                                </ControlLabel>
-                                {formControl}
-                                {item.description ?
-                                    <HelpBlock>{item.description}</HelpBlock> :
-                                    undefined
-                                }
-                            </FormGroup>;
+                            return <FormLabelField label={item.name}
+                                                   key={`template-run-variable-${item.refId}`}
+                                                   validationState={validationState}
+                                                   field={formControl} hint={item.description}>
+                            </FormLabelField>;
                         })}
                     </form>
                     <Button
