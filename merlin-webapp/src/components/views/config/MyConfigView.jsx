@@ -145,7 +145,7 @@ class MyConfigForm extends React.Component {
         }
         return (
             <form>
-                <FormLabelField label={'Language'} name={'language'} fieldLength={'2'}
+                <FormLabelField label={'Language'} htmlFor={'language'} fieldLength={'2'}
                                 field={<select className="form-control" id="selectLanguage" value={this.state.language}
                                                name="language"
                                                onChange={this.handleTextChange}>
@@ -156,34 +156,20 @@ class MyConfigForm extends React.Component {
                                         removeItem={this.removeDirectoryItem}
                                         onDirectoryChange={this.handleDirectoryChange}
                                         onRecursiveFlagChange={this.handleRecursiveFlagChange}/>
-                <div className="form-group row">
-                    <div className="col-sm-2"></div>
-                    <div className="col-sm-10">
-                        <a onClick={() => this.setState({expertSettingsOpen: !this.state.expertSettingsOpen})}>
-                            For experts only
-                        </a>
-                    </div>
-                </div>
+                <FormLabelField field={<a onClick={() => this.setState({expertSettingsOpen: !this.state.expertSettingsOpen})}>
+                                    For experts only
+                                </a>}/>
                 <Collapse in={this.state.expertSettingsOpen}>
                     <fieldset className="form-group">
                         <legend>Expert settings</legend>
-                        <div className="form-group row">
-                            <label className="col-sm-2 col-form-label" htmlFor="inputPort">Port</label>
-                            <div className="col-sm-2">
-                                <input type="number" min="0" max="65535" step="1" className="form-control"
-                                       id="inputPort"
-                                       value={this.state.port} name="port" onChange={this.handleTextChange}
-                                       placeholder="Enter port"/>
-                            </div>
-                        </div>
-                        <div className="form-group row">
-                            <div className="col-sm-2"></div>
-                            <div className="col-sm-10">
-                                <button type="button" onClick={this.onResetConfiguration} className="btn btn-danger"
-                                        title="Add new Template directory row">Delete all settings
-                                </button>
-                            </div>
-                        </div>
+                        <FormLabelField label={'Port'} htmlFor={'inputPort'} fieldLength={'2'}
+                                        field={<input type="number" min="0" max="65535" step="1" className="form-control"
+                                                      id="inputPort"
+                                                      value={this.state.port} name="port" onChange={this.handleTextChange}
+                                                      placeholder="Enter port"/>}/>
+                        <FormLabelField field={<button type="button" onClick={this.onResetConfiguration} className="btn btn-danger"
+                                                       title="Add new Template directory row">Delete all settings
+                        </button>}/>
                     </fieldset>
                 </Collapse>
                 <div className="form-group row">

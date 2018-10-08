@@ -7,7 +7,7 @@ class FormLabelField extends React.Component {
         return (
             <div className={'form-group row'}>
                 <label className={`col-sm-${this.props.labelLength} col-form-label`}
-                       htmlFor={this.props.name}>{this.props.label}</label>
+                       htmlFor={this.props.htmlFor}>{this.props.label}</label>
                 <div className={`col-sm-${this.props.fieldLength}`}>{this.props.field}</div>
             </div>
         );
@@ -17,15 +17,17 @@ class FormLabelField extends React.Component {
 FormLabelField.propTypes = {
     label: PropTypes.node,
     field: PropTypes.node,
-    name: PropTypes.node,
+    htmlFor: PropTypes.node,
     labelLength: PropTypes.string,
     fieldLength: PropTypes.string
     //onClick: PropTypes.func
 };
 
 FormLabelField.defaultProps = {
+    label: '',
     labelLength: '2',
-    fieldLength: '10'
+    fieldLength: '10',
+    htmlFor: ''
     //  onClick: function () {
     //      alert("Hello");
     //  }

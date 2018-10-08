@@ -1,4 +1,5 @@
 import React from 'react';
+import FormLabelField from "../../general/forms/FormComponents";
 import {getRestServiceUrl} from "../../../actions/global";
 
 class DirectoryItem extends React.Component {
@@ -52,6 +53,7 @@ class DirectoryItem extends React.Component {
     render() {
         const index = this.props.index;
         return (
+
             <div className="form-group row">
                 <label className="col-sm-2 col-form-label"
                        htmlFor={"inputDirectory" + index}>Directory</label>
