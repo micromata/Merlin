@@ -1,5 +1,4 @@
 import React from 'react';
-import FormLabelField from "../../general/forms/FormComponents";
 import {getRestServiceUrl} from "../../../actions/global";
 
 class DirectoryItem extends React.Component {

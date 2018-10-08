@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import {revisedRandId} from "../../../actions/global";
 
@@ -45,22 +44,29 @@ class FormLabelInputField extends React.Component {
             <FormLabelField label={this.props.label} htmlFor={id} labelLength={this.props.labelLength}
                             fieldLength={this.props.fieldLength} hint={this.props.hint}
                             validationState={this.props.validationState}
-                            field={<input id={id} type={this.props.type} min={this.props.min} max={this.props.max}
+                            field={<input id={id} name={this.props.name} type={this.props.type} min={this.props.min} max={this.props.max}
                                           step={this.props.step}
-                                          value={this.props.value} onChange={this.props.onChange}
+                                          value={this.props.value} onChange={this.handleInputChange}
                                           placeholder={this.props.placeholder}/>}/>
         );
+    }
+    constructor(props) {
+        super(props);
+        this.handleInputChange = this.handleInputChange.bind(this);
+    }
+    handleInputChange = event => {
+        this.props.onInputChange(event);
     }
 };
 FormLabelInputField.propTypes = {
     label: PropTypes.node,
     field: PropTypes.node,
+    name: PropTypes.string,
     type: PropTypes.string,
     min: PropTypes.string,
     max: PropTypes.string,
     step: PropTypes.string,
     placeholder: PropTypes.string,
-    onChange: PropTypes.node,
     labelLength: PropTypes.string,
     fieldLength: PropTypes.string,
     validationState: PropTypes.oneOf(['success', 'warning', 'error', null])

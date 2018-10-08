@@ -2,7 +2,7 @@ import React from 'react';
 import {Redirect} from 'react-router-dom'
 import {PageHeader, Collapse} from 'react-bootstrap';
 import DirectoryItemsFieldset from "./DirectoryItemsFieldset";
-import {FormLabelField, FormFieldset} from "../../general/forms/FormComponents";
+import {FormLabelField, FormLabelInputField, FormFieldset} from "../../general/forms/FormComponents";
 import {getRestServiceUrl} from "../../../actions/global";
 
 var directoryItems = [];
@@ -17,7 +17,6 @@ class MyConfigForm extends React.Component {
             redirect: false,
             expertSettingsOpen: false
         }
-        this.handleTextChange = this.handleTextChange.bind(this);
         this.handleCheckboxChange = this.handleCheckboxChange.bind(this);
         this.addDirectoryItem = this.addDirectoryItem.bind(this);
         this.removeDirectoryItem = this.removeDirectoryItem.bind(this);
@@ -162,11 +161,9 @@ class MyConfigForm extends React.Component {
                 <Collapse in={this.state.expertSettingsOpen}>
                     <div>
                     <FormFieldset text={'Expert settings'} content={<div>
-                        <FormLabelField label={'Port'} htmlFor={'inputPort'} fieldLength={'2'}
-                                        field={<input type="number" min="0" max="65535" step="1" className="form-control"
-                                                      id="inputPort"
-                                                      value={this.state.port} name="port" onChange={this.handleTextChange}
-                                                      placeholder="Enter port"/>}/>
+                        <FormLabelInputField label={'Port'} fieldLength={'2'} type="number" min="0" max="65535" step="1"
+                                                      name={'port'} value={this.state.port} onInputChange={this.handleTextChange}
+                                                      placeholder="Enter port" />
                         <FormLabelField field={<button type="button" onClick={this.onResetConfiguration} className="btn btn-danger"
                                                        title="Add new Template directory row">Delete all settings
                         </button>}/></div>}>
