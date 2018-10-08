@@ -5,7 +5,7 @@ class DirectoryItem extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            fileBrowserResult: ''
+            fileBrowserResult: props.item.directory
         }
         this.handleDirectoryChange = this.handleDirectoryChange.bind(this);
         this.handleRecursiveFlagChange = this.handleRecursiveFlagChange.bind(this);
