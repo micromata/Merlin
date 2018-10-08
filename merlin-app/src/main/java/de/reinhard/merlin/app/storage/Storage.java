@@ -1,12 +1,17 @@
 package de.reinhard.merlin.app.storage;
 
+import de.reinhard.merlin.app.ConfigurationHandler;
+import de.reinhard.merlin.app.ConfigurationListener;
+import de.reinhard.merlin.app.ConfigurationTemplatesDir;
 import de.reinhard.merlin.app.javafx.RunningMode;
 import de.reinhard.merlin.excel.ExcelWorkbook;
-import de.reinhard.merlin.persistency.templates.DirectoryScanner;
 import de.reinhard.merlin.persistency.FileDescriptor;
 import de.reinhard.merlin.persistency.PersistencyRegistry;
 import de.reinhard.merlin.persistency.StorageInterface;
-import de.reinhard.merlin.word.templating.*;
+import de.reinhard.merlin.persistency.templates.DirectoryScanner;
+import de.reinhard.merlin.word.templating.Template;
+import de.reinhard.merlin.word.templating.TemplateDefinition;
+import de.reinhard.merlin.word.templating.TemplateDefinitionExcelReader;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
@@ -14,12 +19,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Storage implements StorageInterface {
+public class Storage implements StorageInterface, ConfigurationListener {
     private Logger log = LoggerFactory.getLogger(Storage.class);
     private static final Storage instance = new Storage();
 
@@ -34,6 +40,11 @@ public class Storage implements StorageInterface {
 
     private Storage() {
         directoryScannerMap = new HashMap<>();
+        ConfigurationHandler.getInstance().register(this);
+    }
+
+    public void clear() {
+        dirty = true;
     }
 
     public void add(DirectoryScanner directoryScanner) {
@@ -177,9 +188,13 @@ public class Storage implements StorageInterface {
     public synchronized void refresh() {
         log.info("(Re-)loading storage.");
         dirty = false;
+        for (ConfigurationTemplatesDir configDir : ConfigurationHandler.getDefaultConfiguration().getTemplatesDirs()) {
+            DirectoryScanner scanner = new DirectoryScanner(Paths.get(configDir.getDirectory()), configDir.isRecursive());
+            add(scanner);
+        }
         if (RunningMode.getMode() == RunningMode.Mode.TemplatesTest) {
             // Creating data for testing.
-            TestData.create(RunningMode.getBaseDir());
+            add(TestData.getTestDirectory(RunningMode.getBaseDir()));
         }
     }
 
@@ -192,5 +207,13 @@ public class Storage implements StorageInterface {
             return;
         }
         refresh();
+    }
+
+    /**
+     * Forces refresh.
+     */
+    @Override
+    public void templatesDirsModified() {
+        dirty = true;
     }
 }

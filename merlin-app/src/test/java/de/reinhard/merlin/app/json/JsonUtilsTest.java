@@ -35,7 +35,7 @@ public class JsonUtilsTest {
 
     @Test
     public void testData() {
-        TestData.create(new File("..")); // current dir is merlin-app.
+        TestData.getTestDirectory(new File("..")); // current dir is merlin-app.
         List<TemplateDefinition> ts1 = Storage.getInstance().getAllTemplateDefinitions();
         String json = JsonUtils.toJson(ts1);
         log.debug(json);

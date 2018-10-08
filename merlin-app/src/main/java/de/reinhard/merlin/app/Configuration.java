@@ -4,11 +4,21 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Configuration {
     private int port;
     private String language;
     private List<ConfigurationTemplatesDir> templatesDirs;
+    private boolean templatesDirModified = false;
+
+    public void resetModifiedFlag() {
+        templatesDirModified = false;
+    }
+
+    public boolean isTemplatesDirModified() {
+        return templatesDirModified;
+    }
 
     public int getPort() {
         return port;
@@ -31,10 +41,14 @@ public class Configuration {
     }
 
     public void setTemplatesDirs(List<ConfigurationTemplatesDir> templatesDirs) {
+        if (!Objects.equals(this.templatesDirs, templatesDirs)) {
+            templatesDirModified = true;
+        }
         this.templatesDirs = templatesDirs;
     }
 
     public void addTemplatesDir(String templateDir) {
+        templatesDirModified = true;
         addTemplatesDir(templateDir, false);
     }
 
@@ -45,12 +59,16 @@ public class Configuration {
         if (templatesDirs == null) {
             templatesDirs = new ArrayList<>();
         }
+        templatesDirModified = true;
         templatesDirs.add(new ConfigurationTemplatesDir().setDirectory(templateDir).setRecursive(recursive));
     }
 
-    public void copyFrom(Configuration configuration) {
-        this.language = configuration.language;
-        this.port = configuration.port;
-        this.templatesDirs = configuration.templatesDirs;
+    public void copyFrom(Configuration other) {
+        this.language = other.language;
+        this.port = other.port;
+        if (!this.templatesDirs.equals(other.templatesDirs)) {
+            templatesDirModified = true;
+        }
+        this.templatesDirs = other.templatesDirs;
     }
 }

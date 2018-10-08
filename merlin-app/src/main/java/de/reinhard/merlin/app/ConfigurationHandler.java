@@ -6,6 +6,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
@@ -21,6 +22,7 @@ public class ConfigurationHandler {
 
     private Preferences preferences;
     private Configuration configuration = new Configuration();
+    private List<ConfigurationListener> configurationListeners = new ArrayList<>();
 
     /**
      * Only for test case.
@@ -40,8 +42,16 @@ public class ConfigurationHandler {
         return instance;
     }
 
+    public static Configuration getDefaultConfiguration() {
+        return instance.getConfiguration();
+    }
+
     public Configuration getConfiguration() {
         return configuration;
+    }
+
+    public void register(ConfigurationListener listener) {
+        configurationListeners.add(listener);
     }
 
     public void load() {
@@ -60,6 +70,7 @@ public class ConfigurationHandler {
         } else {
             configuration.setTemplatesDirs(null);
         }
+        configuration.resetModifiedFlag();
     }
 
     public void save() {
@@ -76,6 +87,11 @@ public class ConfigurationHandler {
             preferences.flush();
         } catch (BackingStoreException ex) {
             log.error("Couldn't flush user preferences: " + ex.getMessage(), ex);
+        }
+        if (configuration.isTemplatesDirModified()) {
+            for (ConfigurationListener listener : configurationListeners) {
+                listener.templatesDirsModified();
+            }
         }
     }
 

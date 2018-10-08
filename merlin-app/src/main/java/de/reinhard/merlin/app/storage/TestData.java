@@ -13,20 +13,19 @@ public class TestData {
     private static Logger log = LoggerFactory.getLogger(TestData.class);
 
     private static final String TEST_TEMPLATES_DIR = "examples/templates";
-    private static boolean created;
+    private static DirectoryScanner testDirectoryScanner;
 
-    public static void create(File parent) {
-        if (created) {
-            return; // Don't create twice.
+    public static DirectoryScanner getTestDirectory(File parent) {
+        if (testDirectoryScanner != null) {
+            return testDirectoryScanner;
         }
-        created = true;
         File dir = new File(parent, TEST_TEMPLATES_DIR).getAbsoluteFile();
         log.info("Creating test data from '" + dir.toPath());
-        DirectoryScanner directoryScanner = new DirectoryScanner(dir.toPath(), true);
-        if (directoryScanner.getTemplateDefinitions() == null) {
+        testDirectoryScanner = new DirectoryScanner(dir.toPath(), true);
+        if (testDirectoryScanner.getTemplateDefinitions() == null) {
             log.error("Can't scan directory '" + dir.getAbsolutePath() + "' for test template files.");
-            return;
+            return null;
         }
-        Storage.getInstance().add(directoryScanner);
+        return testDirectoryScanner;
     }
 }
