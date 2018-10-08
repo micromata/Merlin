@@ -66,7 +66,7 @@ public class Configuration {
     public void copyFrom(Configuration other) {
         this.language = other.language;
         this.port = other.port;
-        if (!this.templatesDirs.equals(other.templatesDirs)) {
+        if (!Objects.equals(this.templatesDirs, other.templatesDirs)) {
             templatesDirModified = true;
         }
         this.templatesDirs = other.templatesDirs;

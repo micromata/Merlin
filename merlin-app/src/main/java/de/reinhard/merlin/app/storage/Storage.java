@@ -188,9 +188,12 @@ public class Storage implements StorageInterface, ConfigurationListener {
     public synchronized void refresh() {
         log.info("(Re-)loading storage.");
         dirty = false;
-        for (ConfigurationTemplatesDir configDir : ConfigurationHandler.getDefaultConfiguration().getTemplatesDirs()) {
-            DirectoryScanner scanner = new DirectoryScanner(Paths.get(configDir.getDirectory()), configDir.isRecursive());
-            add(scanner);
+        List<ConfigurationTemplatesDir> templatesDirs = ConfigurationHandler.getDefaultConfiguration().getTemplatesDirs();
+        if (templatesDirs != null) {
+            for (ConfigurationTemplatesDir configDir : templatesDirs) {
+                DirectoryScanner scanner = new DirectoryScanner(Paths.get(configDir.getDirectory()), configDir.isRecursive());
+                add(scanner);
+            }
         }
         if (RunningMode.getMode() == RunningMode.Mode.TemplatesTest) {
             // Creating data for testing.
