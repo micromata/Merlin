@@ -20,7 +20,13 @@ class TemplateDefinitionsHandler extends AbstractHandler<TemplateDefinition> {
 
     @Override
     TemplateDefinition read(DirectoryWatchEntry watchEntry, Path path, FileDescriptor fileDescriptor) {
-        ExcelWorkbook workbook = ExcelWorkbook.create(path);
+        ExcelWorkbook workbook;
+        try {
+            workbook = ExcelWorkbook.create(path);
+        } catch (Exception ex) {
+            log.info("Ignoring unsupported file: " + path);
+            return null;
+        }
         TemplateDefinitionExcelReader templateReader = new TemplateDefinitionExcelReader();
         if (!templateReader.isMerlinTemplateDefinition(workbook)) {
             return null;

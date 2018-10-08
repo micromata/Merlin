@@ -22,7 +22,13 @@ class TemplatesHandler extends AbstractHandler<Template> {
 
     @Override
     Template read(DirectoryWatchEntry watchEntry, Path path, FileDescriptor fileDescriptor) {
-        WordDocument doc = WordDocument.create(path);
+        WordDocument doc;
+        try {
+            doc = WordDocument.create(path);
+        } catch (Exception ex) {
+            log.info("Ignoring unsupported file: " + path);
+            return null;
+        }
         WordTemplateChecker templateChecker = new WordTemplateChecker(doc);
         if (CollectionUtils.isEmpty(templateChecker.getTemplate().getStatistics().getAllUsedVariables())) {
             log.debug("Skipping Word document: '" + path.toAbsolutePath()

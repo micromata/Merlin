@@ -20,7 +20,13 @@ class SerialDatasHandler extends AbstractHandler<SerialData> {
 
     @Override
     SerialData read(DirectoryWatchEntry watchEntry, Path path, FileDescriptor fileDescriptor) {
-        ExcelWorkbook workbook = ExcelWorkbook.create(path);
+        ExcelWorkbook workbook;
+        try {
+            workbook = ExcelWorkbook.create(path);
+        } catch (Exception ex) {
+            log.info("Ignoring unsupported file: " + path);
+            return null;
+        }
         SerialDataExcelReader templateReader = new SerialDataExcelReader();
         if (!templateReader.isMerlinSerialTemplateData(workbook)) {
             return null;
