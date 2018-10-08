@@ -39,11 +39,12 @@ class TemplatesHandler extends AbstractHandler<Template> {
                 log.warn("Template definition not found: " + templateDefinitionId);
             }
         } else {
-            TemplateDefinition templateDefinition = directoryScanner.getTemplateDefinitionsHandler()
-                    .getItem(fileDescriptor);
-            if (templateDefinition != null) {
-                templateChecker.getTemplate().assignTemplateDefinition(templateDefinition);
-                log.info("Found matching template definition: " + templateDefinition.getFileDescriptor());
+            for (TemplateDefinition templateDefinition : directoryScanner.getTemplateDefinitionsHandler().getItems()) {
+                if (fileDescriptor.matches(templateDefinition.getFileDescriptor())) {
+                    templateChecker.getTemplate().assignTemplateDefinition(templateDefinition);
+                    log.info("Found matching template definition: " + templateDefinition.getFileDescriptor());
+                    break;
+                }
             }
         }
         return templateChecker.getTemplate();
