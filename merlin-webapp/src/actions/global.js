@@ -16,3 +16,7 @@ export function getResponseHeaderFilename(contentDisposition) {
     }
     return filename ? decodeURI(filename) : "download";
 }
+
+export function revisedRandId() {
+    return Math.random().toString(36).replace(/[^a-z]+/g, '').substr(2, 10);
+}
