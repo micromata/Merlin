@@ -2,6 +2,7 @@ import React from 'react';
 import {Redirect} from 'react-router-dom'
 import {PageHeader, Collapse} from 'react-bootstrap';
 import DirectoryItemsFieldset from "./DirectoryItemsFieldset";
+import FormLabelField from "../../general/forms/FormComponents";
 import {getRestServiceUrl} from "../../../actions/global";
 
 var directoryItems = [];
@@ -144,16 +145,13 @@ class MyConfigForm extends React.Component {
         }
         return (
             <form>
-                <div className="form-group row">
-                    <label className="col-sm-2 col-form-label" htmlFor="selectLanguage">Language</label>
-                    <div className="col-sm-2">
-                        <select className="form-control" id="selectLanguage" value={this.state.language} name="language"
-                                onChange={this.handleTextChange}>
-                            <option>English</option>
-                            <option>German</option>
-                        </select>
-                    </div>
-                </div>
+                <FormLabelField label={'Language'} name={'language'} fieldLength={'2'}
+                                field={<select className="form-control" id="selectLanguage" value={this.state.language}
+                                               name="language"
+                                               onChange={this.handleTextChange}>
+                                    <option>English</option>
+                                    <option>German</option>
+                                </select>}/>
                 <DirectoryItemsFieldset items={this.state.directoryItems} addItem={this.addDirectoryItem}
                                         removeItem={this.removeDirectoryItem}
                                         onDirectoryChange={this.handleDirectoryChange}
@@ -182,7 +180,8 @@ class MyConfigForm extends React.Component {
                             <div className="col-sm-2"></div>
                             <div className="col-sm-10">
                                 <button type="button" onClick={this.onResetConfiguration} className="btn btn-danger"
-                                        title="Add new Template directory row">Delete all settings</button>
+                                        title="Add new Template directory row">Delete all settings
+                                </button>
                             </div>
                         </div>
                     </fieldset>
