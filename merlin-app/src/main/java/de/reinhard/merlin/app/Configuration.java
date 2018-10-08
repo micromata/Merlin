@@ -20,10 +20,6 @@ public class Configuration {
         return templatesDirModified;
     }
 
-    void setTemplatesDirModified(boolean templatesDirModified) {
-        this.templatesDirModified = templatesDirModified;
-    }
-
     public int getPort() {
         return port;
     }

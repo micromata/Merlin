@@ -88,11 +88,11 @@ public class ConfigurationHandler {
         } catch (BackingStoreException ex) {
             log.error("Couldn't flush user preferences: " + ex.getMessage(), ex);
         }
-        notifyListeners();
+        notifyListeners(false);
     }
 
-    private void notifyListeners() {
-        if (configuration.isTemplatesDirModified()) {
+    private void notifyListeners(boolean force) {
+        if (force || configuration.isTemplatesDirModified()) {
             for (ConfigurationListener listener : configurationListeners) {
                 listener.templatesDirsModified();
             }
@@ -110,7 +110,6 @@ public class ConfigurationHandler {
             log.error("Couldn't flush user preferences: " + ex.getMessage(), ex);
         }
         load();
-        configuration.setTemplatesDirModified(true);
-        notifyListeners();
+        notifyListeners(true);
     }
 }
