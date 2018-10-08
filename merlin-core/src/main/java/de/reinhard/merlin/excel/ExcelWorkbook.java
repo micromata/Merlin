@@ -48,11 +48,8 @@ public class ExcelWorkbook implements AutoCloseable {
     public ExcelWorkbook(File excelFile) {
         try {
             workbook = WorkbookFactory.create(excelFile);
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             log.error("Couldn't open File '" + excelFile.getAbsolutePath() + "': " + ex.getMessage(), ex);
-            throw new RuntimeException(ex);
-        } catch (InvalidFormatException ex) {
-            log.error("Unsupported file format '" + excelFile.getAbsolutePath() + "': " + ex.getMessage(), ex);
             throw new RuntimeException(ex);
         }
     }

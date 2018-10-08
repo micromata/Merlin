@@ -2,7 +2,6 @@ package de.reinhard.merlin.word;
 
 import de.reinhard.merlin.persistency.PersistencyRegistry;
 import org.apache.commons.io.output.ByteArrayOutputStream;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.openxml4j.opc.OPCPackage;
 import org.apache.poi.xwpf.usermodel.*;
 import org.slf4j.Logger;
@@ -51,11 +50,8 @@ public class WordDocument implements AutoCloseable {
         this.filename = wordFile.getAbsolutePath();
         try {
             document = new XWPFDocument(OPCPackage.open(filename));
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             log.error("Couldn't open File '" + filename + "': " + ex.getMessage(), ex);
-            throw new RuntimeException(ex);
-        } catch (InvalidFormatException ex) {
-            log.error("Unsupported file format '" + filename + "': " + ex.getMessage(), ex);
             throw new RuntimeException(ex);
         }
     }
