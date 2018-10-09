@@ -14,6 +14,10 @@ div.editable-text-field div.editable-text-field-label {
     font-weight: 700;
 }
 
+.editable-text-field-value:hover {
+    cursor: pointer;
+}
+
 div.editable-text-field div.editable-text-field-value-container {
     width: 100%;
 }
