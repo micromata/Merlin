@@ -1,5 +1,5 @@
 import React from 'react';
-import {FormLabelField} from "../../general/forms/FormComponents";
+import {FormGroup, FormLabel, FormField} from "../../general/forms/FormComponents";
 import {getRestServiceUrl} from "../../../actions/global";
 
 class DirectoryItem extends React.Component {
@@ -53,14 +53,17 @@ class DirectoryItem extends React.Component {
     render() {
         const index = this.props.index;
         return (
-            <div>
-                <FormLabelField label={'Directory'} htmlFor={`inputDirectory${index}`} fieldLength={'6'}>
-                                    <input name="directory" type="text" className="form-control"
-                                           id={"inputDirectory" + index}
-                                           onChange={this.handleDirectoryChange}
-                                           value={this.props.item.directory} placeholder="Enter directory"/>
-                </FormLabelField>
-                <div className="form-check col-sm-2">
+            <FormGroup>
+                <FormLabel htmlFor={`inputDirectory${index}`}>
+                    Directory
+                </FormLabel>
+                <FormField fieldLength={'6'}>
+                    <input name="directory" type="text" className="form-control"
+                           id={"inputDirectory" + index}
+                           onChange={this.handleDirectoryChange}
+                           value={this.props.item.directory} placeholder="Enter directory"/>
+                </FormField>
+                <FormField fieldLength={'2'}>
                     <input className="form-check-input" type="checkbox"
                            checked={this.props.item.recursive}
                            id={"checkedRecursive" + index} name="recursive"
@@ -69,8 +72,8 @@ class DirectoryItem extends React.Component {
                     <label className="form-check-label" htmlFor={"checkedRecursive" + index}>
                         recursive
                     </label>
-                </div>
-                <div className="col-sm-2">
+                </FormField>
+                <FormField fieldLength={'2'}>
                     <button type="button" className="btn" onClick={this.browseDirectory}
                             title="Call rest service for browsing local directories">Browse
                     </button>
@@ -78,8 +81,8 @@ class DirectoryItem extends React.Component {
                             title="remove this item"><span
                         className="glyphicon glyphicon-remove"/>
                     </button>
-                </div>
-            </div>
+                </FormField>
+            </FormGroup>
         );
     }
 }

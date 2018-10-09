@@ -14,25 +14,60 @@ class FormGroup extends React.Component {
         );
     }
 }
+
 FormGroup.propTypes = {
     validationState: PropTypes.oneOf(['success', 'warning', 'error', null])
 };
 
+class FormLabel extends React.Component {
+    render() {
+        return (
+            <label className={`col-sm-${this.props.labelLength} col-form-label`}
+                       htmlFor={this.props.htmlFor}>{this.props.children}</label>
+        );
+    }
+}
+FormLabel.propTypes = {
+    labelLength: PropTypes.string,
+    htmlFor: PropTypes.string
+};
+FormLabel.defaultProps = {
+    labelLength: '2',
+};
 
-class FormLabelField extends React.Component {
+class FormField extends React.Component {
     render() {
         let hint = '';
         if (this.props.hint) {
             hint = <small className="text-muted">{this.props.hint}</small>
         }
         return (
+            <div className={`col-sm-${this.props.fieldLength}`} id={this.props.id}>
+                {this.props.children}
+                {hint}
+            </div>
+        );
+    }
+}
+FormField.propTypes = {
+    fieldLength: PropTypes.string,
+    hint: PropTypes.node,
+    id: PropTypes.string
+};
+FormField.defaultProps = {
+    fieldLength: '10',
+};
+
+class FormLabelField extends React.Component {
+    render() {
+        return (
             <FormGroup validationState={this.props.validationState}>
-                <label className={`col-sm-${this.props.labelLength} col-form-label`}
-                       htmlFor={this.props.htmlFor}>{this.props.label}</label>
-                <div className={`col-sm-${this.props.fieldLength}`}>
+                <FormLabel labelLength={this.props.labelLength} htmlFor={this.props.htmlFor}>
+                    {this.props.label}
+                </FormLabel>
+                <FormField fieldLength={this.props.fieldLength} hint={this.props.hint}>
                     {this.props.children}
-                    {hint}
-                </div>
+                </FormField>
             </FormGroup>
         );
     }
@@ -43,11 +78,8 @@ FormLabelField.propTypes = {
     fieldLength: PropTypes.string,
     htmlFor: PropTypes.string,
     hint: PropTypes.string,
+    id: PropTypes.string,
     validationState: PropTypes.oneOf(['success', 'warning', 'error', null])
-};
-FormLabelField.defaultProps = {
-    labelLength: '2',
-    fieldLength: '10',
 };
 
 class FormLabelInputField extends React.Component {
@@ -57,11 +89,11 @@ class FormLabelInputField extends React.Component {
             <FormLabelField label={this.props.label} htmlFor={id} labelLength={this.props.labelLength}
                             fieldLength={this.props.fieldLength} hint={this.props.hint}
                             validationState={this.props.validationState}>
-                            <input id={id} name={this.props.name} type={this.props.type} min={this.props.min}
-                                          max={this.props.max}
-                                          step={this.props.step}
-                                          value={this.props.value} onChange={this.handleInputChange}
-                                          placeholder={this.props.placeholder}/>
+                <input id={id} name={this.props.name} type={this.props.type} min={this.props.min}
+                       max={this.props.max}
+                       step={this.props.step}
+                       value={this.props.value} onChange={this.handleInputChange}
+                       placeholder={this.props.placeholder}/>
             </FormLabelField>
         );
     }
@@ -107,4 +139,4 @@ FormFieldset.propTypes = {
     text: PropTypes.string
 };
 
-export {FormGroup, FormLabelField, FormLabelInputField, FormFieldset};
+export {FormGroup, FormLabel, FormField, FormLabelField, FormLabelInputField, FormFieldset};

@@ -89,7 +89,7 @@ class Template extends React.Component {
                 <span className={'hint'}>Click to run.</span>
             </div>
 
-            <Modal
+            <Modal bsSize="large"
                 show={this.state.showRunModal}
                 onHide={this.closeRunModal}
             >
@@ -154,7 +154,7 @@ class Template extends React.Component {
                                     type={item.type}
                                 />;
                             }
-                            return <FormLabelField label={item.name}
+                            return <FormLabelField label={item.name} labelLength={'3'} fieldLength={'9'}
                                                    key={`template-run-variable-${item.refId}`}
                                                    validationState={validationState} hint={item.description}>
                                                    {formControl}

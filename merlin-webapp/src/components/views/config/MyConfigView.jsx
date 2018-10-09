@@ -2,7 +2,7 @@ import React from 'react';
 import {Redirect} from 'react-router-dom'
 import {PageHeader, Collapse} from 'react-bootstrap';
 import DirectoryItemsFieldset from "./DirectoryItemsFieldset";
-import {FormLabelField, FormLabelInputField, FormFieldset} from "../../general/forms/FormComponents";
+import {FormGroup, FormLabelField, FormLabelInputField, FormFieldset} from "../../general/forms/FormComponents";
 import {getRestServiceUrl} from "../../../actions/global";
 
 var directoryItems = [];
@@ -178,7 +178,7 @@ class MyConfigForm extends React.Component {
                         </FormFieldset>
                     </div>
                 </Collapse>
-                <div className="form-group row">
+                <FormGroup>
                     <div className="col-sm-12">
                         <button type="button" onClick={this.onCancel} className="btn btn-danger"
                                 title="Discard changes and go to Start page.">Cancel
@@ -187,7 +187,7 @@ class MyConfigForm extends React.Component {
                                 title="Persist changes and go to Start page.">Save
                         </button>
                     </div>
-                </div>
+                </FormGroup>
             </form>
         );
     }
