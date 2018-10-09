@@ -51,7 +51,6 @@ class FormInput extends React.Component {
 FormInput.propTypes = {
     id: PropTypes.string,
     name: PropTypes.string,
-    value: PropTypes.string,
     min: PropTypes.number,
     max: PropTypes.number,
     step: PropTypes.number,
@@ -73,8 +72,7 @@ class FormSelect extends React.Component {
 
 FormSelect.propTypes = {
     id: PropTypes.string,
-    name: PropTypes.string,
-    value: PropTypes.string
+    name: PropTypes.string
 };
 
 class FormCheckbox extends React.Component {
@@ -178,6 +176,7 @@ class FormLabelInputField extends React.Component {
     }
 };
 FormLabelInputField.propTypes = {
+    id: PropTypes.string,
     label: PropTypes.node,
     field: PropTypes.node,
     name: PropTypes.string,
