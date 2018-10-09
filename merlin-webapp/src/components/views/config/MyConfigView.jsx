@@ -144,6 +144,8 @@ class MyConfigForm extends React.Component {
         }
         return (
             <form>
+                <FormGroup>
+                </FormGroup>
                 <FormLabelField label={'Language'} htmlFor={'language'} fieldLength={'2'}>
                     <select className="form-control" id="selectLanguage" value={this.state.language}
                             name="language"

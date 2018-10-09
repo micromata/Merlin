@@ -22,17 +22,44 @@ FormGroup.propTypes = {
 class FormLabel extends React.Component {
     render() {
         return (
-            <label className={`col-sm-${this.props.labelLength} col-form-label`}
+            <label className={`col-sm-${this.props.length} col-form-label`}
                        htmlFor={this.props.htmlFor}>{this.props.children}</label>
         );
     }
 }
 FormLabel.propTypes = {
-    labelLength: PropTypes.string,
+    length: PropTypes.string,
     htmlFor: PropTypes.string
 };
 FormLabel.defaultProps = {
-    labelLength: '2',
+    length: '2',
+};
+
+class FormInput extends React.Component {
+    render() {
+        return (
+            <input id={this.props.id} name={this.props.name} type={this.props.type} min={this.props.min}
+                   max={this.props.max} className={'form-control'}
+                   step={this.props.step}
+                   value={this.props.value} onChange={this.props.onChange}
+                   placeholder={this.props.placeholder}/>
+        );
+    }
+}
+FormInput.propTypes = {
+    id: PropTypes.string,
+    name: PropTypes.string,
+    value: PropTypes.string,
+    min: PropTypes.string,
+    max: PropTypes.string,
+    stemp: PropTypes.string,
+    type: PropTypes.string,
+    onChange: PropTypes.string,
+    placeholder: PropTypes.string,
+    htmlFor: PropTypes.string
+};
+FormInput.defaultProps = {
+    length: '10',
 };
 
 class FormField extends React.Component {
@@ -42,7 +69,7 @@ class FormField extends React.Component {
             hint = <small className="text-muted">{this.props.hint}</small>
         }
         return (
-            <div className={`col-sm-${this.props.fieldLength}`} id={this.props.id}>
+            <div className={`col-sm-${this.props.length}`} id={this.props.id}>
                 {this.props.children}
                 {hint}
             </div>
@@ -50,22 +77,22 @@ class FormField extends React.Component {
     }
 }
 FormField.propTypes = {
-    fieldLength: PropTypes.string,
+    length: PropTypes.string,
     hint: PropTypes.node,
     id: PropTypes.string
 };
 FormField.defaultProps = {
-    fieldLength: '10',
+    length: '10',
 };
 
 class FormLabelField extends React.Component {
     render() {
         return (
             <FormGroup validationState={this.props.validationState}>
-                <FormLabel labelLength={this.props.labelLength} htmlFor={this.props.htmlFor}>
+                <FormLabel length={this.props.labelLength} htmlFor={this.props.htmlFor}>
                     {this.props.label}
                 </FormLabel>
-                <FormField fieldLength={this.props.fieldLength} hint={this.props.hint}>
+                <FormField length={this.props.fieldLength} hint={this.props.hint}>
                     {this.props.children}
                 </FormField>
             </FormGroup>
@@ -89,10 +116,10 @@ class FormLabelInputField extends React.Component {
             <FormLabelField label={this.props.label} htmlFor={id} labelLength={this.props.labelLength}
                             fieldLength={this.props.fieldLength} hint={this.props.hint}
                             validationState={this.props.validationState}>
-                <input id={id} name={this.props.name} type={this.props.type} min={this.props.min}
+                <FormInput id={id} name={this.props.name} type={this.props.type} min={this.props.min}
                        max={this.props.max}
                        step={this.props.step}
-                       value={this.props.value} onChange={this.handleInputChange}
+                       value={this.props.value} onChange={this.props.onChange}
                        placeholder={this.props.placeholder}/>
             </FormLabelField>
         );
@@ -139,4 +166,4 @@ FormFieldset.propTypes = {
     text: PropTypes.string
 };
 
-export {FormGroup, FormLabel, FormField, FormLabelField, FormLabelInputField, FormFieldset};
+export {FormGroup, FormLabel, FormField, FormLabelField, FormInput, FormLabelInputField, FormFieldset};
