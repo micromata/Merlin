@@ -1,10 +1,10 @@
 import React from 'react';
-import {Button, FormControl, Modal} from 'react-bootstrap';
+import {Modal} from 'react-bootstrap';
 import './style.css';
 import {getResponseHeaderFilename, getRestServiceUrl} from '../../../actions/global';
 import downloadFile from '../../../utilities/download';
 import DropArea from '../../general/droparea/Component';
-import {FormLabelField, FormButton} from "../../general/forms/FormComponents";
+import {FormLabelField, FormButton, FormSelect, FormInput} from "../../general/forms/FormComponents";
 
 class Template extends React.Component {
 
@@ -116,9 +116,8 @@ class Template extends React.Component {
                             };
 
                             if (item.allowedValuesList && item.allowedValuesList.length !== 0) {
-                                formControl = <FormControl
+                                formControl = <FormSelect
                                     {...formControlProps}
-                                    componentClass={'select'}
                                 >
                                     {item.allowedValuesList.map(option => <option
                                         key={`template-run-variable-${item.refId}-select-${option}`}
@@ -126,7 +125,7 @@ class Template extends React.Component {
                                     >
                                         {option}
                                     </option>)}
-                                </FormControl>
+                                </FormSelect>
                             } else {
 
                                 if ((item.required && currentValue.trim() === '') ||
@@ -149,12 +148,12 @@ class Template extends React.Component {
                                     item.type = 'number';
                                 }
 
-                                formControl = <FormControl
+                                formControl = <FormInput
                                     {...formControlProps}
                                     type={item.type}
                                 />;
                             }
-                            return <FormLabelField label={item.name} labelLength={'3'} fieldLength={'9'}
+                            return <FormLabelField label={item.name} labelLength={3} fieldLength={9}
                                                    key={`template-run-variable-${item.refId}`}
                                                    validationState={validationState} hint={item.description}>
                                                    {formControl}

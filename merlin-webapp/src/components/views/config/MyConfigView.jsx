@@ -150,7 +150,7 @@ class MyConfigForm extends React.Component {
         }
         return (
             <form>
-                <FormLabelField label={'Language'} name={'language'} fieldLength={'2'}>
+                <FormLabelField label={'Language'} name={'language'} fieldLength={2}>
                     <FormSelect value={this.state.language} onChange={this.handleTextChange}>
                         <option>English</option>
                         <option>German</option>
@@ -168,10 +168,10 @@ class MyConfigForm extends React.Component {
                 <Collapse in={this.state.expertSettingsOpen}>
                     <div>
                         <FormFieldset text={'Expert settings'}>
-                            <FormLabelInputField label={'Port'} fieldLength={'2'} type="number" min="0" max="65535"
-                                                 step="1"
+                            <FormLabelInputField label={'Port'} fieldLength={2} type="number" min={0} max={65535}
+                                                 step={1}
                                                  name={'port'} value={this.state.port}
-                                                 onInputChange={this.handleTextChange}
+                                                 onChange={this.handleTextChange}
                                                  placeholder="Enter port"/>
                             <FormLabelField>
                                 <FormButton onClick={this.onResetConfiguration} bsStyle="danger"

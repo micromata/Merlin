@@ -29,11 +29,11 @@ class FormLabel extends React.Component {
 }
 
 FormLabel.propTypes = {
-    length: PropTypes.string,
+    length: PropTypes.number,
     htmlFor: PropTypes.string
 };
 FormLabel.defaultProps = {
-    length: '2',
+    length: 2,
 };
 
 class FormInput extends React.Component {
@@ -52,11 +52,10 @@ FormInput.propTypes = {
     id: PropTypes.string,
     name: PropTypes.string,
     value: PropTypes.string,
-    min: PropTypes.string,
-    max: PropTypes.string,
-    step: PropTypes.string,
+    min: PropTypes.number,
+    max: PropTypes.number,
+    step: PropTypes.number,
     type: PropTypes.string,
-    onChange: PropTypes.string,
     placeholder: PropTypes.string
 };
 
@@ -75,8 +74,7 @@ class FormSelect extends React.Component {
 FormSelect.propTypes = {
     id: PropTypes.string,
     name: PropTypes.string,
-    value: PropTypes.string,
-    onChange: PropTypes.string
+    value: PropTypes.string
 };
 
 class FormCheckbox extends React.Component {
@@ -102,8 +100,7 @@ FormCheckbox.propTypes = {
     id: PropTypes.string,
     name: PropTypes.string,
     hint: PropTypes.string,
-    checked: PropTypes.string,
-    onChange: PropTypes.string,
+    checked: PropTypes.bool,
     label: PropTypes.node
 };
 
@@ -123,12 +120,12 @@ class FormField extends React.Component {
 }
 
 FormField.propTypes = {
-    length: PropTypes.string,
+    length: PropTypes.number,
     hint: PropTypes.node,
     id: PropTypes.string
 };
 FormField.defaultProps = {
-    length: '10',
+    length: 10
 };
 
 class FormLabelField extends React.Component {
@@ -148,8 +145,8 @@ class FormLabelField extends React.Component {
 };
 FormLabelField.propTypes = {
     label: PropTypes.node,
-    labelLength: PropTypes.string,
-    fieldLength: PropTypes.string,
+    labelLength: PropTypes.number,
+    fieldLength: PropTypes.number,
     hint: PropTypes.string,
     id: PropTypes.string,
     validationState: PropTypes.oneOf(['success', 'warning', 'error', null])
@@ -157,7 +154,7 @@ FormLabelField.propTypes = {
 
 class FormLabelInputField extends React.Component {
     render() {
-        let id = this.props.id ? this.props.id : revisedRandId() + 'kai';
+        let id = this.props.id ? this.props.id : revisedRandId();
         return (
             <FormLabelField label={this.props.label} htmlFor={id} labelLength={this.props.labelLength}
                             fieldLength={this.props.fieldLength} hint={this.props.hint}
@@ -185,17 +182,17 @@ FormLabelInputField.propTypes = {
     field: PropTypes.node,
     name: PropTypes.string,
     type: PropTypes.string,
-    min: PropTypes.string,
-    max: PropTypes.string,
-    step: PropTypes.string,
+    min: PropTypes.number,
+    max: PropTypes.number,
+    step: PropTypes.number,
     placeholder: PropTypes.string,
-    labelLength: PropTypes.string,
-    fieldLength: PropTypes.string,
+    labelLength: PropTypes.number,
+    fieldLength: PropTypes.number,
     validationState: PropTypes.oneOf(['success', 'warning', 'error', null])
 };
 FormLabelInputField.defaultProps = {
-    labelLength: '2',
-    fieldLength: '10'
+    labelLength: 2,
+    fieldLength: 10
 };
 
 class FormFieldset extends React.Component {
@@ -225,7 +222,6 @@ class FormButton extends React.Component {
 };
 FormButton.propTypes = {
     hint: PropTypes.string,
-    onClick: PropTypes.string,
     disabled: PropTypes.bool,
     bsStyle: PropTypes.oneOf(['danger', 'success', null])
 };

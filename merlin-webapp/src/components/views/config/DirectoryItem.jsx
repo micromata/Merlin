@@ -57,19 +57,19 @@ class DirectoryItem extends React.Component {
                 <FormLabel htmlFor={`inputDirectory${index}`}>
                     Directory
                 </FormLabel>
-                <FormField length={'6'}>
+                <FormField length={6}>
                     <FormInput name="directory" type="text" className="form-control"
                                id={"inputDirectory" + index}
                                onChange={this.handleDirectoryChange}
                                value={this.props.item.directory} placeholder="Enter directory"/>
                 </FormField>
-                <FormField length={'2'}>
+                <FormField length={2}>
                     <FormCheckbox checked={this.props.item.recursive}
                            name="recursive" label={'recursive'}
                            onChange={this.handleRecursiveFlagChange}
                            hint="If checked, Merlin will search for all templates inside this directory including all sub directories. If not checked, the sub directories will be skipped."/>
                 </FormField>
-                <FormField length={'2'}>
+                <FormField length={2}>
                     <FormButton onClick={this.browseDirectory}
                             hint="Call rest service for browsing local directories">Browse
                     </FormButton>
