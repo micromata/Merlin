@@ -144,30 +144,39 @@ class MyConfigForm extends React.Component {
         }
         return (
             <form>
-                <FormLabelField label={'Language'} htmlFor={'language'} fieldLength={'2'}
-                                field={<select className="form-control" id="selectLanguage" value={this.state.language}
-                                               name="language"
-                                               onChange={this.handleTextChange}>
-                                    <option>English</option>
-                                    <option>German</option>
-                                </select>}/>
+                <FormLabelField label={'Language'} htmlFor={'language'} fieldLength={'2'}>
+                    <select className="form-control" id="selectLanguage" value={this.state.language}
+                            name="language"
+                            onChange={this.handleTextChange}>
+                        <option>English</option>
+                        <option>German</option>
+                    </select>
+                </FormLabelField>
                 <DirectoryItemsFieldset items={this.state.directoryItems} addItem={this.addDirectoryItem}
                                         removeItem={this.removeDirectoryItem}
                                         onDirectoryChange={this.handleDirectoryChange}
                                         onRecursiveFlagChange={this.handleRecursiveFlagChange}/>
-                <FormLabelField field={<a onClick={() => this.setState({expertSettingsOpen: !this.state.expertSettingsOpen})}>
-                                    For experts only
-                                </a>}/>
+                <FormLabelField>
+                    <a onClick={() => this.setState({expertSettingsOpen: !this.state.expertSettingsOpen})}>
+                        For experts only
+                    </a>
+                </FormLabelField>
                 <Collapse in={this.state.expertSettingsOpen}>
                     <div>
-                    <FormFieldset text={'Expert settings'} content={<div>
-                        <FormLabelInputField label={'Port'} fieldLength={'2'} type="number" min="0" max="65535" step="1"
-                                                      name={'port'} value={this.state.port} onInputChange={this.handleTextChange}
-                                                      placeholder="Enter port" />
-                        <FormLabelField field={<button type="button" onClick={this.onResetConfiguration} className="btn btn-danger"
-                                                       title="Add new Template directory row">Delete all settings
-                        </button>}/></div>}>
-                    </FormFieldset></div>
+                        <FormFieldset text={'Expert settings'}>
+                            <FormLabelInputField label={'Port'} fieldLength={'2'} type="number" min="0" max="65535"
+                                                 step="1"
+                                                 name={'port'} value={this.state.port}
+                                                 onInputChange={this.handleTextChange}
+                                                 placeholder="Enter port"/>
+                            <FormLabelField>
+                                <button type="button" onClick={this.onResetConfiguration}
+                                        className="btn btn-danger"
+                                        title="Add new Template directory row">Delete all settings
+                                </button>
+                            </FormLabelField>
+                        </FormFieldset>
+                    </div>
                 </Collapse>
                 <div className="form-group row">
                     <div className="col-sm-12">

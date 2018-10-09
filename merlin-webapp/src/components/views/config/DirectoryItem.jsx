@@ -1,4 +1,5 @@
 import React from 'react';
+import {FormLabelField} from "../../general/forms/FormComponents";
 import {getRestServiceUrl} from "../../../actions/global";
 
 class DirectoryItem extends React.Component {
@@ -52,18 +53,18 @@ class DirectoryItem extends React.Component {
     render() {
         const index = this.props.index;
         return (
-
-            <div className="form-group row">
-                <label className="col-sm-2 col-form-label"
-                       htmlFor={"inputDirectory" + index}>Directory</label>
-                <div className="col-sm-6">
-                    <input name="directory" type="text" className="form-control" id={"inputDirectory" + index}
-                           onChange={this.handleDirectoryChange}
-                           value={this.props.item.directory} placeholder="Enter directory"/>
-                </div>
+            <div>
+                <FormLabelField label={'Directory'} htmlFor={`inputDirectory${index}`} fieldLength={'6'}>
+                                    <input name="directory" type="text" className="form-control"
+                                           id={"inputDirectory" + index}
+                                           onChange={this.handleDirectoryChange}
+                                           value={this.props.item.directory} placeholder="Enter directory"/>
+                </FormLabelField>
                 <div className="form-check col-sm-2">
-                    <input className="form-check-input" type="checkbox" checked={this.props.item.recursive}
-                           id={"checkedRecursive" + index} name="recursive" onChange={this.handleRecursiveFlagChange}
+                    <input className="form-check-input" type="checkbox"
+                           checked={this.props.item.recursive}
+                           id={"checkedRecursive" + index} name="recursive"
+                           onChange={this.handleRecursiveFlagChange}
                            title="If checked, Merlin will search for all templates inside this directory including all sub directories. If not checked, the sub directories will be skipped."/>
                     <label className="form-check-label" htmlFor={"checkedRecursive" + index}>
                         recursive

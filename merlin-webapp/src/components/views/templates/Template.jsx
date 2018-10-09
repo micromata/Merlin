@@ -156,8 +156,8 @@ class Template extends React.Component {
                             }
                             return <FormLabelField label={item.name}
                                                    key={`template-run-variable-${item.refId}`}
-                                                   validationState={validationState}
-                                                   field={formControl} hint={item.description}>
+                                                   validationState={validationState} hint={item.description}>
+                                                   {formControl}
                             </FormLabelField>;
                         })}
                     </form>
