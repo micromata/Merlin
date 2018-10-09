@@ -1,5 +1,6 @@
 import React from 'react';
-import {FormGroup, FormLabel, FormField, FormInput, FormCheckbox, FormButton} from "../../general/forms/FormComponents";
+import {FormGroup, FormLabel, FormField, FormCheckbox, FormButton} from "../../general/forms/FormComponents";
+import EditableTextField from "../../general/forms/EditableTextField";
 import {getRestServiceUrl} from "../../../actions/global";
 
 class DirectoryItem extends React.Component {
@@ -13,8 +14,8 @@ class DirectoryItem extends React.Component {
         this.onClickRemove = this.onClickRemove.bind(this);
     }
 
-    handleDirectoryChange = event => {
-        this.props.onDirectoryChange(this.props.index, event.target.value);
+    handleDirectoryChange = value => {
+        this.props.onDirectoryChange(this.props.index, value);
     }
 
     handleRecursiveFlagChange = event => {
@@ -27,7 +28,7 @@ class DirectoryItem extends React.Component {
     }
 
     browseDirectory = () => {
-        const current = this.state.fileBrowserResult ? "&current=" + encodeURIComponent(this.state.fileBrowserResult) : '';
+        const current = "&current=" + encodeURIComponent(this.props.item.directory);
         fetch(getRestServiceUrl("files/browse-local-filesystem?type=dir" + current), {
             method: "GET",
             dataType: "JSON",
@@ -51,17 +52,18 @@ class DirectoryItem extends React.Component {
 
 
     render() {
-        const index = this.props.index;
         return (
             <FormGroup>
-                <FormLabel htmlFor={`inputDirectory${index}`}>
+                <FormLabel>
                     Directory
                 </FormLabel>
                 <FormField length={6}>
-                    <FormInput name="directory" type="text" className="form-control"
-                               id={"inputDirectory" + index}
-                               onChange={this.handleDirectoryChange}
-                               value={this.props.item.directory} placeholder="Enter directory"/>
+                    <EditableTextField
+                        type={'text'}
+                        value={this.props.item.directory}
+                        name={'directory'}
+                        onChange={this.handleDirectoryChange}
+                    />
                 </FormField>
                 <FormField length={2}>
                     <FormCheckbox checked={this.props.item.recursive}

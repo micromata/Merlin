@@ -1,7 +1,6 @@
 import React from 'react';
 import './EditableTextFieldStyle.css';
 import {Button, FormControl, Glyphicon, InputGroup} from "react-bootstrap";
-import InputGroup from "react-bootstrap/es/InputGroup";
 
 class EditableTextField extends React.Component {
 
@@ -27,8 +26,8 @@ class EditableTextField extends React.Component {
             editing: false
         });
 
-        if (value && this.props.updateValue) {
-            this.props.updateValue(value);
+        if (value && this.props.onChange) {
+            this.props.onChange(value);
         }
     };
 
