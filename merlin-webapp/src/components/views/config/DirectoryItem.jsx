@@ -1,5 +1,5 @@
 import React from 'react';
-import {FormGroup, FormLabel, FormField, FormInput} from "../../general/forms/FormComponents";
+import {FormGroup, FormLabel, FormField, FormInput, FormCheckbox, FormButton} from "../../general/forms/FormComponents";
 import {getRestServiceUrl} from "../../../actions/global";
 
 class DirectoryItem extends React.Component {
@@ -57,30 +57,26 @@ class DirectoryItem extends React.Component {
                 <FormLabel htmlFor={`inputDirectory${index}`}>
                     Directory
                 </FormLabel>
-                <FormField length={'6'} >
+                <FormField length={'6'}>
                     <FormInput name="directory" type="text" className="form-control"
                                id={"inputDirectory" + index}
                                onChange={this.handleDirectoryChange}
                                value={this.props.item.directory} placeholder="Enter directory"/>
                 </FormField>
                 <FormField length={'2'}>
-                    <input className="form-check-input" type="checkbox"
-                           checked={this.props.item.recursive}
-                           id={"checkedRecursive" + index} name="recursive"
+                    <FormCheckbox checked={this.props.item.recursive}
+                           name="recursive" label={'recursive'}
                            onChange={this.handleRecursiveFlagChange}
-                           title="If checked, Merlin will search for all templates inside this directory including all sub directories. If not checked, the sub directories will be skipped."/>
-                    <label className="form-check-label" htmlFor={"checkedRecursive" + index}>
-                        recursive
-                    </label>
+                           hint="If checked, Merlin will search for all templates inside this directory including all sub directories. If not checked, the sub directories will be skipped."/>
                 </FormField>
                 <FormField length={'2'}>
-                    <button type="button" className="btn" onClick={this.browseDirectory}
-                            title="Call rest service for browsing local directories">Browse
-                    </button>
-                    <button type="button" onClick={this.onClickRemove} className="btn btn-danger"
-                            title="remove this item"><span
+                    <FormButton onClick={this.browseDirectory}
+                            hint="Call rest service for browsing local directories">Browse
+                    </FormButton>
+                    <FormButton onClick={this.onClickRemove} bsStyle="danger"
+                            hint="Remove this item"><span
                         className="glyphicon glyphicon-remove"/>
-                    </button>
+                    </FormButton>
                 </FormField>
             </FormGroup>
         );

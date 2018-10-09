@@ -2,7 +2,13 @@ import React from 'react';
 import {Redirect} from 'react-router-dom'
 import {PageHeader, Collapse} from 'react-bootstrap';
 import DirectoryItemsFieldset from "./DirectoryItemsFieldset";
-import {FormGroup, FormLabelField, FormLabelInputField, FormFieldset} from "../../general/forms/FormComponents";
+import {
+    FormGroup,
+    FormLabelField,
+    FormLabelInputField,
+    FormFieldset,
+    FormField, FormButton, FormSelect
+} from "../../general/forms/FormComponents";
 import {getRestServiceUrl} from "../../../actions/global";
 
 var directoryItems = [];
@@ -144,15 +150,11 @@ class MyConfigForm extends React.Component {
         }
         return (
             <form>
-                <FormGroup>
-                </FormGroup>
-                <FormLabelField label={'Language'} htmlFor={'language'} fieldLength={'2'}>
-                    <select className="form-control" id="selectLanguage" value={this.state.language}
-                            name="language"
-                            onChange={this.handleTextChange}>
+                <FormLabelField label={'Language'} name={'language'} fieldLength={'2'}>
+                    <FormSelect value={this.state.language} onChange={this.handleTextChange}>
                         <option>English</option>
                         <option>German</option>
-                    </select>
+                    </FormSelect>
                 </FormLabelField>
                 <DirectoryItemsFieldset items={this.state.directoryItems} addItem={this.addDirectoryItem}
                                         removeItem={this.removeDirectoryItem}
@@ -172,23 +174,22 @@ class MyConfigForm extends React.Component {
                                                  onInputChange={this.handleTextChange}
                                                  placeholder="Enter port"/>
                             <FormLabelField>
-                                <button type="button" onClick={this.onResetConfiguration}
-                                        className="btn btn-danger"
-                                        title="Add new Template directory row">Delete all settings
-                                </button>
+                                <FormButton onClick={this.onResetConfiguration} bsStyle="danger"
+                                            hint="Reset factory settings.">Cancel
+                                </FormButton>
                             </FormLabelField>
                         </FormFieldset>
                     </div>
                 </Collapse>
                 <FormGroup>
-                    <div className="col-sm-12">
-                        <button type="button" onClick={this.onCancel} className="btn btn-danger"
-                                title="Discard changes and go to Start page.">Cancel
-                        </button>
-                        <button type="button" onClick={this.onSave} className="btn btn-success"
-                                title="Persist changes and go to Start page.">Save
-                        </button>
-                    </div>
+                    <FormField length={12}>
+                        <FormButton onClick={this.onCancel} bsStyle="danger"
+                                    hint="Discard changes and go to Start page.">Cancel
+                        </FormButton>
+                        <FormButton onClick={this.onSave} bsStyle="success"
+                                    hint="Persist changes and go to Start page.">Save
+                        </FormButton>
+                    </FormField>
                 </FormGroup>
             </form>
         );

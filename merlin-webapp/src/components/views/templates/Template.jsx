@@ -4,7 +4,7 @@ import './style.css';
 import {getResponseHeaderFilename, getRestServiceUrl} from '../../../actions/global';
 import downloadFile from '../../../utilities/download';
 import DropArea from '../../general/droparea/Component';
-import {FormLabelField} from "../../general/forms/FormComponents";
+import {FormLabelField, FormButton} from "../../general/forms/FormComponents";
 
 class Template extends React.Component {
 
@@ -161,13 +161,13 @@ class Template extends React.Component {
                             </FormLabelField>;
                         })}
                     </form>
-                    <Button
+                    <FormButton
                         bsStyle={'success'}
                         onClick={this.runSingleTemplate}
                         disabled={!valid}
                     >
                         Run
-                    </Button>
+                    </FormButton>
                 </Modal.Body>
             </Modal>
         </div>;

@@ -23,10 +23,11 @@ class FormLabel extends React.Component {
     render() {
         return (
             <label className={`col-sm-${this.props.length} col-form-label`}
-                       htmlFor={this.props.htmlFor}>{this.props.children}</label>
+                   htmlFor={this.props.htmlFor}>{this.props.children}</label>
         );
     }
 }
+
 FormLabel.propTypes = {
     length: PropTypes.string,
     htmlFor: PropTypes.string
@@ -46,20 +47,64 @@ class FormInput extends React.Component {
         );
     }
 }
+
 FormInput.propTypes = {
     id: PropTypes.string,
     name: PropTypes.string,
     value: PropTypes.string,
     min: PropTypes.string,
     max: PropTypes.string,
-    stemp: PropTypes.string,
+    step: PropTypes.string,
     type: PropTypes.string,
     onChange: PropTypes.string,
-    placeholder: PropTypes.string,
-    htmlFor: PropTypes.string
+    placeholder: PropTypes.string
 };
-FormInput.defaultProps = {
-    length: '10',
+
+class FormSelect extends React.Component {
+    render() {
+        return (
+            <select className="form-control" id={this.props.id} value={this.props.value}
+                    name={this.props.language}
+                    onChange={this.props.onChange}>
+                {this.props.children}
+            </select>
+        );
+    }
+}
+
+FormSelect.propTypes = {
+    id: PropTypes.string,
+    name: PropTypes.string,
+    value: PropTypes.string,
+    onChange: PropTypes.string
+};
+
+class FormCheckbox extends React.Component {
+    render() {
+        let id = this.props.id ? this.props.id : revisedRandId();
+        return (
+            <div>
+                <input className="form-check-input" type="checkbox"
+                       checked={this.props.checked}
+                       id={id} name={this.props.name}
+                       onChange={this.props.onChange}
+                       title={this.props.hint}/>
+                <label className="form-check-label" htmlFor={id} style={{marginLeft: 1 + 'ex'}}
+                       title={this.props.title}>
+                    {this.props.label}
+                </label>
+            </div>
+        );
+    }
+}
+
+FormCheckbox.propTypes = {
+    id: PropTypes.string,
+    name: PropTypes.string,
+    hint: PropTypes.string,
+    checked: PropTypes.string,
+    onChange: PropTypes.string,
+    label: PropTypes.node
 };
 
 class FormField extends React.Component {
@@ -76,6 +121,7 @@ class FormField extends React.Component {
         );
     }
 }
+
 FormField.propTypes = {
     length: PropTypes.string,
     hint: PropTypes.node,
@@ -87,13 +133,14 @@ FormField.defaultProps = {
 
 class FormLabelField extends React.Component {
     render() {
+        let id = this.props.htmlFor ? this.props.htmlFor : (this.props.id ? this.props.id : revisedRandId());
         return (
             <FormGroup validationState={this.props.validationState}>
-                <FormLabel length={this.props.labelLength} htmlFor={this.props.htmlFor}>
+                <FormLabel length={this.props.labelLength} htmlFor={id}>
                     {this.props.label}
                 </FormLabel>
                 <FormField length={this.props.fieldLength} hint={this.props.hint}>
-                    {this.props.children}
+                    {React.cloneElement(this.props.children, { id: id })}
                 </FormField>
             </FormGroup>
         );
@@ -103,7 +150,6 @@ FormLabelField.propTypes = {
     label: PropTypes.node,
     labelLength: PropTypes.string,
     fieldLength: PropTypes.string,
-    htmlFor: PropTypes.string,
     hint: PropTypes.string,
     id: PropTypes.string,
     validationState: PropTypes.oneOf(['success', 'warning', 'error', null])
@@ -111,16 +157,16 @@ FormLabelField.propTypes = {
 
 class FormLabelInputField extends React.Component {
     render() {
-        let id = revisedRandId();
+        let id = this.props.id ? this.props.id : revisedRandId() + 'kai';
         return (
             <FormLabelField label={this.props.label} htmlFor={id} labelLength={this.props.labelLength}
                             fieldLength={this.props.fieldLength} hint={this.props.hint}
                             validationState={this.props.validationState}>
                 <FormInput id={id} name={this.props.name} type={this.props.type} min={this.props.min}
-                       max={this.props.max}
-                       step={this.props.step}
-                       value={this.props.value} onChange={this.props.onChange}
-                       placeholder={this.props.placeholder}/>
+                           max={this.props.max}
+                           step={this.props.step}
+                           value={this.props.value} onChange={this.props.onChange}
+                           placeholder={this.props.placeholder}/>
             </FormLabelField>
         );
     }
@@ -149,7 +195,7 @@ FormLabelInputField.propTypes = {
 };
 FormLabelInputField.defaultProps = {
     labelLength: '2',
-    fieldLength: '10',
+    fieldLength: '10'
 };
 
 class FormFieldset extends React.Component {
@@ -166,4 +212,25 @@ FormFieldset.propTypes = {
     text: PropTypes.string
 };
 
-export {FormGroup, FormLabel, FormField, FormLabelField, FormInput, FormLabelInputField, FormFieldset};
+class FormButton extends React.Component {
+    render() {
+        let bsStyle = this.props.bsStyle ? 'btn-' + this.props.bsStyle : '';
+        return (
+            <button type="button" className={`btn ${bsStyle}`} onClick={this.props.onClick}
+                    title={this.props.hint} disabled={this.props.disabled}>
+                {this.props.children}
+            </button>
+        );
+    }
+};
+FormButton.propTypes = {
+    hint: PropTypes.string,
+    onClick: PropTypes.string,
+    disabled: PropTypes.bool,
+    bsStyle: PropTypes.oneOf(['danger', 'success', null])
+};
+FormButton.defaultProps = {
+    disabled: false
+};
+
+export {FormGroup, FormLabel, FormField, FormLabelField, FormInput, FormSelect, FormCheckbox, FormLabelInputField, FormFieldset, FormButton};
