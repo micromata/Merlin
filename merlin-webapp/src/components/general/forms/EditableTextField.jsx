@@ -1,7 +1,59 @@
 import React from 'react';
-import {Button, FormControl, Glyphicon, InputGroup} from 'react-bootstrap';
+import './EditableTextFieldStyle.css';
+import {Button, FormControl, Glyphicon, InputGroup} from "react-bootstrap";
+import InputGroup from "react-bootstrap/es/InputGroup";
 
-class ConfigurationEditingField extends React.Component {
+class EditableTextField extends React.Component {
+
+    state = {
+        editing: false
+    };
+
+    constructor(props) {
+        super(props);
+
+        this.startEditing = this.startEditing.bind(this);
+        this.stopEditing = this.stopEditing.bind(this);
+    }
+
+    startEditing = () => {
+        this.setState({
+            editing: true
+        });
+    };
+
+    stopEditing = value => {
+        this.setState({
+            editing: false
+        });
+
+        if (value && this.props.updateValue) {
+            this.props.updateValue(value);
+        }
+    };
+
+    render = () => <div className={'editable-text-field'}>
+        <div className={'editable-text-field-label'}>{this.props.title}</div>
+        <div className={'editable-text-field-value-container'}>
+            {this.state.editing ?
+                <EditableTextFieldInput
+                    type={this.props.type}
+                    value={this.props.value}
+                    name={this.props.title}
+                    stopEditing={this.stopEditing}
+                /> :
+                <span
+                    onClick={this.startEditing}
+                    className={'editable-text-field-value'}
+                >
+                    {this.props.value}
+                </span>
+            }
+        </div>
+    </div>;
+}
+
+class EditableTextFieldInput extends React.Component {
 
     state = {
         value: this.props.value
@@ -72,4 +124,5 @@ class ConfigurationEditingField extends React.Component {
     </div>;
 }
 
-export default ConfigurationEditingField;
+
+export default EditableTextField;

@@ -1,0 +1,29 @@
+div.editable-text-field {
+    width: 100%;
+    display: block;
+    font-size: 16px;
+    margin: 5px 0;
+}
+
+div.editable-text-field div {
+    display: block;
+    position: relative;
+}
+
+div.editable-text-field div.editable-text-field-label {
+    font-weight: 700;
+}
+
+div.editable-text-field div.editable-text-field-value-container {
+    width: 100%;
+}
+
+div.editable-text-field div.editable-text-field-value-container input {
+    font-size: 16px;
+}
+
+div.editable-text-field div.editable-text-field-value-container span.editable-text-field-value {
+    padding: 6px 12px;
+    display: block;
+    width: 100%;
+}
