@@ -51,6 +51,7 @@ class FormInput extends React.Component {
 FormInput.propTypes = {
     id: PropTypes.string,
     name: PropTypes.string,
+    value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     min: PropTypes.number,
     max: PropTypes.number,
     step: PropTypes.number,
@@ -178,6 +179,7 @@ class FormLabelInputField extends React.Component {
 FormLabelInputField.propTypes = {
     id: PropTypes.string,
     label: PropTypes.node,
+    value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     field: PropTypes.node,
     name: PropTypes.string,
     type: PropTypes.string,
