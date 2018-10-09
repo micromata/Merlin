@@ -4,7 +4,7 @@ import {Route, Router, Switch} from 'react-router';
 
 import Menu from '../components/general/Menu';
 import Start from '../components/views/Start';
-import Config from '../components/views/config/MyConfigView';
+import Config from '../components/views/config/ConfigView';
 import TableExample from '../components/views/TableExample';
 import FileUploadView from '../components/views/FileUpload';
 import RestServices from '../components/views/develop/RestServices';
@@ -16,11 +16,11 @@ class WebApp extends React.Component {
         const history = createBrowserHistory();
         const routes = [
             ['Start', '/', Start],
-            ['Config', '/config', Config],
-            ['Table Example', '/table', TableExample],
+            ['Templates', '/templates', TemplateListView],
             ['File Upload', '/drop', FileUploadView],
+            ['Table Example', '/table', TableExample],
             ['Rest services', '/restServices', RestServices],
-            ['Templates', '/templates', TemplateListView]
+            ['Configuration', '/config', Config]
         ];
 
         return (

@@ -6,12 +6,9 @@ import {Provider} from 'react-redux';
 
 import WebApp from './containers/WebApp';
 
-import reducer from './reducers';
-
 import registerServiceWorker from './registerServiceWorker';
 
 const store = createStore(
-    reducer,
     applyMiddleware(thunk)
 );
 
