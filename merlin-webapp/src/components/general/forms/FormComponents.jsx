@@ -166,15 +166,6 @@ class FormLabelInputField extends React.Component {
             </FormLabelField>
         );
     }
-
-    constructor(props) {
-        super(props);
-        this.handleInputChange = this.handleInputChange.bind(this);
-    }
-
-    handleInputChange = event => {
-        this.props.onInputChange(event);
-    }
 };
 FormLabelInputField.propTypes = {
     id: PropTypes.string,
