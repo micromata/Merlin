@@ -196,7 +196,7 @@ class MyConfigForm extends React.Component {
     }
 }
 
-class ConfigView extends React.Component {
+class Configuration extends React.Component {
 
     render() {
         return (
@@ -214,5 +214,5 @@ class ConfigView extends React.Component {
     }
 }
 
-export default ConfigView;
+export default Configuration;
 
