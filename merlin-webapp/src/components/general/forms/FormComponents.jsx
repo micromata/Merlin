@@ -37,10 +37,11 @@ FormLabel.defaultProps = {
 };
 
 class FormInput extends React.Component {
+
     render() {
         return (
             <input id={this.props.id} name={this.props.name} type={this.props.type} min={this.props.min}
-                   max={this.props.max} className={'form-control'}
+                   max={this.props.max} className={'form-control form-control-sm'}
                    step={this.props.step}
                    value={this.props.value} onChange={this.props.onChange}
                    placeholder={this.props.placeholder}/>
@@ -62,7 +63,7 @@ FormInput.propTypes = {
 class FormSelect extends React.Component {
     render() {
         return (
-            <select className="form-control" id={this.props.id} value={this.props.value}
+            <select className="form-control form-control-sm" id={this.props.id} value={this.props.value}
                     name={this.props.name}
                     onChange={this.props.onChange}>
                 {this.props.children}
