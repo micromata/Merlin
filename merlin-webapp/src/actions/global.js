@@ -7,15 +7,10 @@ export function getRestServiceUrl(restService) {
     return global.restBaseUrl + '/' + restService;
 }
 
-export function getResponseHeaderFilename(contentDisposition) {
-    var regex = /filename[^;=\n]*=(UTF-8(['"]*))?(.*)/;
-    var matches = regex.exec(contentDisposition);
-    var filename;
-    if (matches != null && matches[3]) {
-        filename = matches[3].replace(/['"]/g, '');
-    }
-    return filename ? decodeURI(filename) : "download";
-}
+export const getResponseHeaderFilename = contentDisposition => {
+    const matches = /filename[^;=\n]*=(UTF-8(['"]*))?(.*)/.exec(contentDisposition);
+    return matches.length >= 3 && matches[3] ? decodeURI(matches[3].replace(/['"]/g, '')) : 'download';
+};
 
 export function revisedRandId() {
     return Math.random().toString(36).replace(/[^a-z]+/g, '').substr(2, 10);
