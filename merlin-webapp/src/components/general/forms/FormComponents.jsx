@@ -63,7 +63,7 @@ class FormSelect extends React.Component {
     render() {
         return (
             <select className="form-control" id={this.props.id} value={this.props.value}
-                    name={this.props.language}
+                    name={this.props.name}
                     onChange={this.props.onChange}>
                 {this.props.children}
             </select>
