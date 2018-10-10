@@ -205,7 +205,7 @@ class FormButton extends React.Component {
     render() {
         let bsStyle = this.props.bsStyle ? 'btn-' + this.props.bsStyle : '';
         return (
-            <button type="button" className={`btn ${bsStyle}`} onClick={this.props.onClick}
+            <button type={this.props.type} className={`btn ${bsStyle}`} onClick={this.props.onClick}
                     title={this.props.hint} disabled={this.props.disabled}>
                 {this.props.children}
             </button>
@@ -215,10 +215,12 @@ class FormButton extends React.Component {
 FormButton.propTypes = {
     hint: PropTypes.string,
     disabled: PropTypes.bool,
-    bsStyle: PropTypes.oneOf(['danger', 'success', null])
+    bsStyle: PropTypes.oneOf(['danger', 'success', null]),
+    type: PropTypes.string
 };
 FormButton.defaultProps = {
-    disabled: false
+    disabled: false,
+    type: 'button'
 };
 
 export {FormGroup, FormLabel, FormField, FormLabelField, FormInput, FormSelect, FormCheckbox, FormLabelInputField, FormFieldset, FormButton};
