@@ -13,7 +13,7 @@ import {getRestServiceUrl} from "../../../actions/global";
 
 var directoryItems = [];
 
-class MyConfigForm extends React.Component {
+class ConfigForm extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -23,6 +23,7 @@ class MyConfigForm extends React.Component {
             redirect: false,
             expertSettingsOpen: false
         }
+        this.handleTextChange = this.handleTextChange.bind(this);
         this.handleCheckboxChange = this.handleCheckboxChange.bind(this);
         this.addDirectoryItem = this.addDirectoryItem.bind(this);
         this.removeDirectoryItem = this.removeDirectoryItem.bind(this);
@@ -150,10 +151,10 @@ class MyConfigForm extends React.Component {
         }
         return (
             <form>
-                <FormLabelField label={'Language'} name={'language'} fieldLength={2}>
-                    <FormSelect value={this.state.language} onChange={this.handleTextChange}>
-                        <option>English</option>
-                        <option>German</option>
+                <FormLabelField label={'Language'} fieldLength={2}>
+                    <FormSelect value={this.state.language} name={'language'} onChange={this.handleTextChange}>
+                        <option value={'en'}>English</option>
+                        <option value={'de'}>German</option>
                     </FormSelect>
                 </FormLabelField>
                 <DirectoryItemsFieldset items={this.state.directoryItems} addItem={this.addDirectoryItem}
@@ -201,8 +202,8 @@ class Configuration extends React.Component {
     render() {
         return (
             <div>
-                <PageHeader>Config</PageHeader>
-                <MyConfigForm/>
+                <PageHeader>Configuration</PageHeader>
+                <ConfigForm/>
 
                 <h3>ToDo</h3>
                 <ul>
