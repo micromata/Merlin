@@ -3,7 +3,15 @@
 global.testserver = 'http://localhost:8042';
 global.restBaseUrl = (process.env.NODE_ENV === 'development' ? global.testserver : '') + '/rest';
 
-export const getRestServiceUrl = restService => `${global.restBaseUrl}/${restService}`;
+const createQueryParams = params =>
+    Object.keys(params)
+        .map(k => `${k}=${encodeURI(params[k])}`)
+        .join('&');
+
+export const getRestServiceUrl = (restService, params) => {
+    if (params) return `${global.restBaseUrl}/${restService}?${createQueryParams(params)}`;
+    return `${global.restBaseUrl}/${restService}`;
+}
 
 export const getResponseHeaderFilename = contentDisposition => {
     const matches = /filename[^;=\n]*=(UTF-8(['"]*))?(.*)/.exec(contentDisposition);
