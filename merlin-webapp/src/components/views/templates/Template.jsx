@@ -4,7 +4,7 @@ import './style.css';
 import {getResponseHeaderFilename, getRestServiceUrl} from '../../../actions/global';
 import downloadFile from '../../../utilities/download';
 import DropArea from '../../general/droparea/Component';
-import {FormLabelField, FormButton, FormSelect, FormInput} from "../../general/forms/FormComponents";
+import {FormButton, FormInput, FormLabelField, FormSelect} from '../../general/forms/FormComponents';
 
 class Template extends React.Component {
 
@@ -19,26 +19,20 @@ class Template extends React.Component {
         }), {})
     };
 
-    showRunModal = () => {
-        this.setState({
-            showRunModal: true
-        });
-    };
+    showRunModal = () => this.setState({
+        showRunModal: true
+    });
 
-    closeRunModal = () => {
-        this.setState({
-            showRunModal: false
-        });
-    };
+    closeRunModal = () => this.setState({
+        showRunModal: false
+    });
 
-    handleRunConfigurationChange = (name) => (event) => {
-        this.setState({
-            runConfiguration: {
-                ...this.state.runConfiguration,
-                [name]: event.target.value
-            }
-        });
-    };
+    handleRunConfigurationChange = (name) => (event) => this.setState({
+        runConfiguration: {
+            ...this.state.runConfiguration,
+            [name]: event.target.value
+        }
+    });
 
     runSingleTemplate = () => this.runTemplate(`${this.path}/run`, {
             'Content-Type': 'application/json'
@@ -47,7 +41,8 @@ class Template extends React.Component {
             templateDefinitionId: this.props.templateDefinitionId,
             templateCanonicalPath: this.props.canonicalPath,
             variables: this.state.runConfiguration
-        }));
+        })
+    );
 
     runSerialTemplate = (file) => {
         const formData = new FormData();
@@ -89,7 +84,8 @@ class Template extends React.Component {
                 <span className={'hint'}>Click to run.</span>
             </div>
 
-            <Modal bsSize="large"
+            <Modal
+                bsSize="large"
                 show={this.state.showRunModal}
                 onHide={this.closeRunModal}
             >
@@ -153,10 +149,14 @@ class Template extends React.Component {
                                     type={item.type}
                                 />;
                             }
-                            return <FormLabelField label={item.name} labelLength={3} fieldLength={9}
-                                                   key={`template-run-variable-${item.refId}`}
-                                                   validationState={validationState} hint={item.description}>
-                                                   {formControl}
+                            return <FormLabelField
+                                label={item.name}
+                                labelLength={3}
+                                fieldLength={9}
+                                key={`template-run-variable-${item.refId}`}
+                                validationState={validationState} hint={item.description}
+                            >
+                                {formControl}
                             </FormLabelField>;
                         })}
                     </form>
@@ -178,7 +178,6 @@ class Template extends React.Component {
         this.showRunModal = this.showRunModal.bind(this);
         this.closeRunModal = this.closeRunModal.bind(this);
         this.handleRunConfigurationChange = this.handleRunConfigurationChange.bind(this);
-        this.runTemplate = this.runTemplate.bind(this);
         this.runSerialTemplate = this.runSerialTemplate.bind(this);
     }
 }

@@ -1,23 +1,13 @@
 // Later Webpack, Context etc. should be used instead.
 
 global.testserver = 'http://localhost:8042';
-global.restBaseUrl = global.testserver + '/rest';
-//global.restBaseUrl = '/rest';
+global.restBaseUrl = (process.env.NODE_ENV === 'development' ? global.testserver : '') + '/rest';
 
-export function getRestServiceUrl(restService) {
-    return global.restBaseUrl + '/' + restService;
-}
+export const getRestServiceUrl = restService => `${global.restBaseUrl}/${restService}`;
 
-export function getResponseHeaderFilename(contentDisposition) {
-    var regex = /filename[^;=\n]*=(UTF-8(['"]*))?(.*)/;
-    var matches = regex.exec(contentDisposition);
-    var filename;
-    if (matches != null && matches[3]) {
-        filename = matches[3].replace(/['"]/g, '');
-    }
-    return filename ? decodeURI(filename) : "download";
-}
+export const getResponseHeaderFilename = contentDisposition => {
+    const matches = /filename[^;=\n]*=(UTF-8(['"]*))?(.*)/.exec(contentDisposition);
+    return matches && matches.length >= 3 && matches[3] ? decodeURI(matches[3].replace(/['"]/g, '')) : 'download';
+};
 
-export function revisedRandId() {
-    return Math.random().toString(36).replace(/[^a-z]+/g, '').substr(2, 10);
-}
+export const revisedRandId = () => Math.random().toString(36).replace(/[^a-z]+/g, '').substr(2, 10);
