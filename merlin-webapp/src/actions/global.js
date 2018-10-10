@@ -1,8 +1,7 @@
 // Later Webpack, Context etc. should be used instead.
 
 global.testserver = 'http://localhost:8042';
-global.restBaseUrl = global.testserver + '/rest';
-//global.restBaseUrl = '/rest';
+global.restBaseUrl = (process.env.NODE_ENV === 'development' ? global.testserver : '') + '/rest';
 
 export function getRestServiceUrl(restService) {
     return global.restBaseUrl + '/' + restService;
