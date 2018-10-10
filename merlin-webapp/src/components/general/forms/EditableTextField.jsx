@@ -1,5 +1,5 @@
 import React from 'react';
-import './EditableTextFieldStyle.css';
+import './EditableTextField.css';
 import {Button, FormControl, Glyphicon, InputGroup} from "react-bootstrap";
 
 class EditableTextField extends React.Component {
