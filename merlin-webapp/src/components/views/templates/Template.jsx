@@ -84,9 +84,10 @@ class Template extends React.Component {
                 <span className={'hint'}>Click to run.</span>
             </div>
 
-            <Modal bsSize="large"
-                   show={this.state.showRunModal}
-                   onHide={this.closeRunModal}
+            <Modal
+                bsSize="large"
+                show={this.state.showRunModal}
+                onHide={this.closeRunModal}
             >
                 <Modal.Header>
                     <Modal.Title>
