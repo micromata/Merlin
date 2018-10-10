@@ -5,9 +5,6 @@ package de.reinhard.merlin.app.logging;
  */
 public class LogFilter {
     private String search;
-    private String searchMessage;
-    private String searchLoggerName;
-    private String searchJavaClass;
     private LogLevel threshold;
     private Integer maxSize;
 
@@ -21,30 +18,6 @@ public class LogFilter {
 
     public void setSearch(String search) {
         this.search = search;
-    }
-
-    public String getSearchMessage() {
-        return searchMessage;
-    }
-
-    public void setSearchMessage(String searchMessage) {
-        this.searchMessage = searchMessage;
-    }
-
-    public String getSearchLoggerName() {
-        return searchLoggerName;
-    }
-
-    public void setSearchLoggerName(String searchLoggerName) {
-        this.searchLoggerName = searchLoggerName;
-    }
-
-    public String getSearchJavaClass() {
-        return searchJavaClass;
-    }
-
-    public void setSearchJavaClass(String searchJavaClass) {
-        this.searchJavaClass = searchJavaClass;
     }
 
     public LogLevel getThreshold() {

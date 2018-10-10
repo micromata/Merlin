@@ -7,15 +7,19 @@ import org.apache.log4j.spi.LoggingEvent;
  * For easier serialization: JSON
  */
 public class LoggingEventData {
-    private LogLevel level;
-    private String message;
+    LogLevel level;
+    String message;
     private String messageObjectClass;
     private String loggerName;
     private long timestamp;
 
-    private String javaClass;
+    String javaClass;
     private String lineNumber;
     private String methodName;
+
+    LoggingEventData() {
+
+    }
 
     public LoggingEventData(LoggingEvent event) {
         level = LogLevel.getLevel(event);

@@ -1,11 +1,8 @@
 import React from 'react';
-import {PageHeader, Collapse, Table} from 'react-bootstrap';
+import {PageHeader, Table} from 'react-bootstrap';
 import {
-    FormGroup,
     FormLabelField,
-    FormLabelInputField,
-    FormFieldset,
-    FormField, FormButton, FormSelect, FormInput
+    FormButton, FormSelect, FormInput
 } from "../../general/forms/FormComponents";
 import {getRestServiceUrl} from "../../../actions/global";
 
@@ -30,24 +27,24 @@ class LogViewerData extends React.Component {
             failed: false,
             logEntries: undefined
         });
-        var filter = {search: this.state.search, treshold: this.state.treshold, maxSize: this.props.maxSize};
         fetch(getRestServiceUrl("logging/query"), {
-            method: 'POST',
+            method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(filter)
+            }
         })
             .then(response => response.json())
             .then(json => {
-                const logEntries = json.templates.map(logEntry => {
+                const logEntries = json.map(logEntry => {
                     return {
-                        logLevel: logEntry.logLevel,
+                        level: logEntry.level,
                         message: logEntry.message,
-                        javaClass: logEntry.javaClass
+                        timestamp: logEntry.timestamp,
+                        javaClass: logEntry.javaClass,
+                        lineNumber: logEntry.lineNumber,
+                        method: logEntry.method
                     };
                 });
-
                 this.setState({
                     isFetching: false,
                     logEntries
@@ -59,14 +56,17 @@ class LogViewerData extends React.Component {
 
     render() {
         const rows = [];
-        this.props.logEntries.forEach((entry) => {
-            rows.push(
-                <LogEntryRow
-                    entry={entry}
-                    key={entry.timestamp}
-                />
-            );
-        });
+        if (this.state.logEntries) {
+            let counter = 0;
+            this.state.logEntries.forEach((entry) => {
+                rows.push(
+                    <LogEntryRow
+                        entry={entry}
+                        key={counter++}
+                    />
+                );
+            });
+        }
         return (
             <div>
                 <form>
@@ -104,18 +104,21 @@ class LogViewerData extends React.Component {
 
 class LogEntryRow extends React.Component {
     render() {
-        const entry = this.props.logEntry;
-        const level = entry.level < 3 ?
-            level.level :
+        const entry = this.props.entry;
+        console.log(entry.message)
+        const level = (entry.level === 'WARN' || entry.level === 'ERROR' || entry.logLevel === 'FATAL') ?
             <span style={{color: 'red'}}>
         {entry.level}
-      </span>;
+      </span> :
+            entry.level
+        ;
+      const source = entry.javaClass + ':' + entry.method + ':' + entry.lineNumber;
 
         return (
             <tr>
-                <td>{entry.timestamp}</td>
-                <td>{entry.source}</td>
-                <td>{entry.level}</td>
+                <td>{new Date(entry.timestamp).toISOString()}</td>
+                <td>{source}</td>
+                <td>{level}</td>
                 <td>{entry.message}</td>
             </tr>
         );

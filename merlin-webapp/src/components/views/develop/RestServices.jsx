@@ -127,6 +127,12 @@ class RestServices extends React.Component {
                     <li><RestUrlLink service='files/browse-local-filesystem' params='type=word'/></li>
                     <li><RestUrlLink service='files/browse-local-filesystem' params='type=file'/></li>
                 </ul>
+                <h3>Logging</h3>
+                <ul>
+                    <li><RestUrlLink service='logging/query'/> (all, default is info log level as treshold)</li>
+                    <li><RestUrlLink service='logging/query' params={'treshold=warn'}/> (only warnings)</li>
+                    <li><RestUrlLink service='logging/query' params={'treshold=info&search=server'}/> (search for server)</li>
+                </ul>
             </div>
         );
     }

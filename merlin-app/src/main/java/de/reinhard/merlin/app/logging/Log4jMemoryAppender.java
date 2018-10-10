@@ -10,6 +10,7 @@ import java.util.List;
 
 public class Log4jMemoryAppender extends AppenderSkeleton {
     private static final int MAX_RESULT_SIZE = 1000;
+    private static final int QUEUE_SIZE = 10000;
     private static Log4jMemoryAppender instance;
 
     public static Log4jMemoryAppender getInstance() {
@@ -23,12 +24,28 @@ public class Log4jMemoryAppender extends AppenderSkeleton {
         instance = this;
     }
 
-    CircularFifoQueue<LoggingEventData> queue = new CircularFifoQueue(10000);
+    /**
+     * For test purposes.
+     */
+    Log4jMemoryAppender(boolean ignoreMultipleInstance) {
+
+    }
+
+    CircularFifoQueue<LoggingEventData> queue = new CircularFifoQueue(QUEUE_SIZE);
 
     @Override
     protected void append(LoggingEvent event) {
         LoggingEventData eventData = new LoggingEventData(event);
         queue.add(eventData);
+    }
+
+    /**
+     * For testing purposes.
+     *
+     * @param event
+     */
+    void append(LoggingEventData event) {
+        queue.add(event);
     }
 
     public List<LoggingEventData> query(LogFilter filter) {
@@ -37,21 +54,18 @@ public class Log4jMemoryAppender extends AppenderSkeleton {
             return result;
         }
         int counter = 0;
-        int maxNumber = filter.getMaxSize() != null ? filter.getMaxSize() : MAX_RESULT_SIZE;
-        if (maxNumber > MAX_RESULT_SIZE) {
-            maxNumber = MAX_RESULT_SIZE;
-        }
         for (LoggingEventData event : queue) {
-            if (counter++ > maxNumber) {
-                break;
-            }
             if (!event.getLevel().matches(filter.getThreshold())) {
                 continue;
             }
-            if (matches(filter, event.getLoggerName(), filter.getSearchLoggerName()) ||
-                    matches(filter, event.getMessage(), filter.getSearchMessage()) ||
-                    matches(filter, event.getJavaClass(), filter.getSearchJavaClass())) {
+            if (matches(event.getLoggerName(), filter.getSearch()) ||
+                    matches(event.getMessage(), filter.getSearch()) ||
+                    matches(event.getJavaClass(), filter.getSearch()) ||
+                    matches(event.getMessage(), filter.getSearch())) {
                 result.add(event);
+                if (counter++ > MAX_RESULT_SIZE) {
+                    break;
+                }
             }
         }
         return result;
@@ -62,13 +76,6 @@ public class Log4jMemoryAppender extends AppenderSkeleton {
 
     public boolean requiresLayout() {
         return false;
-    }
-
-    private boolean matches(LogFilter filter, String str, String searchString) {
-        if (matches(str, searchString)) {
-            return true;
-        }
-        return matches(str, filter.getSearch());
     }
 
     private boolean matches(String str, String searchString) {

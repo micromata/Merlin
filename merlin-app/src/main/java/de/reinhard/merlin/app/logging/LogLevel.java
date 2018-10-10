@@ -1,5 +1,6 @@
 package de.reinhard.merlin.app.logging;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Level;
 import org.apache.log4j.spi.LoggingEvent;
 
@@ -7,7 +8,6 @@ public enum LogLevel {
     FATAL, ERROR, WARN, INFO, DEBUG, TRACE;
 
     /**
-     *
      * @param treshold
      * @return True, if this log level is equals or higher than given treshold. FATAL is the highest and TRACE the lowest.
      */
@@ -36,5 +36,9 @@ public enum LogLevel {
                 return LogLevel.ERROR;
         }
 
+    }
+
+    public static String getSupportedValues() {
+        return StringUtils.join(LogLevel.values(), ", ");
     }
 }
