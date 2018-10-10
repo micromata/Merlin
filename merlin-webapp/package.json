@@ -8,6 +8,7 @@
     "react": "^16.4.2",
     "react-bootstrap": "^0.32.3",
     "react-dom": "^16.4.2",
+    "react-highlighter": "^0.4.3",
     "react-redux": "^5.0.7",
     "react-router": "^4.3.1",
     "react-router-bootstrap": "^0.24.4",

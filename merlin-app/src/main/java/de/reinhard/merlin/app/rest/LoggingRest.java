@@ -21,7 +21,7 @@ public class LoggingRest {
     @Path("query")
     @Produces(MediaType.APPLICATION_JSON)
     public String query(@QueryParam("search") String search, @QueryParam("treshold") String logLevelTreshold,
-                        @QueryParam("prettyPrinter") boolean prettyPrinter) {
+                        @QueryParam("maxSize") Integer maxSize, @QueryParam("prettyPrinter") boolean prettyPrinter) {
         LogFilter filter = new LogFilter();
         filter.setSearch(search);
         if (logLevelTreshold != null) {
@@ -34,6 +34,9 @@ public class LoggingRest {
         }
         if (filter.getThreshold() == null) {
             filter.setThreshold(LogLevel.INFO);
+        }
+        if (maxSize != null) {
+            filter.setMaxSize(maxSize);
         }
         Log4jMemoryAppender appender = Log4jMemoryAppender.getInstance();
         String json = JsonUtils.toJson(appender.query(filter), prettyPrinter);

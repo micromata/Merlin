@@ -1,10 +1,8 @@
 import React from 'react';
 import {PageHeader, Table} from 'react-bootstrap';
-import {
-    FormLabelField,
-    FormButton, FormSelect, FormInput
-} from "../../general/forms/FormComponents";
+import {FormLabel, FormButton, FormSelect, FormInput} from "../../general/forms/FormComponents";
 import {getRestServiceUrl} from "../../../actions/global";
+import './LogViewer.css';
 
 class LogViewerData extends React.Component {
     constructor(props) {
@@ -12,23 +10,32 @@ class LogViewerData extends React.Component {
         this.state = {
             search: '',
             treshold: 'info',
-            maxSize: 50
+            maxSize: 50,
+            display: 'none'
         }
     }
 
     handleTextChange = event => {
         event.preventDefault();
         this.setState({[event.target.name]: event.target.value});
+        if (event.target.name === 'treshold') {
+            this.reload(event.target.value);
+        }
     }
 
-    reload = event => {
+    onSubmit = event => {
         event.preventDefault();
+        this.reload();
+    }
+
+    reload = treshold => {
+        if (!treshold) treshold = this.state.treshold;
         this.setState({
             isFetching: true,
             failed: false,
             logEntries: undefined
         });
-        fetch(getRestServiceUrl("logging/query", {search: this.state.search, treshold: this.state.treshold}), {
+        fetch(getRestServiceUrl("logging/query", {search: this.state.search, treshold: treshold}), {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -42,6 +49,7 @@ class LogViewerData extends React.Component {
                         message: logEntry.message,
                         timestamp: logEntry.timestamp,
                         javaClass: logEntry.javaClass,
+                        javaClassSimpleName: logEntry.javaClassSimpleName,
                         lineNumber: logEntry.lineNumber,
                         methodName: logEntry.methodName
                     };
@@ -59,31 +67,41 @@ class LogViewerData extends React.Component {
         const rows = [];
         if (this.state.logEntries) {
             let counter = 0;
+            let searchLower = this.state.search.toLowerCase();
             this.state.logEntries.forEach((entry) => {
+                if (entry.message.toLowerCase().indexOf(searchLower) === -1 &&
+                    entry.javaClass.toLowerCase().indexOf(searchLower) === -1 &&
+                    entry.methodName.toLowerCase().indexOf(searchLower) === -1) {
+                    return;
+                }
                 rows.push(
                     <LogEntryRow
                         entry={entry}
+                        search={searchLower}
                         key={counter++}
+                        display={this.state.display}
                     />
                 );
             });
         }
         return (
             <div>
-                <form onSubmit={this.reload}>
-                    <FormLabelField label={'Log treshold'} fieldLength={2}>
-                        <FormSelect value={this.state.treshold} name={'treshold'} onChange={this.handleTextChange}>
-                            <option>fatal</option>
-                            <option>error</option>
-                            <option>warn</option>
-                            <option>info</option>
-                            <option>debug</option>
-                            <option>trace</option>
-                        </FormSelect>
-                    </FormLabelField>
-                    <FormLabelField label={'Search'} fieldLength={2}>
-                        <FormInput value={this.state.search} name={'search'} onChange={this.handleTextChange}/>
-                    </FormLabelField>
+                <form onSubmit={this.onSubmit} className={'form-inline'}>
+                    <FormLabel length={1}>Log filter:</FormLabel>
+                    <FormSelect value={this.state.treshold} name={'treshold'} onChange={this.handleTextChange}>
+                        <option>fatal</option>
+                        <option>error</option>
+                        <option>warn</option>
+                        <option>info</option>
+                        <option>debug</option>
+                        <option>trace</option>
+                    </FormSelect>
+                    <FormInput value={this.state.search} name={'search'} onChange={this.handleTextChange}/>
+                    <FormSelect value={this.state.display} name={'display'} onChange={this.handleTextChange}>
+                        <option>none</option>
+                        <option>short</option>
+                        <option>normal</option>
+                    </FormSelect>
                     <FormButton type={'submit'} bsStyle="success">load
                     </FormButton>
                 </form>
@@ -91,8 +109,8 @@ class LogViewerData extends React.Component {
                     <thead>
                     <tr>
                         <th>Timestamp</th>
-                        <th>Source</th>
                         <th>Log level</th>
+                        {this.state.display !== 'none' ? <th>Location</th> : null}
                         <th>Message</th>
                     </tr>
                     </thead>
@@ -112,14 +130,18 @@ class LogEntryRow extends React.Component {
       </span> :
             entry.level
         ;
-      const source = `${entry.javaClass}:${entry.methodName}:${entry.lineNumber}`;
-
+        var location = null;
+        if (this.props.display === 'short') {
+            location = <td>{entry.javaClassSimpleName}:{entry.methodName}:{entry.lineNumber}</td>;
+        } else if (this.props.display === 'normal') {
+            location = <td>{entry.javaClass}:{entry.methodName}:{entry.lineNumber}</td>;
+        }
         return (
             <tr>
                 <td>{new Date(entry.timestamp).toISOString()}</td>
-                <td>{source}</td>
                 <td>{level}</td>
-                <td>{entry.message}</td>
+                {location}
+                <td className={'tt'}>{entry.message}</td>
             </tr>
         );
     }
