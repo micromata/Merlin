@@ -22,12 +22,13 @@ class LogViewerData extends React.Component {
     }
 
     reload = event => {
+        event.preventDefault();
         this.setState({
             isFetching: true,
             failed: false,
             logEntries: undefined
         });
-        fetch(getRestServiceUrl("logging/query"), {
+        fetch(getRestServiceUrl("logging/query", {search: this.state.search, treshold: this.state.treshold}), {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -42,7 +43,7 @@ class LogViewerData extends React.Component {
                         timestamp: logEntry.timestamp,
                         javaClass: logEntry.javaClass,
                         lineNumber: logEntry.lineNumber,
-                        method: logEntry.method
+                        methodName: logEntry.methodName
                     };
                 });
                 this.setState({
@@ -69,21 +70,21 @@ class LogViewerData extends React.Component {
         }
         return (
             <div>
-                <form>
-                    <FormLabelField label={'Log treshold'} name={'treshold'} fieldLength={2}>
-                        <FormSelect value={this.state.treshold} onChange={this.handleTextChange}>
+                <form onSubmit={this.reload}>
+                    <FormLabelField label={'Log treshold'} fieldLength={2}>
+                        <FormSelect value={this.state.treshold} name={'treshold'} onChange={this.handleTextChange}>
                             <option>fatal</option>
                             <option>error</option>
-                            <option>warning</option>
+                            <option>warn</option>
                             <option>info</option>
                             <option>debug</option>
                             <option>trace</option>
                         </FormSelect>
                     </FormLabelField>
-                    <FormLabelField label={'Search'} name={'search'} fieldLength={2}>
-                        <FormInput value={this.state.search} onChange={this.handleTextChange}/>
+                    <FormLabelField label={'Search'} fieldLength={2}>
+                        <FormInput value={this.state.search} name={'search'} onChange={this.handleTextChange}/>
                     </FormLabelField>
-                    <FormButton onClick={this.reload} bsStyle="success">load
+                    <FormButton type={'submit'} bsStyle="success">load
                     </FormButton>
                 </form>
                 <Table striped bordered condensed hover>
@@ -105,14 +106,13 @@ class LogViewerData extends React.Component {
 class LogEntryRow extends React.Component {
     render() {
         const entry = this.props.entry;
-        console.log(entry.message)
         const level = (entry.level === 'WARN' || entry.level === 'ERROR' || entry.logLevel === 'FATAL') ?
             <span style={{color: 'red'}}>
         {entry.level}
       </span> :
             entry.level
         ;
-      const source = entry.javaClass + ':' + entry.method + ':' + entry.lineNumber;
+      const source = `${entry.javaClass}:${entry.methodName}:${entry.lineNumber}`;
 
         return (
             <tr>
