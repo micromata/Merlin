@@ -34,15 +34,18 @@ class Template extends React.Component {
         }
     });
 
-    runSingleTemplate = () => this.runTemplate(`${this.path}/run`, {
-            'Content-Type': 'application/json'
-        },
-        JSON.stringify({
-            templateDefinitionId: this.props.templateDefinitionId,
-            templateCanonicalPath: this.props.canonicalPath,
-            variables: this.state.runConfiguration
-        })
-    );
+    runSingleTemplate = (event) => {
+        event.preventDefault();
+        this.runTemplate(`${this.path}/run`, {
+                'Content-Type': 'application/json'
+            },
+            JSON.stringify({
+                templateDefinitionId: this.props.templateDefinitionId,
+                templateCanonicalPath: this.props.canonicalPath,
+                variables: this.state.runConfiguration
+            })
+        );
+    }
 
     runSerialTemplate = (file) => {
         const formData = new FormData();
@@ -101,7 +104,7 @@ class Template extends React.Component {
                     />
                     <br/>
                     <h4>Single Generation:</h4>
-                    <form>
+                    <form onSubmit={this.runSingleTemplate}>
                         {this.props.variableDefinitions.map(item => {
                             let formControl;
                             const currentValue = this.state.runConfiguration[item.name];
@@ -159,14 +162,14 @@ class Template extends React.Component {
                                 {formControl}
                             </FormLabelField>;
                         })}
+                        <FormButton
+                            bsStyle={'success'}
+                            type={'submit'}
+                            disabled={!valid}
+                        >
+                            Run
+                        </FormButton>
                     </form>
-                    <FormButton
-                        bsStyle={'success'}
-                        onClick={this.runSingleTemplate}
-                        disabled={!valid}
-                    >
-                        Run
-                    </FormButton>
                 </Modal.Body>
             </Modal>
         </div>;
