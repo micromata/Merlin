@@ -1,5 +1,6 @@
 package de.reinhard.merlin.app.logging;
 
+import org.apache.commons.lang3.ClassUtils;
 import org.apache.log4j.spi.LocationInfo;
 import org.apache.log4j.spi.LoggingEvent;
 
@@ -12,8 +13,8 @@ public class LoggingEventData {
     private String messageObjectClass;
     private String loggerName;
     private long timestamp;
-
     String javaClass;
+    private String javaClassSimpleName;
     private String lineNumber;
     private String methodName;
 
@@ -30,6 +31,7 @@ public class LoggingEventData {
         LocationInfo info = event.getLocationInformation();
         if (info != null) {
             javaClass = info.getClassName();
+            javaClassSimpleName = ClassUtils.getShortClassName(info.getClassName());
             lineNumber = info.getLineNumber();
             methodName = info.getMethodName();
         }
@@ -57,6 +59,10 @@ public class LoggingEventData {
 
     public String getJavaClass() {
         return javaClass;
+    }
+
+    public String getJavaClassSimpleName() {
+        return javaClassSimpleName;
     }
 
     public String getLineNumber() {
