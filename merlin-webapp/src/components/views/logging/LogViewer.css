@@ -2,3 +2,7 @@ td.tt {
     white-space: pre-wrap;
     font-family: monospace;
 }
+mark.highlight {
+    padding: 0px;
+    background-color: yellow;
+}

@@ -1,5 +1,6 @@
 import React from 'react';
 import {PageHeader, Table} from 'react-bootstrap';
+import Highlight from 'react-highlighter';
 import {FormLabel, FormButton, FormSelect, FormInput} from "../../general/forms/FormComponents";
 import {getRestServiceUrl} from "../../../actions/global";
 import './LogViewer.css';
@@ -11,7 +12,7 @@ class LogViewerData extends React.Component {
             search: '',
             treshold: 'info',
             maxSize: 50,
-            display: 'none'
+            locationFormat: 'none'
         }
     }
 
@@ -62,6 +63,14 @@ class LogViewerData extends React.Component {
             .catch(() => this.setState({isFetching: false, failed: true}));
     }
 
+    locationString = entry => {
+        if (this.state.display === 'short') {
+            return `${entry.javaClassSimpleName}:${entry.methodName}:${entry.lineNumber}`;
+        } else if (this.state.display === 'normal') {
+            return `${entry.javaClass}:${entry.methodName}:${entry.lineNumber}`;
+        }
+        return null;
+    }
 
     render() {
         const rows = [];
@@ -69,17 +78,18 @@ class LogViewerData extends React.Component {
             let counter = 0;
             let searchLower = this.state.search.toLowerCase();
             this.state.logEntries.forEach((entry) => {
-                if (entry.message.toLowerCase().indexOf(searchLower) === -1 &&
-                    entry.javaClass.toLowerCase().indexOf(searchLower) === -1 &&
-                    entry.methodName.toLowerCase().indexOf(searchLower) === -1) {
-                    return;
+                let locationString = this.locationString(entry);
+                if (entry.message.toLowerCase().indexOf(searchLower) === -1) {
+                    if (!locationString) {
+                        return;
+                    }
                 }
                 rows.push(
                     <LogEntryRow
                         entry={entry}
                         search={searchLower}
+                        location={locationString}
                         key={counter++}
-                        display={this.state.display}
                     />
                 );
             });
@@ -131,17 +141,15 @@ class LogEntryRow extends React.Component {
             entry.level
         ;
         var location = null;
-        if (this.props.display === 'short') {
-            location = <td>{entry.javaClassSimpleName}:{entry.methodName}:{entry.lineNumber}</td>;
-        } else if (this.props.display === 'normal') {
-            location = <td>{entry.javaClass}:{entry.methodName}:{entry.lineNumber}</td>;
+        if (this.props.location) {
+            location = <td><Highlight search={this.props.search}>{this.props.location}</Highlight></td>;
         }
         return (
             <tr>
                 <td>{new Date(entry.timestamp).toISOString()}</td>
                 <td>{level}</td>
                 {location}
-                <td className={'tt'}>{entry.message}</td>
+                <td className={'tt'}><Highlight search={this.props.search}>{entry.message}</Highlight></td>
             </tr>
         );
     }
