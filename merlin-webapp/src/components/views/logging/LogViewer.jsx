@@ -56,7 +56,7 @@ class LogViewerData extends React.Component {
                     return {
                         level: logEntry.level.toLowerCase(),
                         message: logEntry.message,
-                        timestamp: logEntry.timestamp,
+                        logDate: logEntry.logDate,
                         javaClass: logEntry.javaClass,
                         javaClassSimpleName: logEntry.javaClassSimpleName,
                         lineNumber: logEntry.lineNumber,
@@ -87,9 +87,8 @@ class LogViewerData extends React.Component {
             let searchLower = this.state.search.toLowerCase();
             this.state.logEntries.forEach((entry) => {
                 let locationString = this.locationString(entry);
-                if (entry.message.toLowerCase().indexOf(searchLower) === -1 &&
-                    entry.level.indexOf(searchLower) === -1 &&
-                    (!locationString || locationString.toLowerCase().indexOf(searchLower) === -1)) {
+                let str = [entry.message, locationString, entry.level, entry.logDate].join("|#|").toLowerCase();
+                if (str.indexOf(searchLower) === -1) {
                     return;
                 }
                 rows.push(
@@ -161,7 +160,7 @@ class LogEntryRow extends React.Component {
         }
         return (
             <tr>
-                <td>{new Date(entry.timestamp).toISOString()}</td>
+                <td>{entry.logDate}</td>
                 <td className={`log-${entry.level}`}><Highlight search={this.props.search}>{entry.level}</Highlight>
                 </td>
                 {location}

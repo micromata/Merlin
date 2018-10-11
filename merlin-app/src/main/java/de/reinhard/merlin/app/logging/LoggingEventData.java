@@ -4,15 +4,21 @@ import org.apache.commons.lang3.ClassUtils;
 import org.apache.log4j.spi.LocationInfo;
 import org.apache.log4j.spi.LoggingEvent;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * For easier serialization: JSON
  */
 public class LoggingEventData {
+    private SimpleDateFormat ISO_DATEFORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+    int number;
     LogLevel level;
     String message;
     private String messageObjectClass;
     private String loggerName;
-    private long timestamp;
+    private String logDate;
     String javaClass;
     private String javaClassSimpleName;
     private String lineNumber;
@@ -27,7 +33,7 @@ public class LoggingEventData {
         message = event.getRenderedMessage();
         messageObjectClass = event.getMessage().getClass().toString();
         loggerName = event.getLoggerName();
-        timestamp = event.timeStamp;
+        logDate = getIsoLogDate(event.timeStamp);
         LocationInfo info = event.getLocationInformation();
         if (info != null) {
             javaClass = info.getClassName();
@@ -53,8 +59,8 @@ public class LoggingEventData {
         return loggerName;
     }
 
-    public long getTimestamp() {
-        return timestamp;
+    public String getLogDate() {
+        return logDate;
     }
 
     public String getJavaClass() {
@@ -71,5 +77,15 @@ public class LoggingEventData {
 
     public String getMethodName() {
         return methodName;
+    }
+
+    public int getNumber() {
+        return number;
+    }
+
+    private String getIsoLogDate(long millis) {
+        synchronized (ISO_DATEFORMAT) {
+            return ISO_DATEFORMAT.format(new Date(millis));
+        }
     }
 }

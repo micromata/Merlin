@@ -13,6 +13,8 @@ public class Log4jMemoryAppender extends AppenderSkeleton {
     private static final int QUEUE_SIZE = 10000;
     private static Log4jMemoryAppender instance;
 
+    private int entryCounter = 0;
+
     public static Log4jMemoryAppender getInstance() {
         return instance;
     }
@@ -62,15 +64,14 @@ public class Log4jMemoryAppender extends AppenderSkeleton {
             if (!event.getLevel().matches(filter.getThreshold())) {
                 continue;
             }
-            if (matches(event.getLoggerName(), filter.getSearch()) ||
-                    matches(event.getMessage(), filter.getSearch()) ||
-                    matches(event.getJavaClass(), filter.getSearch()) ||
-                    matches(event.getMessage(), filter.getSearch())) {
+            String str = StringUtils.join(event.getLoggerName(), event.getJavaClass(), event.getMessage(), event.getLevel(), event.getLogDate(), "|#|");
+            if (StringUtils.isEmpty(filter.getSearch()) || matches(str, filter.getSearch())) {
                 if (filter.isAscendingOrder()) {
                     result.add(event);
                 } else {
                     result.add(0, event);
                 }
+                event.number = entryCounter++;
                 if (counter++ > maxSize) {
                     break;
                 }
