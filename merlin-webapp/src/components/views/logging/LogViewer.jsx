@@ -69,9 +69,9 @@ class LogViewerData extends React.Component {
     }
 
     locationString = entry => {
-        if (this.state.display === 'short') {
+        if (this.state.locationFormat === 'short') {
             return `${entry.javaClassSimpleName}:${entry.methodName}:${entry.lineNumber}`;
-        } else if (this.state.display === 'normal') {
+        } else if (this.state.locationFormat === 'normal') {
             return `${entry.javaClass}:${entry.methodName}:${entry.lineNumber}`;
         }
         return null;
@@ -112,7 +112,7 @@ class LogViewerData extends React.Component {
                         <option>trace</option>
                     </FormSelect>
                     <FormInput value={this.state.search} name={'search'} onChange={this.handleTextChange}/>
-                    <FormSelect value={this.state.display} name={'display'} onChange={this.handleTextChange}>
+                    <FormSelect value={this.state.locationFormat} name={'locationFormat'} onChange={this.handleTextChange}>
                         <option>none</option>
                         <option>short</option>
                         <option>normal</option>
@@ -132,7 +132,7 @@ class LogViewerData extends React.Component {
                     <tr>
                         <th>Timestamp</th>
                         <th>Log level</th>
-                        {this.state.display !== 'none' ? <th>Location</th> : null}
+                        {this.state.locationFormat !== 'none' ? <th>Location</th> : null}
                         <th>Message</th>
                     </tr>
                     </thead>
