@@ -22,6 +22,7 @@ public class LoggingRest {
      * @param logLevelTreshold fatal, error, warn, info, debug or trace (case insensitive).
      * @param maxSize          Max size of the result list.
      * @param ascendingOrder   Default is false (default is descending order).
+     * @param lastReceivedOrderNumber The last received order number for updating log entries (preventing querying all entries again).
      * @param prettyPrinter
      * @return
      */
@@ -30,7 +31,7 @@ public class LoggingRest {
     @Produces(MediaType.APPLICATION_JSON)
     public String query(@QueryParam("search") String search, @QueryParam("treshold") String logLevelTreshold,
                         @QueryParam("maxSize") Integer maxSize, @QueryParam("ascendingOrder") Boolean ascendingOrder,
-                        @QueryParam("prettyPrinter") boolean prettyPrinter) {
+                        @QueryParam("lastReceivedOrderNumber") Integer lastReceivedOrderNumber, @QueryParam("prettyPrinter") boolean prettyPrinter) {
         LogFilter filter = new LogFilter();
         filter.setSearch(search);
         if (logLevelTreshold != null) {
@@ -49,6 +50,9 @@ public class LoggingRest {
         }
         if (ascendingOrder != null && ascendingOrder == true) {
             filter.setAscendingOrder(true);
+        }
+        if (lastReceivedOrderNumber != null) {
+            filter.setLastReceivedLogOrderNumber(lastReceivedOrderNumber);
         }
         Log4jMemoryAppender appender = Log4jMemoryAppender.getInstance();
         String json = JsonUtils.toJson(appender.query(filter), prettyPrinter);

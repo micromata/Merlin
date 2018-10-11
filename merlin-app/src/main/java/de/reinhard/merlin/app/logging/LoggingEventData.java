@@ -13,7 +13,7 @@ import java.util.Date;
 public class LoggingEventData {
     private SimpleDateFormat ISO_DATEFORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-    int number;
+    int orderNumber;
     LogLevel level;
     String message;
     private String messageObjectClass;
@@ -79,8 +79,8 @@ public class LoggingEventData {
         return methodName;
     }
 
-    public int getNumber() {
-        return number;
+    public int getOrderNumber() {
+        return orderNumber;
     }
 
     private String getIsoLogDate(long millis) {

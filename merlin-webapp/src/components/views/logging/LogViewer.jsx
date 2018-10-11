@@ -13,6 +13,7 @@ class LogViewerData extends React.Component {
             treshold: 'info',
             maxSize: 100,
             ascendingOrder: false,
+            lastReceivedOrderNumber: -1,
             locationFormat: 'none'
         }
     }
@@ -47,7 +48,8 @@ class LogViewerData extends React.Component {
             search: this.state.search,
             treshold: this.state.treshold,
             maxSize: this.state.maxSize,
-            ascendingOrder: this.state.ascendingOrder
+            ascendingOrder: this.state.ascendingOrder,
+            lastReceivedOrderNumber: this.state.lastReceivedOrderNumber
         }), {
             method: 'GET',
             headers: {

@@ -8,6 +8,7 @@ public class LogFilter {
     private LogLevel threshold;
     private Integer maxSize;
     private boolean ascendingOrder;
+    private Integer lastReceivedLogOrderNumber;
 
     /**
      *
@@ -47,5 +48,17 @@ public class LogFilter {
      */
     public boolean isAscendingOrder() {
         return ascendingOrder;
+    }
+
+    /**
+     *
+     * @return If given, all log entries with order orderNumber higher than this orderNumber will be queried.
+     */
+    public Integer getLastReceivedLogOrderNumber() {
+        return lastReceivedLogOrderNumber;
+    }
+
+    public void setLastReceivedLogOrderNumber(Integer lastReceivedLogOrderNumber) {
+        this.lastReceivedLogOrderNumber = lastReceivedLogOrderNumber;
     }
 }
