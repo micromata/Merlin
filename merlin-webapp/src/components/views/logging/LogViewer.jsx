@@ -86,7 +86,7 @@ class LogViewerData extends React.Component {
                 let locationString = this.locationString(entry);
                 if (entry.message.toLowerCase().indexOf(searchLower) === -1 &&
                     entry.level.indexOf(searchLower) === -1 &&
-                    (!locationString || locationString.indexOf(searchLower) === -1)) {
+                    (!locationString || locationString.toLowerCase().indexOf(searchLower) === -1)) {
                     return;
                 }
                 rows.push(
