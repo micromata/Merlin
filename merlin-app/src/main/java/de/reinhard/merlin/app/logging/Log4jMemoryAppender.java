@@ -53,6 +53,10 @@ public class Log4jMemoryAppender extends AppenderSkeleton {
         if (filter == null) {
             return result;
         }
+        int maxSize = filter.getMaxSize() != null ? filter.getMaxSize() : MAX_RESULT_SIZE;
+        if (maxSize > MAX_RESULT_SIZE) {
+            maxSize = MAX_RESULT_SIZE;
+        }
         int counter = 0;
         for (LoggingEventData event : queue) {
             if (!event.getLevel().matches(filter.getThreshold())) {
@@ -63,7 +67,7 @@ public class Log4jMemoryAppender extends AppenderSkeleton {
                     matches(event.getJavaClass(), filter.getSearch()) ||
                     matches(event.getMessage(), filter.getSearch())) {
                 result.add(event);
-                if (counter++ > MAX_RESULT_SIZE) {
+                if (counter++ > maxSize) {
                     break;
                 }
             }

@@ -11,16 +11,18 @@ class LogViewerData extends React.Component {
         this.state = {
             search: '',
             treshold: 'info',
-            maxSize: 50,
+            maxSize: 100,
             locationFormat: 'none'
         }
     }
 
     handleTextChange = event => {
         event.preventDefault();
-        this.setState({[event.target.name]: event.target.value});
-        if (event.target.name === 'treshold') {
-            this.reload(event.target.value);
+        if (event.target.name === 'treshold' ||
+            event.target.name === 'maxSize') {
+            this.setState({[event.target.name]: event.target.value}, () => this.reload());
+        } else {
+            this.setState({[event.target.name]: event.target.value});
         }
     }
 
@@ -29,14 +31,17 @@ class LogViewerData extends React.Component {
         this.reload();
     }
 
-    reload = treshold => {
-        if (!treshold) treshold = this.state.treshold;
+    reload = () => {
         this.setState({
             isFetching: true,
             failed: false,
             logEntries: undefined
         });
-        fetch(getRestServiceUrl("logging/query", {search: this.state.search, treshold: treshold}), {
+        fetch(getRestServiceUrl("logging/query", {
+            search: this.state.search,
+            treshold: this.state.treshold,
+            maxSize: this.state.maxSize
+        }), {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -46,7 +51,7 @@ class LogViewerData extends React.Component {
             .then(json => {
                 const logEntries = json.map(logEntry => {
                     return {
-                        level: logEntry.level,
+                        level: logEntry.level.toLowerCase(),
                         message: logEntry.message,
                         timestamp: logEntry.timestamp,
                         javaClass: logEntry.javaClass,
@@ -79,10 +84,10 @@ class LogViewerData extends React.Component {
             let searchLower = this.state.search.toLowerCase();
             this.state.logEntries.forEach((entry) => {
                 let locationString = this.locationString(entry);
-                if (entry.message.toLowerCase().indexOf(searchLower) === -1) {
-                    if (!locationString) {
-                        return;
-                    }
+                if (entry.message.toLowerCase().indexOf(searchLower) === -1 &&
+                    entry.level.indexOf(searchLower) === -1 &&
+                    (!locationString || locationString.indexOf(searchLower) === -1)) {
+                    return;
                 }
                 rows.push(
                     <LogEntryRow
@@ -112,6 +117,13 @@ class LogViewerData extends React.Component {
                         <option>short</option>
                         <option>normal</option>
                     </FormSelect>
+                    <FormSelect value={this.state.maxSize} name={'maxSize'} onChange={this.handleTextChange}>
+                        <option>50</option>
+                        <option>100</option>
+                        <option>500</option>
+                        <option>1000</option>
+                        <option>10000</option>
+                    </FormSelect>
                     <FormButton type={'submit'} bsStyle="success">load
                     </FormButton>
                 </form>
@@ -134,12 +146,6 @@ class LogViewerData extends React.Component {
 class LogEntryRow extends React.Component {
     render() {
         const entry = this.props.entry;
-        const level = (entry.level === 'WARN' || entry.level === 'ERROR' || entry.logLevel === 'FATAL') ?
-            <span style={{color: 'red'}}>
-        {entry.level}
-      </span> :
-            entry.level
-        ;
         var location = null;
         if (this.props.location) {
             location = <td><Highlight search={this.props.search}>{this.props.location}</Highlight></td>;
@@ -147,7 +153,8 @@ class LogEntryRow extends React.Component {
         return (
             <tr>
                 <td>{new Date(entry.timestamp).toISOString()}</td>
-                <td>{level}</td>
+                <td className={`log-${entry.level}`}><Highlight search={this.props.search}>{entry.level}</Highlight>
+                </td>
                 {location}
                 <td className={'tt'}><Highlight search={this.props.search}>{entry.message}</Highlight></td>
             </tr>
