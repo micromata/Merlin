@@ -17,6 +17,10 @@ class LogViewerData extends React.Component {
         }
     }
 
+    componentDidMount = () => {
+        this.reload();
+    }
+
     handleTextChange = event => {
         event.preventDefault();
         if (event.target.name === 'treshold' ||
