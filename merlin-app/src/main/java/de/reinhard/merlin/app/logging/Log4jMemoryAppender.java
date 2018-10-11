@@ -66,7 +66,11 @@ public class Log4jMemoryAppender extends AppenderSkeleton {
                     matches(event.getMessage(), filter.getSearch()) ||
                     matches(event.getJavaClass(), filter.getSearch()) ||
                     matches(event.getMessage(), filter.getSearch())) {
-                result.add(event);
+                if (filter.isAscendingOrder()) {
+                    result.add(event);
+                } else {
+                    result.add(0, event);
+                }
                 if (counter++ > maxSize) {
                     break;
                 }

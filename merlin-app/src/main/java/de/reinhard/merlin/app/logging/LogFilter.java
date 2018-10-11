@@ -7,6 +7,7 @@ public class LogFilter {
     private String search;
     private LogLevel threshold;
     private Integer maxSize;
+    private boolean ascendingOrder;
 
     /**
      *
@@ -34,5 +35,17 @@ public class LogFilter {
 
     public void setMaxSize(Integer maxSize) {
         this.maxSize = maxSize;
+    }
+
+    public void setAscendingOrder(boolean ascendingOrder) {
+        this.ascendingOrder = ascendingOrder;
+    }
+
+    /**
+     *
+     * @return false at default (default is descending order of the result).
+     */
+    public boolean isAscendingOrder() {
+        return ascendingOrder;
     }
 }

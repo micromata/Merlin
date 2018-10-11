@@ -12,6 +12,7 @@ class LogViewerData extends React.Component {
             search: '',
             treshold: 'info',
             maxSize: 100,
+            ascendingOrder: false,
             locationFormat: 'none'
         }
     }
@@ -19,7 +20,8 @@ class LogViewerData extends React.Component {
     handleTextChange = event => {
         event.preventDefault();
         if (event.target.name === 'treshold' ||
-            event.target.name === 'maxSize') {
+            event.target.name === 'maxSize' ||
+            event.target.name === 'ascendingOrder') {
             this.setState({[event.target.name]: event.target.value}, () => this.reload());
         } else {
             this.setState({[event.target.name]: event.target.value});
@@ -40,7 +42,8 @@ class LogViewerData extends React.Component {
         fetch(getRestServiceUrl("logging/query", {
             search: this.state.search,
             treshold: this.state.treshold,
-            maxSize: this.state.maxSize
+            maxSize: this.state.maxSize,
+            ascendingOrder: this.state.ascendingOrder
         }), {
             method: 'GET',
             headers: {
@@ -112,7 +115,8 @@ class LogViewerData extends React.Component {
                         <option>trace</option>
                     </FormSelect>
                     <FormInput value={this.state.search} name={'search'} onChange={this.handleTextChange}/>
-                    <FormSelect value={this.state.locationFormat} name={'locationFormat'} onChange={this.handleTextChange}>
+                    <FormSelect value={this.state.locationFormat} name={'locationFormat'}
+                                onChange={this.handleTextChange}>
                         <option>none</option>
                         <option>short</option>
                         <option>normal</option>
@@ -123,6 +127,11 @@ class LogViewerData extends React.Component {
                         <option>500</option>
                         <option>1000</option>
                         <option>10000</option>
+                    </FormSelect>
+                    <FormSelect value={this.state.ascendingOrder} name={'ascendingOrder'}
+                                onChange={this.handleTextChange}>
+                        <option value={'true'}>ascending</option>
+                        <option value={'false'}>descending</option>
                     </FormSelect>
                     <FormButton type={'submit'} bsStyle="success">load
                     </FormButton>
