@@ -13,7 +13,7 @@ function FormGroup({validationState, children}) {
 }
 
 FormGroup.propTypes = {
-    validationState: PropTypes.oneOf(['success', 'warning', 'error', null]),
+    validationState: PropTypes.oneOf(['success', 'warning', 'error', 'no-validation', null]),
     children: PropTypes.node
 };
 

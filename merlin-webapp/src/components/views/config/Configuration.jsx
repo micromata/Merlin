@@ -1,6 +1,6 @@
 import React from 'react';
 import {Redirect} from 'react-router-dom'
-import {Collapse} from 'reactstrap';
+import {Button, Collapse} from 'reactstrap';
 import {PageHeader} from '../../general/BootstrapComponents';
 import DirectoryItemsFieldset from "./DirectoryItemsFieldset";
 import {
@@ -163,25 +163,23 @@ class ConfigForm extends React.Component {
                                         onDirectoryChange={this.handleDirectoryChange}
                                         onRecursiveFlagChange={this.handleRecursiveFlagChange}/>
                 <FormLabelField>
-                    <a onClick={() => this.setState({expertSettingsOpen: !this.state.expertSettingsOpen})}>
+                    <Button color="link" onClick={() => this.setState({expertSettingsOpen: !this.state.expertSettingsOpen})}>
                         For experts only
-                    </a>
+                    </Button>
                 </FormLabelField>
-                <Collapse in={this.state.expertSettingsOpen}>
-                    <div>
-                        <FormFieldset text={'Expert settings'}>
-                            <FormLabelInputField label={'Port'} fieldLength={2} type="number" min={0} max={65535}
-                                                 step={1}
-                                                 name={'port'} value={this.state.port}
-                                                 onChange={this.handleTextChange}
-                                                 placeholder="Enter port"/>
-                            <FormLabelField>
-                                <FormButton onClick={this.onResetConfiguration} bsStyle="danger"
-                                            hint="Reset factory settings.">Cancel
-                                </FormButton>
-                            </FormLabelField>
-                        </FormFieldset>
-                    </div>
+                <Collapse isOpen={this.state.expertSettingsOpen}>
+                    <FormFieldset text={'Expert settings'}>
+                        <FormLabelInputField label={'Port'} fieldLength={2} type="number" min={0} max={65535}
+                                             step={1}
+                                             name={'port'} value={this.state.port}
+                                             onChange={this.handleTextChange}
+                                             placeholder="Enter port"/>
+                        <FormLabelField>
+                            <FormButton onClick={this.onResetConfiguration} bsStyle="danger"
+                                        hint="Reset factory settings.">Reset
+                            </FormButton>
+                        </FormLabelField>
+                    </FormFieldset>
                 </Collapse>
                 <FormGroup>
                     <FormField length={12}>

@@ -26,6 +26,15 @@ class Menu extends React.Component {
         });
     }
 
+    getNavElement = (route, index) => {
+        if (index === 0) {
+            return '';
+        }
+        return <NavItem key={index}>
+            <NavLink href={route[1]}>{route[0]}</NavLink>
+        </NavItem>
+    }
+
     render() {
         return (
             <Navbar color="light" light expand="md">
@@ -35,9 +44,7 @@ class Menu extends React.Component {
                     <Nav className="ml-auto" navbar>
                         {
                             this.props.routes.map((route, index) => (
-                                <NavItem key={index}>
-                                    <NavLink href={route[1]}>{route[0]}</NavLink>
-                                </NavItem>
+                                this.getNavElement(route, index)
                             ))
                         }
                     </Nav>
