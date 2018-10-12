@@ -1,7 +1,12 @@
 // Later Webpack, Context etc. should be used instead.
 
+export const isDevelopmentMode = () => {
+    return process.env.NODE_ENV === 'development';
+}
+
 global.testserver = 'http://localhost:8042';
-global.restBaseUrl = (process.env.NODE_ENV === 'development' ? global.testserver : '') + '/rest';
+global.restBaseUrl = (isDevelopmentMode() ? global.testserver : '') + '/rest';
+
 
 const createQueryParams = params =>
     Object.keys(params)
