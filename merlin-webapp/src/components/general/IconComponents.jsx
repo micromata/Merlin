@@ -5,14 +5,21 @@ import {
     faCheck,
     faPlus,
     faSync,
-    faUpload,
-    faTrash
+    faTrash,
+    faTimes,
+    faUpload
 } from '@fortawesome/free-solid-svg-icons'
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
 function IconAdd() {
     return (
         <FontAwesomeIcon icon={faPlus}/>
+    );
+}
+
+function IconCancel() {
+    return (
+        <FontAwesomeIcon icon={faTimes}/>
     );
 }
 
@@ -41,5 +48,5 @@ function IconUpload() {
 }
 
 export {
-    IconAdd, IconCheck, IconRefresh, IconRemove, IconUpload
+    IconAdd, IconCancel, IconCheck, IconRefresh, IconRemove, IconUpload
 };
