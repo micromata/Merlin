@@ -6,7 +6,7 @@ import {revisedRandId} from '../../../actions/global';
 
 function FormGroup({validationState, children}) {
     return (
-        <div className={`form-group row has-${validationState}`}>
+        <div className={`form-group row ${validationState ? `has-${validationState}` : ''}`}>
             {children}
         </div>
     );
@@ -18,7 +18,7 @@ FormGroup.propTypes = {
 };
 
 FormGroup.defaultProps = {
-    validationState: 'no-validation',
+    validationState: null,
     children: null
 };
 
@@ -88,7 +88,7 @@ function FormSelect(props) {
 
 FormSelect.propTypes = {
     id: PropTypes.string,
-    value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    value: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool]),
     name: PropTypes.string,
     onChange: PropTypes.func,
     children: PropTypes.node
@@ -176,15 +176,14 @@ FormField.defaultProps = {
 
 
 function FormLabelField({id, htmlFor, validationState, labelLength, fieldLength, label, hint, children}) {
-    const forId = htmlFor | id | revisedRandId();
-
+    const forId = htmlFor || id || revisedRandId();
     return (
         <FormGroup validationState={validationState}>
             <FormLabel length={labelLength} htmlFor={forId}>
                 {label}
             </FormLabel>
             <FormField length={fieldLength} hint={hint}>
-                {React.cloneElement(children, {forId})}
+                {React.cloneElement(children, {id: forId})}
             </FormField>
         </FormGroup>
     );
