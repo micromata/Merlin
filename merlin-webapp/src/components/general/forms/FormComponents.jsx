@@ -1,52 +1,57 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {revisedRandId} from "../../../actions/global";
+import {revisedRandId} from '../../../actions/global';
 
-class FormGroup extends React.Component {
-    render() {
-        let validationClass = '';
-        if (this.props.validationState) {
-            validationClass = " has-" + this.props.validationState;
-        }
-        return (<div className={`form-group row ${validationClass}`}>
-                {this.props.children}
-            </div>
-        );
-    }
+// TODO: SPLIT IN DIFFERENT FILES
+
+function FormGroup({validationState, children}) {
+    return (
+        <div className={`form-group row has-${validationState}`}>
+            {children}
+        </div>
+    );
 }
 
 FormGroup.propTypes = {
-    validationState: PropTypes.oneOf(['success', 'warning', 'error', null])
+    validationState: PropTypes.oneOf(['success', 'warning', 'error', null]),
+    children: PropTypes.node
 };
 
-class FormLabel extends React.Component {
-    render() {
-        return (
-            <label className={`col-sm-${this.props.length} col-form-label`}
-                   htmlFor={this.props.htmlFor}>{this.props.children}</label>
-        );
-    }
+FormGroup.defaultProps = {
+    validationState: 'no-validation',
+    children: null
+};
+
+
+function FormLabel({length, htmlFor, children}) {
+    return (
+        <label
+            className={`col-sm-${length} col-form-label`}
+            htmlFor={htmlFor}
+        >
+            {children}
+        </label>
+    );
 }
 
 FormLabel.propTypes = {
     length: PropTypes.number,
     htmlFor: PropTypes.string
 };
+
 FormLabel.defaultProps = {
     length: 2,
+    htmlFor: null
 };
 
-class FormInput extends React.Component {
 
-    render() {
-        return (
-            <input id={this.props.id} name={this.props.name} type={this.props.type} min={this.props.min}
-                   max={this.props.max} className={'form-control form-control-sm'}
-                   step={this.props.step}
-                   value={this.props.value} onChange={this.props.onChange}
-                   placeholder={this.props.placeholder}/>
-        );
-    }
+function FormInput(props) {
+    return (
+        <input
+            {...props}
+            className={'form-control form-control-sm'}
+        />
+    );
 }
 
 FormInput.propTypes = {
@@ -60,168 +65,275 @@ FormInput.propTypes = {
     placeholder: PropTypes.string
 };
 
-class FormSelect extends React.Component {
-    render() {
-        return (
-            <select className="form-control form-control-sm" id={this.props.id} value={this.props.value}
-                    name={this.props.name}
-                    onChange={this.props.onChange}>
-                {this.props.children}
-            </select>
-        );
-    }
+FormInput.defaultProps = {
+    id: null,
+    name: '',
+    value: '',
+    min: null,
+    max: null,
+    step: 1,
+    type: 'text',
+    placeholder: ''
+};
+
+
+function FormSelect(props) {
+    return (
+        <select
+            {...props}
+            className={'form-control form-control-sm'}
+        />
+    );
 }
 
 FormSelect.propTypes = {
     id: PropTypes.string,
-    name: PropTypes.string
+    value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    name: PropTypes.string,
+    onChange: PropTypes.func,
+    children: PropTypes.node
 };
 
-class FormCheckbox extends React.Component {
-    render() {
-        let id = this.props.id ? this.props.id : revisedRandId();
-        return (
-            <div>
-                <input className="form-check-input" type="checkbox"
-                       checked={this.props.checked}
-                       id={id} name={this.props.name}
-                       onChange={this.props.onChange}
-                       title={this.props.hint}/>
-                <label className="form-check-label" htmlFor={id} style={{marginLeft: 1 + 'ex'}}
-                       title={this.props.title}>
-                    {this.props.label}
-                </label>
-            </div>
-        );
-    }
+FormSelect.defaultProps = {
+    id: null,
+    value: null,
+    name: '',
+    onChange: null,
+    children: null
+};
+
+
+function FormCheckbox({id = revisedRandId(), name, checked, onChange, hint, title, label}) {
+    return (
+        <div>
+            <input
+                className={'form-check-input'}
+                type={'checkbox'}
+                id={id}
+                name={name}
+                title={hint}
+                checked={checked}
+                onChange={onChange}
+            />
+            <label
+                className={'form-check-label'}
+                htmlFor={id}
+                style={{marginLeft: '1ex'}}
+                title={title}
+            >
+                {label}
+            </label>
+        </div>
+    );
 }
 
 FormCheckbox.propTypes = {
     id: PropTypes.string,
     name: PropTypes.string,
-    hint: PropTypes.string,
     checked: PropTypes.bool,
+    onChange: PropTypes.func,
+    hint: PropTypes.string,
+    title: PropTypes.string,
     label: PropTypes.node
 };
 
-class FormField extends React.Component {
-    render() {
-        let hint = '';
-        if (this.props.hint) {
-            hint = <small className="text-muted">{this.props.hint}</small>
-        }
-        return (
-            <div className={`col-sm-${this.props.length}`} id={this.props.id}>
-                {this.props.children}
-                {hint}
-            </div>
-        );
-    }
+FormCheckbox.defaultProps = {
+    id: null,
+    name: '',
+    checked: false,
+    onChange: null,
+    hint: '',
+    title: '',
+    label: ''
+};
+
+
+function FormField({id, hint, length, children}) {
+    return (
+        <div
+            className={`col-sm-${length}`}
+            id={id}
+        >
+            {children}
+            {hint ? <small className={'text-muted'}>{hint}</small> : ''}
+        </div>
+    );
 }
 
 FormField.propTypes = {
-    length: PropTypes.number,
+    id: PropTypes.string,
     hint: PropTypes.node,
-    id: PropTypes.string
-};
-FormField.defaultProps = {
-    length: 10
+    length: PropTypes.number,
+    children: PropTypes.node
 };
 
-class FormLabelField extends React.Component {
-    render() {
-        let id = this.props.htmlFor ? this.props.htmlFor : (this.props.id ? this.props.id : revisedRandId());
-        return (
-            <FormGroup validationState={this.props.validationState}>
-                <FormLabel length={this.props.labelLength} htmlFor={id}>
-                    {this.props.label}
-                </FormLabel>
-                <FormField length={this.props.fieldLength} hint={this.props.hint}>
-                    {React.cloneElement(this.props.children, { id: id })}
-                </FormField>
-            </FormGroup>
-        );
-    }
+FormField.defaultProps = {
+    id: null,
+    hint: null,
+    length: 10,
+    children: null
 };
+
+
+function FormLabelField({id, htmlFor, validationState, labelLength, fieldLength, label, hint, children}) {
+    const forId = htmlFor | id | revisedRandId();
+
+    return (
+        <FormGroup validationState={validationState}>
+            <FormLabel length={labelLength} htmlFor={forId}>
+                {label}
+            </FormLabel>
+            <FormField length={fieldLength} hint={hint}>
+                {React.cloneElement(children, {forId})}
+            </FormField>
+        </FormGroup>
+    );
+}
+
 FormLabelField.propTypes = {
-    label: PropTypes.node,
+    id: PropTypes.string,
+    htmlFor: PropTypes.string,
+    validationState: PropTypes.oneOf(['success', 'warning', 'error', null]),
     labelLength: PropTypes.number,
     fieldLength: PropTypes.number,
+    label: PropTypes.node,
     hint: PropTypes.string,
-    id: PropTypes.string,
-    validationState: PropTypes.oneOf(['success', 'warning', 'error', null])
+    children: PropTypes.node
 };
 
-class FormLabelInputField extends React.Component {
-    render() {
-        let id = this.props.id ? this.props.id : revisedRandId();
-        return (
-            <FormLabelField label={this.props.label} htmlFor={id} labelLength={this.props.labelLength}
-                            fieldLength={this.props.fieldLength} hint={this.props.hint}
-                            validationState={this.props.validationState}>
-                <FormInput id={id} name={this.props.name} type={this.props.type} min={this.props.min}
-                           max={this.props.max}
-                           step={this.props.step}
-                           value={this.props.value} onChange={this.props.onChange}
-                           placeholder={this.props.placeholder}/>
-            </FormLabelField>
-        );
-    }
+FormLabelField.defaultProps = {
+    id: null,
+    htmlFor: null,
+    validationState: null,
+    labelLength: 2,
+    fieldLength: 10,
+    label: '',
+    hint: '',
+    children: null
 };
+
+
+function FormLabelInputField({id = revisedRandId(), ...props}) {
+    return (
+        <FormLabelField
+            htmlFor={id}
+            labelLength={props.labelLength}
+            label={props.label}
+            hint={props.hint}
+            validationState={props.validationState}
+        >
+            <FormInput
+                id={id}
+                name={props.name}
+                type={props.type}
+                min={props.min}
+                max={props.max}
+                step={props.step}
+                value={props.value}
+                onChange={props.onChange}
+                placeholder={props.placeholder}
+            />
+        </FormLabelField>
+    );
+}
+
 FormLabelInputField.propTypes = {
     id: PropTypes.string,
     label: PropTypes.node,
-    value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-    field: PropTypes.node,
-    name: PropTypes.string,
+    labelLength: PropTypes.number,
+    fieldLength: PropTypes.number,
+    hint: PropTypes.string,
+    validationState: PropTypes.oneOf(['success', 'warning', 'error', null]),
     type: PropTypes.string,
+    name: PropTypes.string,
     min: PropTypes.number,
     max: PropTypes.number,
     step: PropTypes.number,
-    placeholder: PropTypes.string,
-    labelLength: PropTypes.number,
-    fieldLength: PropTypes.number,
-    validationState: PropTypes.oneOf(['success', 'warning', 'error', null])
+    value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    onChange: PropTypes.func,
+    placeholder: PropTypes.string
 };
+
 FormLabelInputField.defaultProps = {
+    id: null,
+    label: '',
     labelLength: 2,
-    fieldLength: 10
+    fieldLength: 10,
+    hint: '',
+    validationState: null,
+    type: 'text',
+    name: '',
+    min: null,
+    max: null,
+    step: 1,
+    value: '',
+    onChange: null,
+    placeholder: ''
 };
 
-class FormFieldset extends React.Component {
-    render() {
-        return (
-            <fieldset className="form-group" id={this.props.id}>
-                <legend>{this.props.text}</legend>
-                {this.props.children}
-            </fieldset>
-        );
-    }
-};
+
+function FormFieldset({id, text, children}) {
+    return (
+        <fieldset className={'form-group'} id={id}>
+            <legend>{text}</legend>
+            {children}
+        </fieldset>
+    );
+}
+
 FormFieldset.propTypes = {
-    text: PropTypes.string
+    id: PropTypes.string,
+    text: PropTypes.string,
+    children: PropTypes.node
 };
 
-class FormButton extends React.Component {
-    render() {
-        let bsStyle = this.props.bsStyle ? 'btn-' + this.props.bsStyle : '';
-        return (
-            <button type={this.props.type} className={`btn ${bsStyle}`} onClick={this.props.onClick}
-                    title={this.props.hint} disabled={this.props.disabled}>
-                {this.props.children}
-            </button>
-        );
-    }
+FormFieldset.defaultProps = {
+    id: null,
+    text: '',
+    children: null
 };
+
+
+function FormButton({bsStyle = 'default', type, onClick, hint, disabled, children}) {
+    return (
+        <button
+            type={type}
+            className={`btn btn-${bsStyle}`}
+            onClick={onClick}
+            title={hint}
+            disabled={disabled}
+        >
+            {children}
+        </button>
+    );
+}
+
 FormButton.propTypes = {
+    bsStyle: PropTypes.oneOf(['default', 'danger', 'success', null]),
+    type: PropTypes.string,
+    onClick: PropTypes.func,
     hint: PropTypes.string,
     disabled: PropTypes.bool,
-    bsStyle: PropTypes.oneOf(['danger', 'success', null]),
-    type: PropTypes.string
+    children: PropTypes.node
 };
 FormButton.defaultProps = {
+    bsStyle: 'default',
+    type: 'button',
+    onClick: null,
+    hint: '',
     disabled: false,
-    type: 'button'
+    children: null
 };
 
-export {FormGroup, FormLabel, FormField, FormLabelField, FormInput, FormSelect, FormCheckbox, FormLabelInputField, FormFieldset, FormButton};
+export {
+    FormGroup,
+    FormLabel,
+    FormField,
+    FormLabelField,
+    FormInput,
+    FormSelect,
+    FormCheckbox,
+    FormLabelInputField,
+    FormFieldset,
+    FormButton
+};
