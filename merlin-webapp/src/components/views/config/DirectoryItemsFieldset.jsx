@@ -1,5 +1,6 @@
 import React from 'react';
 import DirectoryItem from "./DirectoryItem";
+import {IconAdd} from '../../general/IconComponents';
 
 class DirectoryItemsFieldset extends React.Component {
     constructor(props) {
@@ -28,8 +29,7 @@ class DirectoryItemsFieldset extends React.Component {
                     <div className="col-sm-2"></div>
                     <div className="col-sm-10">
                         <button type="button" onClick={this.onAdd} className="btn"
-                                title="Add new Template directory row"><span
-                            className="glyphicon glyphicon-plus"/></button>
+                                title="Add new Template directory row"><IconAdd/></button>
                     </div>
                 </div>
             </fieldset>

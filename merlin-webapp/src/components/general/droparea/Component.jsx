@@ -1,5 +1,5 @@
 import React from 'react';
-import {Glyphicon} from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import './style.css';
 
 class DropArea extends React.Component {
@@ -129,7 +129,7 @@ class DropArea extends React.Component {
                             />
                         </form>
                         <span className={'info'}>
-                            <Glyphicon glyph={'upload'}/>
+                            <FontAwesomeIcon icon={'upload'}/>
                             <b> Select a file,</b> or drop one here.
                         </span>
                     </div>

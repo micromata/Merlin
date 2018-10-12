@@ -2,6 +2,7 @@ import React from 'react';
 import {FormGroup, FormLabel, FormField, FormCheckbox, FormButton} from "../../general/forms/FormComponents";
 import EditableTextField from "../../general/forms/EditableTextField";
 import {getRestServiceUrl} from "../../../actions/global";
+import {IconRemove} from '../../general/IconComponents';
 
 class DirectoryItem extends React.Component {
     constructor(props) {
@@ -76,8 +77,7 @@ class DirectoryItem extends React.Component {
                             hint="Call rest service for browsing local directories">Browse
                     </FormButton>
                     <FormButton onClick={this.onClickRemove} bsStyle="danger"
-                            hint="Remove this item"><span
-                        className="glyphicon glyphicon-remove"/>
+                            hint="Remove this item"><IconRemove />
                     </FormButton>
                 </FormField>
             </FormGroup>

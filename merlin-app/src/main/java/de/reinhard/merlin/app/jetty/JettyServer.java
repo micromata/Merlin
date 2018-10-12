@@ -58,7 +58,11 @@ public class JettyServer {
 
         try {
             // Resolve file to directory
-            ctx.setBaseResource(Resource.newResource("./merlin-webapp/build"));
+            if (RunningMode.isDevelopmentMode()) {
+                ctx.setBaseResource(Resource.newResource("./merlin-webapp/build"));
+            } else {
+                ctx.setBaseResource(Resource.newResource("./web"));
+            }
         } catch (IOException ex) {
             log.error(ex.getMessage(), ex);
             return;

@@ -1,6 +1,7 @@
 import React from 'react';
 import './EditableTextField.css';
-import {Button, FormControl, Glyphicon, InputGroup} from "react-bootstrap";
+import {Button, Input, InputGroup, InputGroupAddon} from 'reactstrap';
+import {IconCheck, IconCancel} from '../IconComponents'
 
 class EditableTextField extends React.Component {
 
@@ -32,8 +33,8 @@ class EditableTextField extends React.Component {
     };
 
     render = () => <div className={'editable-text-field'}>
-        <div className={'editable-text-field-label'}>{this.props.title}</div>
-        <div className={'editable-text-field-value-container'}>
+        <div className={'editable-text-div editable-text-field-label'}>{this.props.title}</div>
+        <div className={'editable-text-div editable-text-field-value-container'}>
             {this.state.editing ?
                 <EditableTextFieldInput
                     type={this.props.type}
@@ -105,20 +106,25 @@ class EditableTextFieldInput extends React.Component {
 
     render = () => <div ref={this.setReference}>
         <InputGroup>
-            <FormControl
+            <Input
                 autoFocus
                 type={this.props.type}
                 value={this.state.value}
-                onChange={this.handleInputChange}
-            />
-            <InputGroup.Button>
-                <Button onClick={this.stopEditing(true)}>
-                    <Glyphicon glyph={'ok'}/>
+                onChange={this.handleInputChange}/>
+            <InputGroupAddon addonType={'append'}>
+                <Button
+                    onClick={this.stopEditing(true)}
+                    color={'success'}
+                >
+                    <IconCheck />
                 </Button>
-                <Button onClick={this.stopEditing(false)}>
-                    <Glyphicon glyph={'remove'}/>
+                <Button
+                    onClick={this.stopEditing(false)}
+                    color={'danger'}
+                >
+                    <IconCancel />
                 </Button>
-            </InputGroup.Button>
+            </InputGroupAddon>
         </InputGroup>
     </div>;
 }

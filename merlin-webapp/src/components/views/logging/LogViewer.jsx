@@ -1,5 +1,6 @@
 import React from 'react';
-import {PageHeader, Table} from 'react-bootstrap';
+import {Table} from 'reactstrap';
+import {PageHeader} from '../../general/BootstrapComponents';
 import Highlight from 'react-highlighter';
 import {FormLabel, FormButton, FormSelect, FormInput} from "../../general/forms/FormComponents";
 import {getRestServiceUrl} from "../../../actions/global";

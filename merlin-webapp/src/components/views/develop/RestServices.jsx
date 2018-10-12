@@ -1,5 +1,5 @@
 import React from 'react';
-import {PageHeader} from 'react-bootstrap';
+import {PageHeader} from '../../general/BootstrapComponents';
 import {getRestServiceUrl, getResponseHeaderFilename} from "../../../actions/global";
 import downloadFile from "../../../utilities/download";
 
