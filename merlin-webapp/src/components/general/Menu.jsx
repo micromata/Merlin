@@ -1,5 +1,5 @@
 import React from 'react';
-import {Link} from 'react-router-dom';
+import {NavLink as ReactRouterNavLink} from 'react-router-dom';
 import {
     Collapse,
     Navbar,
@@ -31,7 +31,7 @@ class Menu extends React.Component {
             return '';
         }
         return <NavItem key={index}>
-            <NavLink href={route[1]}>{route[0]}</NavLink>
+            <NavLink to={route[1]} tag={ReactRouterNavLink}>{route[0]}</NavLink>
         </NavItem>
     }
 
