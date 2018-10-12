@@ -1,5 +1,5 @@
 import React from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import {IconUpload} from "../IconComponents";
 import './style.css';
 
 class DropArea extends React.Component {
@@ -129,7 +129,7 @@ class DropArea extends React.Component {
                             />
                         </form>
                         <span className={'info'}>
-                            <FontAwesomeIcon icon={'upload'}/>
+                            <IconUpload/>
                             <b> Select a file,</b> or drop one here.
                         </span>
                     </div>
