@@ -1,7 +1,7 @@
 import React from 'react';
 import './EditableTextField.css';
 import {Button, Input, InputGroup, InputGroupAddon} from 'reactstrap';
-import {IconCheck, IconRemove} from '../IconComponents'
+import {IconCheck, IconCancel} from '../IconComponents'
 
 class EditableTextField extends React.Component {
 
@@ -122,7 +122,7 @@ class EditableTextFieldInput extends React.Component {
                     onClick={this.stopEditing(false)}
                     color={'danger'}
                 >
-                    <IconRemove />
+                    <IconCancel />
                 </Button>
             </InputGroupAddon>
         </InputGroup>
