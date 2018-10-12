@@ -22,7 +22,12 @@ public class ConfigurationRest {
      * @see JsonUtils#toJson(Object, boolean)
      */
     public String getConfig(@QueryParam("prettyPrinter") boolean prettyPrinter) {
-        String json = JsonUtils.toJson(ConfigurationHandler.getInstance().getConfiguration(), prettyPrinter);
+        Configuration config = new Configuration();
+        config.copyFrom(ConfigurationHandler.getInstance().getConfiguration());
+        if (config.getLanguage() == null) {
+            config.setLanguage("auto");
+        }
+        String json = JsonUtils.toJson(config, prettyPrinter);
         return json;
     }
 
