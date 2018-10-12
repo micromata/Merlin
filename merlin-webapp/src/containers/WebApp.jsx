@@ -10,6 +10,7 @@ import FileUploadView from '../components/views/FileUpload';
 import LogViewer from '../components/views/logging/LogViewer';
 import RestServices from '../components/views/develop/RestServices';
 import {isDevelopmentMode} from '../actions/global';
+import TemplateView from '../components/views/templates/TemplateView';
 
 class WebApp extends React.Component {
 
@@ -42,6 +43,7 @@ class WebApp extends React.Component {
                                     />
                                 ))
                             }
+                            <Route path={'/templates/:templateId'} component={TemplateView} />
                         </Switch>
                     </div>
                 </div>

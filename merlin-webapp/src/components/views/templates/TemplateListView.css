@@ -8,6 +8,14 @@ div.template-list-refresh:hover {
     color: #337ab7;
 }
 
+a.card-link {
+    color: #111;
+}
+
+a.card-link:hover {
+    text-decoration: none;
+}
+
 div.card.template {
     margin: 5pt;
     cursor: pointer;
