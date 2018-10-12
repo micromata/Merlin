@@ -9,29 +9,21 @@ import Config from '../components/views/config/Configuration';
 import FileUploadView from '../components/views/FileUpload';
 import LogViewer from '../components/views/logging/LogViewer';
 import RestServices from '../components/views/develop/RestServices';
-import {isDevelopmentMode} from "../actions/global";
+import {isDevelopmentMode} from '../actions/global';
 
 class WebApp extends React.Component {
 
     render() {
         const history = createBrowserHistory();
-        let routes;
+        let routes = [
+            ['Start', '/', Start],
+            ['Templates', '/templates', TemplateListView],
+            ['Log viewer', '/logViewer', LogViewer],
+            ['Configuration', '/config', Config]
+        ];
         if (isDevelopmentMode()) {
-            routes = [
-                ['Start', '/', Start],
-                ['Templates', '/templates', TemplateListView],
-                ['File Upload', '/drop', FileUploadView],
-                ['Log viewer', '/logViewer', LogViewer],
-                ['Rest services', '/restServices', RestServices],
-                ['Configuration', '/config', Config]
-            ];
-        } else {
-            routes = [
-                ['Start', '/', Start],
-                ['Templates', '/templates', TemplateListView],
-                ['Log viewer', '/logViewer', LogViewer],
-                ['Configuration', '/config', Config]
-            ];
+            routes.push(['File Upload', '/drop', FileUploadView]);
+            routes.push(['Rest services', '/restServices', RestServices]);
         }
 
         return (
