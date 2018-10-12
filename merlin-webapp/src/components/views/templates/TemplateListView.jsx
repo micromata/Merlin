@@ -1,9 +1,11 @@
 import React from 'react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import './TemplateListView.css';
+import {CardGroup} from 'reactstrap';
 import {PageHeader} from '../../general/BootstrapComponents';
 import {getRestServiceUrl} from '../../../actions/global';
 import ErrorAlert from '../../general/ErrorAlert';
 import TemplateCard from './TemplateCard';
+import {IconRefresh} from "../../general/IconComponents";
 
 class TemplateListView extends React.Component {
 
@@ -84,9 +86,9 @@ class TemplateListView extends React.Component {
                     className={'template-list-refresh'}
                     onClick={this.fetchTemplates}
                 >
-                    <FontAwesomeIcon icon={'refresh'}/> Refresh
+                    <IconRefresh/>
                 </div>
-                <div className="row">
+                <CardGroup>
                 {this.state.templates.map(template => {
                     const definition = this.state.definitions[template.templateDefinition];
 
@@ -97,7 +99,7 @@ class TemplateListView extends React.Component {
                         {...definition}
                     />;
                 })}
-                </div>
+                </CardGroup>
             </div>;
 
         }

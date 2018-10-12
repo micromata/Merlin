@@ -1,0 +1,13 @@
+div.template-list-refresh {
+    cursor: pointer;
+    color: #555;
+    text-align: right;
+}
+
+div.template-list-refresh:hover {
+    color: #337ab7;
+}
+
+div.card.template {
+    margin: 5pt;
+}

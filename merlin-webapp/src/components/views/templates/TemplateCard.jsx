@@ -1,20 +1,19 @@
 import React from 'react';
 
+import {Card, CardBody, CardTitle, CardHeader, CardSubtitle, CardText, CardFooter} from 'reactstrap';
+
 class TemplateCard extends React.Component {
     render = () => {
 
-        return <div className="col-sm-6">
-            <div className="card  border-success mb-3">
-                <div className="card-hedader">
-                    {this.props.id}
-                </div>
-                <div className="card-body">
-                    <h5 className="card-title"></h5>
-                    <p className="card-text">{this.props.description}.</p>
-                    <footer class="blockquote-footer">Click to run.</footer>
-                </div>
-            </div>
-        </div>;
+        return <div>
+            <Card outline color="success" className={'template'} style={{ backgroundColor: '#fff', width: '20em' }}>
+                <CardHeader>{this.props.id}</CardHeader>
+                <CardBody>
+                    <CardText>{this.props.description}</CardText>
+                </CardBody>
+                <CardFooter>Click to run.</CardFooter>
+            </Card>
+        </div>
     };
 
     constructor(props) {
