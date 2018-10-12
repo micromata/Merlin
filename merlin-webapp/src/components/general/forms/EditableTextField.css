@@ -5,7 +5,7 @@ div.editable-text-field {
     margin: 5px 0;
 }
 
-div.editable-text-field div {
+div.editable-text-field div.editable-text-div {
     display: block;
     position: relative;
 }

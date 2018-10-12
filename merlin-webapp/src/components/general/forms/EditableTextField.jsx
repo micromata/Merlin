@@ -1,8 +1,7 @@
 import React from 'react';
 import './EditableTextField.css';
-import {Button, Input, InputGroup, InputGroupButton} from "reactstrap";
+import {Button, Input, InputGroup, InputGroupAddon} from 'reactstrap';
 import {IconCheck, IconRemove} from '../IconComponents'
-import {FormInput} from "./FormComponents";
 
 class EditableTextField extends React.Component {
 
@@ -34,8 +33,8 @@ class EditableTextField extends React.Component {
     };
 
     render = () => <div className={'editable-text-field'}>
-        <div className={'editable-text-field-label'}>{this.props.title}</div>
-        <div className={'editable-text-field-value-container'}>
+        <div className={'editable-text-div editable-text-field-label'}>{this.props.title}</div>
+        <div className={'editable-text-div editable-text-field-value-container'}>
             {this.state.editing ?
                 <EditableTextFieldInput
                     type={this.props.type}
@@ -107,16 +106,25 @@ class EditableTextFieldInput extends React.Component {
 
     render = () => <div ref={this.setReference}>
         <InputGroup>
-            <Input addonType
+            <Input
                 autoFocus
                 type={this.props.type}
                 value={this.state.value}
                 onChange={this.handleInputChange}/>
-            <InputGroupButton addonType onClick={this.stopEditing(true)}>
-                <IconCheck/></InputGroupButton>
-            <InputGroupButton addonType="append" onClick={this.stopEditing(false)}>
-                <IconRemove/>
-            </InputGroupButton>
+            <InputGroupAddon addonType={'append'}>
+                <Button
+                    onClick={this.stopEditing(true)}
+                    color={'success'}
+                >
+                    <IconCheck />
+                </Button>
+                <Button
+                    onClick={this.stopEditing(false)}
+                    color={'danger'}
+                >
+                    <IconRemove />
+                </Button>
+            </InputGroupAddon>
         </InputGroup>
     </div>;
 }
