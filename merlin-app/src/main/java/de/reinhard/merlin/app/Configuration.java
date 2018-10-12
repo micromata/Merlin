@@ -1,5 +1,6 @@
 package de.reinhard.merlin.app;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
@@ -7,10 +8,16 @@ import java.util.List;
 import java.util.Objects;
 
 public class Configuration {
+    private final static String[] SUPPORTED_LANGUAGES = {"en", "de"};
+
     private int port;
     private String language;
     private List<ConfigurationTemplatesDir> templatesDirs;
     private boolean templatesDirModified = false;
+
+    public static String[] getSupportedLanguages() {
+        return SUPPORTED_LANGUAGES;
+    }
 
     public void resetModifiedFlag() {
         templatesDirModified = false;
@@ -33,7 +40,10 @@ public class Configuration {
     }
 
     public void setLanguage(String language) {
-        this.language = language;
+        if (language == null || !ArrayUtils.contains(SUPPORTED_LANGUAGES, language))
+            this.language = null;
+        else
+            this.language = language;
     }
 
     public List<ConfigurationTemplatesDir> getTemplatesDirs() {
@@ -64,7 +74,7 @@ public class Configuration {
     }
 
     public void copyFrom(Configuration other) {
-        this.language = other.language;
+        setLanguage(other.language);
         this.port = other.port;
         if (!Objects.equals(this.templatesDirs, other.templatesDirs)) {
             templatesDirModified = true;
