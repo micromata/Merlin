@@ -1,6 +1,7 @@
 import React from 'react';
 import './EditableTextField.css';
-import {Button, FormControl, Glyphicon, InputGroup} from "react-bootstrap";
+import {Button, Form, InputGroup} from "reactstrap";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 class EditableTextField extends React.Component {
 
@@ -105,7 +106,7 @@ class EditableTextFieldInput extends React.Component {
 
     render = () => <div ref={this.setReference}>
         <InputGroup>
-            <FormControl
+            <Form
                 autoFocus
                 type={this.props.type}
                 value={this.state.value}
@@ -113,10 +114,10 @@ class EditableTextFieldInput extends React.Component {
             />
             <InputGroup.Button>
                 <Button onClick={this.stopEditing(true)}>
-                    <Glyphicon glyph={'ok'}/>
+                    <FontAwesomeIcon icon={'ok'}/>
                 </Button>
                 <Button onClick={this.stopEditing(false)}>
-                    <Glyphicon glyph={'remove'}/>
+                    <FontAwesomeIcon icon={'remove'}/>
                 </Button>
             </InputGroup.Button>
         </InputGroup>

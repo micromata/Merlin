@@ -1,14 +1,14 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
-import {LinkContainer} from 'react-router-bootstrap';
-import {Nav, Navbar, NavItem} from 'react-bootstrap';
+import {Nav, NavLink, Navbar, NavItem} from 'reactstrap';
 
 class Menu extends React.Component {
 
     render() {
 
         return (
-            <Navbar collapseOnSelect>
+            <div>Test</div>
+/*            <Navbar collapseOnSelect>
                 <Navbar.Header>
                     <Navbar.Brand>
                         <Link to={'/'}>
@@ -21,9 +21,9 @@ class Menu extends React.Component {
                     <Nav>
                         {
                             this.props.routes.map((route, index) => (
-                                <LinkContainer
+                                <NavLink
                                     key={index}
-                                    to={route[1]}
+                                    href={route[1]}
                                     exact
                                 >
                                     <NavItem
@@ -31,12 +31,12 @@ class Menu extends React.Component {
                                     >
                                         {route[0]}
                                     </NavItem>
-                                </LinkContainer>
+                                </NavLink>
                             ))
                         }
                     </Nav>
                 </Navbar.Collapse>
-            </Navbar>
+            </Navbar>*/
         );
     }
 }

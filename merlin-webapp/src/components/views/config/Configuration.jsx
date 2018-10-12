@@ -1,6 +1,7 @@
 import React from 'react';
 import {Redirect} from 'react-router-dom'
-import {PageHeader, Collapse} from 'react-bootstrap';
+import {Collapse} from 'reactstrap';
+import {PageHeader} from '../../general/BootstrapComponents';
 import DirectoryItemsFieldset from "./DirectoryItemsFieldset";
 import {
     FormGroup,

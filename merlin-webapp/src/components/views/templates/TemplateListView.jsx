@@ -1,8 +1,9 @@
 import React from 'react'
-import {Glyphicon, PageHeader} from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import {PageHeader} from '../../general/BootstrapComponents';
 import {getRestServiceUrl} from '../../../actions/global';
 import ErrorAlert from '../../general/ErrorAlert';
-import Template from './Template';
+import TemplateCard from './TemplateCard';
 
 class TemplateListView extends React.Component {
 
@@ -83,18 +84,20 @@ class TemplateListView extends React.Component {
                     className={'template-list-refresh'}
                     onClick={this.fetchTemplates}
                 >
-                    <Glyphicon glyph={'refresh'}/> Refresh
+                    <FontAwesomeIcon icon={'refresh'}/> Refresh
                 </div>
+                <div className="row">
                 {this.state.templates.map(template => {
                     const definition = this.state.definitions[template.templateDefinition];
 
-                    return <Template
+                    return <TemplateCard
                         key={`template-${template.fileDescriptor.canonicalPath}-${template.templateDefinitionId}`}
                         templateDefinitionId={template.templateDefinitionId}
                         canonicalPath={template.fileDescriptor.canonicalPath}
                         {...definition}
                     />;
                 })}
+                </div>
             </div>;
 
         }

@@ -1,6 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {PageHeader} from 'react-bootstrap';
+import {PageHeader} from '../general/BootstrapComponents';
 import DropArea from '../general/droparea/Component';
 import {uploadFile} from '../../actions';
 
