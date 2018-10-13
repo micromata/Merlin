@@ -42,7 +42,7 @@ public class UserFilter implements Filter {
             userData.setUsername("admin");
             userData.setAdmin(true);
             UserUtils.setUser(userData);
-            log.info("Request for user: " + userData);
+            if (log.isDebugEnabled()) log.debug("Request for user: " + userData);
             chain.doFilter(request, response);
         } finally {
             UserUtils.removeUser();
