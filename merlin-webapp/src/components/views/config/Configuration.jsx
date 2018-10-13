@@ -19,7 +19,7 @@ class ConfigForm extends React.Component {
         super(props);
         this.state = {
             port: 8042,
-            language: 'auto',
+            language: 'default',
             directoryItems: [],
             redirect: false,
             expertSettingsOpen: false
@@ -154,7 +154,7 @@ class ConfigForm extends React.Component {
             <form>
                 <FormLabelField label={'Language'} fieldLength={2}>
                     <FormSelect value={this.state.language} name={'language'} onChange={this.handleTextChange}>
-                        <option value={'auto'}>Automatically</option>
+                        <option value={'default'}>Default (server)</option>
                         <option value={'en'}>English</option>
                         <option value={'de'}>German</option>
                     </FormSelect>

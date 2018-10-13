@@ -25,7 +25,7 @@ public class ConfigurationRest {
         Configuration config = new Configuration();
         config.copyFrom(ConfigurationHandler.getInstance().getConfiguration());
         if (config.getLanguage() == null) {
-            config.setLanguage("auto");
+            config.setLanguage("default");
         }
         String json = JsonUtils.toJson(config, prettyPrinter);
         return json;
