@@ -89,6 +89,8 @@ public class FileDescriptor implements Cloneable {
     }
 
     /**
+     * This isn't the last modified date of the file in the file system!
+     * 
      * For syncing purposes: do only update if any modification of the representing file is newer than the last update.
      *
      * @return Date of last update of this object (if set).
