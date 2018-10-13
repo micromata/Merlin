@@ -2,12 +2,13 @@ package de.reinhard.merlin.app.rest;
 
 import de.reinhard.merlin.app.json.JsonUtils;
 import de.reinhard.merlin.app.storage.Storage;
-import de.reinhard.merlin.persistency.FileDescriptor;
 import de.reinhard.merlin.word.templating.Template;
 import de.reinhard.merlin.word.templating.TemplateDefinition;
-import org.apache.commons.collections4.CollectionUtils;
 
-import javax.ws.rs.*;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,16 +45,15 @@ public class TemplatesRest {
     @Produces(MediaType.APPLICATION_JSON)
     /**
      *
+     * @param primaryKey Gets the definition by its primary key.
+     * @param id Gets the definition by its id.
      * @param prettyPrinter If true then the json output will be in pretty format.
      * @see JsonUtils#toJson(Object, boolean)
      */
-    public String getTemplateDefinition(@QueryParam("directory") String directory, @QueryParam("relativePath") String relativePath,
+    public String getTemplateDefinition(@QueryParam("primaryKey") String primaryKey,
                                         @QueryParam("id") String id, @QueryParam("prettyPrinter") boolean prettyPrinter) {
-        FileDescriptor descriptor = new FileDescriptor();
-        descriptor.setDirectory(directory);
-        descriptor.setRelativePath(relativePath);
-        List<TemplateDefinition> templateDefinitions = Storage.getInstance().getTemplateDefinition(descriptor, id);
-        TemplateDefinition templateDefinition = CollectionUtils.isNotEmpty(templateDefinitions) ? templateDefinitions.get(0) : null;
+        String idOrPrimaryKey = primaryKey != null ? primaryKey : id;
+        TemplateDefinition templateDefinition = Storage.getInstance().getTemplateDefinition(idOrPrimaryKey);
         return JsonUtils.toJson(templateDefinition, prettyPrinter);
     }
 

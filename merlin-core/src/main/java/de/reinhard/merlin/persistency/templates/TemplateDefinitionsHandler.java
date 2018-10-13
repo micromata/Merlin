@@ -41,9 +41,17 @@ class TemplateDefinitionsHandler extends AbstractHandler<TemplateDefinition> {
         return templateDefinition;
     }
 
+    /**
+     *
+     * @param id Id or primary key of the template definition.
+     * @return
+     */
     TemplateDefinition getTemplateDefinition(String id) {
         String search = id.trim().toLowerCase();
         for (TemplateDefinition templateDefinition : getItems()) {
+            if (id.equals(templateDefinition.getFileDescriptor().getPrimaryKey())) {
+                return templateDefinition;
+            }
             if (search.equals(templateDefinition.getId().trim().toLowerCase())) {
                 return templateDefinition;
             }

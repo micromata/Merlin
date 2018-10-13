@@ -96,15 +96,15 @@ public class DirectoryScanner {
     }
 
     /**
-     * @param id Id or name of the template definition to search for.
+     * @param idOrPrimaryKey Id or primary key of the template definition to search for.
      * @return
      */
-    public TemplateDefinition getTemplateDefinition(String id) {
-        if (id == null) {
+    public TemplateDefinition getTemplateDefinition(String idOrPrimaryKey) {
+        if (idOrPrimaryKey == null) {
             return null;
         }
         templateDefinitionsHandler.checkAndRefreshItems();
-        return templateDefinitionsHandler.getTemplateDefinition(id);
+        return templateDefinitionsHandler.getTemplateDefinition(idOrPrimaryKey);
     }
 
     TemplateDefinitionsHandler getTemplateDefinitionsHandler() {

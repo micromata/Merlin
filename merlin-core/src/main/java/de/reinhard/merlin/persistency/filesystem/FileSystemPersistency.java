@@ -2,6 +2,7 @@ package de.reinhard.merlin.persistency.filesystem;
 
 import de.reinhard.merlin.persistency.AbstractDirectoryWatcher;
 import de.reinhard.merlin.persistency.PersistencyInterface;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,8 +57,10 @@ public class FileSystemPersistency implements PersistencyInterface {
     }
 
     /**
-     * Builds hash id (SHA256, base64 encoded) from the canonical path. If SHA256 is not available, {@link String#hashCode()}
-     * will be used instead as a fall back.
+     * Builds hash id (MD5, base64 and url encoded) from the canonical path. If SHA256 is not available, {@link String#hashCode()}
+     * will be used instead as a fall back.<br/>
+     * Security nodes: We need a fast hash algorithm, MD5 is not secure, but for this purpose the security lack of MD5 should
+     * have no negative effect.
      * @param path
      * @return
      * @see #getCanonicalPathString(Path)
@@ -66,9 +69,10 @@ public class FileSystemPersistency implements PersistencyInterface {
     public String getPrimaryKey(Path path) {
         String canonicalPath = getCanonicalPathString(path);
         try {
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            MessageDigest digest = MessageDigest.getInstance("MD5");
             byte[] encodedhash = digest.digest(canonicalPath.getBytes(StandardCharsets.UTF_8));
-            return Base64.getEncoder().encodeToString(encodedhash);
+            String base64 = Base64.getEncoder().encodeToString(encodedhash);
+            return StringUtils.replaceChars(base64, "+/=", "._-");
         } catch (NoSuchAlgorithmException ex) {
             log.error("SHA-256 not available (falling back to hashCode): " + ex.getMessage(), ex);
             return String.valueOf(canonicalPath.hashCode());

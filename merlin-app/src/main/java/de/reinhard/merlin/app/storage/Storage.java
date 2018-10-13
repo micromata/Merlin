@@ -7,13 +7,11 @@ import de.reinhard.merlin.app.javafx.RunningMode;
 import de.reinhard.merlin.excel.ExcelWorkbook;
 import de.reinhard.merlin.persistency.FileDescriptor;
 import de.reinhard.merlin.persistency.PersistencyRegistry;
-import de.reinhard.merlin.persistency.StorageInterface;
 import de.reinhard.merlin.persistency.templates.DirectoryScanner;
 import de.reinhard.merlin.word.templating.Template;
 import de.reinhard.merlin.word.templating.TemplateDefinition;
 import de.reinhard.merlin.word.templating.TemplateDefinitionExcelReader;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Storage implements StorageInterface, ConfigurationListener {
+public class Storage implements ConfigurationListener {
     private Logger log = LoggerFactory.getLogger(Storage.class);
     private static final Storage instance = new Storage();
 
@@ -60,46 +58,22 @@ public class Storage implements StorageInterface, ConfigurationListener {
         return templateDefinitions;
     }
 
-    @Override
-    public List<TemplateDefinition> getTemplateDefinition(de.reinhard.merlin.persistency.FileDescriptor descriptor, String templateDefinitionId) {
-        Validate.notNull(templateDefinitionId);
+    /**
+     * @param idOrPrimaryKey Id or primary key of the template definition to return.
+     * @return
+     */
+    public TemplateDefinition getTemplateDefinition(String idOrPrimaryKey) {
+        Validate.notNull(idOrPrimaryKey);
         checkRefresh();
-        templateDefinitionId = normalizeTemplateId(templateDefinitionId);
-        List<TemplateDefinition> list = new ArrayList<>();
-        if (templateDefinitionId == null) {
-            return list;
-        }
         for (DirectoryScanner directoryScanner : directoryScannerMap.values()) {
-            if (descriptor != null && StringUtils.isNotEmpty(descriptor.getDirectory())) {
-                String directory = directoryScanner.getCanonicalPath();
-                if (!descriptor.getDirectory().equals(directory)) {
-                    // Directory doesn't match directory of the FileDescriptor.
-                    continue;
-                }
-            }
-            TemplateDefinition templateDefinition = directoryScanner.getTemplateDefinition(templateDefinitionId);
-            if (templateDefinition == null) {
-                continue;
-            }
-            if (descriptor == null || descriptor.getRelativePath() == null) {
-                if (templateDefinitionId.equals(normalizeTemplateId(templateDefinition.getId()))) {
-                    list.add(templateDefinition);
-                }
-            } else {
-                if (templateDefinition.getFileDescriptor() == null) {
-                    log.error("FileDescriptor of TemplateDefinition is null: " + templateDefinitionId);
-                } else if (descriptor.getRelativePath().equals(templateDefinition.getFileDescriptor().getRelativePath())) {
-                    if (templateDefinitionId.equals(normalizeTemplateId(templateDefinition.getId()))) {
-                        list.add(templateDefinition);
-                    }
-                }
+            TemplateDefinition templateDefinition = directoryScanner.getTemplateDefinition(idOrPrimaryKey);
+            if (templateDefinition != null) {
+                reloadIfModified(templateDefinition);
+                return templateDefinition;
             }
         }
-        if (CollectionUtils.isEmpty(list)) {
-            log.info("Template definition with id '" + templateDefinitionId + "' not found for file descriptor: " + descriptor + ".");
-        }
-        reloadIfModified(list);
-        return list;
+        log.error("Template definition with id or primary key '" + idOrPrimaryKey + "' not found.");
+        return null;
     }
 
     private void reloadIfModified(List<TemplateDefinition> templateDefinitions) {

@@ -6,7 +6,6 @@ import de.reinhard.merlin.excel.ExcelWorkbook;
 import de.reinhard.merlin.word.templating.SerialDataExcelWriter;
 import de.reinhard.merlin.word.templating.Template;
 import de.reinhard.merlin.word.templating.TemplateDefinition;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +18,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.util.List;
 
 @Path("/templates")
 public class TemplateSerialRunnerRest {
@@ -46,14 +44,9 @@ public class TemplateSerialRunnerRest {
             }
             TemplateDefinition templateDefinition = null;
             if (StringUtils.isNotBlank(templateDefinitionId)) {
-                List<TemplateDefinition> templateDefinitions = Storage.getInstance().getTemplateDefinition(null, templateDefinitionId);
-                if (CollectionUtils.isEmpty(templateDefinitions)) {
-                    return RestUtils.get404Response(log, "Template definition with id or name '" + templateDefinitionId + "' not found.");
-                } else {
-                    if (templateDefinitions.size() > 1) {
-                        log.warn("Multiple template definitions found under id '" + templateDefinitionId + "'.");
-                    }
-                    templateDefinition = templateDefinitions.get(0);
+                templateDefinition = Storage.getInstance().getTemplateDefinition(templateDefinitionId);
+                if (templateDefinition == null) {
+                    log.error("Template with refid '" + templateDefinitionId + "' not found.");
                 }
             }
             SerialDataExcelWriter writer = new SerialDataExcelWriter(null, null);

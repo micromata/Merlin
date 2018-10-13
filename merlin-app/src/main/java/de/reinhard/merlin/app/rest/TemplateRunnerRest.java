@@ -7,7 +7,6 @@ import de.reinhard.merlin.word.WordDocument;
 import de.reinhard.merlin.word.templating.Template;
 import de.reinhard.merlin.word.templating.TemplateDefinition;
 import de.reinhard.merlin.word.templating.WordTemplateRunner;
-import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,7 +15,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.List;
 
 @Path("/templates")
 public class TemplateRunnerRest {
@@ -51,16 +49,7 @@ public class TemplateRunnerRest {
         if (!PersistencyRegistry.getDefault().exists(path)) {
             return RestUtils.get404Response(log, "Template file not found by canonical path: " + path);
         }
-        List<TemplateDefinition> templateDefinitions = Storage.getInstance().getTemplateDefinition(null, data.getTemplateDefinitionId());
-        TemplateDefinition templateDefinition = null;
-        if (CollectionUtils.isEmpty(templateDefinitions)) {
-            log.info("Template definition with id '" + data.getTemplateDefinitionId() + "' not found. Proceeding without template definition.");
-        } else {
-            if (templateDefinitions.size() > 1) {
-                log.warn("Multiple template definition files found with id '" + data.getTemplateDefinitionId() + "'.");
-            }
-            templateDefinition = templateDefinitions.get(0);
-        }
+        TemplateDefinition templateDefinition = Storage.getInstance().getTemplateDefinition(data.getTemplateDefinitionId());
         Response response = null;
         try {
             WordDocument doc = WordDocument.create(path);
