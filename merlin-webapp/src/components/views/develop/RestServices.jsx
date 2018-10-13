@@ -28,7 +28,7 @@ class RestServices extends React.Component {
         super(props);
         this.state = {
             templateDefinitionId: '',
-            templateCanonicalPath: '',
+            templateHashId: '',
         }
         this.onRun = this.onRun.bind(this);
     }
@@ -47,7 +47,7 @@ class RestServices extends React.Component {
             .then((data) => {
                     this.setState({
                         templateDefinitionId: data.templateDefinitionId,
-                        templateCanonicalPath: data.templateCanonicalPath
+                        templateHashId: data.templateHashId
                     });
                 }
             )
@@ -102,10 +102,10 @@ class RestServices extends React.Component {
                 <ol>
                     <li>Get a list of all templates:<br/>
                         <RestUrlLink service='templates/list'/></li>
-                    <li>Get a single template from list or get one by the canonical path via rest
-                        (path={this.state.templateCanonicalPath}):<br/>
+                    <li>Get a single template from list or get one by the hash id via rest
+                        (hashId={this.state.templateHashId}):<br/>
                         <RestUrlLink service='templates/template'
-                                     params={'canonicalPath=' + encodeURIComponent(this.state.templateCanonicalPath)}/>
+                                     params={'hashId=' + encodeURIComponent(this.state.templateHashId)}/>
                     </li>
                     <li>You will receive a template including its template definition if assigned.</li>
                     <li>Run template with <a

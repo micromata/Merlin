@@ -162,26 +162,16 @@ public class Storage implements StorageInterface, ConfigurationListener {
         return templates;
     }
 
-    public Template getTemplate(String canonicalPath) {
-        Validate.notNull(canonicalPath);
+    public Template getTemplate(String hashId) {
+        Validate.notNull(hashId);
         checkRefresh();
-        boolean directoryScannerFound = false;
         for (DirectoryScanner directoryScanner : directoryScannerMap.values()) {
-            if (!canonicalPath.startsWith(directoryScanner.getCanonicalPath())) {
-                // canonicalPath is not part of this directory scanner.
-                continue;
-            }
-            directoryScannerFound = true;
-            Template template = directoryScanner.getTemplate(canonicalPath);
+            Template template = directoryScanner.getTemplate(hashId);
             if (template != null) {
                 return template;
             }
         }
-        if (directoryScannerFound == false) {
-            log.info("No directory scanner matching parent directory of canonical path '" + canonicalPath + "' registered. Can't find template.");
-        } else {
-            log.info("No template with canonical path '" + canonicalPath + "' found.");
-        }
+        log.info("No template with hashId '" + hashId + "' found.");
         return null;
     }
 

@@ -4,6 +4,7 @@ import de.reinhard.merlin.app.json.JsonUtils;
 import de.reinhard.merlin.app.storage.Storage;
 import de.reinhard.merlin.persistency.PersistencyRegistry;
 import de.reinhard.merlin.word.WordDocument;
+import de.reinhard.merlin.word.templating.Template;
 import de.reinhard.merlin.word.templating.TemplateDefinition;
 import de.reinhard.merlin.word.templating.WordTemplateRunner;
 import org.apache.commons.collections4.CollectionUtils;
@@ -26,7 +27,7 @@ public class TemplateRunnerRest {
     @Produces(MediaType.APPLICATION_JSON)
     public String checkTemplate(String json) {
         TemplateRunnerData data = JsonUtils.fromJson(TemplateRunnerData.class, json);
-        log.info("Checking template: definition=" + data.getTemplateDefinitionId() + ", template=" + data.getTemplateCanonicalPath());
+        log.info("Checking template: definition=" + data.getTemplateDefinitionId() + ", template=" + data.getTemplateHashId());
         TemplateRunnerCheckData check = new TemplateRunnerCheckData();
         check.setStatus("Not yet implemented");
         String result = JsonUtils.toJson(check);
@@ -41,10 +42,14 @@ public class TemplateRunnerRest {
         if (data == null) {
             return RestUtils.get404Response(log, "No valid data json object given. TemplateRunnerData expected.");
         }
-        log.info("Running template: definition=" + data.getTemplateDefinitionId() + ", template=" + data.getTemplateCanonicalPath());
-        java.nio.file.Path path = data.getTemplateCanonicalPath();
+        log.info("Running template: definition=" + data.getTemplateDefinitionId() + ", template=" + data.getTemplateHashId());
+        Template template = Storage.getInstance().getTemplate(data.getTemplateHashId());
+        if (template == null) {
+            return RestUtils.get404Response(log, "Template file not found by hash id: " + data.getTemplateHashId());
+        }
+        java.nio.file.Path path = template.getFileDescriptor().getCanonicalPath();
         if (!PersistencyRegistry.getDefault().exists(path)) {
-            return RestUtils.get404Response(log, "Template file not found by canonical path: " + data.getTemplateCanonicalPath());
+            return RestUtils.get404Response(log, "Template file not found by canonical path: " + path);
         }
         List<TemplateDefinition> templateDefinitions = Storage.getInstance().getTemplateDefinition(null, data.getTemplateDefinitionId());
         TemplateDefinition templateDefinition = null;
@@ -72,7 +77,7 @@ public class TemplateRunnerRest {
             log.info("Downloading file '" + filename + "', length: " + doc.getLength());
             return response;
         } catch (Exception ex) {
-            String errorMsg = "Error while try to run template '" + data.getTemplateCanonicalPath() + "'.";
+            String errorMsg = "Error while try to run template '" + data.getTemplateHashId() + "'.";
             log.error(errorMsg + " " + ex.getMessage(), ex);
             return RestUtils.get404Response(log, errorMsg);
         }

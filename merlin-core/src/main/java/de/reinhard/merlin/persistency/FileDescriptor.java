@@ -27,6 +27,7 @@ public class FileDescriptor implements Cloneable {
     private String relativePath;
     private String filename;
     private Date lastUpdate;
+    private String hashId;
 
     public String getDirectory() {
         return directory;
@@ -34,6 +35,7 @@ public class FileDescriptor implements Cloneable {
 
     public void setDirectory(String directory) {
         this.directory = directory;
+        hashId = null;
     }
 
     /**
@@ -44,6 +46,7 @@ public class FileDescriptor implements Cloneable {
      */
     public FileDescriptor setDirectory(Path dir) {
         directory = PersistencyRegistry.getDefault().getCanonicalPathString(dir);
+        hashId = null;
         return this;
     }
 
@@ -57,15 +60,16 @@ public class FileDescriptor implements Cloneable {
 
     public FileDescriptor setRelativePath(String relativePath) {
         this.relativePath = relativePath;
+        hashId = null;
         return this;
     }
 
     /**
-     *
      * @param path path including file name.
      * @return
      */
     public FileDescriptor setRelativePath(Path path) {
+        hashId = null;
         Path dirPath = Paths.get(directory);
         Path filePath = PersistencyRegistry.getDefault().getCanonicalPath(path);
         Path relPath = dirPath.relativize(filePath);
@@ -153,6 +157,19 @@ public class FileDescriptor implements Cloneable {
         eb.append(relativePath, other.relativePath);
         eb.append(filename, other.filename);
         return eb.isEquals();
+    }
+
+    /**
+     * Base64 encoded Hash.
+     *
+     * @return
+     */
+    public String getBiUniqueHashId() {
+        if (hashId != null) {
+            return hashId;
+        }
+        hashId = PersistencyRegistry.getDefault().getBiUniqueHashId(Paths.get(directory, relativePath, filename));
+        return hashId;
     }
 
     @Override

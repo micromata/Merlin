@@ -65,8 +65,8 @@ public class TemplatesRest {
      * @param prettyPrinter If true then the json output will be in pretty format.
      * @see JsonUtils#toJson(Object, boolean)
      */
-    public String getTemplate(@QueryParam("canonicalPath") String canonicalPath, @QueryParam("prettyPrinter") boolean prettyPrinter) {
-        Template template = Storage.getInstance().getTemplate(canonicalPath);
+    public String getTemplate(@QueryParam("hashId") String hashId, @QueryParam("prettyPrinter") boolean prettyPrinter) {
+        Template template = Storage.getInstance().getTemplate(hashId);
         return JsonUtils.toJson(template, prettyPrinter);
     }
 
