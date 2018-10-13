@@ -19,6 +19,7 @@ public interface PersistencyInterface {
 
     /**
      * Base64 encoded bi-unique Hash. Can be built e. g. from canonical path. It must specify a item (file) bi-unique.
+     * It's also possible to return the primary key.
      * @param path
      * @return
      */
