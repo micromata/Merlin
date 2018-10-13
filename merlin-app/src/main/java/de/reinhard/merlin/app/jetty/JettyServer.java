@@ -3,6 +3,7 @@ package de.reinhard.merlin.app.jetty;
 import de.reinhard.merlin.app.ConfigurationHandler;
 import de.reinhard.merlin.app.javafx.RunningMode;
 import de.reinhard.merlin.app.rest.ConfigurationRest;
+import de.reinhard.merlin.app.rest.UserFilter;
 import de.reinhard.merlin.app.ui.rest.ConfigurationUIRest;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
@@ -55,6 +56,7 @@ public class JettyServer {
         );
         jerseyServlet.setInitOrder(1);
         ctx.addServlet(jerseyServlet, "/rest/*");
+        ctx.addFilter(UserFilter.class, "/rest/*", EnumSet.of(DispatcherType.INCLUDE, DispatcherType.REQUEST));
 
         try {
             // Resolve file to directory
