@@ -205,7 +205,6 @@ class Configuration extends React.Component {
             todo = <div><h3>ToDo</h3>
                 <ul>
                     <li>Do the form validation (server and/or client side) with error fields.</li>
-                    <li>Component directory: display issue on to small windows.</li>
                 </ul>
             </div>
         }
