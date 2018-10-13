@@ -17,7 +17,7 @@ class TemplateCard extends React.Component {
 
     render = () => {
         const template = this.props.template;
-        let templateId = template.id;
+        let templateId = template.id ? template.id : template.filename;
         let content = [['Filename', template.filename, 'filename']];
         let templateText = this.buildItem('Template', content);
 

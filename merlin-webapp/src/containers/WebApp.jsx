@@ -5,6 +5,7 @@ import {Route, Router, Switch} from 'react-router';
 import Menu from '../components/general/Menu';
 import Start from '../components/views/Start';
 import TemplateListView from '../components/views/templates/TemplateListView';
+import TemplateDefinitionListView from '../components/views/templates/TemplateDefinitionListView';
 import Config from '../components/views/config/Configuration';
 import FileUploadView from '../components/views/FileUpload';
 import LogViewer from '../components/views/logging/LogViewer';
@@ -19,6 +20,7 @@ class WebApp extends React.Component {
         let routes = [
             ['Start', '/', Start],
             ['Templates', '/templates', TemplateListView],
+            ['Definitions', '/templateDefinitions', TemplateDefinitionListView],
             ['Log viewer', '/logViewer', LogViewer],
             ['Configuration', '/config', Config]
         ];
