@@ -118,6 +118,19 @@ public class WordDocument implements AutoCloseable {
         return null;
     }
 
+    public String scanForTemplateId() {
+        for (IBodyElement element : document.getBodyElements()) {
+            if (element instanceof XWPFParagraph) {
+                XWPFParagraph paragraph = (XWPFParagraph) element;
+                String id = new RunsProcessor(paragraph).scanForTemplateId();
+                if (id != null) {
+                    return id;
+                }
+            }
+        }
+        return null;
+    }
+
     public Conditionals getConditionals() {
         Conditionals conditionals = new Conditionals(this);
         conditionals.read();

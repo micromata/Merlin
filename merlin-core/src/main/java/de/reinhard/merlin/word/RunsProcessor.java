@@ -21,8 +21,10 @@ import java.util.regex.Pattern;
  */
 public class RunsProcessor {
     private static Logger log = LoggerFactory.getLogger(RunsProcessor.class);
-    // {templateDefinition.id="Letter template"}:
-    static final Pattern TEMPLATE_DEFINITION_REFERENCE_PATTERN = Pattern.compile("\\{\\s*templateDefinition\\.(id)\\s*=\\s*([^\\}]*)\\s*\\}");
+    // {templateDefinition.reference="Letter template"}:
+    static final Pattern TEMPLATE_DEFINITION_REFERENCE_PATTERN = Pattern.compile("\\{\\s*templateDefinition\\.refid\\s*=\\s*([^\\}]*)\\s*\\}");
+    // {id="Letter template"}:
+    static final Pattern TEMPLATE_ID_PATTERN = Pattern.compile("\\{\\s*id\\s*=\\s*([^\\}]*)\\s*\\}");
     private int[] runSizes;
     private Pattern variablePattern;
     private XWPFParagraph paragraph;
@@ -90,17 +92,24 @@ public class RunsProcessor {
     }
 
     public String scanForTemplateDefinitionReference() {
+        return scanForValue(TEMPLATE_DEFINITION_REFERENCE_PATTERN, "template definition refid");
+    }
+
+    public String scanForTemplateId() {
+        return scanForValue(TEMPLATE_ID_PATTERN, "template id");
+    }
+
+    private String scanForValue(Pattern pattern, String name) {
         if (runs == null || runs.size() == 0) {
             return null;
         }
         String runsText = getText();
-        Matcher matcher = TEMPLATE_DEFINITION_REFERENCE_PATTERN.matcher(runsText);
+        Matcher matcher = pattern.matcher(runsText);
         if (matcher.find()) {
-            String variable = matcher.group(1);
-            String quotedValue = matcher.group(2);
+            String quotedValue = matcher.group(1);
             String[] strArray = CSVStringUtils.parseStringList(quotedValue, true);
             if (strArray == null || strArray.length != 1) {
-                log.error("Can't get template reference: " + strArray);
+                log.error("Can't get '" + name + "': " + strArray);
                 return null;
             }
             String value = strArray[0];
@@ -108,6 +117,7 @@ public class RunsProcessor {
         }
         return null;
     }
+
 
     DocumentPosition getEnd(int bodyElementNo) {
         int lastRun = runs.size() - 1;

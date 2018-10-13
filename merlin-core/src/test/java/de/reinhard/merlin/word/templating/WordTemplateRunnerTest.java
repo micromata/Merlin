@@ -28,8 +28,11 @@ public class WordTemplateRunnerTest {
         WordDocument templateDocument = new WordDocument(new File(Definitions.EXAMPLES_TEMPLATES_TEST_DIR, "EmploymentContractTemplate.docx"));
         WordTemplateRunner runner = new WordTemplateRunner(templateDefinition, templateDocument);
         String ref = runner.scanForTemplateDefinitionReference();
+        assertEquals("Employment contract definition", ref);
+        String id = runner.scanForTemplateId();
         assertNotNull(ref);
-        assertEquals("Employment contract template", ref);
+        assertEquals("Employment contract template", id);
+
         runDocument(runner, "Stéph Ciçá", "male", "3/16/2001",
                 "4/1/2001", "25", "30");
         runDocument(runner, "Bärta Üßten", "female", "8/14/2017",

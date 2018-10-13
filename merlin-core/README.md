@@ -47,14 +47,15 @@ errors.
   See [EmploymentContract-Serial.xlsx](https://github.com/kreinhard/merlin/raw/master/examples/templates/EmploymentContract-Serial.xlsx)
   in the [examples](https://github.com/kreinhard/merlin/tree/master/examples/templates) directory.
 * You may place comments in your word template document as well (such comments will be removed automatically). This is
-  useful for documenting your template. Comments are enclosed in __{* ...}__. You may optional end with __*}__.
-  > __{if fox = "lazy"}__ The fox is lazy. {* here ends the lazy fox part. *}__{endif}__
+  useful for documenting your template. Comments are enclosed in __{\* ...}__. You may optional end with __\*}__.
+  > __{if fox = "lazy"}__ The fox is lazy. {\* here ends the lazy fox part. \*}__{endif}__
     
   Please note: Comments are only inside single paragraphs supported. Comments starting in one word paragraph and ending
   in a following one doesn't work. If you want to have comments in several paragraphs, please try this:
   > Here is my text.
-  > {* Here is my comment, which will be removed automatically. *}
-  > {* But I have to say it in more than one paragraph. *}
+  > {\* Here is my comment, which will be removed automatically. \*}
+  >
+  > {\* But I have to say it in more than one paragraph. \*}
   
   Please note: Comments containing hyperlinks aren't supported.
 
@@ -64,7 +65,7 @@ errors.
 You may run a template with the following settings:
 * Customized variables (gender, name of receiver, etc.)
 * A template file. This template file may contain a reference to an existing template definition:
-  > ${templateDefinition.id = "Employment contract template"} (template definition referenced by id)
+  > ${templateDefinition.refid = "Employment contract template"} (template definition referenced by id)
     
   Template definitions are automatically assigned if they have the same file name (without file extension) as the template
    file, e. g. a template named EmploymentContractTemplate.docx matches a definition file named EmploymentContractTemplate.xlsx.
@@ -86,5 +87,23 @@ You may run a template with the following settings:
   * it can be defined in the serial definition file or, if not
   * in the template file itself.
 * Please notice: A template definition file is optional (see above).
+
+### Template files
+Template files (docx) may contain following expressions supported by Merlin:
+| Expression | Description |
+|------------|-------------|
+|${templateDefinition.refid = "..."}|You may specify an optional template definition for further functionality for this template such as dependent variables.||
+|${id = "..."}|You may specify id for this template for using as reference in serial letter runs.||
+|${variable}|Will be replaced by the value of the variable if given.|
+|{if expr}...{endif}|The text inside the if-endif-statement will be displayed only and only if the expression will be evaluated to true.
+
+Examples for if-expressions:
+* variable='value': Will be true, if the variable has the given value.
+* variable!='value': Will be true, if the variable has __not__ the given value.
+* variable in "blue", "red", "yellow": Will be true, if the variable has one of the given values.
+* variable ! in "blue", "red", "yellow": Will be true, if the variable has none of the given values.
+* Cascading of if-statements is supported.
+* variable < value, variable <= value, variable > value, variable >= value. Integers and doubles as values are supported.
+
 
 
