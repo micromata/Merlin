@@ -28,7 +28,7 @@ class RestServices extends React.Component {
         super(props);
         this.state = {
             templateDefinitionId: '',
-            templateHashId: '',
+            templatePrimaryKey: '',
         }
         this.onRun = this.onRun.bind(this);
     }
@@ -47,7 +47,7 @@ class RestServices extends React.Component {
             .then((data) => {
                     this.setState({
                         templateDefinitionId: data.templateDefinitionId,
-                        templateHashId: data.templateHashId
+                        templatePrimaryKey: data.templatePrimaryKey
                     });
                 }
             )
@@ -102,10 +102,10 @@ class RestServices extends React.Component {
                 <ol>
                     <li>Get a list of all templates:<br/>
                         <RestUrlLink service='templates/list'/></li>
-                    <li>Get a single template from list or get one by the hash id via rest
-                        (hashId={this.state.templateHashId}):<br/>
+                    <li>Get a single template from list or get one by its primary key via rest
+                        (primaryKey={this.state.templatePrimaryKey}):<br/>
                         <RestUrlLink service='templates/template'
-                                     params={'hashId=' + encodeURIComponent(this.state.templateHashId)}/>
+                                     params={'primaryKey=' + encodeURIComponent(this.state.templatePrimaryKey)}/>
                     </li>
                     <li>You will receive a template including its template definition if assigned.</li>
                     <li>Run template with <a

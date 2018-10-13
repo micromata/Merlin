@@ -112,9 +112,9 @@ abstract class AbstractHandler<T extends FileDescriptorInterface> {
         return null;
     }
 
-    T getItem(String hashId) {
+    T getItem(String primaryKey) {
         for (T item : getItems()) {
-            if (hashId.equals(item.getFileDescriptor().getHashId())) {
+            if (primaryKey.equals(item.getFileDescriptor().getPrimaryKey())) {
                 return item;
             }
         }

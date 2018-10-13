@@ -21,7 +21,7 @@ public class DirectoryScannerTest {
                 directoryScanner.getTemplateDefinition("Employment contract definition").getFileDescriptor().getFilename());
         assertEquals(3, directoryScanner.getTemplates().size());
         File templateFile = new File(Definitions.EXAMPLES_TEMPLATES_TEST_DIR, "LetterTemplate.docx");
-        String templatePath = PersistencyRegistry.getDefault().getBiUniqueHashId(templateFile.toPath());
+        String templatePath = PersistencyRegistry.getDefault().getPrimaryKey(templateFile.toPath());
         Template template = directoryScanner.getTemplate(templatePath);
         assertNotNull(template);
         assertNotNull(template.getTemplateDefinition());

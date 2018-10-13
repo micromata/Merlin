@@ -27,7 +27,7 @@ public class TemplateRunnerRest {
     @Produces(MediaType.APPLICATION_JSON)
     public String checkTemplate(String json) {
         TemplateRunnerData data = JsonUtils.fromJson(TemplateRunnerData.class, json);
-        log.info("Checking template: definition=" + data.getTemplateDefinitionId() + ", template=" + data.getTemplateHashId());
+        log.info("Checking template: definition=" + data.getTemplateDefinitionId() + ", template=" + data.getTemplatePrimaryKey());
         TemplateRunnerCheckData check = new TemplateRunnerCheckData();
         check.setStatus("Not yet implemented");
         String result = JsonUtils.toJson(check);
@@ -42,10 +42,10 @@ public class TemplateRunnerRest {
         if (data == null) {
             return RestUtils.get404Response(log, "No valid data json object given. TemplateRunnerData expected.");
         }
-        log.info("Running template: definition=" + data.getTemplateDefinitionId() + ", template=" + data.getTemplateHashId());
-        Template template = Storage.getInstance().getTemplate(data.getTemplateHashId());
+        log.info("Running template: definition=" + data.getTemplateDefinitionId() + ", template=" + data.getTemplatePrimaryKey());
+        Template template = Storage.getInstance().getTemplate(data.getTemplatePrimaryKey());
         if (template == null) {
-            return RestUtils.get404Response(log, "Template file not found by hash id: " + data.getTemplateHashId());
+            return RestUtils.get404Response(log, "Template file not found by hash id: " + data.getTemplatePrimaryKey());
         }
         java.nio.file.Path path = template.getFileDescriptor().getCanonicalPath();
         if (!PersistencyRegistry.getDefault().exists(path)) {
@@ -77,7 +77,7 @@ public class TemplateRunnerRest {
             log.info("Downloading file '" + filename + "', length: " + doc.getLength());
             return response;
         } catch (Exception ex) {
-            String errorMsg = "Error while try to run template '" + data.getTemplateHashId() + "'.";
+            String errorMsg = "Error while try to run template '" + data.getTemplatePrimaryKey() + "'.";
             log.error(errorMsg + " " + ex.getMessage(), ex);
             return RestUtils.get404Response(log, errorMsg);
         }

@@ -48,7 +48,7 @@ class TemplateListView extends React.Component {
 
                     return {
                         id: template.id,
-                        hashId: template.fileDescriptor.hashId,
+                        primaryKey: template.fileDescriptor.primaryKey,
                         filename: template.fileDescriptor.filename,
                         templateDefinitionId: template.templateDefinitionId,
                         templateDefinition: template.templateDefinition
@@ -95,7 +95,7 @@ class TemplateListView extends React.Component {
                     const definition = this.state.definitions[template.templateDefinition];
 
                     return <TemplateCard
-                        key={`template-${template.hashId}`}
+                        key={template.primaryKey}
                         template={template}
                         definition={definition}
                     />;

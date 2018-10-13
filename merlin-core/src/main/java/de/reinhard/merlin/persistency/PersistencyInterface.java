@@ -18,12 +18,11 @@ public interface PersistencyInterface {
     public String getCanonicalPathString(Path path);
 
     /**
-     * Base64 encoded bi-unique Hash. Can be built e. g. from canonical path. It must specify a item (file) bi-unique.
-     * It's also possible to return the primary key.
+     * Generates a primary key for the given path. The value must be bi-unique for the path.
      * @param path
      * @return
      */
-    public String getBiUniqueHashId(Path path);
+    public String getPrimaryKey(Path path);
 
 
     /**

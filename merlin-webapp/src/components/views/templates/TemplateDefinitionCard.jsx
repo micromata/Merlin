@@ -26,9 +26,9 @@ class TemplateDefinitionCard extends React.Component {
         if (definition.description) {
             content.push(['Description', definition.description, 'description']);
         }
-        definitionText = this.buildItem('Definition', content);
+        definitionText = this.buildItem('Info', content);
         return <div>
-            <Link to={`/templates/${definition.hashId}`} className={'card-link'}>
+            <Link to={`/templates/${definition.primaryKey}`} className={'card-link'}>
                 <Card outline color="success" className={'template'} style={{backgroundColor: '#fff', width: '20em'}}>
                     <CardHeader>{definition.id}</CardHeader>
                     <ul className="list-group list-group-flush">

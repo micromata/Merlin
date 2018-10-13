@@ -5,7 +5,7 @@ import java.util.Map;
 
 public class TemplateRunnerData {
     private String templateDefinitionId;
-    private String templateHashId;
+    private String templatePrimaryKey;
     private Map<String, Object> variables;
 
     public String getTemplateDefinitionId() {
@@ -16,12 +16,12 @@ public class TemplateRunnerData {
         this.templateDefinitionId = templateDefinitionId;
     }
 
-    public String getTemplateHashId() {
-        return templateHashId;
+    public String getTemplatePrimaryKey() {
+        return templatePrimaryKey;
     }
 
-    public void setTemplateHashId(String templateHashId) {
-        this.templateHashId = templateHashId;
+    public void setTemplatePrimaryKey(String templatePrimaryKey) {
+        this.templatePrimaryKey = templatePrimaryKey;
     }
 
     public Map<String, Object> getVariables() {

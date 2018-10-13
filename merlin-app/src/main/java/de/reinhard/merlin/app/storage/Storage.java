@@ -162,16 +162,16 @@ public class Storage implements StorageInterface, ConfigurationListener {
         return templates;
     }
 
-    public Template getTemplate(String hashId) {
-        Validate.notNull(hashId);
+    public Template getTemplate(String primaryKey) {
+        Validate.notNull(primaryKey);
         checkRefresh();
         for (DirectoryScanner directoryScanner : directoryScannerMap.values()) {
-            Template template = directoryScanner.getTemplate(hashId);
+            Template template = directoryScanner.getTemplate(primaryKey);
             if (template != null) {
                 return template;
             }
         }
-        log.info("No template with hashId '" + hashId + "' found.");
+        log.info("No template with primaryKey '" + primaryKey + "' found.");
         return null;
     }
 

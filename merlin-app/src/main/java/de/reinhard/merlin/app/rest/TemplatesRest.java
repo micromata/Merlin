@@ -62,11 +62,12 @@ public class TemplatesRest {
     @Produces(MediaType.APPLICATION_JSON)
     /**
      *
+     * @param primaryKey
      * @param prettyPrinter If true then the json output will be in pretty format.
      * @see JsonUtils#toJson(Object, boolean)
      */
-    public String getTemplate(@QueryParam("hashId") String hashId, @QueryParam("prettyPrinter") boolean prettyPrinter) {
-        Template template = Storage.getInstance().getTemplate(hashId);
+    public String getTemplate(@QueryParam("primaryKey") String primaryKey, @QueryParam("prettyPrinter") boolean prettyPrinter) {
+        Template template = Storage.getInstance().getTemplate(primaryKey);
         return JsonUtils.toJson(template, prettyPrinter);
     }
 

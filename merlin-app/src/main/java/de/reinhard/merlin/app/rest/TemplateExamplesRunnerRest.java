@@ -28,7 +28,7 @@ public class TemplateExamplesRunnerRest {
         ExampleData exampleData = createExampleData();
         TemplateRunnerData data = new TemplateRunnerData();
         data.setTemplateDefinitionId(exampleData.templateDefinitionId);
-        data.setTemplateHashId(exampleData.templateHashId);
+        data.setTemplatePrimaryKey(exampleData.templatePrimaryKey);
         data.put("Gender", "female");
         data.put("Employee", "Berta Smith");
         data.put("Date", "2018/01/01");
@@ -60,15 +60,15 @@ public class TemplateExamplesRunnerRest {
             if (template.getTemplateDefinition() != null
                     && "Employment contract definition".equals(template.getTemplateDefinition().getId())) {
                 // found template with template definition:
-                data.templateHashId = template.getFileDescriptor().getHashId();
+                data.templatePrimaryKey = template.getFileDescriptor().getPrimaryKey();
                 data.templateDefinitionId = template.getTemplateDefinitionId();
                 found = true;
                 break;
             }
         }
         if (!found) {
-            data.templateHashId = "Oups, no template with assigned template definiton found (reset settings)!";
-            data.templateDefinitionHashId = "No template definition found (reset settings)!";
+            data.templatePrimaryKey = "Oups, no template with assigned template definiton found (reset settings)!";
+            data.templateDefinitionPrimaryKey = "No template definition found (reset settings)!";
             data.templateDefinitionId = "No template definition found (reset settings)!";
         }
         return data;
@@ -76,19 +76,19 @@ public class TemplateExamplesRunnerRest {
 
     public static class ExampleData {
         String templateDefinitionId;
-        String templateDefinitionHashId;
-        String templateHashId;
+        String templateDefinitionPrimaryKey;
+        String templatePrimaryKey;
 
         public String getTemplateDefinitionId() {
             return templateDefinitionId;
         }
 
-        public String getTemplateHashId() {
-            return templateHashId;
+        public String getTemplatePrimaryKey() {
+            return templatePrimaryKey;
         }
 
-        public String getTemplateDefinitionHashId() {
-            return templateDefinitionHashId;
+        public String getTemplateDefinitionPrimaryKey() {
+            return templateDefinitionPrimaryKey;
         }
 
     }

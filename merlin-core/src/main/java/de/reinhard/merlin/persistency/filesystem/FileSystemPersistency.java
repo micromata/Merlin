@@ -63,7 +63,7 @@ public class FileSystemPersistency implements PersistencyInterface {
      * @see #getCanonicalPathString(Path)
      */
     @Override
-    public String getBiUniqueHashId(Path path) {
+    public String getPrimaryKey(Path path) {
         String canonicalPath = getCanonicalPathString(path);
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");

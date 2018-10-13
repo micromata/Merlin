@@ -80,9 +80,9 @@ public class DirectoryScanner {
         return templatesHandler.getItems();
     }
 
-    public Template getTemplate(String hashId) {
+    public Template getTemplate(String primaryKey) {
         checkAndRefreshAllItems();
-        return templatesHandler.getItem(hashId);
+        return templatesHandler.getItem(primaryKey);
     }
 
     public Collection<TemplateDefinition> getTemplateDefinitions() {
@@ -116,9 +116,9 @@ public class DirectoryScanner {
         return serialDatasHandler.getItems();
     }
 
-    public SerialData getSerialData(String hashId) {
+    public SerialData getSerialData(String primaryKey) {
         checkAndRefreshAllItems();
-        return serialDatasHandler.getItem(hashId);
+        return serialDatasHandler.getItem(primaryKey);
     }
 
 

@@ -27,7 +27,7 @@ public class FileDescriptor implements Cloneable {
     private String relativePath;
     private String filename;
     private Date lastUpdate;
-    private String hashId;
+    private String primaryKey;
 
     public String getDirectory() {
         return directory;
@@ -35,7 +35,7 @@ public class FileDescriptor implements Cloneable {
 
     public void setDirectory(String directory) {
         this.directory = directory;
-        hashId = null;
+        primaryKey = null;
     }
 
     /**
@@ -46,7 +46,7 @@ public class FileDescriptor implements Cloneable {
      */
     public FileDescriptor setDirectory(Path dir) {
         directory = PersistencyRegistry.getDefault().getCanonicalPathString(dir);
-        hashId = null;
+        primaryKey = null;
         return this;
     }
 
@@ -60,7 +60,7 @@ public class FileDescriptor implements Cloneable {
 
     public FileDescriptor setRelativePath(String relativePath) {
         this.relativePath = relativePath;
-        hashId = null;
+        primaryKey = null;
         return this;
     }
 
@@ -69,7 +69,7 @@ public class FileDescriptor implements Cloneable {
      * @return
      */
     public FileDescriptor setRelativePath(Path path) {
-        hashId = null;
+        primaryKey = null;
         Path dirPath = Paths.get(directory);
         Path filePath = PersistencyRegistry.getDefault().getCanonicalPath(path);
         Path relPath = dirPath.relativize(filePath);
@@ -166,12 +166,12 @@ public class FileDescriptor implements Cloneable {
      *
      * @return
      */
-    public String getHashId() {
-        if (hashId != null) {
-            return hashId;
+    public String getPrimaryKey() {
+        if (primaryKey != null) {
+            return primaryKey;
         }
-        hashId = PersistencyRegistry.getDefault().getBiUniqueHashId(Paths.get(directory, relativePath, filename));
-        return hashId;
+        primaryKey = PersistencyRegistry.getDefault().getPrimaryKey(Paths.get(directory, relativePath, filename));
+        return primaryKey;
     }
 
     @Override

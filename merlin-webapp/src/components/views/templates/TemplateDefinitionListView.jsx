@@ -70,7 +70,7 @@ class TemplateDefinitionListView extends React.Component {
                 <CardGroup>
                     {this.state.definitions.map(definition => {
                         return <TemplateDefinitionCard
-                            key={`definition-${definition.fileDescriptor.hashId}`}
+                            key={definition.primaryKey}
                             definition={definition}
                         />;
                     })}
