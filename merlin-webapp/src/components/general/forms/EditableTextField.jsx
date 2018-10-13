@@ -42,12 +42,9 @@ class EditableTextField extends React.Component {
                     name={this.props.title}
                     stopEditing={this.stopEditing}
                 /> :
-                <span
-                    onClick={this.startEditing}
-                    className={'editable-text-field-value'}
-                >
+                <div className={'text-truncate editable-text-field-value'} onClick={this.startEditing} title={this.props.value}>
                     {this.props.value}
-                </span>
+                </div>
             }
         </div>
     </div>;
