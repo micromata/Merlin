@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
  */
 public class Template implements Cloneable, FileDescriptorInterface {
     private Logger log = LoggerFactory.getLogger(Template.class);
+    private String id;
     private TemplateStatistics statistics;
     private TemplateDefinition templateDefinition;
     private String templateDefinitionId;
@@ -21,6 +22,14 @@ public class Template implements Cloneable, FileDescriptorInterface {
 
     public Template() {
         statistics = new TemplateStatistics(this);
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public TemplateDefinition getTemplateDefinition() {

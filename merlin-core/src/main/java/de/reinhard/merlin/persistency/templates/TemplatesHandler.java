@@ -35,6 +35,11 @@ class TemplatesHandler extends AbstractHandler<Template> {
                     + "'. It's seemd to be not a Merlin template. No variables and conditionals found.");
             return null;
         }
+        String templateId = doc.scanForTemplateId();
+        if (templateId != null) {
+            log.debug("Template id found: " + templateId);
+            templateChecker.getTemplate().setId(templateId);
+        }
         String templateDefinitionId = doc.scanForTemplateDefinitionReference();
         if (templateDefinitionId != null) {
             log.debug("Template definition reference found: " + templateDefinitionId);
