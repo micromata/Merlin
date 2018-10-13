@@ -8,8 +8,6 @@ import {IconRefresh} from "../../general/IconComponents";
 import TemplateDefinitionCard from "./TemplateDefinitionCard";
 
 class TemplateDefinitionListView extends React.Component {
-
-
     path = getRestServiceUrl('templates');
     state = {
         isFetching: false
@@ -70,7 +68,7 @@ class TemplateDefinitionListView extends React.Component {
                 <CardGroup>
                     {this.state.definitions.map(definition => {
                         return <TemplateDefinitionCard
-                            key={definition.primaryKey}
+                            key={definition.fileDescriptor.primaryKey}
                             definition={definition}
                         />;
                     })}
