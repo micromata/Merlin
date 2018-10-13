@@ -1,6 +1,7 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
 import {Card, CardFooter, CardHeader} from 'reactstrap';
+import {formatDateTime} from "../../../actions/global";
 
 class TemplateCard extends React.Component {
 
@@ -42,7 +43,7 @@ class TemplateCard extends React.Component {
                         {templateText}
                         {definitionText}
                     </ul>
-                    <CardFooter>Click to run.</CardFooter>
+                    <CardFooter>Click to run.<span className={'lastModified'}>{formatDateTime(template.lastModified)}</span></CardFooter>
                 </Card>
             </Link>
         </div>

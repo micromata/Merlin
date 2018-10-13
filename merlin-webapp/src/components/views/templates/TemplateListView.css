@@ -43,6 +43,10 @@ div.card.template div.card-list-entry .filename {
     font-family: monospace;
 }
 
+div.card.template div.card-footer .lastModified {
+    float:right;
+}
+
 div.card.template:hover div.card-header, div.card.template:hover div.card-footer {
     background-color: #eeee;
 }

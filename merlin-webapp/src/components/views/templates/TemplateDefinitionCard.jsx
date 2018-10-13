@@ -1,6 +1,7 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
 import {Card, CardFooter, CardHeader} from 'reactstrap';
+import {formatDateTime} from "../../../actions/global";
 
 class TemplateDefinitionCard extends React.Component {
 
@@ -19,10 +20,7 @@ class TemplateDefinitionCard extends React.Component {
     render = () => {
         const definition = this.props.definition;
         let definitionText = null;
-        let content = [['refid', definition.id]];
-        if (definition.fileDescriptor.filename) {
-            content.push(['Filename', definition.fileDescriptor.filename, 'filename']);
-        }
+        let content = [['Filename', definition.fileDescriptor.filename, 'filename']];
         if (definition.description) {
             content.push(['Description', definition.description, 'description']);
         }
@@ -34,7 +32,7 @@ class TemplateDefinitionCard extends React.Component {
                     <ul className="list-group list-group-flush">
                         {definitionText}
                     </ul>
-                    <CardFooter>...</CardFooter>
+                    <CardFooter><span className={'lastModified'}>{formatDateTime(definition.fileDescriptor.lastModified)}</span></CardFooter>
                 </Card>
             </Link>
         </div>

@@ -50,6 +50,7 @@ class TemplateListView extends React.Component {
                         id: template.id,
                         primaryKey: template.fileDescriptor.primaryKey,
                         filename: template.fileDescriptor.filename,
+                        lastModified: template.fileDescriptor.lastModified,
                         templateDefinitionId: template.templateDefinitionId,
                         templateDefinition: template.templateDefinition
                     };
