@@ -10,7 +10,7 @@ import {
     FormFieldset,
     FormField, FormButton, FormSelect
 } from "../../general/forms/FormComponents";
-import {getRestServiceUrl} from "../../../actions/global";
+import {getRestServiceUrl, isDevelopmentMode} from "../../../actions/global";
 
 var directoryItems = [];
 
@@ -200,16 +200,20 @@ class ConfigForm extends React.Component {
 class Configuration extends React.Component {
 
     render() {
+        let todo = '';
+        if (isDevelopmentMode()) {
+            todo = <div><h3>ToDo</h3>
+                <ul>
+                    <li>Do the form validation (server and/or client side) with error fields.</li>
+                    <li>Component directory: display issue on to small windows.</li>
+                </ul>
+            </div>
+        }
         return (
             <div>
                 <PageHeader>Configuration</PageHeader>
                 <ConfigForm/>
-
-                <h3>ToDo</h3>
-                <ul>
-                    <li>Do the form validation (server and/or client side) with error fields.</li>
-                </ul>
-
+                {todo}
             </div>
         );
     }
