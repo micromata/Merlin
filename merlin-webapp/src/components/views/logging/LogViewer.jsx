@@ -5,6 +5,7 @@ import Highlight from 'react-highlighter';
 import {FormLabel, FormButton, FormSelect, FormInput} from "../../general/forms/FormComponents";
 import {getRestServiceUrl} from "../../../actions/global";
 import './LogViewer.css';
+import {IconRefresh} from "../../general/IconComponents";
 
 class LogViewerData extends React.Component {
     constructor(props) {
@@ -138,7 +139,7 @@ class LogViewerData extends React.Component {
                         <option value={'true'}>ascending</option>
                         <option value={'false'}>descending</option>
                     </FormSelect>
-                    <FormButton type={'submit'} bsStyle="success">load
+                    <FormButton type={'submit'} bsStyle="success"> <IconRefresh/>
                     </FormButton>
                 </form>
                 <Table striped bordered hover size="sm" responsive>
