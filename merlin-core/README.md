@@ -90,6 +90,7 @@ You may run a template with the following settings:
 
 ### Template files
 Template files (docx) may contain following expressions supported by Merlin:
+
 | Expression | Description |
 |------------|-------------|
 |${templateDefinition.refid = "..."}|You may specify an optional template definition for further functionality for this template such as dependent variables.||
