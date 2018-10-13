@@ -76,7 +76,10 @@ public class ConfigurationHandler {
     public void save() {
         log.info("Saving configuration to user prefs.");
         preferences.putInt(WEBSERVER_PORT_PREF, configuration.getPort());
-        preferences.put(LANGUAGE_PREF, configuration.getLanguage());
+        if (configuration.getLanguage() != null)
+            preferences.put(LANGUAGE_PREF, configuration.getLanguage());
+        else
+            preferences.remove(LANGUAGE_PREF);
         if (CollectionUtils.isNotEmpty(configuration.getTemplatesDirs())) {
             String json = JsonUtils.toJson(configuration.getTemplatesDirs());
             preferences.put(TEMPLATES_DIRS, json);
