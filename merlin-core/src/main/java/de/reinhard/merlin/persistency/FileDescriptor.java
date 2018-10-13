@@ -27,6 +27,7 @@ public class FileDescriptor implements Cloneable {
     private String relativePath;
     private String filename;
     private Date lastUpdate;
+    private long lastModified;
     private String primaryKey;
 
     public String getDirectory() {
@@ -100,6 +101,19 @@ public class FileDescriptor implements Cloneable {
         return lastUpdate;
     }
 
+    /**
+     * The last modified date of the item represented by this FileDescriptor. For file systems it's the last modified
+     * date of the file.
+     * @return
+     */
+    public long getLastModified() {
+        return lastModified;
+    }
+
+    public void setLastModified(long lastModified) {
+        this.lastModified = lastModified;
+    }
+
     public FileDescriptor setLastUpdate(Date lastUpdate) {
         this.lastUpdate = lastUpdate;
         return this;
@@ -144,11 +158,12 @@ public class FileDescriptor implements Cloneable {
      * @return true, if the gifen file was modified after last update or if last update is not set.
      */
     public boolean isModified(Path file) {
+        this.lastModified = PersistencyRegistry.getDefault().getLastModified(file);
         if (lastUpdate == null) {
             return true;
         }
-        Date lastModified = new Date(PersistencyRegistry.getDefault().getLastModified(file));
-        return lastModified.after(lastUpdate);
+        Date lastModifiedDate = new Date(this.lastModified);
+        return lastModifiedDate.after(lastUpdate);
     }
 
     @Override
