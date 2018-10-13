@@ -2,7 +2,7 @@ td.tt {
     white-space: pre-wrap;
     font-family: monospace;
 }
-td.log-fatal, td.log-warn, td.log-error {
+td.log-warn, td.log-error {
     color: red;
     font-weight: bold;
 }

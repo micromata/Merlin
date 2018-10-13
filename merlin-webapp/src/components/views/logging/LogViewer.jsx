@@ -113,7 +113,6 @@ class LogViewerData extends React.Component {
                 <form onSubmit={this.onSubmit} className={'form-inline'}>
                     <FormLabel length={1}>Log filter:</FormLabel>
                     <FormSelect value={this.state.treshold} name={'treshold'} onChange={this.handleTextChange}>
-                        <option>fatal</option>
                         <option>error</option>
                         <option>warn</option>
                         <option>info</option>
@@ -142,7 +141,7 @@ class LogViewerData extends React.Component {
                     <FormButton type={'submit'} bsStyle="success">load
                     </FormButton>
                 </form>
-                <Table striped bordered condensed hover>
+                <Table striped bordered hover size="sm" responsive>
                     <thead>
                     <tr>
                         <th>Timestamp</th>
