@@ -49,7 +49,8 @@ public class RunsProcessor {
     }
 
     /**
-     * Replace all variable by their values. Removes also any occurencies of template references: {@link #removeTemplateReference()}.
+     * Replace all variable by their values. Removes also any occurencies of template id and definition references:
+     * <tt>{templateDefinition.refid = "..."}</tt> and <tt>{id = "..."}</tt>.
      * @param variables
      */
     public void replace(Map<String, ?> variables) {
@@ -58,7 +59,8 @@ public class RunsProcessor {
         }
         replaceEntries = new ArrayList<>();
         String runsText = getText();
-        removeTemplateReference();
+        removePattern(TEMPLATE_DEFINITION_REFERENCE_PATTERN);
+        removePattern(TEMPLATE_ID_PATTERN);
         //log.debug("Start pos: " + lastPos);
         ReplaceUtils.createReplaceEntries(runsText, replaceEntries, variables);
         for (ReplaceEntry entry : replaceEntries) {
@@ -68,10 +70,10 @@ public class RunsProcessor {
     }
 
     /**
-     * Removes any occurence of <tt>{template.id = "..."}</tt>.
+     * Removes any occurence of pattern.
      */
-    private void removeTemplateReference() {
-        Matcher matcher = TEMPLATE_DEFINITION_REFERENCE_PATTERN.matcher(runsText);
+    private void removePattern(Pattern pattern) {
+        Matcher matcher = pattern.matcher(runsText);
         while (matcher.find()) {
             int start = matcher.start();
             int end = matcher.end();

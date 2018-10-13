@@ -59,7 +59,7 @@ public class TemplateExamplesRunnerRest {
         boolean found = false;
         for (Template template : Storage.getInstance().getAllTemplates()) {
             if (template.getTemplateDefinition() != null
-                    && "Employment contract template".equals(template.getTemplateDefinition().getId())) {
+                    && "Employment contract definition".equals(template.getTemplateDefinition().getId())) {
                 // found template with template definition:
                 data.templateCanonicalPath = template.getFileDescriptor().getCanonicalPath();
                 data.templateDefinitionId = template.getTemplateDefinitionId();
