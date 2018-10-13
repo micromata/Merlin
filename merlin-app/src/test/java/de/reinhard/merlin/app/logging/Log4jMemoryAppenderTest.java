@@ -14,6 +14,7 @@ public class Log4jMemoryAppenderTest {
         create(appender, LogLevel.INFO, "de.merlin.Simply", "The lazy fox jumps over the river.");
         create(appender, LogLevel.DEBUG, "de.merlin.Fox","Everything fine.");
         create(appender, LogLevel.ERROR, "de.merlin.Fox","Oups, simply try everything harder.");
+
         testQuery(appender, null, null, "The lazy", "Everything", "Oups,");
         testQuery(appender, LogLevel.INFO, null, "The lazy", "Oups,");
         testQuery(appender, null, "every", "Everything", "Oups,");
@@ -33,6 +34,7 @@ public class Log4jMemoryAppenderTest {
         LogFilter filter = new LogFilter();
         filter.setThreshold(treshold);
         filter.setSearch(search);
+        filter.setAscendingOrder(true);
         List<LoggingEventData> result = appender.query(filter);
         if (expectedMessageStarts == null) {
             assertEquals(0, result.size());
