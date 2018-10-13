@@ -26,7 +26,7 @@ div.card.template div.card-footer {
     font-size: 12px;
 }
 
-div.card.template:hover div.card-body {
+div.card.template:hover div.card-body, div.card.template:hover li.list-group-item {
     background-color: #f5f5f5;
 }
 

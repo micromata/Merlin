@@ -93,10 +93,10 @@ class TemplateListView extends React.Component {
                     const definition = this.state.definitions[template.templateDefinition];
 
                     return <TemplateCard
-                        key={`template-${template.fileDescriptor.canonicalPath}-${template.templateDefinitionId}`}
-                        templateDefinitionId={template.templateDefinitionId}
+                        key={`template-${template.fileDescriptor.canonicalPath}`}
                         canonicalPath={template.fileDescriptor.canonicalPath}
-                        {...definition}
+                        template={template}
+                        definition={definition}
                     />;
                 })}
                 </CardGroup>
