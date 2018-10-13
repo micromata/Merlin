@@ -164,7 +164,7 @@ public class FileDescriptor implements Cloneable {
      *
      * @return
      */
-    public String getBiUniqueHashId() {
+    public String getHashId() {
         if (hashId != null) {
             return hashId;
         }
