@@ -36,7 +36,7 @@ class TemplateCard extends React.Component {
         }
 
         return <div>
-            <Link to={`/templates/${template.primaryKey}`} className={'card-link'}>
+            <Link to={`/template/${template.primaryKey}`} className={'card-link'}>
                 <Card outline color="success" className={'template'} style={{backgroundColor: '#fff', width: '20em'}}>
                     <CardHeader>{templateId}</CardHeader>
                     <ul className="list-group list-group-flush">
