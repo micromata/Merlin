@@ -47,6 +47,7 @@ class TemplateListView extends React.Component {
                     }
 
                     return {
+                        id: template.id,
                         templateDefinitionId: template.templateDefinitionId,
                         templateDefinition: template.templateDefinition,
                         fileDescriptor: template.fileDescriptor

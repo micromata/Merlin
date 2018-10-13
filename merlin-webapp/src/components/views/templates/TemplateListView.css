@@ -30,6 +30,15 @@ div.card.template:hover div.card-body, div.card.template:hover li.list-group-ite
     background-color: #f5f5f5;
 }
 
+div.card.template div.card-list-entry {
+    color: grey;
+}
+
+div.card.template div.card-list-entry .card-list-entry-value {
+    font-style: italic;
+    font-size: 80%;
+}
+
 div.card.template:hover div.card-header, div.card.template:hover div.card-footer {
     background-color: #eeee;
 }
