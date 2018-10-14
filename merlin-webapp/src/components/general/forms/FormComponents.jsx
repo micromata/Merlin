@@ -103,7 +103,10 @@ FormSelect.defaultProps = {
 };
 
 
-function FormCheckbox({id = revisedRandId(), name, checked, onChange, hint, title, label}) {
+function FormCheckbox({id, name, checked, onChange, hint, label}) {
+    if (!id) {
+        id = revisedRandId();
+    }
     return (
         <div>
             <input
@@ -119,7 +122,7 @@ function FormCheckbox({id = revisedRandId(), name, checked, onChange, hint, titl
                 className={'form-check-label'}
                 htmlFor={id}
                 style={{marginLeft: '1ex'}}
-                title={title}
+                title={hint}
             >
                 {label}
             </label>
@@ -133,7 +136,6 @@ FormCheckbox.propTypes = {
     checked: PropTypes.bool,
     onChange: PropTypes.func,
     hint: PropTypes.string,
-    title: PropTypes.string,
     label: PropTypes.node
 };
 
@@ -143,7 +145,6 @@ FormCheckbox.defaultProps = {
     checked: false,
     onChange: null,
     hint: '',
-    title: '',
     label: ''
 };
 
