@@ -28,7 +28,7 @@ class EditableTextField extends React.Component {
         });
 
         if (value && this.props.onChange) {
-            this.props.onChange(value, this.props.name);
+            this.props.onChange(value, this.props.name, this.props.index);
         }
     };
 
