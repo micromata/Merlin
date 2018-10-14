@@ -31,6 +31,20 @@ class TemplateDefinition extends React.Component {
         this.setState({definition: definition});
     }
 
+    handleVariableTextChange = (value, name, index) => {
+        let definition = this.state.definition;
+        const variable = definition.variableDefinitions[index];
+        variable[name] = value;
+        this.setState({definition: definition});
+    }
+
+    handleVariableStateChange = (event, index) => {
+        let definition = this.state.definition;
+        const variable = definition.variableDefinitions[index];
+        variable[event.target.name]= event.target.checked;
+        this.setState({definition: definition});
+    }
+
     fetchTemplateDefinition = () => {
         this.setState({
             isFetching: true,
@@ -106,7 +120,9 @@ class TemplateDefinition extends React.Component {
                                                 handleStateChange={this.handleStateChange}/>
                     </TabPane>
                     <TabPane tabId="2">
-                        <TemplateDefinitionVariables definition={this.state.definition}/>
+                        <TemplateDefinitionVariables definition={this.state.definition}
+                                                     handleTextChange={this.handleVariableTextChange}
+                                                     handleStateChange={this.handleVariableStateChange}/>
                     </TabPane>
                     <TabPane tabId="3">
                         <TemplateDefinitionDependentVariables definition={this.state.definition}/>
@@ -146,6 +162,8 @@ class TemplateDefinition extends React.Component {
         };
         this.handleTextChange = this.handleTextChange.bind(this);
         this.handleStateChange = this.handleStateChange.bind(this);
+        this.handleVariableStateChange = this.handleVariableStateChange.bind(this);
+        this.handleVariableTextChange = this.handleVariableTextChange.bind(this);
         this.fetchTemplateDefinition = this.fetchTemplateDefinition.bind(this);
         this.toggleTab = this.toggleTab.bind(this);
     }
