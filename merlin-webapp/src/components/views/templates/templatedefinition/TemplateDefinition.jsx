@@ -1,25 +1,18 @@
 import React from 'react';
-import {getRestServiceUrl, isDevelopmentMode, formatDateTime} from "../../../utilities/global";
+import {getRestServiceUrl, isDevelopmentMode} from "../../../../utilities/global";
 import {
-    Form,
     TabContent,
     TabPane,
     Nav,
     NavItem,
-    NavLink,
-    Table
+    NavLink
 } from 'reactstrap';
 import classnames from 'classnames';
-import ErrorAlert from "../../general/ErrorAlert";
-import {
-    FormGroup,
-    FormField,
-    FormLabel,
-    FormCheckbox,
-} from "../../general/forms/FormComponents";
-import {PageHeader} from "../../general/BootstrapComponents";
-import EditableTextField from "../../general/forms/EditableTextField";
-import LinkFile from "../../general/LinkFile"
+import ErrorAlert from "../../../general/ErrorAlert";
+import {PageHeader} from "../../../general/BootstrapComponents";
+import TemplateDefinitionMain from "./TemplateDefinitionMain";
+import TemplateDefinitionVariables from "./TemplateDefinitionVariables";
+import TemplateDefinitionDependentVariables from "./TemplateDefinitionDependentVariables";
 
 class TemplateDefinition extends React.Component {
     componentDidMount = () => {
@@ -108,13 +101,15 @@ class TemplateDefinition extends React.Component {
                 </Nav>
                 <TabContent activeTab={this.state.activeTab}>
                     <TabPane tabId="1">
-                        {this.mainTab()}
+                        <TemplateDefinitionMain definition={this.state.definition}
+                                                handleTextChange={this.handleTextChange}
+                                                handleStateChange={this.handleStateChange}/>
                     </TabPane>
                     <TabPane tabId="2">
-                        {this.variablesTab()}
+                        <TemplateDefinitionVariables definition={this.state.definition}/>
                     </TabPane>
                     <TabPane tabId="3">
-                        {this.dependentVariablesTab()}
+                        <TemplateDefinitionDependentVariables definition={this.state.definition}/>
                     </TabPane>
                 </TabContent>
 
@@ -153,9 +148,6 @@ class TemplateDefinition extends React.Component {
         this.handleStateChange = this.handleStateChange.bind(this);
         this.fetchTemplateDefinition = this.fetchTemplateDefinition.bind(this);
         this.toggleTab = this.toggleTab.bind(this);
-        this.mainTab = this.mainTab.bind(this);
-        this.variablesTab = this.variablesTab.bind(this);
-        this.dependentVariablesTab = this.dependentVariablesTab.bind(this);
     }
 
     toggleTab(tab) {
@@ -164,101 +156,6 @@ class TemplateDefinition extends React.Component {
                 activeTab: tab
             });
         }
-    }
-
-    mainTab = () => {
-        return <div><Form>
-            <FormGroup>
-                <FormLabel htmlFor={'id'}>
-                    Id
-                </FormLabel>
-                <FormField length={6}>
-                    <EditableTextField
-                        type={'text'}
-                        value={this.state.definition.id}
-                        name={'id'}
-                        onChange={this.handleTextChange}
-                    />
-                </FormField>
-            </FormGroup>
-            <FormGroup>
-                <FormLabel htmlFor={'description'}>
-                    Description
-                </FormLabel>
-                <FormField length={6}>
-                    <EditableTextField
-                        type={'textarea'}
-                        value={this.state.definition.description}
-                        name={'description'}
-                        onChange={this.handleTextChange}
-                    />
-                </FormField>
-            </FormGroup>
-            <FormGroup>
-                <FormLabel htmlFor={'filenamePattern'}>
-                    File name pattern
-                </FormLabel>
-                <FormField length={6}>
-                    <EditableTextField
-                        type={'text'}
-                        value={this.state.definition.filenamePattern}
-                        name={'filenamePattern'}
-                        onChange={this.handleTextChange}
-                    />
-                </FormField>
-                <FormField length={2}>
-                    <FormCheckbox checked={this.state.definition.stronglyRestrictedFilenames}
-                                  name="stronglyRestrictedFilenames" label={'strong file names'}
-                                  onChange={this.handleStateChange}
-                                  hint="Merlin will ensure filenames without unallowed chars. If checked, Merlin will only use ASCII-chars and replace e. g. ä by ae (recommended)."/>
-                </FormField>
-            </FormGroup>
-        </Form>
-            <h5>Information</h5>
-            <Table hover>
-                <tbody>
-                <tr>
-                    <td>Last modified</td>
-                    <td>{formatDateTime(this.state.definition.fileDescriptor.lastModified)}</td>
-                </tr>
-                <tr>
-                    <td>Pfad</td>
-                    <td><LinkFile primaryKey={this.state.definition.fileDescriptor.primaryKey}
-                                  filepath={this.state.definition.fileDescriptor.canonicalPath}/></td>
-                </tr>
-                </tbody>
-            </Table>
-
-        </div>;
-    }
-
-    variablesTab = () => {
-        if (!this.state.definition.variableDefinitions) {
-            return null;
-        }
-        const rows = [];
-        this.state.definition.variableDefinitions.forEach((variable) => {
-            rows.push(
-                <div key={variable.name}>{variable.name}</div>
-            );
-        });
-
-        return <div>
-            {rows}</div>
-    }
-    dependentVariablesTab = () => {
-        if (!this.state.definition.dependentVariableDefinitions) {
-            return null;
-        }
-        const rows = [];
-        this.state.definition.dependentVariableDefinitions.forEach((variable) => {
-            rows.push(
-                <div key={variable.name}>{variable.name}</div>
-            );
-        });
-
-        return <div>
-            {rows}</div>
     }
 }
 
