@@ -79,11 +79,7 @@ LogFilters.propTypes = {
         maxSize: PropTypes.oneOf(['50', '100', '500', '1000', '10000']),
         ascendingOrder: PropTypes.oneOf(['true', 'false'])
     }).isRequired,
-    loadLog: PropTypes.func
-};
-
-LogFilters.defaultProps = {
-    loadLog: (event) => event.preventDefault()
+    loadLog: PropTypes.func.isRequired
 };
 
 export default LogFilters;

@@ -8,14 +8,9 @@ import PropTypes from 'prop-types';
 
 class LogView extends React.Component {
 
-    componentDidMount = () => {
-        this.props.loadLog();
-    };
+    componentDidMount = () => this.props.loadLog();
 
-    render = () => {
-
-        console.log(this.props.filters);
-        return (
+    render = () => (
             <div>
                 <PageHeader>Log viewer</PageHeader>
                 <LogFilters
@@ -33,7 +28,6 @@ class LogView extends React.Component {
                 />
             </div>
         );
-    };
 }
 
 LogView.propTypes = {
