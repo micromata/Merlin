@@ -1,5 +1,6 @@
 package de.reinhard.merlin.excel;
 
+import de.reinhard.merlin.CoreI18n;
 import de.reinhard.merlin.I18n;
 import de.reinhard.merlin.ResultMessage;
 import de.reinhard.merlin.ResultMessageStatus;
@@ -85,7 +86,7 @@ public class ExcelValidationErrorMessage extends ResultMessage implements Compar
 
     @Override
     public String getMessage() {
-        return getMessage(I18n.getDefault());
+        return getMessage(CoreI18n.getDefault());
     }
 
     /**

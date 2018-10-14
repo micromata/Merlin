@@ -1,5 +1,6 @@
 package de.reinhard.merlin.word.templating;
 
+import de.reinhard.merlin.CoreI18n;
 import de.reinhard.merlin.I18n;
 import de.reinhard.merlin.excel.ExcelCell;
 import de.reinhard.merlin.excel.ExcelWorkbook;
@@ -33,6 +34,7 @@ public class TemplateRunContext {
     }
 
     public TemplateRunContext(Locale locale) {
+        i18n = CoreI18n.getDefault();
         dateFormatter = new SimpleDateFormat(DEFAULT_DATE_PATTERN);
         dateFormatters = new DateFormat[]{
                 new SimpleDateFormat("yyyy-MM-dd"),
@@ -185,14 +187,11 @@ public class TemplateRunContext {
         }
     }
 
-    public void setI18n(I18n i18n) {
+    public void setI18n(I18n i18N) {
         this.i18n = i18n;
     }
 
     public I18n getI18n() {
-        if (i18n == null) {
-            return I18n.getDefault();
-        }
         return i18n;
     }
 }

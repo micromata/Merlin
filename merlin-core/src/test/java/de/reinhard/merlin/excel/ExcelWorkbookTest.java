@@ -1,7 +1,7 @@
 package de.reinhard.merlin.excel;
 
+import de.reinhard.merlin.CoreI18n;
 import de.reinhard.merlin.Definitions;
-import de.reinhard.merlin.I18n;
 import de.reinhard.merlin.data.PropertiesStorage;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -21,7 +21,7 @@ public class ExcelWorkbookTest {
 
     @Test
     public void configReaderValidationTest() {
-        I18n i18n = I18n.setDefault(Locale.ROOT);
+        CoreI18n coreI18N = CoreI18n.setDefault(Locale.ROOT);
         ExcelWorkbook excelWorkbook = new ExcelWorkbook(new File(Definitions.EXAMPLES_EXCEL_TEST_DIR, "Test.xlsx"));
         ExcelConfigReader configReader = new ExcelConfigReader(excelWorkbook.getSheet("Config"),
                 "Property", "Value");
@@ -30,25 +30,25 @@ public class ExcelWorkbookTest {
         Set<ExcelValidationErrorMessage> validationErrors = configReader.getSheet().getAllValidationErrors();
         assertEquals(1, validationErrors.size());
         assertEquals("In sheet 'Config', column A:'Property' and row #5: Cell value isn't unique. It's already used in row #3: 'user'.",
-                validationErrors.iterator().next().getMessageWithAllDetails(i18n));
+                validationErrors.iterator().next().getMessageWithAllDetails(coreI18N));
         assertEquals("horst", props.getConfigString("user"));
         assertEquals("Hamburg", props.getConfigString("city"));
     }
 
     @Test
     public void validationExcelResponseTest() throws IOException {
-        I18n i18n = I18n.setDefault(Locale.ROOT);
-        validationexcelResponseTest(I18n.getDefault(), "");
-        validationexcelResponseTest(I18n.setDefault(Locale.GERMAN), "_de");
+        CoreI18n coreI18N = CoreI18n.setDefault(Locale.ROOT);
+        validationexcelResponseTest(CoreI18n.getDefault(), "");
+        validationexcelResponseTest(CoreI18n.setDefault(Locale.GERMAN), "_de");
     }
 
-    private void validationexcelResponseTest(I18n i18n, String fileSuffix) throws IOException {
+    private void validationexcelResponseTest(CoreI18n coreI18N, String fileSuffix) throws IOException {
         ExcelWorkbook excelWorkbook = new ExcelWorkbook(new File(Definitions.EXAMPLES_EXCEL_TEST_DIR, "Test.xlsx"));
         ExcelConfigReader configReader = new ExcelConfigReader(excelWorkbook.getSheet("Config"),
                 "Property", "Value");
         PropertiesStorage props = configReader.readConfig(excelWorkbook);
         assertTrue(configReader.getSheet().hasValidationErrors());
-        ExcelWriterContext ctx = new ExcelWriterContext(i18n, excelWorkbook).setAddErrorColumn(true);
+        ExcelWriterContext ctx = new ExcelWriterContext(coreI18N, excelWorkbook).setAddErrorColumn(true);
         configReader.getSheet().markErrors(ctx);
 
         ExcelSheet sheet = excelWorkbook.getSheet("Validator-Test");

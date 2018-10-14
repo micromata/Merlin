@@ -1,5 +1,6 @@
 package de.reinhard.merlin.excel;
 
+import de.reinhard.merlin.CoreI18n;
 import de.reinhard.merlin.I18n;
 import de.reinhard.merlin.ResultMessageStatus;
 import de.reinhard.merlin.data.Data;
@@ -30,11 +31,17 @@ public class ExcelSheet {
     private int columnWithValidationErrorMessages = -1;
     private Set<ExcelValidationErrorMessage> validationErrors;
     private boolean modified;
+    private I18n i18n;
 
     ExcelSheet(ExcelWorkbook workbook, Sheet poiSheet) {
         log.debug("Reading sheet '" + poiSheet.getSheetName() + "'");
         this.workbook = workbook;
         this.poiSheet = poiSheet;
+        this.i18n = CoreI18n.getDefault();
+    }
+
+    public void setI18n(I18n i18n) {
+        this.i18n = i18n;
     }
 
     /**
@@ -345,7 +352,7 @@ public class ExcelSheet {
     }
 
     public ExcelSheet markErrors() {
-        return markErrors(new ExcelWriterContext(I18n.getDefault(), workbook));
+        return markErrors(new ExcelWriterContext(i18n, workbook));
     }
 
     public ExcelSheet markErrors(I18n i18n) {
@@ -361,7 +368,7 @@ public class ExcelSheet {
      * @return this for chaining.
      */
     public ExcelSheet markErrors(ExcelWriterContext excelWriterContext) {
-        return markErrors(I18n.getDefault(), excelWriterContext);
+        return markErrors(i18n, excelWriterContext);
     }
 
     /**
@@ -369,11 +376,11 @@ public class ExcelSheet {
      * Refer {@link #isModified()} for checking if any modification was done.
      * Please don't forget to call {@link #analyze(boolean)} first with parameter validate=true.
      *
-     * @param i18n               For localizing messages.
+     * @param i18N               For localizing messages.
      * @param excelWriterContext Defines the type of response (how to display and highlight validation errors).
      * @return this for chaining.
      */
-    public ExcelSheet markErrors(I18n i18n, ExcelWriterContext excelWriterContext) {
+    public ExcelSheet markErrors(I18n i18N, ExcelWriterContext excelWriterContext) {
         columnWithValidationErrorMessages = excelWriterContext.getCellCleaner().clean(this, excelWriterContext);
         analyze(true);
         Set<ExcelColumnDef> highlightedColumnHeads = new HashSet<>();

@@ -1,17 +1,15 @@
-package de.reinhard.merlin.app;
-
-import de.reinhard.merlin.AbstractI18n;
+package de.reinhard.merlin;
 
 import java.util.Locale;
 
 /**
  * For internationalization.
  */
-public class I18n extends AbstractI18n {
-    private static I18n defaultInstance = new I18n();
-    public static final String BUNDLE_NAME = "MerlinAppMessagesBundle";
+public class CoreI18n extends I18n {
+    private static CoreI18n defaultInstance = new CoreI18n();
+    public static final String BUNDLE_NAME = "MerlinCoreMessagesBundle";
 
-    public static I18n getDefault() {
+    public static CoreI18n getDefault() {
         return defaultInstance;
     }
 
@@ -21,7 +19,7 @@ public class I18n extends AbstractI18n {
      *
      * @param instance
      */
-    public static void setDefault(I18n instance) {
+    public static void setDefault(CoreI18n instance) {
         defaultInstance = instance;
     }
 
@@ -32,19 +30,19 @@ public class I18n extends AbstractI18n {
      * @param locale
      * @return new default instance for chaining.
      */
-    public static I18n setDefault(Locale locale) {
-        defaultInstance = new I18n(locale);
+    public static CoreI18n setDefault(Locale locale) {
+        defaultInstance = new CoreI18n(locale);
         return defaultInstance;
     }
 
     /**
      * Uses the default message bundle "MessagesBundle" of class path with systems default locale.
      */
-    public I18n() {
+    public CoreI18n() {
         super(BUNDLE_NAME);
     }
 
-    public I18n(Locale locale) {
+    public CoreI18n(Locale locale) {
         super(BUNDLE_NAME, locale);
     }
 }

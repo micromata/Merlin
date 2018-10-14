@@ -1,7 +1,7 @@
 package de.reinhard.merlin.word.templating;
 
+import de.reinhard.merlin.CoreI18n;
 import de.reinhard.merlin.Definitions;
-import de.reinhard.merlin.I18n;
 import de.reinhard.merlin.excel.ExcelWorkbook;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -19,7 +19,7 @@ public class DefinitionExcelConverterTest {
 
     @Test
     public void createExcelTest() throws IOException {
-        I18n.setDefault(Locale.ROOT);
+        CoreI18n.setDefault(Locale.ROOT);
         TemplateDefinitionExcelWriter writer = new TemplateDefinitionExcelWriter();
         TemplateDefinition originalTemplate = create();
         ExcelWorkbook workbook = writer.writeToWorkbook(originalTemplate);

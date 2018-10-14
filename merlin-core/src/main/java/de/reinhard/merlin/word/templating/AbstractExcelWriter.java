@@ -1,5 +1,6 @@
 package de.reinhard.merlin.word.templating;
 
+import de.reinhard.merlin.CoreI18n;
 import de.reinhard.merlin.I18n;
 import de.reinhard.merlin.excel.ExcelCell;
 import de.reinhard.merlin.excel.ExcelRow;
@@ -22,7 +23,18 @@ public class AbstractExcelWriter {
     protected CellStyle warningCellStyle;
     protected CellStyle descriptionStyle;
     protected ExcelSheet currentSheet; // Current working sheet.
-    protected TemplateRunContext templateRunContext = new TemplateRunContext();
+    protected TemplateRunContext templateRunContext;
+    protected I18n i18n;
+
+    public AbstractExcelWriter() {
+        this(CoreI18n.getDefault());
+    }
+
+    public AbstractExcelWriter(I18n i18n) {
+        this.i18n = i18n;
+        templateRunContext = new TemplateRunContext();
+        templateRunContext.setI18n(i18n);
+    }
 
     public TemplateRunContext getTemplateRunContext() {
         return templateRunContext;
@@ -52,11 +64,11 @@ public class AbstractExcelWriter {
         row = currentSheet.createRow();
         String msg;
         if (dontModify) {
-            msg = I18n.getDefault().getMessage(descriptionKey)
+            msg = i18n.getMessage(descriptionKey)
                     + "\n"
-                    + I18n.getDefault().getMessage("merlin.word.templating.sheet_configuration_hint");
+                    + i18n.getMessage("merlin.word.templating.sheet_configuration_hint");
         } else {
-            msg = I18n.getDefault().getMessage(descriptionKey);
+            msg = i18n.getMessage(descriptionKey);
         }
         row.createCell().setCellStyle(descriptionStyle).setCellValue(msg);
         if (numberOfColumns > 0) {
@@ -84,8 +96,8 @@ public class AbstractExcelWriter {
         // Description
         ExcelCell cell = row.createCell();
         if (description != null) {
-            if (I18n.getDefault().containsMessage(description)) {
-                cell.setCellValue(I18n.getDefault().getMessage(description));
+            if (i18n.containsMessage(description)) {
+                cell.setCellValue(i18n.getMessage(description));
             } else {
                 cell.setCellValue(description);
             }

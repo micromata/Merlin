@@ -1,5 +1,6 @@
 package de.reinhard.merlin.word.templating;
 
+import de.reinhard.merlin.CoreI18n;
 import de.reinhard.merlin.I18n;
 import de.reinhard.merlin.csv.CSVStringUtils;
 import de.reinhard.merlin.data.PropertiesStorage;
@@ -20,6 +21,11 @@ public class TemplateDefinitionExcelReader {
     private TemplateRunContext templateRunContext = new TemplateRunContext();
     private boolean validTemplateDefinition = true;
     private ExcelConfigReader excelConfigReader;
+    private I18n i18n;
+
+    public TemplateDefinitionExcelReader() {
+        this.i18n = CoreI18n.getDefault();
+    }
 
     public TemplateRunContext getTemplateRunContext() {
         return templateRunContext;
@@ -75,7 +81,7 @@ public class TemplateDefinitionExcelReader {
             excelConfigReader = new ExcelConfigReader(sheet,
                     "Variable", "Value");
             for (ExcelValidationErrorMessage msg : excelConfigReader.getSheet().getAllValidationErrors()) {
-                log.error(msg.getMessageWithAllDetails(I18n.getDefault()));
+                log.error(msg.getMessageWithAllDetails(i18n));
             }
         }
         PropertiesStorage props = excelConfigReader.readConfig(workbook);
@@ -115,7 +121,7 @@ public class TemplateDefinitionExcelReader {
         sheet.registerColumn("type", new ExcelColumnOptionsValidator("string", "int", "float", "date"));
         sheet.analyze(true);
         for (ExcelValidationErrorMessage msg : sheet.getAllValidationErrors()) {
-            log.error(msg.getMessageWithAllDetails(I18n.getDefault()));
+            log.error(msg.getMessageWithAllDetails(i18n));
         }
 
         int counter = 0;
@@ -157,7 +163,7 @@ public class TemplateDefinitionExcelReader {
         ExcelColumnDef mappingCol = sheet.registerColumn("Mapping values");
         sheet.analyze(true);
         for (ExcelValidationErrorMessage msg : sheet.getAllValidationErrors()) {
-            log.error(msg.getMessageWithAllDetails(I18n.getDefault()));
+            log.error(msg.getMessageWithAllDetails(i18n));
         }
 
         int counter = 0;

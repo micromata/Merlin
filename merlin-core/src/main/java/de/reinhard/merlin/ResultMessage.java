@@ -31,10 +31,10 @@ public class ResultMessage {
     }
 
     /**
-     * @return Message including parameters etc. localized with {@link I18n#getDefault()}.
+     * @return Message including parameters etc. localized with {@link CoreI18n#getDefault()}.
      */
     public String getMessage() {
-        return getMessage(I18n.getDefault());
+        return getMessage(CoreI18n.getDefault());
     }
 
     public Object[] getParameters() {

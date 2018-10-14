@@ -1,5 +1,6 @@
 package de.reinhard.merlin.word.templating;
 
+import de.reinhard.merlin.CoreI18n;
 import de.reinhard.merlin.I18n;
 import de.reinhard.merlin.data.PropertiesStorage;
 import de.reinhard.merlin.excel.*;
@@ -19,6 +20,11 @@ public class SerialDataExcelReader {
     private ExcelWorkbook workbook;
     private TemplateRunContext templateRunContext = new TemplateRunContext();
     private ExcelConfigReader excelConfigReader;
+    private I18n i18n;
+
+    public SerialDataExcelReader() {
+        this.i18n = CoreI18n.getDefault();
+    }
 
     public TemplateRunContext getTemplateRunContext() {
         return templateRunContext;
@@ -63,7 +69,7 @@ public class SerialDataExcelReader {
             excelConfigReader = new ExcelConfigReader(sheet,
                     "Variable", "Value");
             for (ExcelValidationErrorMessage msg : excelConfigReader.getSheet().getAllValidationErrors()) {
-                log.error(msg.getMessageWithAllDetails(I18n.getDefault()));
+                log.error(msg.getMessageWithAllDetails(i18n));
             }
         }
         PropertiesStorage props = excelConfigReader.readConfig(workbook);
@@ -103,7 +109,7 @@ public class SerialDataExcelReader {
         }
         sheet.analyze(true);
         for (ExcelValidationErrorMessage msg : sheet.getAllValidationErrors()) {
-            log.error(msg.getMessageWithAllDetails(I18n.getDefault()));
+            log.error(msg.getMessageWithAllDetails(i18n));
         }
         int counter = 0;
         Iterator<Row> it = sheet.getDataRowIterator();

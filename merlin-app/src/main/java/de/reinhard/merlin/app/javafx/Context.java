@@ -27,7 +27,7 @@ public class Context {
             final String translation = resourceBundle.getString(i18nKey);
             return translation;
         } catch (final MissingResourceException ex) {
-            log.error("Internal: I18n key for " + i18nKey + " not found for locale " + String.valueOf(locale) + ".");
+            log.error("Internal: CoreI18n key for " + i18nKey + " not found for locale " + String.valueOf(locale) + ".");
             return "???" + i18nKey + "???";
         }
     }

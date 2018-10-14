@@ -7,7 +7,7 @@ import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.IndexedColors;
 
 /**
- * Context while writing Excel files for customizing CellStyle of error cells, localization (i18n) etc.
+ * Context while writing Excel files for customizing CellStyle of error cells, localization (I18N) etc.
  */
 public class ExcelWriterContext {
     private boolean addCellComments = true;
@@ -165,6 +165,6 @@ public class ExcelWriterContext {
     }
 
     public I18n getI18n() {
-        return i18n;
+        return this.i18n;
     }
 }

@@ -1,5 +1,6 @@
 package de.reinhard.merlin.word.templating;
 
+import de.reinhard.merlin.CoreI18n;
 import de.reinhard.merlin.I18n;
 import de.reinhard.merlin.excel.ExcelRow;
 import de.reinhard.merlin.excel.ExcelWorkbook;
@@ -14,6 +15,11 @@ public class TemplateDefinitionExcelWriter extends AbstractExcelWriter {
     private Logger log = LoggerFactory.getLogger(TemplateDefinitionExcelWriter.class);
 
     private TemplateDefinition template;
+    private I18n i18n;
+
+    public TemplateDefinitionExcelWriter() {
+        this.i18n = CoreI18n.getDefault();
+    }
 
     public ExcelWorkbook writeToWorkbook(TemplateDefinition template) {
         this.template = template;
@@ -74,7 +80,7 @@ public class TemplateDefinitionExcelWriter extends AbstractExcelWriter {
         currentSheet = workbook.createOrGetSheet("Dependent Variables");
         ExcelRow row = addDescriptionRow("merlin.word.templating.sheet_dependent_variables_description", 4);
         row = currentSheet.createRow();
-        row.createCells(headRowStyle, "Variable", "Depends on variable", "Mapping values", I18n.getDefault().getMessage("merlin.word.templating.sheet_dependent_variables_mapping"));
+        row.createCells(headRowStyle, "Variable", "Depends on variable", "Mapping values", i18n.getMessage("merlin.word.templating.sheet_dependent_variables_mapping"));
         currentSheet.autosize();
         currentSheet.setColumnWidth(0, COLUMN_WIDE_LENGTH);
         currentSheet.setColumnWidth(1, COLUMN_WIDE_LENGTH);

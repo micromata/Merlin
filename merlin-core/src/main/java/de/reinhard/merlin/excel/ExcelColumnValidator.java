@@ -1,5 +1,6 @@
 package de.reinhard.merlin.excel;
 
+import de.reinhard.merlin.CoreI18n;
 import de.reinhard.merlin.I18n;
 import de.reinhard.merlin.ResultMessageStatus;
 import org.apache.poi.ss.usermodel.Cell;
@@ -30,6 +31,11 @@ public class ExcelColumnValidator extends ExcelColumnListener {
     private Set<String> entries = new TreeSet<>();
     private Map<String, Integer> cellValueMap;
     private Set<ExcelValidationErrorMessage> validationErrors;
+    private I18n i18n;
+
+    public ExcelColumnValidator() {
+        this.i18n = CoreI18n.getDefault();
+    }
 
     /**
      * Overwrite this for own validation.
@@ -59,7 +65,7 @@ public class ExcelColumnValidator extends ExcelColumnListener {
         ExcelValidationErrorMessage resultMessage = isValid(cell, rowNumber);
         if (resultMessage != null) {
             if (log.isDebugEnabled()) {
-                log.debug("Validation error found: " + resultMessage.getMessageWithAllDetails(I18n.getDefault()));
+                log.debug("Validation error found: " + resultMessage.getMessageWithAllDetails(i18n));
             }
             getValidationErrors().add(resultMessage);
         }
