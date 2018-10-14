@@ -118,8 +118,18 @@ function FormCheckbox({id, name, checked, onChange, hint, label}) {
                 {hint}
             </UncontrolledTooltip></span>;
     }
+    let labelNode = null;
+    if (label) {
+        labelNode = <label
+            className={'form-check-label'}
+            htmlFor={id}
+            style={{marginLeft: '1ex'}}
+        >
+            {label}
+        </label>;
+    }
     return (
-        <div>
+        <span>
             <input
                 className={'form-check-input'}
                 type={'checkbox'}
@@ -128,15 +138,9 @@ function FormCheckbox({id, name, checked, onChange, hint, label}) {
                 checked={checked}
                 onChange={onChange}
             />
-            <label
-                className={'form-check-label'}
-                htmlFor={id}
-                style={{marginLeft: '1ex'}}
-            >
-                {label}
-            </label>
+            {labelNode}
             {tooltip}
-        </div>
+        </span>
     );
 }
 
