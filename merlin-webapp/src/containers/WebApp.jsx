@@ -8,10 +8,10 @@ import TemplateListView from '../components/views/templates/TemplateListView';
 import TemplateDefinitionListView from '../components/views/templates/TemplateDefinitionListView';
 import Config from '../components/views/config/Configuration';
 import FileUploadView from '../components/views/FileUpload';
-import LogViewer from '../components/views/logging/LogViewer';
 import RestServices from '../components/views/develop/RestServices';
 import {isDevelopmentMode} from '../actions/global';
 import TemplateView from '../components/views/templates/TemplateView';
+import LogView from '../components/views/logging/LogView';
 import TemplateDefinition from '../components/views/templates/TemplateDefinition';
 
 class WebApp extends React.Component {
@@ -22,7 +22,7 @@ class WebApp extends React.Component {
             ['Start', '/', Start],
             ['Templates', '/templates', TemplateListView],
             ['Definitions', '/templateDefinitions', TemplateDefinitionListView],
-            ['Log viewer', '/logViewer', LogViewer],
+            ['Log viewer', '/logViewer', LogView],
             ['Configuration', '/config', Config]
         ];
         if (isDevelopmentMode()) {

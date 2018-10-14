@@ -7,8 +7,10 @@ import {Provider} from 'react-redux';
 import WebApp from './containers/WebApp';
 
 import registerServiceWorker from './registerServiceWorker';
+import reducers from './reducers';
 
 const store = createStore(
+    reducers,
     applyMiddleware(thunk)
 );
 
