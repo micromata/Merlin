@@ -3,11 +3,11 @@ import PropTypes from 'prop-types';
 import {FormButton, FormInput, FormLabel, FormSelect} from '../../general/forms/FormComponents';
 import {IconRefresh} from '../../general/IconComponents';
 
-function LogFilters({applyFilters, changeFilter, filters}) {
+function LogFilters({loadLog, changeFilter, filters}) {
 
     return (
         <form
-            onSubmit={applyFilters}
+            onSubmit={loadLog}
             className={'form-inline'}
         >
             <FormLabel length={1}>
@@ -71,28 +71,19 @@ function LogFilters({applyFilters, changeFilter, filters}) {
 }
 
 LogFilters.propTypes = {
-    applyFilters: PropTypes.func,
-    changeFilter: PropTypes.func,
+    changeFilter: PropTypes.func.isRequired,
     filters: PropTypes.shape({
         threshold: PropTypes.oneOf(['error', 'warn', 'info', 'debug', 'trace']),
         search: PropTypes.string,
         locationFormat: PropTypes.oneOf(['none', 'short', 'normal']),
         maxSize: PropTypes.oneOf(['50', '100', '500', '1000', '10000']),
         ascendingOrder: PropTypes.oneOf(['true', 'false'])
-    })
+    }).isRequired,
+    loadLog: PropTypes.func
 };
 
 LogFilters.defaultProps = {
-    // TODO: CHANGE DEFAULT FUNCTIONS
-    applyFilters: () => alert('applied'),
-    changeFilter: (event) => console.log('filter changed', event),
-    filters: {
-        threshold: 'info',
-        search: '',
-        locationFormat: 'none',
-        maxSize: '100',
-        ascendingOrder: 'false'
-    }
+    loadLog: (event) => event.preventDefault()
 };
 
 export default LogFilters;

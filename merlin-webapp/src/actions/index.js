@@ -1,6 +1,6 @@
 import {uploadFile} from './fileupload';
-import {changeFilter} from './log';
+import {changeFilter, requestLogReload} from './log';
 
 export {uploadFile};
 
-export {changeFilter};
+export {changeFilter, requestLogReload};

@@ -8,7 +8,8 @@ const initialState = {
         maxSize: '100',
         ascendingOrder: 'false'
     },
-    loading: false
+    loading: false,
+    entries: []
 };
 
 const reducer = (state = initialState, action) => {
@@ -19,8 +20,8 @@ const reducer = (state = initialState, action) => {
             });
         case LOG_VIEW_RELOADED:
             return Object.assign({}, state, {
-                // TODO ADD DATA FROM RESPONSE
-                loading: false
+                loading: false,
+                entries: action.payload
             });
         case LOG_VIEW_CHANGE_FILTER:
             return Object.assign({}, state, {

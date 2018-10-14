@@ -2,26 +2,57 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {PageHeader} from '../../general/BootstrapComponents';
 import LogFilters from './LogFilters';
-import {changeFilter} from '../../../actions';
+import {changeFilter, requestLogReload} from '../../../actions';
+import LogTable from './LogTable';
+import PropTypes from 'prop-types';
 
-function LogView(props) {
-    return (
-        <div>
-            <PageHeader>Log viewer</PageHeader>
-            <LogFilters
-                filters={props.filters}
-                changeFilter={props.changeFilter}
-            />
-        </div>
-    );
+class LogView extends React.Component {
+
+    componentDidMount = () => {
+        this.props.loadLog();
+    };
+
+    render = () => {
+
+        console.log(this.props.filters);
+        return (
+            <div>
+                <PageHeader>Log viewer</PageHeader>
+                <LogFilters
+                    filters={this.props.filters}
+                    changeFilter={this.props.changeFilter}
+                    loadLog={(event) => {
+                        event.preventDefault();
+                        this.props.loadLog();
+                    }}
+                />
+                <LogTable
+                    search={this.props.filters.search}
+                    locationFormat={this.props.filters.locationFormat}
+                    entries={this.props.entries}
+                />
+            </div>
+        );
+    };
 }
 
-const mapStateToProps = state => ({
-    filters: state.log.filters
-});
+LogView.propTypes = {
+    changeFilter: PropTypes.func.isRequired,
+    filters: PropTypes.shape({
+        threshold: PropTypes.oneOf(['error', 'warn', 'info', 'debug', 'trace']),
+        search: PropTypes.string,
+        locationFormat: PropTypes.oneOf(['none', 'short', 'normal']),
+        maxSize: PropTypes.oneOf(['50', '100', '500', '1000', '10000']),
+        ascendingOrder: PropTypes.oneOf(['true', 'false'])
+    }).isRequired,
+    loadLog: PropTypes.func.isRequired
+};
+
+const mapStateToProps = state => state.log;
 
 const actions = {
-    changeFilter
+    changeFilter,
+    loadLog: requestLogReload
 };
 
 export default connect(mapStateToProps, actions)(LogView);
