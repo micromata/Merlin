@@ -51,7 +51,7 @@ function FormInput(props) {
     return (
         <input
             {...props}
-            className={'form-control form-control-sm'}
+            className={`form-control form-control-sm col-sm-${props.fieldLength}`}
         />
     );
 }
@@ -59,6 +59,7 @@ function FormInput(props) {
 FormInput.propTypes = {
     id: PropTypes.string,
     name: PropTypes.string,
+    fieldLength: PropTypes.number,
     value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     min: PropTypes.number,
     max: PropTypes.number,
@@ -70,6 +71,7 @@ FormInput.propTypes = {
 FormInput.defaultProps = {
     id: null,
     name: '',
+    fieldLength: 10,
     value: '',
     min: null,
     max: null,
@@ -239,6 +241,7 @@ function FormLabelInputField({id = revisedRandId(), ...props}) {
                 step={props.step}
                 value={props.value}
                 onChange={props.onChange}
+                fieldLength={props.fieldLength}
                 placeholder={props.placeholder}
             />
         </FormLabelField>
