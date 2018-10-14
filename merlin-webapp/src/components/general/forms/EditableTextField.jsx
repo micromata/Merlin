@@ -42,7 +42,8 @@ class EditableTextField extends React.Component {
                     name={this.props.title}
                     stopEditing={this.stopEditing}
                 /> :
-                <div className={'text-truncate editable-text-field-value'} onClick={this.startEditing} title={this.props.value}>
+                <div className={'text-truncate editable-text-field-value'} onClick={this.startEditing}
+                     title={this.props.value}>
                     {this.props.value}
                 </div>
             }
@@ -92,8 +93,11 @@ class EditableTextFieldInput extends React.Component {
                 this.stopEditing(false)();
                 return;
             case 'Enter':
-                this.stopEditing(true)();
-                return;
+                if (this.props.type !== 'textarea') {
+                    this.stopEditing(true)();
+                    return;
+                }
+                break;
             default:
         }
     };
@@ -113,13 +117,13 @@ class EditableTextFieldInput extends React.Component {
                     onClick={this.stopEditing(true)}
                     color={'success'}
                 >
-                    <IconCheck />
+                    <IconCheck/>
                 </Button>
                 <Button
                     onClick={this.stopEditing(false)}
                     color={'danger'}
                 >
-                    <IconCancel />
+                    <IconCancel/>
                 </Button>
             </InputGroupAddon>
         </InputGroup>
