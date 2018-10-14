@@ -11,7 +11,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
-import java.nio.file.Paths;
 
 @Path("/templates")
 public class TemplateExamplesRunnerRest {
@@ -29,7 +28,7 @@ public class TemplateExamplesRunnerRest {
         ExampleData exampleData = createExampleData();
         TemplateRunnerData data = new TemplateRunnerData();
         data.setTemplateDefinitionId(exampleData.templateDefinitionId);
-        data.setTemplateCanonicalPath(exampleData.templateCanonicalPath);
+        data.setTemplatePrimaryKey(exampleData.templatePrimaryKey);
         data.put("Gender", "female");
         data.put("Employee", "Berta Smith");
         data.put("Date", "2018/01/01");
@@ -61,15 +60,15 @@ public class TemplateExamplesRunnerRest {
             if (template.getTemplateDefinition() != null
                     && "Employment contract definition".equals(template.getTemplateDefinition().getId())) {
                 // found template with template definition:
-                data.templateCanonicalPath = template.getFileDescriptor().getCanonicalPath();
+                data.templatePrimaryKey = template.getFileDescriptor().getPrimaryKey();
                 data.templateDefinitionId = template.getTemplateDefinitionId();
                 found = true;
                 break;
             }
         }
         if (!found) {
-            data.templateCanonicalPath = Paths.get("Oups, no template with assigned template definiton found (reset settings)!");
-            data.templateDefinitionName = Paths.get("No template definition found (reset settings)!");
+            data.templatePrimaryKey = "Oups, no template with assigned template definiton found (reset settings)!";
+            data.templateDefinitionPrimaryKey = "No template definition found (reset settings)!";
             data.templateDefinitionId = "No template definition found (reset settings)!";
         }
         return data;
@@ -77,19 +76,19 @@ public class TemplateExamplesRunnerRest {
 
     public static class ExampleData {
         String templateDefinitionId;
-        java.nio.file.Path templateDefinitionName;
-        java.nio.file.Path templateCanonicalPath;
+        String templateDefinitionPrimaryKey;
+        String templatePrimaryKey;
 
         public String getTemplateDefinitionId() {
             return templateDefinitionId;
         }
 
-        public java.nio.file.Path getTemplateCanonicalPath() {
-            return templateCanonicalPath;
+        public String getTemplatePrimaryKey() {
+            return templatePrimaryKey;
         }
 
-        public java.nio.file.Path getTemplateDefinitionName() {
-            return templateDefinitionName;
+        public String getTemplateDefinitionPrimaryKey() {
+            return templateDefinitionPrimaryKey;
         }
 
     }

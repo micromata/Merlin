@@ -1,6 +1,7 @@
 import React from 'react';
 import {
     faCheck,
+    faInfoCircle,
     faPlus,
     faSync,
     faTrash,
@@ -27,6 +28,12 @@ function IconCheck() {
     );
 }
 
+function IconInfo() {
+    return (
+        <FontAwesomeIcon icon={faInfoCircle}/>
+    );
+}
+
 function IconRefresh() {
     return (
         <FontAwesomeIcon icon={faSync}/>
@@ -46,5 +53,5 @@ function IconUpload() {
 }
 
 export {
-    IconAdd, IconCancel, IconCheck, IconRefresh, IconRemove, IconUpload
+    IconAdd, IconCancel, IconCheck, IconInfo, IconRefresh, IconRemove, IconUpload
 };

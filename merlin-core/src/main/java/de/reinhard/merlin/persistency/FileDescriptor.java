@@ -27,6 +27,8 @@ public class FileDescriptor implements Cloneable {
     private String relativePath;
     private String filename;
     private Date lastUpdate;
+    private long lastModified;
+    private String primaryKey;
 
     public String getDirectory() {
         return directory;
@@ -34,6 +36,7 @@ public class FileDescriptor implements Cloneable {
 
     public void setDirectory(String directory) {
         this.directory = directory;
+        primaryKey = null;
     }
 
     /**
@@ -44,6 +47,7 @@ public class FileDescriptor implements Cloneable {
      */
     public FileDescriptor setDirectory(Path dir) {
         directory = PersistencyRegistry.getDefault().getCanonicalPathString(dir);
+        primaryKey = null;
         return this;
     }
 
@@ -57,15 +61,16 @@ public class FileDescriptor implements Cloneable {
 
     public FileDescriptor setRelativePath(String relativePath) {
         this.relativePath = relativePath;
+        primaryKey = null;
         return this;
     }
 
     /**
-     *
      * @param path path including file name.
      * @return
      */
     public FileDescriptor setRelativePath(Path path) {
+        primaryKey = null;
         Path dirPath = Paths.get(directory);
         Path filePath = PersistencyRegistry.getDefault().getCanonicalPath(path);
         Path relPath = dirPath.relativize(filePath);
@@ -85,6 +90,8 @@ public class FileDescriptor implements Cloneable {
     }
 
     /**
+     * This isn't the last modified date of the file in the file system!
+     * 
      * For syncing purposes: do only update if any modification of the representing file is newer than the last update.
      *
      * @return Date of last update of this object (if set).
@@ -92,6 +99,19 @@ public class FileDescriptor implements Cloneable {
     @Transient
     public Date getLastUpdate() {
         return lastUpdate;
+    }
+
+    /**
+     * The last modified date of the item represented by this FileDescriptor. For file systems it's the last modified
+     * date of the file.
+     * @return
+     */
+    public long getLastModified() {
+        return lastModified;
+    }
+
+    public void setLastModified(long lastModified) {
+        this.lastModified = lastModified;
     }
 
     public FileDescriptor setLastUpdate(Date lastUpdate) {
@@ -138,11 +158,12 @@ public class FileDescriptor implements Cloneable {
      * @return true, if the gifen file was modified after last update or if last update is not set.
      */
     public boolean isModified(Path file) {
+        this.lastModified = PersistencyRegistry.getDefault().getLastModified(file);
         if (lastUpdate == null) {
             return true;
         }
-        Date lastModified = new Date(PersistencyRegistry.getDefault().getLastModified(file));
-        return lastModified.after(lastUpdate);
+        Date lastModifiedDate = new Date(this.lastModified);
+        return lastModifiedDate.after(lastUpdate);
     }
 
     @Override
@@ -153,6 +174,19 @@ public class FileDescriptor implements Cloneable {
         eb.append(relativePath, other.relativePath);
         eb.append(filename, other.filename);
         return eb.isEquals();
+    }
+
+    /**
+     * Base64 encoded Hash.
+     *
+     * @return
+     */
+    public String getPrimaryKey() {
+        if (primaryKey != null) {
+            return primaryKey;
+        }
+        primaryKey = PersistencyRegistry.getDefault().getPrimaryKey(Paths.get(directory, relativePath, filename));
+        return primaryKey;
     }
 
     @Override

@@ -112,9 +112,9 @@ abstract class AbstractHandler<T extends FileDescriptorInterface> {
         return null;
     }
 
-    T getItem(String canonicalPath) {
+    T getItem(String primaryKey) {
         for (T item : getItems()) {
-            if (canonicalPath.equals(item.getFileDescriptor().getCanonicalPathString())) {
+            if (primaryKey.equals(item.getFileDescriptor().getPrimaryKey())) {
                 return item;
             }
         }

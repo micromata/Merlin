@@ -24,3 +24,10 @@ export const getResponseHeaderFilename = contentDisposition => {
 };
 
 export const revisedRandId = () => Math.random().toString(36).replace(/[^a-z]+/g, '').substr(2, 10);
+
+export const formatDateTime = (millis) => {
+    var options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' };
+    const date = new Date(millis);
+    return date.toLocaleDateString(options) + ' ' + date.toLocaleTimeString(options);
+    //return date.toLocaleDateString("de-DE", options);
+}

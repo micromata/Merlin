@@ -80,9 +80,9 @@ public class DirectoryScanner {
         return templatesHandler.getItems();
     }
 
-    public Template getTemplate(String canonicalPath) {
+    public Template getTemplate(String primaryKey) {
         checkAndRefreshAllItems();
-        return templatesHandler.getItem(canonicalPath);
+        return templatesHandler.getItem(primaryKey);
     }
 
     public Collection<TemplateDefinition> getTemplateDefinitions() {
@@ -96,15 +96,15 @@ public class DirectoryScanner {
     }
 
     /**
-     * @param id Id or name of the template definition to search for.
+     * @param idOrPrimaryKey Id or primary key of the template definition to search for.
      * @return
      */
-    public TemplateDefinition getTemplateDefinition(String id) {
-        if (id == null) {
+    public TemplateDefinition getTemplateDefinition(String idOrPrimaryKey) {
+        if (idOrPrimaryKey == null) {
             return null;
         }
         templateDefinitionsHandler.checkAndRefreshItems();
-        return templateDefinitionsHandler.getTemplateDefinition(id);
+        return templateDefinitionsHandler.getTemplateDefinition(idOrPrimaryKey);
     }
 
     TemplateDefinitionsHandler getTemplateDefinitionsHandler() {
@@ -116,9 +116,9 @@ public class DirectoryScanner {
         return serialDatasHandler.getItems();
     }
 
-    public SerialData getSerialData(String canonicalPath) {
+    public SerialData getSerialData(String primaryKey) {
         checkAndRefreshAllItems();
-        return serialDatasHandler.getItem(canonicalPath);
+        return serialDatasHandler.getItem(primaryKey);
     }
 
 

@@ -5,12 +5,14 @@ import {Route, Router, Switch} from 'react-router';
 import Menu from '../components/general/Menu';
 import Start from '../components/views/Start';
 import TemplateListView from '../components/views/templates/TemplateListView';
+import TemplateDefinitionListView from '../components/views/templates/TemplateDefinitionListView';
 import Config from '../components/views/config/Configuration';
 import FileUploadView from '../components/views/FileUpload';
 import RestServices from '../components/views/develop/RestServices';
 import {isDevelopmentMode} from '../actions/global';
 import TemplateView from '../components/views/templates/TemplateView';
 import LogView from '../components/views/logging/LogView';
+import TemplateDefinition from '../components/views/templates/TemplateDefinition';
 
 class WebApp extends React.Component {
 
@@ -19,6 +21,7 @@ class WebApp extends React.Component {
         let routes = [
             ['Start', '/', Start],
             ['Templates', '/templates', TemplateListView],
+            ['Definitions', '/templateDefinitions', TemplateDefinitionListView],
             ['Log viewer', '/logViewer', LogView],
             ['Configuration', '/config', Config]
         ];
@@ -43,7 +46,8 @@ class WebApp extends React.Component {
                                     />
                                 ))
                             }
-                            <Route path={'/templates/:templateId'} component={TemplateView} />
+                            <Route path={'/template/:primaryKey'} component={TemplateView} />
+                            <Route path={'/templateDefinition/:primaryKey'} component={TemplateDefinition} />
                         </Switch>
                     </div>
                 </div>

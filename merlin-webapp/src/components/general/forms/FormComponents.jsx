@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import {UncontrolledTooltip} from 'reactstrap';
 import {revisedRandId} from '../../../actions/global';
+import {IconInfo} from "../IconComponents";
 
 // TODO: SPLIT IN DIFFERENT FILES
 
@@ -103,7 +105,17 @@ FormSelect.defaultProps = {
 };
 
 
-function FormCheckbox({id = revisedRandId(), name, checked, onChange, hint, title, label}) {
+function FormCheckbox({id, name, checked, onChange, hint, label}) {
+    if (!id) {
+        id = revisedRandId();
+    }
+    let tooltip = null;
+    if (hint) {
+        tooltip =<span> <span id={`info-${id}`}><IconInfo/></span>
+            <UncontrolledTooltip placement="right" target={`info-${id}`}>
+                {hint}
+            </UncontrolledTooltip></span>;
+    }
     return (
         <div>
             <input
@@ -111,7 +123,6 @@ function FormCheckbox({id = revisedRandId(), name, checked, onChange, hint, titl
                 type={'checkbox'}
                 id={id}
                 name={name}
-                title={hint}
                 checked={checked}
                 onChange={onChange}
             />
@@ -119,10 +130,10 @@ function FormCheckbox({id = revisedRandId(), name, checked, onChange, hint, titl
                 className={'form-check-label'}
                 htmlFor={id}
                 style={{marginLeft: '1ex'}}
-                title={title}
             >
                 {label}
             </label>
+            {tooltip}
         </div>
     );
 }
@@ -133,7 +144,6 @@ FormCheckbox.propTypes = {
     checked: PropTypes.bool,
     onChange: PropTypes.func,
     hint: PropTypes.string,
-    title: PropTypes.string,
     label: PropTypes.node
 };
 
@@ -143,7 +153,6 @@ FormCheckbox.defaultProps = {
     checked: false,
     onChange: null,
     hint: '',
-    title: '',
     label: ''
 };
 

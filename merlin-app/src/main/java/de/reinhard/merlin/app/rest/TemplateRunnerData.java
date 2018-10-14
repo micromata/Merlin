@@ -1,12 +1,11 @@
 package de.reinhard.merlin.app.rest;
 
-import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
 public class TemplateRunnerData {
     private String templateDefinitionId;
-    private Path templateCanonicalPath;
+    private String templatePrimaryKey;
     private Map<String, Object> variables;
 
     public String getTemplateDefinitionId() {
@@ -17,12 +16,12 @@ public class TemplateRunnerData {
         this.templateDefinitionId = templateDefinitionId;
     }
 
-    public Path getTemplateCanonicalPath() {
-        return templateCanonicalPath;
+    public String getTemplatePrimaryKey() {
+        return templatePrimaryKey;
     }
 
-    public void setTemplateCanonicalPath(Path templateCanonicalPath) {
-        this.templateCanonicalPath = templateCanonicalPath;
+    public void setTemplatePrimaryKey(String templatePrimaryKey) {
+        this.templatePrimaryKey = templatePrimaryKey;
     }
 
     public Map<String, Object> getVariables() {

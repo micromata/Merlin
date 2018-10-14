@@ -13,9 +13,17 @@ public interface PersistencyInterface {
 
     /**
      * @param path
-     * @return the value in milliseconds, since the epoch (1970-01-01T00:00:00Z)
+     * @return the canonical path should specify this file / path bi-unique.
      */
     public String getCanonicalPathString(Path path);
+
+    /**
+     * Generates a primary key for the given path. The value must be bi-unique for the path.
+     * @param path
+     * @return
+     */
+    public String getPrimaryKey(Path path);
+
 
     /**
      * @param path
@@ -30,14 +38,12 @@ public interface PersistencyInterface {
     public boolean exists(Path path);
 
     /**
-     *
      * @param path
      * @return The input stream of the object (e. g. file) specified by the path.
      */
     public InputStream getInputStream(Path path);
 
     /**
-     *
      * @param path
      * @return File, if supported by the implementation, otherwise null (then use {@link #getInputStream(Path)} instead).
      */

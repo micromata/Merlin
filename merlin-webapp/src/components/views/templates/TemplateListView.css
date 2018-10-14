@@ -32,11 +32,19 @@ div.card.template:hover div.card-body, div.card.template:hover li.list-group-ite
 
 div.card.template div.card-list-entry {
     color: grey;
+    font-size: 80%;
 }
 
 div.card.template div.card-list-entry .card-list-entry-value {
     font-style: italic;
-    font-size: 80%;
+}
+
+div.card.template div.card-list-entry .filename {
+    font-family: monospace;
+}
+
+div.card.template div.card-footer .lastModified {
+    float:right;
 }
 
 div.card.template:hover div.card-header, div.card.template:hover div.card-footer {

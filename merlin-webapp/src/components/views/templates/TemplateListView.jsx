@@ -48,9 +48,11 @@ class TemplateListView extends React.Component {
 
                     return {
                         id: template.id,
+                        primaryKey: template.fileDescriptor.primaryKey,
+                        filename: template.fileDescriptor.filename,
+                        lastModified: template.fileDescriptor.lastModified,
                         templateDefinitionId: template.templateDefinitionId,
-                        templateDefinition: template.templateDefinition,
-                        fileDescriptor: template.fileDescriptor
+                        templateDefinition: template.templateDefinition
                     };
                 });
 
@@ -94,8 +96,7 @@ class TemplateListView extends React.Component {
                     const definition = this.state.definitions[template.templateDefinition];
 
                     return <TemplateCard
-                        key={`template-${template.fileDescriptor.canonicalPath}`}
-                        canonicalPath={template.fileDescriptor.canonicalPath}
+                        key={template.primaryKey}
                         template={template}
                         definition={definition}
                     />;
