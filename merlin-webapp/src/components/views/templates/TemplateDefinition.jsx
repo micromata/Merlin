@@ -1,17 +1,20 @@
 import React from 'react';
 import {getRestServiceUrl, isDevelopmentMode} from "../../../actions/global";
-import {Form} from 'reactstrap';
+import {
+    Form,
+    TabContent,
+    TabPane,
+    Nav,
+    NavItem,
+    NavLink
+} from 'reactstrap';
+import classnames from 'classnames';
 import ErrorAlert from "../../general/ErrorAlert";
 import {FormGroup, FormField, FormLabel, FormCheckbox} from "../../general/forms/FormComponents";
 import {PageHeader} from "../../general/BootstrapComponents";
 import EditableTextField from "../../general/forms/EditableTextField";
 
 class TemplateDefinition extends React.Component {
-    state = {
-        primaryKey: this.props.match.params.primaryKey,
-        definition: null
-    };
-
     componentDidMount = () => {
         this.fetchTemplateDefinition();
     };
@@ -66,54 +69,49 @@ class TemplateDefinition extends React.Component {
                 }}
             />;
         } else if (this.state.definition) {
+            let formTab = this.formTab();
             content = <div>
-                <Form>
-                    <FormGroup>
-                        <FormLabel htmlFor={'id'}>
-                            Id
-                        </FormLabel>
-                        <FormField length={6}>
-                            <EditableTextField
-                                type={'text'}
-                                value={this.state.definition.id}
-                                name={'id'}
-                                onChange={this.handleTextChange}
-                            />
-                        </FormField>
-                    </FormGroup>
-                    <FormGroup>
-                        <FormLabel htmlFor={'description'}>
-                            Description
-                        </FormLabel>
-                        <FormField length={6}>
-                            <EditableTextField
-                                type={'textarea'}
-                                value={this.state.definition.description}
-                                name={'description'}
-                                onChange={this.handleTextChange}
-                            />
-                        </FormField>
-                    </FormGroup>
-                    <FormGroup>
-                        <FormLabel htmlFor={'filenamePattern'}>
-                            File name pattern
-                        </FormLabel>
-                        <FormField length={6}>
-                            <EditableTextField
-                                type={'text'}
-                                value={this.state.definition.filenamePattern}
-                                name={'filenamePattern'}
-                                onChange={this.handleTextChange}
-                            />
-                        </FormField>
-                        <FormField length={2}>
-                            <FormCheckbox checked={this.state.definition.stronglyRestrictedFilenames}
-                                          name="stronglyRestrictedFilenames" label={'stronglyRestrictedFilenames'}
-                                          onChange={this.handleStateChange}
-                                          hint="Merlin will ensure filenames without unallowed chars. If checked, Merlin will only use ASCII-chars and replace e. g. ä by ae (recommended)."/>
-                        </FormField>
-                    </FormGroup>
-                </Form>
+                <Nav tabs>
+                    <NavItem>
+                        <NavLink
+                            className={classnames({active: this.state.activeTab === '1'})}
+                            onClick={() => {
+                                this.toggleTab('1');
+                            }}>
+                            Main
+                        </NavLink>
+                    </NavItem>
+                    <NavItem>
+                        <NavLink
+                            className={classnames({active: this.state.activeTab === '2'})}
+                            onClick={() => {
+                                this.toggleTab('2');
+                            }}>
+                            Variables
+                        </NavLink>
+                    </NavItem>
+                    <NavItem>
+                        <NavLink
+                            className={classnames({active: this.state.activeTab === '3'})}
+                            onClick={() => {
+                                this.toggleTab('3');
+                            }}>
+                            Dependent variables
+                        </NavLink>
+                    </NavItem>
+                </Nav>
+                <TabContent activeTab={this.state.activeTab}>
+                    <TabPane tabId="1">
+                        {formTab}
+                    </TabPane>
+                    <TabPane tabId="2">
+                        Variables
+                    </TabPane>
+                    <TabPane tabId="3">
+                        Dependent variables
+                    </TabPane>
+                </TabContent>
+
             </div>;
         }
 
@@ -125,11 +123,11 @@ class TemplateDefinition extends React.Component {
                 </ul>
             </div>
         }
-
+        let title = this.state.definition ? 'Template definition: ' + this.state.definition.id : 'Template definition';
 
         return <div>
             <PageHeader>
-                Template definition
+                {title}
             </PageHeader>
             {content}
             {todo}
@@ -138,9 +136,77 @@ class TemplateDefinition extends React.Component {
 
     constructor(props) {
         super(props);
+        this.state = {
+            primaryKey: this.props.match.params.primaryKey,
+            isFetching: true,
+            failed: false,
+            definition: undefined,
+            activeTab: '1'
+        };
         this.handleTextChange = this.handleTextChange.bind(this);
         this.handleStateChange = this.handleStateChange.bind(this);
         this.fetchTemplateDefinition = this.fetchTemplateDefinition.bind(this);
+        this.toggleTab = this.toggleTab.bind(this);
+        this.formTab = this.formTab.bind(this);
+    }
+
+    toggleTab(tab) {
+        if (this.state.activeTab !== tab) {
+            this.setState({
+                activeTab: tab
+            });
+        }
+    }
+
+    formTab = () => {
+        return <Form>
+            <FormGroup>
+                <FormLabel htmlFor={'id'}>
+                    Id
+                </FormLabel>
+                <FormField length={6}>
+                    <EditableTextField
+                        type={'text'}
+                        value={this.state.definition.id}
+                        name={'id'}
+                        onChange={this.handleTextChange}
+                    />
+                </FormField>
+            </FormGroup>
+            <FormGroup>
+                <FormLabel htmlFor={'description'}>
+                    Description
+                </FormLabel>
+                <FormField length={6}>
+                    <EditableTextField
+                        type={'textarea'}
+                        value={this.state.definition.description}
+                        name={'description'}
+                        onChange={this.handleTextChange}
+                    />
+                </FormField>
+            </FormGroup>
+            <FormGroup>
+                <FormLabel htmlFor={'filenamePattern'}>
+                    File name pattern
+                </FormLabel>
+                <FormField length={6}>
+                    <EditableTextField
+                        type={'text'}
+                        value={this.state.definition.filenamePattern}
+                        name={'filenamePattern'}
+                        onChange={this.handleTextChange}
+                    />
+                </FormField>
+                <FormField length={2}>
+                    <FormCheckbox checked={this.state.definition.stronglyRestrictedFilenames}
+                                  name="stronglyRestrictedFilenames" label={'strong file names'}
+                                  onChange={this.handleStateChange}
+                                  hint="Merlin will ensure filenames without unallowed chars. If checked, Merlin will only use ASCII-chars and replace e. g. ä by ae (recommended)."/>
+                </FormField>
+            </FormGroup>
+
+        </Form>;
     }
 }
 
