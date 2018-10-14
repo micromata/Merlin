@@ -11,6 +11,10 @@
     </parent>
     <artifactId>merlin-app</artifactId>
     <packaging>jar</packaging>
+    <properties>
+        <maven.build.timestamp.format>yyyy-MM-dd' 'HH:mm:ss</maven.build.timestamp.format>
+        <timestamp>${maven.build.timestamp}</timestamp>
+    </properties>
 
     <name>Merlin app</name>
 
@@ -24,6 +28,10 @@
                         <manifest>
                             <mainClass>fully.qualified.MainClass</mainClass>
                         </manifest>
+                        <manifestEntries>
+                            <Build-Time>${maven.build.timestamp}</Build-Time>
+                            <Project-Version>${project.version}</Project-Version>
+                        </manifestEntries>
                     </archive>
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
@@ -31,6 +39,12 @@
                 </configuration>
             </plugin>
         </plugins>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
     </build>
 
     <dependencies>

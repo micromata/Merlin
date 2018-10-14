@@ -1,5 +1,6 @@
 package de.reinhard.merlin.app.javafx;
 
+import de.reinhard.merlin.app.Version;
 import de.reinhard.merlin.app.jetty.JettyServer;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -17,12 +18,15 @@ import java.io.IOException;
 import java.net.URL;
 
 public class Main extends Application {
-    private Logger log = LoggerFactory.getLogger(Main.class);
+    private static Logger log = LoggerFactory.getLogger(Main.class);
     private JettyServer server;
     private static Main main;
     private Stage stage;
 
     public static void main(String[] args) {
+        Version version = Version.getInstance();
+        log.info("Starting " + version.getAppName() + " " + version.getVersion() + ", build time: "
+                + version.getBuildDate() + " (UTC: " + version.getBuildDateUTC() + ").");
         launch(args);
     }
 
@@ -53,7 +57,7 @@ public class Main extends Application {
             // Use reflection for avoiding compiling errors on non Mac OS development systems.
             try {
                 Class<?> c = Class.forName("com.apple.eawt.Application");
-                Object application = MethodUtils.invokeStaticMethod(c, "getApplication", (Object[])null);
+                Object application = MethodUtils.invokeStaticMethod(c, "getApplication", (Object[]) null);
                 MethodUtils.invokeMethod(application, "setDockIconImage", image);
             } catch (Exception ex) {
                 log.error("Can't call com.apple.eawt.Application.getApplication().setDockIconImage(image): " + ex.getMessage(), ex);
