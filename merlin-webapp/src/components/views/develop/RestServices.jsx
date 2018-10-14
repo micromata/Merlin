@@ -1,6 +1,6 @@
 import React from 'react';
 import {PageHeader} from '../../general/BootstrapComponents';
-import {getRestServiceUrl, getResponseHeaderFilename} from "../../../actions/global";
+import {getRestServiceUrl, getResponseHeaderFilename} from "../../../utilities/global";
 import downloadFile from "../../../utilities/download";
 
 class RestUrlLink extends React.Component {

@@ -1,4 +1,4 @@
-import {getRestServiceUrl} from './global';
+import {getRestServiceUrl} from '../utilities/global';
 import {LOG_VIEW_CHANGE_FILTER, LOG_VIEW_RELOADED, LOG_VIEW_REQUEST_RELOAD} from './types';
 
 const requestedLogReload = () => ({

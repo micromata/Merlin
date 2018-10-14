@@ -1,7 +1,6 @@
 import React from 'react';
-import {getRestServiceUrl, isDevelopmentMode} from "../../../actions/global";
+import {getRestServiceUrl, isDevelopmentMode, formatDateTime} from "../../../utilities/global";
 import {
-    Button,
     Form,
     TabContent,
     TabPane,
@@ -17,12 +16,9 @@ import {
     FormField,
     FormLabel,
     FormCheckbox,
-    FormFieldset,
-    FormLabelInputField, FormLabelField, FormButton
 } from "../../general/forms/FormComponents";
 import {PageHeader} from "../../general/BootstrapComponents";
 import EditableTextField from "../../general/forms/EditableTextField";
-import {formatDateTime} from "../../../actions/global";
 import LinkFile from "../../general/LinkFile"
 
 class TemplateDefinition extends React.Component {

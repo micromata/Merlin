@@ -1,6 +1,6 @@
 import React from 'react';
 import {Button} from 'reactstrap';
-import {getResponseHeaderFilename, getRestServiceUrl} from "../../actions/global";
+import {getResponseHeaderFilename, getRestServiceUrl} from "../../utilities/global";
 import downloadFile from "../../utilities/download";
 
 class OpenLocalFile extends React.Component {

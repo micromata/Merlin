@@ -9,7 +9,7 @@ import TemplateDefinitionListView from '../components/views/templates/TemplateDe
 import Config from '../components/views/config/Configuration';
 import FileUploadView from '../components/views/FileUpload';
 import RestServices from '../components/views/develop/RestServices';
-import {isDevelopmentMode} from '../actions/global';
+import {isDevelopmentMode} from '../utilities/global';
 import TemplateView from '../components/views/templates/TemplateView';
 import LogView from '../components/views/logging/LogView';
 import TemplateDefinition from '../components/views/templates/TemplateDefinition';

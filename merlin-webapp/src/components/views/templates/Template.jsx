@@ -1,7 +1,7 @@
 import React from 'react';
 import {Modal} from 'react-bootstrap';
 import './Template.css';
-import {getResponseHeaderFilename, getRestServiceUrl} from '../../../actions/global';
+import {getResponseHeaderFilename, getRestServiceUrl} from '../../../utilities/global';
 import downloadFile from '../../../utilities/download';
 import DropArea from '../../general/droparea/Component';
 import {FormButton, FormInput, FormLabelField, FormSelect} from '../../general/forms/FormComponents';

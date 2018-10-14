@@ -2,7 +2,7 @@ import React from 'react'
 import './TemplateListView.css';
 import {CardGroup} from 'reactstrap';
 import {PageHeader} from '../../general/BootstrapComponents';
-import {getRestServiceUrl} from '../../../actions/global';
+import {getRestServiceUrl} from '../../../utilities/global';
 import ErrorAlert from '../../general/ErrorAlert';
 import {IconRefresh} from "../../general/IconComponents";
 import TemplateDefinitionCard from "./TemplateDefinitionCard";

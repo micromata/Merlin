@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {UncontrolledTooltip} from 'reactstrap';
-import {revisedRandId} from '../../../actions/global';
+import {revisedRandId} from '../../../utilities/global';
 import {IconInfo} from "../IconComponents";
 
 // TODO: SPLIT IN DIFFERENT FILES

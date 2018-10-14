@@ -1,7 +1,7 @@
 import React from 'react';
 import {FormGroup, FormLabel, FormField, FormCheckbox, FormButton} from "../../general/forms/FormComponents";
 import EditableTextField from "../../general/forms/EditableTextField";
-import {getRestServiceUrl} from "../../../actions/global";
+import {getRestServiceUrl} from "../../../utilities/global";
 import {IconRemove} from '../../general/IconComponents';
 
 class DirectoryItem extends React.Component {

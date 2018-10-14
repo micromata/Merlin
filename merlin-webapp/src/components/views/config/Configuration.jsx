@@ -10,7 +10,7 @@ import {
     FormFieldset,
     FormField, FormButton, FormSelect
 } from "../../general/forms/FormComponents";
-import {getRestServiceUrl, isDevelopmentMode} from "../../../actions/global";
+import {getRestServiceUrl, isDevelopmentMode} from "../../../utilities/global";
 
 var directoryItems = [];
 

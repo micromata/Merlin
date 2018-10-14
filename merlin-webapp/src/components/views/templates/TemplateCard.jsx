@@ -1,7 +1,7 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
 import {Card, CardFooter, CardHeader} from 'reactstrap';
-import {formatDateTime} from "../../../actions/global";
+import {formatDateTime} from "../../../utilities/global";
 
 class TemplateCard extends React.Component {
 
