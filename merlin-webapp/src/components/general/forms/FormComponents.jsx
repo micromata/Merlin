@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import {UncontrolledTooltip} from 'reactstrap';
 import {revisedRandId} from '../../../actions/global';
+import {IconInfo} from "../IconComponents";
 
 // TODO: SPLIT IN DIFFERENT FILES
 
@@ -107,6 +109,13 @@ function FormCheckbox({id, name, checked, onChange, hint, label}) {
     if (!id) {
         id = revisedRandId();
     }
+    let tooltip = null;
+    if (hint) {
+        tooltip =<span> <span id={`info-${id}`}><IconInfo/></span>
+            <UncontrolledTooltip placement="right" target={`info-${id}`}>
+                {hint}
+            </UncontrolledTooltip></span>;
+    }
     return (
         <div>
             <input
@@ -114,7 +123,6 @@ function FormCheckbox({id, name, checked, onChange, hint, label}) {
                 type={'checkbox'}
                 id={id}
                 name={name}
-                title={hint}
                 checked={checked}
                 onChange={onChange}
             />
@@ -122,10 +130,10 @@ function FormCheckbox({id, name, checked, onChange, hint, label}) {
                 className={'form-check-label'}
                 htmlFor={id}
                 style={{marginLeft: '1ex'}}
-                title={hint}
             >
                 {label}
             </label>
+            {tooltip}
         </div>
     );
 }
