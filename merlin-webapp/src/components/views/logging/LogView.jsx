@@ -1,10 +1,11 @@
 import React from 'react';
 import {connect} from 'react-redux';
+import PropTypes from 'prop-types';
 import {PageHeader} from '../../general/BootstrapComponents';
 import LogFilters from './LogFilters';
 import {changeFilter, requestLogReload} from '../../../actions';
 import LogTable from './LogTable';
-import PropTypes from 'prop-types';
+import './LogViewer.css';
 
 class LogView extends React.Component {
 
