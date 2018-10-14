@@ -78,7 +78,6 @@ class TemplateDefinition extends React.Component {
                 }}
             />;
         } else if (this.state.definition) {
-            let formTab = this.formTab();
             content = <div>
                 <Nav tabs>
                     <NavItem>
@@ -111,13 +110,13 @@ class TemplateDefinition extends React.Component {
                 </Nav>
                 <TabContent activeTab={this.state.activeTab}>
                     <TabPane tabId="1">
-                        {formTab}
+                        {this.mainTab()}
                     </TabPane>
                     <TabPane tabId="2">
-                        Variables
+                        {this.variablesTab()}
                     </TabPane>
                     <TabPane tabId="3">
-                        Dependent variables
+                        {this.dependentVariablesTab()}
                     </TabPane>
                 </TabContent>
 
@@ -156,7 +155,9 @@ class TemplateDefinition extends React.Component {
         this.handleStateChange = this.handleStateChange.bind(this);
         this.fetchTemplateDefinition = this.fetchTemplateDefinition.bind(this);
         this.toggleTab = this.toggleTab.bind(this);
-        this.formTab = this.formTab.bind(this);
+        this.mainTab = this.mainTab.bind(this);
+        this.variablesTab = this.variablesTab.bind(this);
+        this.dependentVariablesTab = this.dependentVariablesTab.bind(this);
     }
 
     toggleTab(tab) {
@@ -167,7 +168,7 @@ class TemplateDefinition extends React.Component {
         }
     }
 
-    formTab = () => {
+    mainTab = () => {
         return <div><Form>
             <FormGroup>
                 <FormLabel htmlFor={'id'}>
@@ -230,6 +231,35 @@ class TemplateDefinition extends React.Component {
             </Table>
 
         </div>;
+    }
+
+    variablesTab = () => {
+        if (!this.state.definition.variableDefinitions) {
+            return null;
+        }
+        const rows = [];
+        this.state.definition.variableDefinitions.forEach((variable) => {
+            rows.push(
+                <div>{variable.name}</div>
+            );
+        });
+
+        return <div>
+            {rows}</div>
+    }
+    dependentVariablesTab = () => {
+        if (!this.state.definition.dependentVariableDefinitions) {
+            return null;
+        }
+        const rows = [];
+        this.state.definition.dependentVariableDefinitions.forEach((variable) => {
+            rows.push(
+                <div>{variable.name}</div>
+            );
+        });
+
+        return <div>
+            {rows}</div>
     }
 }
 
