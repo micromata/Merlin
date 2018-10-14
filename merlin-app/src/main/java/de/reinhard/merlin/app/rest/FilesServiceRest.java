@@ -2,6 +2,10 @@ package de.reinhard.merlin.app.rest;
 
 import de.reinhard.merlin.app.javafx.FileSystemBrowser;
 import de.reinhard.merlin.app.javafx.RunningMode;
+import de.reinhard.merlin.app.storage.Storage;
+import de.reinhard.merlin.persistency.FileDescriptor;
+import de.reinhard.merlin.word.templating.Template;
+import de.reinhard.merlin.word.templating.TemplateDefinition;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.glassfish.jersey.media.multipart.ContentDisposition;
@@ -111,13 +115,16 @@ public class FilesServiceRest {
     /**
      * Works only if the client and the server are running on localhost and the Desktop
      *
-     * @param filepath File to open on local file system. Should be absolute.
+     * @param primaryKey File to open on local file system.
      * @return OK, if the Desktop services are available and .
      */
     @GET
     @Path("/open-local-file")
     @Produces(MediaType.TEXT_PLAIN)
-    public String openLocalFile(@Context HttpServletRequest requestContext, @QueryParam("filepath") String filepath) {
+    public String openLocalFile(@Context HttpServletRequest requestContext, @QueryParam("primaryKey") String primaryKey) {
+        if (StringUtils.isBlank(primaryKey)) {
+            return "Can't open file, primaryKey required by this service.";
+        }
         String msg = checkLocalDesktopAvailable(requestContext);
         if (msg != null) {
             return msg;
@@ -127,18 +134,29 @@ public class FilesServiceRest {
             log.error(msg);
             return msg;
         }
-        File file;
-        if (filepath.startsWith("file:")) {
-            file = new File(filepath.substring(5));
+        java.nio.file.Path path;
+        FileDescriptor fileDescriptor = null;
+        TemplateDefinition templateDefinition = Storage.getInstance().getTemplateDefinition(primaryKey);
+        if (templateDefinition != null) {
+            fileDescriptor = templateDefinition.getFileDescriptor();
         } else {
-            file = new File(filepath);
+            Template template = Storage.getInstance().getTemplate(primaryKey);
+            if (template != null) {
+                fileDescriptor = template.getFileDescriptor();
+            }
         }
+        if (fileDescriptor == null) {
+            msg = "File represented by primaryKey '" + primaryKey + "' not found";
+            log.error(msg);
+            return msg;
+        }
+        File file = fileDescriptor.getCanonicalPath().toFile();
         try {
             Desktop desktop = Desktop.getDesktop();
             desktop.open(file);
         } catch (IOException ex) {
             log.error("Error while opening file '" + file.getAbsolutePath() + "'");
-            return "Error while trying to open file '" + filepath + "'.";
+            return "Error while trying to open file '" + file.getAbsolutePath() + "'.";
         }
         return "OK";
     }

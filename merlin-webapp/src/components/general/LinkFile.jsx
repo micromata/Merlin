@@ -10,7 +10,7 @@ import downloadFile from "../../utilities/download";
 class LinkFile extends React.Component {
     openFile() {
         let filename;
-        fetch(getRestServiceUrl('files/open-local-file', {filepath: this.props.filepath}), {
+        fetch(getRestServiceUrl('files/open-local-file', {primaryKey: this.props.primaryKey}), {
             method: "GET",
             dataType: "text",
             headers: {

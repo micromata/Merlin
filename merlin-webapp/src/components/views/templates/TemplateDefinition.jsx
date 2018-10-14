@@ -227,7 +227,8 @@ class TemplateDefinition extends React.Component {
                 </tr>
                 <tr>
                     <td>Pfad</td>
-                    <td><LinkFile filepath={this.state.definition.fileDescriptor.canonicalPath}/></td>
+                    <td><LinkFile primaryKey={this.state.definition.fileDescriptor.primaryKey}
+                                  filepath={this.state.definition.fileDescriptor.canonicalPath}/></td>
                 </tr>
                 </tbody>
             </Table>
