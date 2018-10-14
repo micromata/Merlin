@@ -16,6 +16,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
+import java.awt.*;
 import java.io.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -71,12 +72,9 @@ public class FilesServiceRest {
     @Path("/browse-local-filesystem")
     @Produces(MediaType.APPLICATION_JSON)
     public String browseLocalFilesystem(@Context HttpServletRequest requestContext, @QueryParam("type") String type, @QueryParam("current") String current) {
-        if (RunningMode.isRunning() == false) {
-            return "Service unavailable. No desktop app on localhost available.";
-        }
-        String remoteAddr = requestContext.getRemoteAddr();
-        if (remoteAddr == null || !remoteAddr.equals("127.0.0.1")) {
-            return "Service not available. Can't call this service remote. Run this service on localhost of the running desktop app.";
+        String msg = checkLocalDesktopAvailable(requestContext);
+        if (msg != null) {
+            return msg;
         }
         FileSystemBrowser.SelectFilter filter = FileSystemBrowser.getFilter(type);
         CompletableFuture<File> future = new CompletableFuture<>();
@@ -94,6 +92,55 @@ public class FilesServiceRest {
         FileSystemBrowser.getInstance().setLastDir(file);
         String result = "{\"directory\":\"" + (file != null ? file.getAbsolutePath() : "") + "\"}";
         return result;
+    }
+
+    /**
+     * @return OK, if the local desktop services such as open file browser etc. are available.
+     */
+    @GET
+    @Path("/local-fileservices-available")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String browseLocalFilesystem(@Context HttpServletRequest requestContext) {
+        String msg = checkLocalDesktopAvailable(requestContext);
+        if (msg != null) {
+            return msg;
+        }
+        return "OK";
+    }
+
+    /**
+     * Works only if the client and the server are running on localhost and the Desktop
+     *
+     * @param filepath File to open on local file system. Should be absolute.
+     * @return OK, if the Desktop services are available and .
+     */
+    @GET
+    @Path("/open-local-file")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String openLocalFile(@Context HttpServletRequest requestContext, @QueryParam("filepath") String filepath) {
+        String msg = checkLocalDesktopAvailable(requestContext);
+        if (msg != null) {
+            return msg;
+        }
+        if (!Desktop.isDesktopSupported()) {
+            msg = "Desktop service isn't supported.";
+            log.error(msg);
+            return msg;
+        }
+        File file;
+        if (filepath.startsWith("file:")) {
+            file = new File(filepath.substring(5));
+        } else {
+            file = new File(filepath);
+        }
+        try {
+            Desktop desktop = Desktop.getDesktop();
+            desktop.open(file);
+        } catch (IOException ex) {
+            log.error("Error while opening file '" + file.getAbsolutePath() + "'");
+            return "Error while trying to open file '" + filepath + "'.";
+        }
+        return "OK";
     }
 
     // save uploaded file to a defined location on the server
@@ -135,5 +182,20 @@ public class FilesServiceRest {
         }
 
         return response;
+    }
+
+    /**
+     * @return null, if the local app (JavaFX) is running and the request is from localhost. Otherwise message, why local
+     * service isn't available.
+     */
+    private String checkLocalDesktopAvailable(HttpServletRequest requestContext) {
+        if (RunningMode.isRunning() == false) {
+            return "Service unavailable. No desktop app on localhost available.";
+        }
+        String remoteAddr = requestContext.getRemoteAddr();
+        if (remoteAddr == null || !remoteAddr.equals("127.0.0.1")) {
+            return "Service not available. Can't call this service remote. Run this service on localhost of the running desktop app.";
+        }
+        return null;
     }
 }
