@@ -7,10 +7,10 @@ import Start from '../components/views/Start';
 import TemplateListView from '../components/views/templates/TemplateListView';
 import Config from '../components/views/config/Configuration';
 import FileUploadView from '../components/views/FileUpload';
-import LogViewer from '../components/views/logging/LogViewer';
 import RestServices from '../components/views/develop/RestServices';
 import {isDevelopmentMode} from '../actions/global';
 import TemplateView from '../components/views/templates/TemplateView';
+import LogView from '../components/views/logging/LogView';
 
 class WebApp extends React.Component {
 
@@ -19,7 +19,7 @@ class WebApp extends React.Component {
         let routes = [
             ['Start', '/', Start],
             ['Templates', '/templates', TemplateListView],
-            ['Log viewer', '/logViewer', LogViewer],
+            ['Log viewer', '/logViewer', LogView],
             ['Configuration', '/config', Config]
         ];
         if (isDevelopmentMode()) {
