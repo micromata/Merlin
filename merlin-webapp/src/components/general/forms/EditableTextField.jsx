@@ -28,7 +28,7 @@ class EditableTextField extends React.Component {
         });
 
         if (value && this.props.onChange) {
-            this.props.onChange(value);
+            this.props.onChange(value, this.props.name);
         }
     };
 
@@ -39,7 +39,7 @@ class EditableTextField extends React.Component {
                 <EditableTextFieldInput
                     type={this.props.type}
                     value={this.props.value}
-                    name={this.props.title}
+                    name={this.props.name}
                     stopEditing={this.stopEditing}
                 /> :
                 <div className={'text-truncate editable-text-field-value'} onClick={this.startEditing}
