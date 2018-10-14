@@ -1,6 +1,7 @@
 import React from 'react';
 import {getRestServiceUrl, isDevelopmentMode} from "../../../actions/global";
 import {
+    Button,
     Form,
     TabContent,
     TabPane,
@@ -22,6 +23,7 @@ import {
 import {PageHeader} from "../../general/BootstrapComponents";
 import EditableTextField from "../../general/forms/EditableTextField";
 import {formatDateTime} from "../../../actions/global";
+import LinkFile from "../../general/LinkFile"
 
 class TemplateDefinition extends React.Component {
     componentDidMount = () => {
@@ -225,7 +227,7 @@ class TemplateDefinition extends React.Component {
                 </tr>
                 <tr>
                     <td>Pfad</td>
-                    <td>{this.state.definition.fileDescriptor.canonicalPath}</td>
+                    <td><LinkFile filepath={this.state.definition.fileDescriptor.canonicalPath}/></td>
                 </tr>
                 </tbody>
             </Table>
@@ -240,7 +242,7 @@ class TemplateDefinition extends React.Component {
         const rows = [];
         this.state.definition.variableDefinitions.forEach((variable) => {
             rows.push(
-                <div>{variable.name}</div>
+                <div key={variable.name}>{variable.name}</div>
             );
         });
 
@@ -254,7 +256,7 @@ class TemplateDefinition extends React.Component {
         const rows = [];
         this.state.definition.dependentVariableDefinitions.forEach((variable) => {
             rows.push(
-                <div>{variable.name}</div>
+                <div key={variable.name}>{variable.name}</div>
             );
         });
 
