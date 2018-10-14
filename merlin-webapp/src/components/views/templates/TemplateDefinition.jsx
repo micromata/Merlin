@@ -6,13 +6,22 @@ import {
     TabPane,
     Nav,
     NavItem,
-    NavLink
+    NavLink,
+    Table
 } from 'reactstrap';
 import classnames from 'classnames';
 import ErrorAlert from "../../general/ErrorAlert";
-import {FormGroup, FormField, FormLabel, FormCheckbox} from "../../general/forms/FormComponents";
+import {
+    FormGroup,
+    FormField,
+    FormLabel,
+    FormCheckbox,
+    FormFieldset,
+    FormLabelInputField, FormLabelField, FormButton
+} from "../../general/forms/FormComponents";
 import {PageHeader} from "../../general/BootstrapComponents";
 import EditableTextField from "../../general/forms/EditableTextField";
+import {formatDateTime} from "../../../actions/global";
 
 class TemplateDefinition extends React.Component {
     componentDidMount = () => {
@@ -159,7 +168,7 @@ class TemplateDefinition extends React.Component {
     }
 
     formTab = () => {
-        return <Form>
+        return <div><Form>
             <FormGroup>
                 <FormLabel htmlFor={'id'}>
                     Id
@@ -205,8 +214,22 @@ class TemplateDefinition extends React.Component {
                                   hint="Merlin will ensure filenames without unallowed chars. If checked, Merlin will only use ASCII-chars and replace e. g. ä by ae (recommended)."/>
                 </FormField>
             </FormGroup>
+        </Form>
+            <h5>Information</h5>
+            <Table hover>
+                <tbody>
+                <tr>
+                    <td>Last modified</td>
+                    <td>{formatDateTime(this.state.definition.fileDescriptor.lastModified)}</td>
+                </tr>
+                <tr>
+                    <td>Pfad</td>
+                    <td>{this.state.definition.fileDescriptor.canonicalPath}</td>
+                </tr>
+                </tbody>
+            </Table>
 
-        </Form>;
+        </div>;
     }
 }
 
