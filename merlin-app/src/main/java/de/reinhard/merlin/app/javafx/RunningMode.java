@@ -9,7 +9,7 @@ public class RunningMode {
     private static Logger log = LoggerFactory.getLogger(RunningMode.class);
     private static OS_TYPE osType;
 
-    public enum Mode {TemplatesTest}
+    public enum Mode {PRODUCTION, DEVELOPMENT}
 
     public enum OS_TYPE {MAC_OS, WINDOWS, LINUX, OTHER}
 
@@ -18,7 +18,7 @@ public class RunningMode {
     private static Boolean development;
 
     public static Mode getMode() {
-        return Mode.TemplatesTest;
+        return isDevelopmentMode() ? Mode.DEVELOPMENT : Mode.PRODUCTION;
     }
 
     public static boolean isDevelopmentMode() {

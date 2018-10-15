@@ -26,7 +26,7 @@ public class Main extends Application {
     public static void main(String[] args) {
         Version version = Version.getInstance();
         log.info("Starting " + version.getAppName() + " " + version.getVersion() + ", build time: "
-                + version.getBuildDate() + " (UTC: " + version.getBuildDateUTC() + ").");
+                + version.getBuildDate() + " (UTC: " + version.getBuildDateUTC() + "), mode: " + RunningMode.getMode());
         launch(args);
     }
 

@@ -160,7 +160,7 @@ public class Storage implements ConfigurationListener {
                 add(scanner);
             }
         }
-        if (RunningMode.getMode() == RunningMode.Mode.TemplatesTest) {
+        if (ConfigurationHandler.getDefaultConfiguration().isShowTestData()) {
             // Creating data for testing.
             add(TestData.getTestDirectory(RunningMode.getBaseDir()));
         }
