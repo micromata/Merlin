@@ -11,6 +11,7 @@ import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.servlet.*;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
 import org.eclipse.jetty.util.resource.Resource;
+import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.servlet.ServletContainer;
@@ -52,8 +53,11 @@ public class JettyServer {
                                 .packages(ConfigurationRest.class.getPackage().getName(),
                                         ConfigurationUIRest.class.getPackage().getName())
                                 .register(MultiPartFeature.class)
-                )
-        );
+                                .register(JacksonFeature.class)
+                        //   .register(LoggingFilter.class)
+                        //   .property("jersey.config.server.tracing.type", "ALL")
+                        //   .property("jersey.config.server.tracing.threshold", "VERBOSE"))
+                ));
         jerseyServlet.setInitOrder(1);
         ctx.addServlet(jerseyServlet, "/rest/*");
         ctx.addFilter(UserFilter.class, "/rest/*", EnumSet.of(DispatcherType.INCLUDE, DispatcherType.REQUEST));
