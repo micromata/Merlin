@@ -80,7 +80,6 @@ class TemplateRunTab extends React.Component {
                             value: this.runConfiguration[name],
                             onChange: this.handleVariableChange
                         };
-                        let validationState;
                         let validationMessage;
 
                         if (typeof item === 'string') {
