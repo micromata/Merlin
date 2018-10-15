@@ -84,7 +84,7 @@ class TemplateListView extends React.Component {
 
         } else if (this.state.templates) {
 
-            content = <div>
+            content = <React.Fragment>
                 <div
                     className={'template-list-refresh'}
                     onClick={this.fetchTemplates}
@@ -102,16 +102,16 @@ class TemplateListView extends React.Component {
                     />;
                 })}
                 </CardGroup>
-            </div>;
+            </React.Fragment>;
 
         }
 
-        return <div>
+        return <React.Fragment>
             <PageHeader>
                 Templates
             </PageHeader>
             {content}
-        </div>;
+        </React.Fragment>;
     };
 
     constructor(props) {

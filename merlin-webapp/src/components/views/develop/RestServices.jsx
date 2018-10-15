@@ -88,7 +88,7 @@ class RestServices extends React.Component {
 
     render() {
         return (
-            <div>
+            <React.Fragment>
                 <PageHeader>
                     Rest Services
                 </PageHeader>
@@ -135,7 +135,7 @@ class RestServices extends React.Component {
                     <li><RestUrlLink service='logging/query' params={'treshold=warn'}/> (only warnings)</li>
                     <li><RestUrlLink service='logging/query' params={'treshold=info&search=server'}/> (search for server)</li>
                 </ul>
-            </div>
+            </React.Fragment>
         );
     }
 }

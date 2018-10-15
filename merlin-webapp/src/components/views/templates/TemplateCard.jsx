@@ -35,7 +35,7 @@ class TemplateCard extends React.Component {
             definitionText = this.buildItem('Definition', content);
         }
 
-        return <div>
+        return <React.Fragment>
             <Link to={`/template/${template.primaryKey}`} className={'card-link'}>
                 <Card outline color="success" className={'template'} style={{backgroundColor: '#fff', width: '20em'}}>
                     <CardHeader>{templateId}</CardHeader>
@@ -46,7 +46,7 @@ class TemplateCard extends React.Component {
                     <CardFooter>Click to run.<span className={'lastModified'}>{formatDateTime(template.lastModified)}</span></CardFooter>
                 </Card>
             </Link>
-        </div>
+        </React.Fragment>
     };
 
     constructor(props) {

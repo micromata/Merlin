@@ -5,7 +5,7 @@ import DropArea from '../general/droparea/Component';
 import {uploadFile} from '../../actions';
 
 const FileUploadView = (props) => (
-    <div>
+    <React.Fragment>
         <PageHeader>
             File Upload View
         </PageHeader>
@@ -25,7 +25,7 @@ const FileUploadView = (props) => (
             </li>
         </ul>
 
-    </div>
+    </React.Fragment>
 );
 
 const mapStateToProps = () => ({});

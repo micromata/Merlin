@@ -109,7 +109,7 @@ class DropArea extends React.Component {
         }
 
         return (
-            <div>
+            <React.Fragment>
                 <div
                     onClick={() => this.refs.input.click()}
                     className={`drop-area ${this.state.inDrag ? 'onDrag' : ''}`}
@@ -134,7 +134,7 @@ class DropArea extends React.Component {
                         </span>
                     </div>
                 </div>
-            </div>
+            </React.Fragment>
         );
     }
 

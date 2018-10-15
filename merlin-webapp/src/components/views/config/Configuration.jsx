@@ -215,18 +215,18 @@ class Configuration extends React.Component {
     render() {
         let todo = '';
         if (isDevelopmentMode()) {
-            todo = <div><h3>ToDo</h3>
+            todo = <code><h3>ToDo</h3>
                 <ul>
                     <li>Do the form validation (server and/or client side) with error fields.</li>
                 </ul>
-            </div>
+            </code>
         }
         return (
-            <div>
+            <React.Fragment>
                 <PageHeader>Configuration</PageHeader>
                 <ConfigForm/>
                 {todo}
-            </div>
+            </React.Fragment>
         );
     }
 }

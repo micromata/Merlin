@@ -12,7 +12,7 @@ class LogView extends React.Component {
     componentDidMount = () => this.props.loadLog();
 
     render = () => (
-            <div>
+            <React.Fragment>
                 <PageHeader>Log viewer</PageHeader>
                 <LogFilters
                     filters={this.props.filters}
@@ -27,7 +27,7 @@ class LogView extends React.Component {
                     locationFormat={this.props.filters.locationFormat}
                     entries={this.props.entries}
                 />
-            </div>
+            </React.Fragment>
         );
 }
 

@@ -11,9 +11,9 @@ class TemplateDefinitionDependentVariables extends React.Component {
                 <div key={variable.name}>{variable.name}</div>
             );
         });
-        return <div>
+        return <React.Fragment>
             {rows}
-        </div>;
+        </React.Fragment>;
     };
 }
 

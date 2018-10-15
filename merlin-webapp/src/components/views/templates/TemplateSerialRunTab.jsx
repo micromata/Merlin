@@ -13,11 +13,11 @@ class TemplateSerialRunTab extends React.Component {
 
     render() {
         return (
-            <div>
+            <React.Fragment>
                 <h4>Generation from a file:</h4>
                 <DropArea upload={this.runSerialTemplate} />
                 <br />
-            </div>
+            </React.Fragment>
         );
     }
 }

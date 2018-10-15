@@ -39,7 +39,7 @@ class TemplateDefinitionVariables extends React.Component {
                 </tr>
             );
         });
-        return <div>
+        return <React.Fragment>
             <Form>
                 <Table striped responsive bordered hover>
                     <thead>
@@ -57,7 +57,7 @@ class TemplateDefinitionVariables extends React.Component {
                     </tbody>
                 </Table>
             </Form>
-        </div>;
+        </React.Fragment>;
     };
 }
 

@@ -25,7 +25,7 @@ class TemplateDefinitionCard extends React.Component {
             content.push(['Description', definition.description, 'description']);
         }
         definitionText = this.buildItem('Info', content);
-        return <div>
+        return <React.Fragment>
             <Link to={`/templateDefinition/${definition.fileDescriptor.primaryKey}`} className={'card-link'}>
                 <Card outline color="success" className={'template'} style={{backgroundColor: '#fff', width: '20em'}}>
                     <CardHeader>{definition.id}</CardHeader>
@@ -35,7 +35,7 @@ class TemplateDefinitionCard extends React.Component {
                     <CardFooter><span className={'lastModified'}>{formatDateTime(definition.fileDescriptor.lastModified)}</span></CardFooter>
                 </Card>
             </Link>
-        </div>
+        </React.Fragment>
     };
 
     constructor(props) {

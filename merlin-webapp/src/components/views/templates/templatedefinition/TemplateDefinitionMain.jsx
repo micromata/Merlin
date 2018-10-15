@@ -15,7 +15,7 @@ import LinkFile from "../../../general/LinkFile"
 
 class TemplateDefinitionMain extends React.Component {
     render = () => {
-        return <div><Form>
+        return <React.Fragment><Form>
             <FormGroup>
                 <FormLabel htmlFor={'id'}>
                     Id
@@ -77,7 +77,7 @@ class TemplateDefinitionMain extends React.Component {
                 </tbody>
             </Table>
 
-        </div>;
+        </React.Fragment>;
     };
 }
 

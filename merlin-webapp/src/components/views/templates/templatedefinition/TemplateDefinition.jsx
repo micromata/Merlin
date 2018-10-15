@@ -83,7 +83,7 @@ class TemplateDefinition extends React.Component {
                 }}
             />;
         } else if (this.state.definition) {
-            content = <div>
+            content = <React.Fragment>
                 <Nav tabs>
                     <NavItem>
                         <NavLink
@@ -129,26 +129,26 @@ class TemplateDefinition extends React.Component {
                     </TabPane>
                 </TabContent>
 
-            </div>;
+            </React.Fragment>;
         }
 
         let todo = '';
         if (isDevelopmentMode()) {
-            todo = <div><h3>ToDo</h3>
+            todo = <code><h3>ToDo</h3>
                 <ul>
                     <li>Auto grow of textarea.</li>
                 </ul>
-            </div>
+            </code>
         }
         let title = this.state.definition ? 'Template definition: ' + this.state.definition.id : 'Template definition';
 
-        return <div>
+        return <React.Fragment>
             <PageHeader>
                 {title}
             </PageHeader>
             {content}
             {todo}
-        </div>;
+        </React.Fragment>;
     };
 
     constructor(props) {

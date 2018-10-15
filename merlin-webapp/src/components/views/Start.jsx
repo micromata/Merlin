@@ -7,22 +7,22 @@ class Start extends React.Component {
     render() {
         let todo = '';
         if (isDevelopmentMode()) {
-            todo = <div><h3>ToDo</h3>
+            todo = <code><h3>ToDo</h3>
                 <ul>
                     <li>Use Webpack for handling dev and production mode.</li>
                     <li>I18n: Get the translations from the server via json for labels etc. Do it globally or on every
                         single view?
                     </li>
                 </ul>
-            </div>
+            </code>
         }
         return (
-            <div>
+            <React.Fragment>
                 <PageHeader>
                     Start
                 </PageHeader>
                 {todo}
-            </div>
+            </React.Fragment>
         );
     }
 }

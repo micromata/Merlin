@@ -58,7 +58,7 @@ class TemplateRunTab extends React.Component {
         let valid = true;
 
         return (
-            <div>
+            <React.Fragment>
                 <h4>Single Generation:</h4>
                 <Form onSubmit={this.runSingleTemplate}>
                     {this.props.variableDefinitions.map(item => {
@@ -143,7 +143,7 @@ class TemplateRunTab extends React.Component {
                         Run
                     </FormButton>
                 </Form>
-            </div>
+            </React.Fragment>
         );
     }
 }

@@ -116,10 +116,10 @@ function FormCheckbox({id, name, checked, onChange, hint, label}) {
     }
     let tooltip = null;
     if (hint) {
-        tooltip =<span> <span id={`info-${id}`}><IconInfo/></span>
+        tooltip =<React.Fragment> <span id={`info-${id}`}><IconInfo/></span>
             <UncontrolledTooltip placement="right" target={`info-${id}`}>
                 {hint}
-            </UncontrolledTooltip></span>;
+            </UncontrolledTooltip></React.Fragment>;
     }
     let labelNode = null;
     if (label) {
@@ -132,7 +132,7 @@ function FormCheckbox({id, name, checked, onChange, hint, label}) {
         </label>;
     }
     return (
-        <span>
+        <React.Fragment>
             <input
                 className={'form-check-input'}
                 type={'checkbox'}
@@ -143,7 +143,7 @@ function FormCheckbox({id, name, checked, onChange, hint, label}) {
             />
             {labelNode}
             {tooltip}
-        </span>
+        </React.Fragment>
     );
 }
 
