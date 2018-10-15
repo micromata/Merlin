@@ -7,6 +7,7 @@ import LinkFile from '../../general/LinkFile';
 import TemplateDefinition from './templatedefinition/TemplateDefinition';
 import TemplateRunTab from './TemplateRunTab';
 import TemplateSerialRunTab from './TemplateSerialRunTab';
+import TemplateStatistics from './TemplateStatistics';
 
 class TemplateView extends React.Component {
 
@@ -58,7 +59,7 @@ class TemplateView extends React.Component {
         const template = this.state.template;
         let templateId = template.id ? template.id : template.filename;
         return (
-            <div>
+            <React.Fragment>
                 <PageHeader>
                     Template: {templateId}
                 </PageHeader>
@@ -108,6 +109,7 @@ class TemplateView extends React.Component {
                             </tr>
                             </tbody>
                         </Table>
+                        <TemplateStatistics statistics={template.statistics} />
                     </TabPane>
                     {this.state.template.templateDefinition ?
                         <TabPane tabId={'2'}>
@@ -132,15 +134,10 @@ class TemplateView extends React.Component {
                     <TabPane tabId={'4'}>
                         <TemplateSerialRunTab
                             primaryKey={this.state.primaryKey}
-                            templateDefinitionId={this.state.template.templateDefinition ?
-                                this.state.template.templateDefinition.fileDescriptor.primaryKey : ''}
-                            variableDefinitions={this.state.template.templateDefinition ?
-                                this.state.template.templateDefinition.variableDefinitions :
-                                this.state.template.statistics.usedVariables}
                         />
                     </TabPane>
                 </TabContent>
-            </div>
+            </React.Fragment>
         );
     };
 
