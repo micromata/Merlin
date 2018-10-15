@@ -7,7 +7,6 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -16,21 +15,12 @@ import java.util.List;
  */
 public class TemplateStatistics implements Cloneable {
     private Logger log = LoggerFactory.getLogger(TemplateStatistics.class);
-    private List<String> usedVariables = new ArrayList<>();
     private Conditionals conditionals;
     private Template template;
     private Collection<String> allDefinedVariables; // All variables defined in TemplateDefinition.
-    private List<String> allUsedVariables;          // All variables used in the Word template.
+    private List<String> usedVariables;          // All variables used in the Word template.
     private Collection<String> unusedVariables;     // Variables defined but not used in the Word template.
     private Collection<String> undefinedVariables;  // Variables used in the Word template but not defined.
-
-    public List<String> getUsedVariables() {
-        return usedVariables;
-    }
-
-    public void setUsedVariables(List<String> usedVariables) {
-        this.usedVariables = usedVariables;
-    }
 
     public TemplateStatistics(Template parent) {
         this.template = parent;
@@ -53,13 +43,13 @@ public class TemplateStatistics implements Cloneable {
                 log.debug("Defined variable: " + variable);
             }
         }
-        this.unusedVariables = CollectionUtils.subtract(allDefinedVariables, allUsedVariables);
+        this.unusedVariables = CollectionUtils.subtract(allDefinedVariables, usedVariables);
         if (log.isDebugEnabled()) {
             for (String variable : unusedVariables) {
                 log.debug("Unused: " + variable);
             }
         }
-        this.undefinedVariables = CollectionUtils.subtract(allUsedVariables, allDefinedVariables);
+        this.undefinedVariables = CollectionUtils.subtract(usedVariables, allDefinedVariables);
         if (log.isDebugEnabled()) {
             for (String variable : undefinedVariables) {
                 log.debug("Undefined: " + variable);
@@ -83,12 +73,12 @@ public class TemplateStatistics implements Cloneable {
         this.allDefinedVariables = allDefinedVariables;
     }
 
-    public List<String> getAllUsedVariables() {
-        return allUsedVariables;
+    public List<String> getUsedVariables() {
+        return usedVariables;
     }
 
-    public void setAllUsedVariables(List<String> allUsedVariables) {
-        this.allUsedVariables = allUsedVariables;
+    public void setUsedVariables(List<String> usedVariables) {
+        this.usedVariables = usedVariables;
     }
 
     public Collection<String> getUnusedVariables() {
@@ -110,7 +100,6 @@ public class TemplateStatistics implements Cloneable {
     @Override
     public String toString() {
         ToStringBuilder tos = new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE);
-        tos.append("allUsedVariables", allUsedVariables);
         tos.append("usedVariables", usedVariables);
         tos.append("unusedVariables", unusedVariables);
         tos.append("undefinedVariables", undefinedVariables);

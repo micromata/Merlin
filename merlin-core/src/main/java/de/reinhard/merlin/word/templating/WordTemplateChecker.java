@@ -28,13 +28,11 @@ public class WordTemplateChecker {
                 variables.add(conditional.getVariable());
             }
         }
-        statistics.setAllUsedVariables(new ArrayList<>());
-        statistics.getAllUsedVariables().addAll(variables);
+        statistics.setUsedVariables(new ArrayList<>());
         statistics.getUsedVariables().addAll(variables);
         Collections.sort(statistics.getUsedVariables(), String.CASE_INSENSITIVE_ORDER);
-        Collections.sort(statistics.getAllUsedVariables(), String.CASE_INSENSITIVE_ORDER);
         if (log.isDebugEnabled()) {
-            for (String variable : statistics.getAllUsedVariables()) {
+            for (String variable : statistics.getUsedVariables()) {
                 log.debug("Used variable: " + variable);
             }
         }

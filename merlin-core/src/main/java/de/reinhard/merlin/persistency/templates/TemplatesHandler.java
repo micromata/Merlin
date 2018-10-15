@@ -30,7 +30,7 @@ class TemplatesHandler extends AbstractHandler<Template> {
             return null;
         }
         WordTemplateChecker templateChecker = new WordTemplateChecker(doc);
-        if (CollectionUtils.isEmpty(templateChecker.getTemplate().getStatistics().getAllUsedVariables())) {
+        if (CollectionUtils.isEmpty(templateChecker.getTemplate().getStatistics().getUsedVariables())) {
             log.debug("Skipping Word document: '" + path.toAbsolutePath()
                     + "'. It's seemd to be not a Merlin template. No variables and conditionals found.");
             return null;
