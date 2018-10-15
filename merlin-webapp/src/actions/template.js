@@ -6,5 +6,5 @@ const savedTemplateRunConfiguration = (template, configuration) => ({
 });
 
 export const saveTemplateRunConfiguration = (template, configuration) => (dispatch) => {
-    dispatch(template, configuration);
+    dispatch(savedTemplateRunConfiguration(template, configuration));
 };
