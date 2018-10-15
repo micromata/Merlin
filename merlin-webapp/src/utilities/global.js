@@ -31,3 +31,8 @@ export const formatDateTime = (millis) => {
     return date.toLocaleDateString(options) + ' ' + date.toLocaleTimeString(options);
     //return date.toLocaleDateString("de-DE", options);
 }
+
+/* Checks if a given array is definied and is not empty. */
+export const notEmpty = (array) => {
+    return array && array.length;
+}
