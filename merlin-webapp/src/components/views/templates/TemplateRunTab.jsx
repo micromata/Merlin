@@ -5,7 +5,6 @@ import {Form} from 'reactstrap';
 import {saveTemplateRunConfiguration} from '../../../actions';
 import {getResponseHeaderFilename, getRestServiceUrl} from '../../../utilities/global';
 import downloadFile from '../../../utilities/download';
-import DropArea from '../../general/droparea/Component';
 import {FormButton, FormInput, FormLabelField, FormSelect} from '../../general/forms/FormComponents';
 
 class TemplateRunTab extends React.Component {
@@ -35,12 +34,6 @@ class TemplateRunTab extends React.Component {
             .then(blob => downloadFile(blob, filename))
             .catch(alert);
     };
-    runSerialTemplate = file => {
-        const formData = new FormData();
-        formData.append('file', file);
-
-        this.runTemplate(getRestServiceUrl('files/upload'), undefined, formData);
-    };
     runSingleTemplate = event => {
         event.preventDefault();
 
@@ -66,10 +59,6 @@ class TemplateRunTab extends React.Component {
 
         return (
             <div>
-                <h4>Generation from a file:</h4>
-                <DropArea upload={this.runSerialTemplate} />
-                <br />
-
                 <h4>Single Generation:</h4>
                 <Form onSubmit={this.runSingleTemplate}>
                     {this.props.variableDefinitions.map(item => {
@@ -128,9 +117,9 @@ class TemplateRunTab extends React.Component {
                             if (item.type === 'INT') {
                                 item.type = 'number';
                             }
-
+                            var { fieldLength, ...other } = formControlProps;
                             formControl = <FormInput
-                                {...formControlProps}
+                                {...other}
                                 type={item.type}
                             />;
                         }

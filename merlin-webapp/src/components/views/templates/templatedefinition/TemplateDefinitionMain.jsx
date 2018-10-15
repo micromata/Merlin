@@ -70,7 +70,7 @@ class TemplateDefinitionMain extends React.Component {
                     <td>{formatDateTime(this.props.definition.fileDescriptor.lastModified)}</td>
                 </tr>
                 <tr>
-                    <td>Pfad</td>
+                    <td>Path</td>
                     <td><LinkFile primaryKey={this.props.definition.fileDescriptor.primaryKey}
                                   filepath={this.props.definition.fileDescriptor.canonicalPath}/></td>
                 </tr>

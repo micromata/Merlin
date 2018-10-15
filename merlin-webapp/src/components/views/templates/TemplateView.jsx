@@ -6,6 +6,7 @@ import {PageHeader} from '../../general/BootstrapComponents';
 import LinkFile from '../../general/LinkFile';
 import TemplateDefinition from './templatedefinition/TemplateDefinition';
 import TemplateRunTab from './TemplateRunTab';
+import TemplateSerialRunTab from './TemplateSerialRunTab';
 
 class TemplateView extends React.Component {
 
@@ -54,11 +55,12 @@ class TemplateView extends React.Component {
                 No template found
             </Alert>
         }
-
+        const template = this.state.template;
+        let templateId = template.id ? template.id : template.filename;
         return (
             <div>
                 <PageHeader>
-                    Template {this.state.primaryKey}
+                    Template: {templateId}
                 </PageHeader>
                 <Nav tabs>
                     <NavLink
@@ -80,6 +82,12 @@ class TemplateView extends React.Component {
                     >
                         Run
                     </NavLink>
+                    <NavLink
+                        className={classNames({active: this.state.activeTab === '4'})}
+                        onClick={this.toggleTab('4')}
+                    >
+                        Serial run
+                    </NavLink>
                 </Nav>
                 <TabContent activeTab={this.state.activeTab}>
                     <TabPane tabId={'1'}>
@@ -95,7 +103,8 @@ class TemplateView extends React.Component {
                             </tr>
                             <tr>
                                 <td>Path</td>
-                                <td><LinkFile filepath={this.state.template.fileDescriptor.canonicalPath} /></td>
+                                <td><LinkFile primaryKey={template.fileDescriptor.primaryKey}
+                                              filepath={template.fileDescriptor.canonicalPath}/></td>
                             </tr>
                             </tbody>
                         </Table>
@@ -112,6 +121,16 @@ class TemplateView extends React.Component {
                         </TabPane> : undefined}
                     <TabPane tabId={'3'}>
                         <TemplateRunTab
+                            primaryKey={this.state.primaryKey}
+                            templateDefinitionId={this.state.template.templateDefinition ?
+                                this.state.template.templateDefinition.fileDescriptor.primaryKey : ''}
+                            variableDefinitions={this.state.template.templateDefinition ?
+                                this.state.template.templateDefinition.variableDefinitions :
+                                this.state.template.statistics.usedVariables}
+                        />
+                    </TabPane>
+                    <TabPane tabId={'4'}>
+                        <TemplateSerialRunTab
                             primaryKey={this.state.primaryKey}
                             templateDefinitionId={this.state.template.templateDefinition ?
                                 this.state.template.templateDefinition.fileDescriptor.primaryKey : ''}
