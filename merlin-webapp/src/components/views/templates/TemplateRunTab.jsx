@@ -81,6 +81,7 @@ class TemplateRunTab extends React.Component {
                             onChange: this.handleVariableChange
                         };
                         let validationState;
+                        let validationMessage;
 
                         if (typeof item === 'string') {
                             formControl = <FormInput
@@ -100,12 +101,21 @@ class TemplateRunTab extends React.Component {
                             </FormSelect>;
                         } else {
 
-                            if ((item.required && formControlProps.value.trim() === '') ||
-                                (item.type === 'INT' && isNaN(formControlProps.value)) ||
-                                (item.minimumValue && item.minimumValue > Number(formControlProps.value)) ||
-                                (item.maximumValue && item.maximumValue < Number(formControlProps.value))) {
-                                validationState = 'error';
+                            if (item.required && formControlProps.value.trim() === '') {
+                                validationMessage = 'This field is required. Please insert a value.';
+                            } else if (item.type === 'INT' && isNaN(formControlProps.value)) {
+                                validationMessage = 'Value must be a number.';
+                            } else if (item.minimumValue && item.minimumValue > Number(formControlProps.value)) {
+                                validationMessage = `The field must be above  ${item.minimumValue}.`;
+                            } else if (item.maximumValue && item.maximumValue < Number(formControlProps.value)) {
+                                validationMessage = `The field must be below ${item.maximumValue}.`;
+                            }
+
+                            if (validationMessage) {
                                 valid = false;
+                                formControlProps.invalid = true;
+                            } else {
+                                formControlProps.valid = true;
                             }
 
                             if (item.minimumValue) {
@@ -131,8 +141,8 @@ class TemplateRunTab extends React.Component {
                             labelLength={3}
                             fieldLength={9}
                             key={`template-run-variable-${item.refId ? item.refId : item}`}
-                            validationState={validationState}
                             hint={item.description ? item.description : ''}
+                            validationMessage={validationMessage}
                         >
                             {formControl}
                         </FormLabelField>;

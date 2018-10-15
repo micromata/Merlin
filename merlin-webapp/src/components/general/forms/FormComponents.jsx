@@ -1,26 +1,24 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {UncontrolledTooltip} from 'reactstrap';
+import {FormFeedback, Input, UncontrolledTooltip} from 'reactstrap';
 import {revisedRandId} from '../../../utilities/global';
-import {IconInfo} from "../IconComponents";
+import {IconInfo} from '../IconComponents';
 
 // TODO: SPLIT IN DIFFERENT FILES
 
-function FormGroup({validationState, children}) {
+function FormGroup({children}) {
     return (
-        <div className={`form-group row ${validationState ? `has-${validationState}` : ''}`}>
+        <div className={`form-group row`}>
             {children}
         </div>
     );
 }
 
 FormGroup.propTypes = {
-    validationState: PropTypes.oneOf(['success', 'warning', 'error', 'no-validation', null]),
     children: PropTypes.node
 };
 
 FormGroup.defaultProps = {
-    validationState: null,
     children: null
 };
 
@@ -49,7 +47,7 @@ FormLabel.defaultProps = {
 
 function FormInput(props) {
     return (
-        <input
+        <Input
             {...props}
             className={`form-control form-control-sm col-sm-${props.fieldLength}`}
         />
@@ -65,7 +63,9 @@ FormInput.propTypes = {
     max: PropTypes.number,
     step: PropTypes.number,
     type: PropTypes.string,
-    placeholder: PropTypes.string
+    placeholder: PropTypes.string,
+    valid: PropTypes.bool,
+    invalid: PropTypes.bool
 };
 
 FormInput.defaultProps = {
@@ -77,7 +77,9 @@ FormInput.defaultProps = {
     max: null,
     step: 1,
     type: 'text',
-    placeholder: ''
+    placeholder: '',
+    valid: null,
+    invalid: null
 };
 
 
@@ -163,13 +165,14 @@ FormCheckbox.defaultProps = {
 };
 
 
-function FormField({id, hint, length, children}) {
+function FormField({id, hint, length, children, validationMessage}) {
     return (
         <div
             className={`col-sm-${length}`}
             id={id}
         >
             {children}
+            {validationMessage ? <FormFeedback>{validationMessage}</FormFeedback> : ''}
             {hint ? <small className={'text-muted'}>{hint}</small> : ''}
         </div>
     );
@@ -179,6 +182,7 @@ FormField.propTypes = {
     id: PropTypes.string,
     hint: PropTypes.node,
     length: PropTypes.number,
+    validationMessage: PropTypes.string,
     children: PropTypes.node
 };
 
@@ -186,18 +190,19 @@ FormField.defaultProps = {
     id: null,
     hint: null,
     length: 10,
+    validationMessage: null,
     children: null
 };
 
 
-function FormLabelField({id, htmlFor, validationState, labelLength, fieldLength, label, hint, children}) {
+function FormLabelField({id, htmlFor, validationMessage, labelLength, fieldLength, label, hint, children}) {
     const forId = htmlFor || id || revisedRandId();
     return (
-        <FormGroup validationState={validationState}>
+        <FormGroup>
             <FormLabel length={labelLength} htmlFor={forId}>
                 {label}
             </FormLabel>
-            <FormField length={fieldLength} hint={hint}>
+            <FormField length={fieldLength} hint={hint} validationMessage={validationMessage}>
                 {React.cloneElement(children, {id: forId})}
             </FormField>
         </FormGroup>
@@ -207,7 +212,7 @@ function FormLabelField({id, htmlFor, validationState, labelLength, fieldLength,
 FormLabelField.propTypes = {
     id: PropTypes.string,
     htmlFor: PropTypes.string,
-    validationState: PropTypes.oneOf(['success', 'warning', 'error', null]),
+    validationMessage: PropTypes.string,
     labelLength: PropTypes.number,
     fieldLength: PropTypes.number,
     label: PropTypes.node,
@@ -218,7 +223,7 @@ FormLabelField.propTypes = {
 FormLabelField.defaultProps = {
     id: null,
     htmlFor: null,
-    validationState: null,
+    validationMessage: null,
     labelLength: 2,
     fieldLength: 10,
     label: '',
