@@ -31,6 +31,7 @@ public class WordTemplateChecker {
         statistics.setAllUsedVariables(new ArrayList<>());
         statistics.getAllUsedVariables().addAll(variables);
         statistics.getUsedVariables().addAll(variables);
+        Collections.sort(statistics.getUsedVariables(), String.CASE_INSENSITIVE_ORDER);
         Collections.sort(statistics.getAllUsedVariables(), String.CASE_INSENSITIVE_ORDER);
         if (log.isDebugEnabled()) {
             for (String variable : statistics.getAllUsedVariables()) {
