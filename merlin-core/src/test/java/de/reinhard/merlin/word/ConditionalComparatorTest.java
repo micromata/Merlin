@@ -19,7 +19,7 @@ public class ConditionalComparatorTest {
 
     @Test
     public void equals() {
-        assertTrue(ConditionalComparator.equals(4.0000001, 3.9999999));
-        assertFalse(ConditionalComparator.equals(4 + ConditionalComparator.EPSILON, 4 - ConditionalComparator.EPSILON));
+        assertTrue(ConditionalComparator.equalsEpsilon(4.0000001, 3.9999999));
+        assertFalse(ConditionalComparator.equalsEpsilon(4 + ConditionalComparator.EPSILON, 4 - ConditionalComparator.EPSILON));
     }
 }

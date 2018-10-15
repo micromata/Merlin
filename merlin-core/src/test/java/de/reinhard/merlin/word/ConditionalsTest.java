@@ -117,7 +117,7 @@ public class ConditionalsTest {
                       int endifBodyElementNumber, double number) {
         assertEquals(variable, conditional.getVariable(), "Variable name.");
         assertEquals(type, conditional.getType(), "AbstractConditional type");
-        assertTrue(ConditionalComparator.equals(number, ((ConditionalComparator) conditional).getDoubleValue()), "double value.");
+        assertTrue(ConditionalComparator.equalsEpsilon(number, ((ConditionalComparator) conditional).getDoubleValue()), "double value.");
         assertEquals(ifBodyElementNumber, conditional.getConditionalExpressionRange().getStartPosition().getBodyElementNumber(), "body-number of if-statement.");
         assertEquals(endifBodyElementNumber, conditional.getEndConditionalExpressionRange().getStartPosition().getBodyElementNumber(), "body-number of endif-statement");
     }

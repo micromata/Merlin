@@ -56,11 +56,11 @@ public class ConditionalComparator extends AbstractConditional {
         }
         switch (type) {
             case LESS_EQUAL:
-                return greaterThan(doubleValue, variableValue) || equals(variableValue, doubleValue);
+                return greaterThan(doubleValue, variableValue) || equalsEpsilon(variableValue, doubleValue);
             case LESS:
                 return greaterThan(doubleValue, variableValue);
             case GREATER_EQUAL:
-                return greaterThan(variableValue, doubleValue) || equals(variableValue, doubleValue);
+                return greaterThan(variableValue, doubleValue) || equalsEpsilon(variableValue, doubleValue);
             case GREATER:
                 return greaterThan(variableValue, doubleValue);
         }
@@ -87,7 +87,7 @@ public class ConditionalComparator extends AbstractConditional {
         return a - b > EPSILON;
     }
 
-    public static boolean equals(double a, double b) {
+    public static boolean equalsEpsilon(double a, double b) {
         return a == b ? true : Math.abs(a - b) < EPSILON;
     }
 }
