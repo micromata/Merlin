@@ -106,29 +106,23 @@ public class WordDocument implements AutoCloseable {
     }
 
     public String scanForTemplateDefinitionReference() {
-        for (IBodyElement element : document.getBodyElements()) {
-            if (element instanceof XWPFParagraph) {
-                XWPFParagraph paragraph = (XWPFParagraph) element;
-                String ref = new RunsProcessor(paragraph).scanForTemplateDefinitionReference();
-                if (ref != null) {
-                    return ref;
-                }
+        String ref = (String) processAllParagraphs(new RunsProcessorExecutor() {
+            @Override
+            Object process(RunsProcessor processor, Object param) {
+                return processor.scanForTemplateDefinitionReference();
             }
-        }
-        return null;
+        }, null);
+        return ref;
     }
 
     public String scanForTemplateId() {
-        for (IBodyElement element : document.getBodyElements()) {
-            if (element instanceof XWPFParagraph) {
-                XWPFParagraph paragraph = (XWPFParagraph) element;
-                String id = new RunsProcessor(paragraph).scanForTemplateId();
-                if (id != null) {
-                    return id;
-                }
+        String id = (String) processAllParagraphs(new RunsProcessorExecutor() {
+            @Override
+            Object process(RunsProcessor processor, Object param) {
+                return processor.scanForTemplateId();
             }
-        }
-        return null;
+        }, null);
+        return id;
     }
 
     public Conditionals getConditionals() {
@@ -139,31 +133,13 @@ public class WordDocument implements AutoCloseable {
 
     public Set<String> getVariables() {
         Set<String> variables = new HashSet<>();
-        for (IBodyElement element : document.getBodyElements()) {
-            if (element instanceof XWPFParagraph) {
-                XWPFParagraph paragraph = (XWPFParagraph) element;
-                new RunsProcessor(paragraph).scanVariables(variables);
-            } else if (element instanceof XWPFTable) {
-                XWPFTable table = (XWPFTable) element;
-                for (XWPFTableRow row : table.getRows()) {
-                    for (XWPFTableCell cell : row.getTableCells()) {
-                        for (XWPFParagraph p : cell.getParagraphs()) {
-                            new RunsProcessor(p).scanVariables(variables);
-                        }
-                    }
-                }
-            } else if (element instanceof XWPFSDT) {
-                ISDTContent content = ((XWPFSDT) element).getContent();
-                if (content == null) {
-                    log.info("Unsupported XWPFSDT element (not body or no paragraphs).");
-                } else {
-                    log.warn("Unsupported content: " + content.getText());
-                }
-            } else {
-                log.warn("Unsupported body element: " + element);
+        processAllParagraphs(new RunsProcessorExecutor() {
+            @Override
+            Object process(RunsProcessor processor, Object param) {
+                processor.scanVariables((Set<String>) param);
+                return null;
             }
-
-        }
+        }, variables);
         return variables;
     }
 
@@ -179,23 +155,13 @@ public class WordDocument implements AutoCloseable {
     }
 
     private void replaceVariables(Map<String, Object> variables) {
-        for (IBodyElement element : document.getBodyElements()) {
-            if (element instanceof XWPFParagraph) {
-                XWPFParagraph paragraph = (XWPFParagraph) element;
-                new RunsProcessor(paragraph).replace(variables);
-            } else if (element instanceof XWPFTable) {
-                XWPFTable table = (XWPFTable) element;
-                for (XWPFTableRow row : table.getRows()) {
-                    for (XWPFTableCell cell : row.getTableCells()) {
-                        for (XWPFParagraph p : cell.getParagraphs()) {
-                            new RunsProcessor(p).replace(variables);
-                        }
-                    }
-                }
-            } else {
-                log.warn("Unsupported body element: " + element);
+        processAllParagraphs(new RunsProcessorExecutor() {
+            @Override
+            Object process(RunsProcessor processor, Object param) {
+                processor.replace((Map<String, ?>) param);
+                return null;
             }
-        }
+        }, variables);
     }
 
     public String getFilename() {
@@ -211,5 +177,43 @@ public class WordDocument implements AutoCloseable {
             return file.length();
         }
         return null;
+    }
+
+    private Object processAllParagraphs(RunsProcessorExecutor processor, Object param) {
+        for (IBodyElement element : document.getBodyElements()) {
+            if (element instanceof XWPFParagraph) {
+                XWPFParagraph paragraph = (XWPFParagraph) element;
+                Object result = processor.process(new RunsProcessor(paragraph), param);
+                if (result != null) {
+                    return result;
+                }
+            } else if (element instanceof XWPFTable) {
+                XWPFTable table = (XWPFTable) element;
+                for (XWPFTableRow row : table.getRows()) {
+                    for (XWPFTableCell cell : row.getTableCells()) {
+                        for (XWPFParagraph paragraph : cell.getParagraphs()) {
+                            Object result = processor.process(new RunsProcessor(paragraph), param);
+                            if (result != null) {
+                                return result;
+                            }
+                        }
+                    }
+                }
+            } else if (element instanceof XWPFSDT) {
+                ISDTContent content = ((XWPFSDT) element).getContent();
+                if (content == null) {
+                    log.info("Unsupported XWPFSDT element (not body or no paragraphs).");
+                } else {
+                    log.warn("Unsupported content: " + content.getText());
+                }
+            } else {
+                log.warn("Unsupported body element: " + element);
+            }
+        }
+        return null;
+    }
+
+    abstract class RunsProcessorExecutor {
+        abstract Object process(RunsProcessor processor, Object param);
     }
 }
