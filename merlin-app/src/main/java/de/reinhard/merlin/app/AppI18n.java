@@ -13,6 +13,9 @@ import java.util.ResourceBundle;
 public class AppI18n extends I18n {
     public static final String BUNDLE_NAME = "MerlinAppMessagesBundle";
 
+    static {
+        Locale.setDefault(Locale.ENGLISH);
+    }
     /**
      * Uses the default message bundle "MessagesBundle" of class path with systems default locale.
      */
