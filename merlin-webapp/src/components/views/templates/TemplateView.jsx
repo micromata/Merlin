@@ -1,10 +1,10 @@
 import React from 'react';
 import {Alert, Nav, NavLink, TabContent, Table, TabPane} from 'reactstrap';
-import {formatDateTime, getRestServiceUrl} from '../../../actions/global';
+import {formatDateTime, getRestServiceUrl} from '../../../utilities/global';
 import classNames from 'classnames';
 import {PageHeader} from '../../general/BootstrapComponents';
 import LinkFile from '../../general/LinkFile';
-import TemplateDefinition from './TemplateDefinition';
+import TemplateDefinition from './templatedefinition/TemplateDefinition';
 import TemplateRunTab from './TemplateRunTab';
 
 class TemplateView extends React.Component {

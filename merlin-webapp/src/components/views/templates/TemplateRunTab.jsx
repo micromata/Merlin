@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {Form} from 'reactstrap';
 import {saveTemplateRunConfiguration} from '../../../actions';
-import {getResponseHeaderFilename, getRestServiceUrl} from '../../../actions/global';
+import {getResponseHeaderFilename, getRestServiceUrl} from '../../../utilities/global';
 import downloadFile from '../../../utilities/download';
 import DropArea from '../../general/droparea/Component';
 import {FormButton, FormInput, FormLabelField, FormSelect} from '../../general/forms/FormComponents';
