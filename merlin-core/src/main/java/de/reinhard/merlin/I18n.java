@@ -49,4 +49,8 @@ public class I18n {
     public String formatMessage(String messageId, Object... params) {
         return MessageFormat.format(resourceBundle.getString(messageId), params);
     }
+
+    protected ResourceBundle getResourceBundle() {
+        return resourceBundle;
+    }
 }
