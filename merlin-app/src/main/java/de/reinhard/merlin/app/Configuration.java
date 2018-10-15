@@ -12,6 +12,7 @@ public class Configuration {
 
     private int port;
     private String language;
+    private boolean showTestData = true;
     private List<ConfigurationTemplatesDir> templatesDirs;
     private boolean templatesDirModified = false;
 
@@ -46,6 +47,17 @@ public class Configuration {
             this.language = language;
     }
 
+    /**
+     * @return true, if test templates will be shown and usable
+     */
+    public boolean isShowTestData() {
+        return showTestData;
+    }
+
+    public void setShowTestData(boolean showTestData) {
+        this.showTestData = showTestData;
+    }
+
     public List<ConfigurationTemplatesDir> getTemplatesDirs() {
         return templatesDirs;
     }
@@ -76,6 +88,7 @@ public class Configuration {
     public void copyFrom(Configuration other) {
         setLanguage(other.language);
         this.port = other.port;
+        this.showTestData = other.showTestData;
         if (!Objects.equals(this.templatesDirs, other.templatesDirs)) {
             templatesDirModified = true;
         }

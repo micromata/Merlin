@@ -18,6 +18,8 @@ public class ConfigurationHandler {
     public static final int WEBSERVER_PORT_DEFAULT = 8042;
     private static final String LANGUAGE_PREF = "language";
     private static final String LANGUAGE_DEFAULT = "en";
+    private static final String SHOW_TEST_DATA_PREF = "show-test-data";
+    private static final boolean SHOW_TEST_DATA_PREF_DEFAULT = true;
     static final String TEMPLATES_DIRS = "template-directories";
 
     private Preferences preferences;
@@ -57,6 +59,7 @@ public class ConfigurationHandler {
     public void load() {
         configuration.setPort(preferences.getInt(WEBSERVER_PORT_PREF, WEBSERVER_PORT_DEFAULT));
         configuration.setLanguage(preferences.get(LANGUAGE_PREF, LANGUAGE_DEFAULT));
+        configuration.setShowTestData(preferences.getBoolean(SHOW_TEST_DATA_PREF, SHOW_TEST_DATA_PREF_DEFAULT));
         String json = preferences.get(TEMPLATES_DIRS, null);
         if (json != null) {
             try {
@@ -76,6 +79,7 @@ public class ConfigurationHandler {
     public void save() {
         log.info("Saving configuration to user prefs.");
         preferences.putInt(WEBSERVER_PORT_PREF, configuration.getPort());
+        preferences.putBoolean(SHOW_TEST_DATA_PREF, configuration.isShowTestData());
         if (configuration.getLanguage() != null)
             preferences.put(LANGUAGE_PREF, configuration.getLanguage());
         else
@@ -107,6 +111,7 @@ public class ConfigurationHandler {
         preferences.remove(WEBSERVER_PORT_PREF);
         preferences.remove(LANGUAGE_PREF);
         preferences.remove(TEMPLATES_DIRS);
+        preferences.remove(SHOW_TEST_DATA_PREF);
         try {
             preferences.flush();
         } catch (BackingStoreException ex) {

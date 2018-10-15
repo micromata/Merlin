@@ -8,7 +8,7 @@ import {
     FormLabelField,
     FormLabelInputField,
     FormFieldset,
-    FormField, FormButton, FormSelect
+    FormField, FormButton, FormSelect, FormCheckbox
 } from "../../general/forms/FormComponents";
 import {getRestServiceUrl, isDevelopmentMode} from "../../../utilities/global";
 
@@ -19,6 +19,7 @@ class ConfigForm extends React.Component {
         super(props);
         this.state = {
             port: 8042,
+            showTestData: true,
             language: 'default',
             directoryItems: [],
             redirect: false,
@@ -48,6 +49,7 @@ class ConfigForm extends React.Component {
                 if (data.port) {
                     this.setState({port: data.port});
                 }
+                this.setState({showTestData: data.showTestData});
                 if (data.language) {
                     this.setState({language: data.language});
                 }
@@ -98,7 +100,12 @@ class ConfigForm extends React.Component {
     }
 
     onSave(event) {
-        var config = {port: this.state.port, language: this.state.language, templatesDirs: []};
+        var config = {
+            port: this.state.port,
+            showTestData: this.state.showTestData,
+            language: this.state.language,
+            templatesDirs: []
+        };
         if (this.state.directoryItems) {
             this.state.directoryItems.forEach(function (item) {
                 config.templatesDirs.push({directory: item.directory, recursive: item.recursive});
@@ -159,12 +166,18 @@ class ConfigForm extends React.Component {
                         <option value={'de'}>German</option>
                     </FormSelect>
                 </FormLabelField>
+                <FormLabelField label={'Show test data'} fieldLength={2}>
+                    <FormCheckbox checked={this.state.showTestData}
+                                  name="showTestData"
+                                  onChange={this.handleCheckboxChange}/>
+                </FormLabelField>
                 <DirectoryItemsFieldset items={this.state.directoryItems} addItem={this.addDirectoryItem}
                                         removeItem={this.removeDirectoryItem}
                                         onDirectoryChange={this.handleDirectoryChange}
                                         onRecursiveFlagChange={this.handleRecursiveFlagChange}/>
                 <FormLabelField>
-                    <Button color="link" onClick={() => this.setState({expertSettingsOpen: !this.state.expertSettingsOpen})}>
+                    <Button color="link"
+                            onClick={() => this.setState({expertSettingsOpen: !this.state.expertSettingsOpen})}>
                         For experts only
                     </Button>
                 </FormLabelField>
