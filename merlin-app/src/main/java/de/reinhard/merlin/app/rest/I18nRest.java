@@ -36,8 +36,7 @@ public class I18nRest {
         } else {
             localeObject = requestContext.getLocale();
         }
-        Locale loc = new Locale.Builder().setLanguage("en").setRegion("US").build();
-        AppI18n i18n = new AppI18n(loc);
+        AppI18n i18n = new AppI18n(localeObject);
         String json = JsonUtils.toJson(i18n.getAllMessages(), prettyPrinter);
         return json;
     }
