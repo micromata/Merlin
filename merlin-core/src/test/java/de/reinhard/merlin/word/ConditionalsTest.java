@@ -76,12 +76,15 @@ public class ConditionalsTest {
         AbstractConditional parent = cond;
         test(cond, "var", ConditionalType.NOT_EQUAL, 1, 4, "test");
         assertNull(cond.getParent());
-        cond = it.next();
+
+        Iterator<AbstractConditional> childIt = cond.getChildConditionals().iterator();
+        cond = childIt.next();
         test(cond, "fox", ConditionalType.EQUAL, 2, 3, "lazy");
         assertEquals(parent, cond.getParent());
-        cond = it.next();
+        cond = childIt.next();
         test(cond, "fox", ConditionalType.NOT_EQUAL, 3, 3, "lazy");
         assertEquals(parent, cond.getParent());
+
         Map<String, String> variables = new HashMap<>();
         variables.put("var", "not test");
         variables.put("fox", "lazy");

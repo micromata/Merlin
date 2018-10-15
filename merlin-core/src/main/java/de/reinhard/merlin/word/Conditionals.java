@@ -48,6 +48,9 @@ public class Conditionals {
                 if (current != null) {
                     // This is a child if-expression of current.
                     conditional.setParent(current);
+                } else {
+                    // This is a top level if-expression.
+                    conditionals.add(conditional);
                 }
                 current = conditional; // Set child as current.
             } else {
@@ -105,7 +108,6 @@ public class Conditionals {
         Matcher beginMatcher = AbstractConditional.beginIfPattern.matcher(text);
         while (beginMatcher.find()) {
             AbstractConditional conditional = AbstractConditional.createConditional(beginMatcher, bodyElementNumber, processor);
-            conditionals.add(conditional);
             allControls.add(conditional.getConditionalExpressionRange());
             conditionalMap.put(conditional.getConditionalExpressionRange(), conditional);
         }
