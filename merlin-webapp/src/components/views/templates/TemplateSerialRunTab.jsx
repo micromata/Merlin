@@ -7,8 +7,6 @@ class TemplateSerialRunTab extends React.Component {
     runSerialTemplate = file => {
         const formData = new FormData();
         formData.append('file', file);
-
-        this.runTemplate(getRestServiceUrl('files/upload'), undefined, formData);
     };
 
     render() {
