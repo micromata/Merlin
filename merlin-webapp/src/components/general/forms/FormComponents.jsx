@@ -46,9 +46,10 @@ FormLabel.defaultProps = {
 
 
 function FormInput(props) {
+    var { fieldLength, ...other } = props;
     return (
         <Input
-            {...props}
+            {...other}
             className={`form-control form-control-sm col-sm-${props.fieldLength}`}
         />
     );
