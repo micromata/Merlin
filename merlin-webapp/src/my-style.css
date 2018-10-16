@@ -6,6 +6,11 @@ a:hover {
 	color: #47a7eb !important;
 }
 
+a.card-link:hover {
+	color: #50555f !important;
+}
+
+
 /* Scaffolding */
 
 .container {
