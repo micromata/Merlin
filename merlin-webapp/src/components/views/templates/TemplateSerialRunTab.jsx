@@ -1,5 +1,4 @@
 import React from 'react';
-import {getRestServiceUrl} from '../../../utilities/global';
 import DropArea from '../../general/droparea/Component';
 
 class TemplateSerialRunTab extends React.Component {

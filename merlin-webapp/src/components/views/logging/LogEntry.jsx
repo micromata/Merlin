@@ -3,12 +3,13 @@ import PropTypes from 'prop-types';
 import Highlight from 'react-highlighter';
 
 function LogEntry({entry, search, locationString}) {
+    let message = entry.stackTrace ? entry.message + <br/> + entry.stackTrace : entry.message;
     return (
         <tr>
             <td>{entry.logDate}</td>
             <td className={`log-${entry.level}`}><Highlight search={search}>{entry.level}</Highlight></td>
             {locationString ? <td><Highlight search={search}>{locationString}</Highlight></td> : undefined}
-            <td className={'tt'}><Highlight search={search}>{entry.message}</Highlight></td>
+            <td className={'tt'}><Highlight search={search}>{message}</Highlight></td>
         </tr>
     );
 }
