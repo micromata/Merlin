@@ -11,6 +11,8 @@ import {
     FormField, FormButton, FormSelect, FormCheckbox
 } from "../../general/forms/FormComponents";
 import {getRestServiceUrl, isDevelopmentMode} from "../../../utilities/global";
+import {IconDanger} from '../../general/IconComponents';
+
 
 var directoryItems = [];
 
@@ -176,9 +178,9 @@ class ConfigForm extends React.Component {
                                         onDirectoryChange={this.handleDirectoryChange}
                                         onRecursiveFlagChange={this.handleRecursiveFlagChange}/>
                 <FormLabelField>
-                    <Button color="link"
+                    <Button className={'btn-outline-primary'}
                             onClick={() => this.setState({expertSettingsOpen: !this.state.expertSettingsOpen})}>
-                        For experts only
+                        <IconDanger /> For experts only
                     </Button>
                 </FormLabelField>
                 <Collapse isOpen={this.state.expertSettingsOpen}>
@@ -200,7 +202,7 @@ class ConfigForm extends React.Component {
                         <FormButton onClick={this.onCancel} bsStyle="danger"
                                     hint="Discard changes and go to Start page.">Cancel
                         </FormButton>
-                        <FormButton onClick={this.onSave} bsStyle="success"
+                        <FormButton onClick={this.onSave} bsStyle="primary"
                                     hint="Persist changes and go to Start page.">Save
                         </FormButton>
                     </FormField>
