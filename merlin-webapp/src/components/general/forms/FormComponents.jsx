@@ -123,21 +123,22 @@ function FormCheckbox({id, name, checked, onChange, hint, label}) {
             </UncontrolledTooltip></React.Fragment>;
     }
     let labelNode = <label
-            className={'custom-control-label'}
-            htmlFor={id}>
-            {label}
-        </label>;
+        className={'custom-control-label'}
+        htmlFor={id}>
+        {label}
+    </label>;
     return (
-        <div class="custom-control custom-checkbox">
-    <input class="custom-control-input" id={id} type="checkbox"
-                id={id}
-                name={name}
-                checked={checked}
-                onChange={onChange}
-     />
-     {labelNode}
+        <div className="custom-control custom-checkbox">
+            <input className="custom-control-input"
+                   type="checkbox"
+                   id={id}
+                   name={name}
+                   checked={checked}
+                   onChange={onChange}
+            />
+            {labelNode}
             {tooltip}
-  </div>
+        </div>
     );
 }
 
@@ -324,7 +325,7 @@ function FormButton({bsStyle = 'default', type, onClick, hint, disabled, childre
 }
 
 FormButton.propTypes = {
-    bsStyle: PropTypes.oneOf(['default', 'danger', 'success', null]),
+    bsStyle: PropTypes.oneOf(['primary', null]),
     type: PropTypes.string,
     onClick: PropTypes.func,
     hint: PropTypes.string,
