@@ -57,11 +57,11 @@ class TemplateView extends React.Component {
             </Alert>
         }
         const template = this.state.template;
-        let templateId = template.id ? template.id : template.filename;
+        let templateId = template.id ? template.id : template.fileDescriptor.filename;
         return (
             <React.Fragment>
                 <PageHeader>
-                    Template: {templateId}
+                    {templateId}
                 </PageHeader>
                 <Nav tabs>
                     <NavLink

@@ -140,7 +140,7 @@ class TemplateDefinition extends React.Component {
                 </ul>
             </code>
         }
-        let title = this.state.definition ? 'Template definition: ' + this.state.definition.id : 'Template definition';
+        let title = this.state.definition ? this.state.definition.id : 'Template definition';
         let pageHeader = !this.props.hidePageHeader ? <PageHeader>
             {title}
         </PageHeader> : null;
