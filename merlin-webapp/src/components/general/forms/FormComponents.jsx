@@ -313,7 +313,7 @@ function FormButton({bsStyle = 'default', type, onClick, hint, disabled, childre
     return (
         <button
             type={type}
-            className={`btn btn-outline-primary btn-${bsStyle}`}
+            className={`btn btn-${bsStyle}`}
             onClick={onClick}
             title={hint}
             disabled={disabled}
@@ -332,7 +332,7 @@ FormButton.propTypes = {
     children: PropTypes.node
 };
 FormButton.defaultProps = {
-    bsStyle: 'default',
+    bsStyle: 'outline-primary',
     type: 'button',
     onClick: null,
     hint: '',

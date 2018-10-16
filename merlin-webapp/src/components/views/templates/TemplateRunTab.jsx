@@ -136,7 +136,7 @@ class TemplateRunTab extends React.Component {
                         </FormLabelField>;
                     })}
                     <FormButton
-                        bsStyle={'success'}
+                        bsStyle={'primary'}
                         type={'submit'}
                         disabled={!valid}
                     >

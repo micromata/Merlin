@@ -191,7 +191,7 @@ class ConfigForm extends React.Component {
                                              onChange={this.handleTextChange}
                                              placeholder="Enter port"/>
                         <FormLabelField>
-                            <FormButton onClick={this.onResetConfiguration} bsStyle="danger"
+                            <FormButton onClick={this.onResetConfiguration}
                                         hint="Reset factory settings.">Reset
                             </FormButton>
                         </FormLabelField>
@@ -199,7 +199,7 @@ class ConfigForm extends React.Component {
                 </Collapse>
                 <FormGroup>
                     <FormField length={12}>
-                        <FormButton onClick={this.onCancel} bsStyle="danger"
+                        <FormButton onClick={this.onCancel}
                                     hint="Discard changes and go to Start page.">Cancel
                         </FormButton>
                         <FormButton onClick={this.onSave} bsStyle="primary"

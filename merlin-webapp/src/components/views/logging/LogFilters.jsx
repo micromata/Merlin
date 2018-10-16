@@ -31,7 +31,6 @@ function LogFilters({loadLog, changeFilter, filters}) {
                 name={'search'}
                 onChange={changeFilter}
                 fieldLength={6}
-                className={'test'}
             />
 
             <FormSelect
@@ -65,7 +64,7 @@ function LogFilters({loadLog, changeFilter, filters}) {
                 <option value={'false'}>descending</option>
             </FormSelect>
 
-            <FormButton type={'submit'} bsStyle={'success'}>
+            <FormButton type={'submit'} bsStyle={'primary'}>
                 <IconRefresh />
             </FormButton>
         </form>
