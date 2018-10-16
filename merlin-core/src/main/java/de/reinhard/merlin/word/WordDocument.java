@@ -4,6 +4,7 @@ import de.reinhard.merlin.persistency.PersistencyRegistry;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.openxml4j.opc.OPCPackage;
+import org.apache.poi.xwpf.model.XWPFHeaderFooterPolicy;
 import org.apache.poi.xwpf.usermodel.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +14,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -180,22 +182,33 @@ public class WordDocument implements AutoCloseable {
     }
 
     private Object processAllParagraphs(RunsProcessorExecutor processor, Object param) {
-        for (IBodyElement element : document.getBodyElements()) {
+        Object result = processBodyElements(processor, param, document.getBodyElements());
+        if (result != null)
+            return result;
+        XWPFHeaderFooterPolicy policy = new XWPFHeaderFooterPolicy(document);
+        // odd page header is equals to default page header!
+        result = processAllHeaders(processor, param, policy.getDefaultHeader(), policy.getFirstPageHeader(), policy.getEvenPageHeader());
+        if (result != null)
+            return result;
+        result = processAllFooters(processor, param, policy.getDefaultFooter(), policy.getFirstPageFooter(), policy.getEvenPageFooter());
+        return result;
+    }
+
+    private Object processBodyElements(RunsProcessorExecutor processor, Object param, List<IBodyElement> list) {
+        for (IBodyElement element : list) {
             if (element instanceof XWPFParagraph) {
                 XWPFParagraph paragraph = (XWPFParagraph) element;
                 Object result = processor.process(new RunsProcessor(paragraph), param);
-                if (result != null) {
+                if (result != null)
                     return result;
-                }
             } else if (element instanceof XWPFTable) {
                 XWPFTable table = (XWPFTable) element;
                 for (XWPFTableRow row : table.getRows()) {
                     for (XWPFTableCell cell : row.getTableCells()) {
                         for (XWPFParagraph paragraph : cell.getParagraphs()) {
                             Object result = processor.process(new RunsProcessor(paragraph), param);
-                            if (result != null) {
+                            if (result != null)
                                 return result;
-                            }
                         }
                     }
                 }
@@ -208,6 +221,30 @@ public class WordDocument implements AutoCloseable {
                 }
             } else {
                 log.warn("Unsupported body element: " + element);
+            }
+        }
+        return null;
+    }
+
+    private Object processAllHeaders(RunsProcessorExecutor processor, Object param, XWPFHeader... headers) {
+        Object result;
+        for (XWPFHeader header : headers) {
+            if (header != null) {
+                result = processBodyElements(processor, param, header.getBodyElements());
+                if (result != null)
+                    return result;
+            }
+        }
+        return null;
+    }
+
+    private Object processAllFooters(RunsProcessorExecutor processor, Object param, XWPFFooter... footers) {
+        Object result;
+        for (XWPFFooter footer : footers) {
+            if (footer != null) {
+                result = processBodyElements(processor, param, footer.getBodyElements());
+                if (result != null)
+                    return result;
             }
         }
         return null;
