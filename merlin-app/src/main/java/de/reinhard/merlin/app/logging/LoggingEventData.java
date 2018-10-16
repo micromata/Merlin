@@ -4,6 +4,8 @@ import org.apache.commons.lang3.ClassUtils;
 import org.apache.log4j.spi.LocationInfo;
 import org.apache.log4j.spi.LoggingEvent;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -23,6 +25,7 @@ public class LoggingEventData {
     private String javaClassSimpleName;
     private String lineNumber;
     private String methodName;
+    private String stackTrace;
 
     LoggingEventData() {
 
@@ -35,6 +38,13 @@ public class LoggingEventData {
         loggerName = event.getLoggerName();
         logDate = getIsoLogDate(event.timeStamp);
         LocationInfo info = event.getLocationInformation();
+        Throwable throwable = event.getThrowableInformation() != null ? event.getThrowableInformation().getThrowable() : null;
+        if (throwable != null) {
+            StringWriter writer = new StringWriter();
+            PrintWriter printWriter= new PrintWriter(writer);
+            throwable.printStackTrace(printWriter);
+            stackTrace = writer.toString();
+        }
         if (info != null) {
             javaClass = info.getClassName();
             javaClassSimpleName = ClassUtils.getShortClassName(info.getClassName());
@@ -81,6 +91,10 @@ public class LoggingEventData {
 
     public int getOrderNumber() {
         return orderNumber;
+    }
+
+    public String getStackTrace() {
+        return stackTrace;
     }
 
     private String getIsoLogDate(long millis) {

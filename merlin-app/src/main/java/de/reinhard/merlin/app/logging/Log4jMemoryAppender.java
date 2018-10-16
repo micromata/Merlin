@@ -70,7 +70,8 @@ public class Log4jMemoryAppender extends AppenderSkeleton {
                     continue;
                 }
             }
-            String str = StringUtils.join(event.getLoggerName(), event.getJavaClass(), event.getMessage(), event.getLevel(), event.getLogDate(), "|#|");
+            String str = StringUtils.join(event.getLoggerName(), event.getJavaClass(), event.getMessage(), event.getStackTrace(),
+                    event.getLevel(), event.getLogDate(), "|#|");
             if (StringUtils.isEmpty(filter.getSearch()) || matches(str, filter.getSearch())) {
                 if (filter.isAscendingOrder()) {
                     result.add(event);
