@@ -6,6 +6,7 @@ import {
     faSync,
     faTrash,
     faTimes,
+    faSkullCrossbones,
     faUpload
 } from '@fortawesome/free-solid-svg-icons'
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
@@ -25,6 +26,12 @@ function IconCancel() {
 function IconCheck() {
     return (
         <FontAwesomeIcon icon={faCheck}/>
+    );
+}
+
+function IconDanger() {
+    return (
+        <FontAwesomeIcon icon={faSkullCrossbones}/>
     );
 }
 
@@ -53,5 +60,5 @@ function IconUpload() {
 }
 
 export {
-    IconAdd, IconCancel, IconCheck, IconInfo, IconRefresh, IconRemove, IconUpload
+    IconAdd, IconCancel, IconCheck, IconDanger, IconInfo, IconRefresh, IconRemove, IconUpload
 };
