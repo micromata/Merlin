@@ -88,6 +88,10 @@ button:focus {
 	min-height: 40px;
 }
 
+.custom-checkbox .custom-control-input:checked ~ .custom-control-label::before {
+	background: #7C8495;
+}
+
 /* Buttons */
 
 .btn.btn-outline-primary {
