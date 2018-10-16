@@ -13,6 +13,7 @@ import {isDevelopmentMode} from '../utilities/global';
 import TemplateView from '../components/views/templates/TemplateView';
 import LogView from '../components/views/logging/LogView';
 import TemplateDefinition from '../components/views/templates/templatedefinition/TemplateDefinition';
+import '../my-style.css';
 
 class WebApp extends React.Component {
 
