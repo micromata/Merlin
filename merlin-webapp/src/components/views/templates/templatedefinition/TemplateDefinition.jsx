@@ -20,29 +20,33 @@ class TemplateDefinition extends React.Component {
     };
 
     handleTextChange = (value, name) => {
-        let definition = this.state.definition;
-        definition[name] = value;
-        this.setState({definition: definition});
+        // Read-only, do nothing.
+        //let definition = this.state.definition;
+        //definition[name] = value;
+        //this.setState({definition: definition});
     }
 
     handleStateChange = event => {
-        let definition = this.state.definition;
-        definition[event.target.name] = event.target.checked;
-        this.setState({definition: definition});
+        // Read-only, do nothing.
+        //let definition = this.state.definition;
+        //definition[event.target.name] = event.target.checked;
+        //this.setState({definition: definition});
     }
 
     handleVariableTextChange = (value, name, index) => {
-        let definition = this.state.definition;
-        const variable = definition.variableDefinitions[index];
-        variable[name] = value;
-        this.setState({definition: definition});
+        // Read-only, do nothing.
+        //let definition = this.state.definition;
+        //const variable = definition.variableDefinitions[index];
+        //variable[name] = value;
+        //this.setState({definition: definition});
     }
 
     handleVariableStateChange = (event, index) => {
-        let definition = this.state.definition;
-        const variable = definition.variableDefinitions[index];
-        variable[event.target.name] = event.target.checked;
-        this.setState({definition: definition});
+        // Read-only, do nothing.
+        //let definition = this.state.definition;
+        //const variable = definition.variableDefinitions[index];
+        //variable[event.target.name] = event.target.checked;
+        //this.setState({definition: definition});
     }
 
     fetchTemplateDefinition = () => {
