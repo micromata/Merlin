@@ -1,5 +1,4 @@
 import React from 'react';
-import DropArea from '../../general/droparea/Component';
 
 class TemplateSerialRunTab extends React.Component {
 
@@ -12,8 +11,8 @@ class TemplateSerialRunTab extends React.Component {
         return (
             <React.Fragment>
                 <h4>Generation from a file:</h4>
-                <DropArea upload={this.runSerialTemplate} />
-                <br />
+                Not yet implemented.
+                {/*<DropArea upload={this.runSerialTemplate} />*/}
             </React.Fragment>
         );
     }
