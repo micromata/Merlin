@@ -41,7 +41,7 @@ class TemplateDefinition extends React.Component {
     handleVariableStateChange = (event, index) => {
         let definition = this.state.definition;
         const variable = definition.variableDefinitions[index];
-        variable[event.target.name]= event.target.checked;
+        variable[event.target.name] = event.target.checked;
         this.setState({definition: definition});
     }
 
@@ -141,11 +141,12 @@ class TemplateDefinition extends React.Component {
             </code>
         }
         let title = this.state.definition ? 'Template definition: ' + this.state.definition.id : 'Template definition';
+        let pageHeader = !this.props.hidePageHeader ? <PageHeader>
+            {title}
+        </PageHeader> : null;
 
         return <React.Fragment>
-            <PageHeader>
-                {title}
-            </PageHeader>
+            {pageHeader}
             {content}
             {todo}
         </React.Fragment>;

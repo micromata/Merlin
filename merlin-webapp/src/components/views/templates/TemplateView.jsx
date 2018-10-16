@@ -113,13 +113,17 @@ class TemplateView extends React.Component {
                     </TabPane>
                     {this.state.template.templateDefinition ?
                         <TabPane tabId={'2'}>
-                            <TemplateDefinition
-                                match={{
-                                    params: {
-                                        primaryKey: this.state.template.templateDefinition.fileDescriptor.primaryKey
-                                    }
-                                }}
-                            />
+                            <div className="card border-secondary mb-3">
+                                <div className="card-body">
+                                    <TemplateDefinition hidePageHeader={'true'}
+                                        match={{
+                                            params: {
+                                                primaryKey: this.state.template.templateDefinition.fileDescriptor.primaryKey
+                                            }
+                                        }}
+                                    />
+                                </div>
+                            </div>
                         </TabPane> : undefined}
                     <TabPane tabId={'3'}>
                         <TemplateRunTab
