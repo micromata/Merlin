@@ -37,7 +37,7 @@ class Menu extends React.Component {
 
     render() {
         return (
-            <Navbar color="light" light expand="md">
+            <Navbar className={'fixed-top'} color="light" light expand="md">
                 <NavbarBrand href="/">Merlin</NavbarBrand>
                 <NavbarToggler onClick={this.toggle}/>
                 <Collapse isOpen={this.state.isOpen} navbar>
