@@ -1,0 +1,62 @@
+body {
+	color: #50555f !important;
+}
+
+/* Scaffolding */
+
+.container {
+	max-width: 1260px;
+}
+
+/* Navbar */
+
+.navbar.bg-light {
+	background: white !important;
+	box-shadow: 0 0 10px rgba(0,0,0,.1);
+	border-bottom: 1px solid rgba(0,0,0,.1);
+	height: 60px;
+}
+
+a.nav-link {
+	color: #7c8495 !important;
+}
+
+.pageheader {
+	font-size: 2.5rem !important;
+	color: #414650;
+	margin-bottom: 40px !important;
+}
+
+
+/* Forms */
+
+.form-inline {
+	margin-bottom: 30px;
+}
+
+/* Buttons */
+
+.btn.btn-outline-primary {
+	color: #47a7eb;
+	background-color: transparent;
+	border-color: #309ce8;
+}
+
+.btn.btn-outline-primary:hover {
+	color: #fff;
+	background-color: #47a7eb;
+	border-color: #47a7eb;
+}
+
+
+/* Tabs */
+
+.nav.nav-tabs {
+	margin-bottom: 25px;
+}
+
+.nav-tabs .nav-link,
+.nav-tabs .nav-link.active {
+	position: relative;
+	top: 1px;
+}
