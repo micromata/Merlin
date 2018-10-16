@@ -16,8 +16,6 @@ const getLocationString = (locationFormat, entry) => {
 
 function LogTable({locationFormat, entries, search}) {
     const lowercaseSearch = search.toLowerCase();
-    //let entry = entries[1];
-     //.join('|#|').toLowerCase());
     return (
         <Table striped bordered hover size={'sm'} responsive>
             <thead>
@@ -30,9 +28,9 @@ function LogTable({locationFormat, entries, search}) {
             </thead>
             <tbody>
             {entries
-                .filter(entry => [entry.message, entry.strackTrace, getLocationString(locationFormat, entry), entry.level, entry.logDate]
+                .filter(entry => [entry.message, entry.stackTrace, getLocationString(locationFormat, entry), entry.level, entry.logDate]
                     .join('|#|').toLowerCase()
-                    .indexOf(lowercaseSearch) >= 0)
+                    .indexOf(lowercaseSearch) !== -1)
                 .map((entry, index) => <LogEntry
                     entry={entry}
                     search={lowercaseSearch}
