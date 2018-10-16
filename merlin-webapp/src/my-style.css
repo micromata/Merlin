@@ -134,3 +134,11 @@ button:focus {
 .tab-pane.active {
 	padding: 20px;
 }
+
+
+/* Cards */
+
+.card-header {
+	font-weight: bold;
+	color: #50555F;
+}
