@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
+import java.io.File;
 import java.net.URL;
 
 public class Main extends Application {
@@ -27,6 +28,7 @@ public class Main extends Application {
         Version version = Version.getInstance();
         log.info("Starting " + version.getAppName() + " " + version.getVersion() + ", build time: "
                 + version.getBuildDate() + " (UTC: " + version.getBuildDateUTC() + "), mode: " + RunningMode.getMode());
+        log.info("Current working directory: " + new File(".").getAbsolutePath());
         launch(args);
     }
 
