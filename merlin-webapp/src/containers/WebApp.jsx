@@ -47,8 +47,8 @@ class WebApp extends React.Component {
                                     />
                                 ))
                             }
-                            <Route path={'/template/:primaryKey'} component={TemplateView} />
-                            <Route path={'/templateDefinition/:primaryKey'} component={TemplateDefinition} />
+                            <Route path={'/templates/:primaryKey'} component={TemplateView} />
+                            <Route path={'/templateDefinitions/:primaryKey'} component={TemplateDefinition} />
                         </Switch>
                     </div>
                 </div>
