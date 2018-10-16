@@ -31,6 +31,7 @@ function LogFilters({loadLog, changeFilter, filters}) {
                 name={'search'}
                 onChange={changeFilter}
                 fieldLength={6}
+                className={'test'}
             />
 
             <FormSelect
