@@ -81,7 +81,7 @@ class TemplateRunTab extends React.Component {
                                 {...formControlProps}
                             >
                                 {item.allowedValuesList.map(option => <option
-                                    key={`template-run-variable-${item.refId}-select-${option}`}
+                                    key={`template-run-variable-${name}-select-${option}`}
                                     value={option}
                                 >
                                     {option}
@@ -128,7 +128,7 @@ class TemplateRunTab extends React.Component {
                             label={name}
                             labelLength={3}
                             fieldLength={9}
-                            key={`template-run-variable-${item.refId ? item.refId : item}`}
+                            key={`template-run-variable-${name}`}
                             hint={item.description ? item.description : ''}
                             validationMessage={validationMessage}
                         >
@@ -154,7 +154,6 @@ TemplateRunTab.propTypes = {
     primaryKey: PropTypes.string.isRequired,
     templateDefinitionId: PropTypes.string.isRequired,
     variableDefinitions: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.shape({
-        refId: PropTypes.number,
         name: PropTypes.string,
         description: PropTypes.string,
         required: PropTypes.bool,
