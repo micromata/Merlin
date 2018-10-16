@@ -89,7 +89,7 @@ class TemplateRunTab extends React.Component {
                             </FormSelect>;
                         } else {
 
-                            if (item.required && formControlProps.value.trim() === '') {
+                            if (item.required && (!formControlProps.value || formControlProps.value.trim() === '')) {
                                 validationMessage = 'This field is required. Please insert a value.';
                             } else if (item.type === 'INT' && isNaN(formControlProps.value)) {
                                 validationMessage = 'Value must be a number.';
