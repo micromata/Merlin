@@ -46,11 +46,11 @@ FormLabel.defaultProps = {
 
 
 function FormInput(props) {
-    var { fieldLength, ...other } = props;
+    var {fieldLength, ...other} = props;
     return (
         <Input
             {...other}
-            className={`form-control form-control-sm col-sm-${props.fieldLength}`}
+            className={`col-sm-${props.fieldLength} ${props.className}`}
         />
     );
 }
@@ -66,7 +66,8 @@ FormInput.propTypes = {
     type: PropTypes.string,
     placeholder: PropTypes.string,
     valid: PropTypes.bool,
-    invalid: PropTypes.bool
+    invalid: PropTypes.bool,
+    className: PropTypes.string
 };
 
 FormInput.defaultProps = {
@@ -116,7 +117,7 @@ function FormCheckbox({id, name, checked, onChange, hint, label}) {
     }
     let tooltip = null;
     if (hint) {
-        tooltip =<React.Fragment> <span id={`info-${id}`}><IconInfo/></span>
+        tooltip = <React.Fragment> <span id={`info-${id}`}><IconInfo/></span>
             <UncontrolledTooltip placement="right" target={`info-${id}`}>
                 {hint}
             </UncontrolledTooltip></React.Fragment>;
