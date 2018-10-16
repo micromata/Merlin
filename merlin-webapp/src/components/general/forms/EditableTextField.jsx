@@ -114,12 +114,14 @@ class EditableTextFieldInput extends React.Component {
                 onChange={this.handleInputChange}/>
             <InputGroupAddon addonType={'append'}>
                 <Button
+                className={'btn-outline-primary'}
                     onClick={this.stopEditing(true)}
                     color={'success'}
                 >
                     <IconCheck/>
                 </Button>
                 <Button
+                className={'btn-outline-primary'}
                     onClick={this.stopEditing(false)}
                     color={'danger'}
                 >
