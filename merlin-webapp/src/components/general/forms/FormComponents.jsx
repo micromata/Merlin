@@ -88,7 +88,7 @@ function FormSelect(props) {
     return (
         <select
             {...props}
-            className={'form-control form-control-sm'}
+            className={'custom-select form-control form-control-sm mr-1'}
         />
     );
 }
