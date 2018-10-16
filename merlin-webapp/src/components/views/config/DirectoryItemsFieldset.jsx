@@ -28,8 +28,8 @@ class DirectoryItemsFieldset extends React.Component {
                 <div className="form-group row">
                     <div className="col-sm-2"></div>
                     <div className="col-sm-10">
-                        <button type="button" onClick={this.onAdd} className="btn"
-                                title="Add new Template directory row"><IconAdd/></button>
+                        <button type="button" onClick={this.onAdd} className="btn btn-outline-primary"
+                                title="Add new Template directory row"><IconAdd/> Add directory</button>
                     </div>
                 </div>
             </fieldset>
