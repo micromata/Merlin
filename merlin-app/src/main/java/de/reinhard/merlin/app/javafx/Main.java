@@ -29,6 +29,7 @@ public class Main extends Application {
         log.info("Starting " + version.getAppName() + " " + version.getVersion() + ", build time: "
                 + version.getBuildDate() + " (UTC: " + version.getBuildDateUTC() + "), mode: " + RunningMode.getMode());
         log.info("Current working directory: " + new File(".").getAbsolutePath());
+        log.info("Using Java version: " + System.getProperty("java.version"));
         launch(args);
     }
 
