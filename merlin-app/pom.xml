@@ -14,6 +14,12 @@
         <maven.build.timestamp.format>yyyy-MM-dd' 'HH:mm:ss</maven.build.timestamp.format>
         <timestamp>${maven.build.timestamp}</timestamp>
     </properties>
+    <repositories>
+        <repository>
+            <id>ej-technologies</id>
+            <url>http://maven.ej-technologies.com/repository</url>
+        </repository>
+    </repositories>
 
     <name>Merlin app</name>
 
@@ -50,7 +56,16 @@
         <dependency>
             <groupId>de.reinhard</groupId>
             <artifactId>merlin-core</artifactId>
-            <version>1.0</version>
+            <version>0.2</version>
+        </dependency>
+
+
+        <!-- https://mvnrepository.com/artifact/com.install4j/install4j-runtime -->
+        <dependency>
+            <groupId>com.install4j</groupId>
+            <artifactId>install4j-runtime</artifactId>
+            <version>7.0.8</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
