@@ -6,8 +6,7 @@
     <parent>
         <groupId>de.reinhard</groupId>
         <artifactId>merlin-parent</artifactId>
-        <version>1.0</version>
-        <relativePath>../merlin-parent</relativePath>
+        <version>0.2</version>
     </parent>
     <artifactId>merlin-smarthome</artifactId>
     <packaging>jar</packaging>
