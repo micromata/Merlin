@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<updateDescriptor baseUrl="https://github.com/kreinhard/merlin/releases/download/">
+  <entry targetMediaFileId="61" updatableVersionMin="0.2" updatableVersionMax="0.2" fileName="merlin_macos_0_1.dmg" newVersion="0.1" newMediaFileId="61" fileSize="71700615" md5Sum="8ed8158386f30cfdb26c29c4e796f6ee" bundledJre="macosx-amd64-1.8.0_181" archive="false" singleBundle="true">
+    <comment language="en" />
+  </entry>
+</updateDescriptor>
