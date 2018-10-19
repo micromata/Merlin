@@ -130,9 +130,11 @@ class TemplateView extends React.Component {
                             primaryKey={this.state.primaryKey}
                             templateDefinitionId={this.state.template.templateDefinition ?
                                 this.state.template.templateDefinition.fileDescriptor.primaryKey : ''}
-                            variableDefinitions={this.state.template.templateDefinition ?
-                                this.state.template.templateDefinition.variableDefinitions :
-                                this.state.template.statistics.usedVariables}
+                            templateVariables={this.state.template.statistics.usedVariables}
+                            definitionVariables={this.state.template.templateDefinition ?
+                                this.state.template.templateDefinition.variableDefinitions : undefined}
+                            definitionDependentVariables={this.state.template.templateDefinition ?
+                                this.state.template.templateDefinition.dependentVariableDefinitions : undefined}
                         />
                     </TabPane>
                     <TabPane tabId={'4'}>
