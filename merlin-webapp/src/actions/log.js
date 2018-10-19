@@ -15,10 +15,7 @@ const changedFilter = (name, value) => ({
     payload: {name, value}
 });
 
-export const changeFilter = event => (dispatch, getState) => {
-    dispatch(changedFilter(event.target.name, event.target.value));
-    loadLog(dispatch, getState);
-};
+export const changeFilter = event => (dispatch) => dispatch(changedFilter(event.target.name, event.target.value));
 
 const loadLog = (dispatch, getState) => {
     dispatch(requestedLogReload());
