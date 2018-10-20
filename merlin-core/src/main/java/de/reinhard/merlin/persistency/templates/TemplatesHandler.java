@@ -1,5 +1,7 @@
 package de.reinhard.merlin.persistency.templates;
 
+import de.reinhard.merlin.logging.MDCHandler;
+import de.reinhard.merlin.logging.MDCKey;
 import de.reinhard.merlin.persistency.DirectoryWatchEntry;
 import de.reinhard.merlin.persistency.FileDescriptor;
 import de.reinhard.merlin.word.WordDocument;
@@ -22,42 +24,53 @@ class TemplatesHandler extends AbstractHandler<Template> {
 
     @Override
     Template read(DirectoryWatchEntry watchEntry, Path path, FileDescriptor fileDescriptor) {
-        WordDocument doc;
+        MDCHandler mdc = new MDCHandler();
         try {
-            doc = WordDocument.create(path);
-        } catch (Exception ex) {
-            log.info("Ignoring unsupported file: " + path);
-            return null;
-        }
-        WordTemplateChecker templateChecker = new WordTemplateChecker(doc);
-        if (CollectionUtils.isEmpty(templateChecker.getTemplate().getStatistics().getUsedVariables())) {
-            log.debug("Skipping Word document: '" + path.toAbsolutePath()
-                    + "'. It's seemd to be not a Merlin template. No variables and conditionals found.");
-            return null;
-        }
-        String templateId = doc.scanForTemplateId();
-        if (templateId != null) {
-            log.debug("Template id found: " + templateId);
-            templateChecker.getTemplate().setId(templateId);
-        }
-        String templateDefinitionId = doc.scanForTemplateDefinitionReference();
-        if (templateDefinitionId != null) {
-            log.debug("Template definition reference found: " + templateDefinitionId);
-            TemplateDefinition templateDefinition = directoryScanner.getTemplateDefinitionsHandler().getTemplateDefinition(templateDefinitionId);
-            if (templateDefinition != null) {
-                templateChecker.getTemplate().assignTemplateDefinition(templateDefinition);
-            } else {
-                log.warn("Template definition not found: " + templateDefinitionId);
+            mdc.put(MDCKey.TEMPLATE_PK, fileDescriptor.getPrimaryKey());
+            WordDocument doc;
+            try {
+                doc = WordDocument.create(path);
+            } catch (Exception ex) {
+                log.info("Ignoring unsupported file: " + path);
+                return null;
             }
-        } else {
-            for (TemplateDefinition templateDefinition : directoryScanner.getTemplateDefinitionsHandler().getItems()) {
-                if (fileDescriptor.matches(templateDefinition.getFileDescriptor())) {
+            WordTemplateChecker templateChecker = new WordTemplateChecker(doc);
+            if (CollectionUtils.isEmpty(templateChecker.getTemplate().getStatistics().getUsedVariables())) {
+                log.debug("Skipping Word document: '" + path.toAbsolutePath()
+                        + "'. It's seemd to be not a Merlin template. No variables and conditionals found.");
+                return null;
+            }
+            String templateId = doc.scanForTemplateId();
+            if (templateId != null) {
+                log.debug("Template id found: " + templateId);
+                templateChecker.getTemplate().setId(templateId);
+            }
+            String templateDefinitionId = doc.scanForTemplateDefinitionReference();
+            if (templateDefinitionId != null) {
+                log.debug("Template definition reference found: " + templateDefinitionId);
+                TemplateDefinition templateDefinition = directoryScanner.getTemplateDefinitionsHandler().getTemplateDefinition(templateDefinitionId);
+                if (templateDefinition != null) {
                     templateChecker.getTemplate().assignTemplateDefinition(templateDefinition);
-                    log.info("Found matching template definition: " + templateDefinition.getFileDescriptor());
-                    break;
+                } else {
+                    log.warn("Template definition not found: " + templateDefinitionId);
+                }
+            } else {
+                for (TemplateDefinition templateDefinition : directoryScanner.getTemplateDefinitionsHandler().getItems()) {
+                    if (fileDescriptor.matches(templateDefinition.getFileDescriptor())) {
+                        templateChecker.getTemplate().assignTemplateDefinition(templateDefinition);
+                        log.info("Found matching template definition: " + templateDefinition.getFileDescriptor());
+                        break;
+                    }
                 }
             }
+            return templateChecker.getTemplate();
+        } finally {
+            mdc.restore();
         }
-        return templateChecker.getTemplate();
+    }
+
+    @Override
+    protected MDCKey getMDCKey() {
+        return MDCKey.TEMPLATE_PK;
     }
 }

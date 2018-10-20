@@ -1,6 +1,8 @@
 package de.reinhard.merlin.persistency.templates;
 
 import de.reinhard.merlin.excel.ExcelWorkbook;
+import de.reinhard.merlin.logging.MDCHandler;
+import de.reinhard.merlin.logging.MDCKey;
 import de.reinhard.merlin.persistency.DirectoryWatchEntry;
 import de.reinhard.merlin.persistency.FileDescriptor;
 import de.reinhard.merlin.word.templating.TemplateDefinition;
@@ -20,29 +22,34 @@ class TemplateDefinitionsHandler extends AbstractHandler<TemplateDefinition> {
 
     @Override
     TemplateDefinition read(DirectoryWatchEntry watchEntry, Path path, FileDescriptor fileDescriptor) {
-        ExcelWorkbook workbook;
+        MDCHandler mdc = new MDCHandler();
         try {
-            workbook = ExcelWorkbook.create(path);
-        } catch (Exception ex) {
-            log.info("Ignoring unsupported file: " + path);
-            return null;
+            mdc.put(MDCKey.TEMPLATE_PK, fileDescriptor.getPrimaryKey());
+            ExcelWorkbook workbook;
+            try {
+                workbook = ExcelWorkbook.create(path);
+            } catch (Exception ex) {
+                log.info("Ignoring unsupported file: " + path);
+                return null;
+            }
+            TemplateDefinitionExcelReader templateReader = new TemplateDefinitionExcelReader();
+            if (!templateReader.isMerlinTemplateDefinition(workbook)) {
+                return null;
+            }
+            TemplateDefinition templateDefinition = templateReader.readFromWorkbook(workbook, false);
+            if (templateDefinition == null) {
+                return null;
+            }
+            if (!templateReader.isValidTemplateDefinition()) {
+                log.warn("Merlin template definition isn't valid for '" + templateDefinition.getId() + "': " + path);
+            }
+            return templateDefinition;
+        } finally {
+            mdc.restore();
         }
-        TemplateDefinitionExcelReader templateReader = new TemplateDefinitionExcelReader();
-        if (!templateReader.isMerlinTemplateDefinition(workbook)) {
-            return null;
-        }
-        TemplateDefinition templateDefinition = templateReader.readFromWorkbook(workbook, false);
-        if (templateDefinition == null) {
-            return null;
-        }
-        if (!templateReader.isValidTemplateDefinition()) {
-            log.warn("Merlin template definition isn't valid for '" + templateDefinition.getId() + "': " + path);
-        }
-        return templateDefinition;
     }
 
     /**
-     *
      * @param id Id or primary key of the template definition.
      * @return
      */
@@ -57,5 +64,10 @@ class TemplateDefinitionsHandler extends AbstractHandler<TemplateDefinition> {
             }
         }
         return null;
+    }
+
+    @Override
+    protected MDCKey getMDCKey() {
+        return MDCKey.TEMPLATE_DEFINITION_PK;
     }
 }
