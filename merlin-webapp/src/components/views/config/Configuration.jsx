@@ -11,7 +11,7 @@ import {
     FormField, FormButton, FormSelect, FormCheckbox
 } from "../../general/forms/FormComponents";
 import {getRestServiceUrl, isDevelopmentMode} from "../../../utilities/global";
-import {IconDanger} from '../../general/IconComponents';
+import {IconDanger, IconWarning} from '../../general/IconComponents';
 
 
 var directoryItems = [];
@@ -137,7 +137,7 @@ class ConfigForm extends React.Component {
     }
 
     onCancel() {
-        this.setRedirect();
+        this.setRedirect()
     }
 
     addDirectoryItem() {
@@ -180,7 +180,7 @@ class ConfigForm extends React.Component {
                 <FormLabelField>
                     <Button className={'btn-outline-primary'}
                             onClick={() => this.setState({expertSettingsOpen: !this.state.expertSettingsOpen})}>
-                        <IconDanger /> For experts only
+                        <IconWarning /> For experts only
                     </Button>
                 </FormLabelField>
                 <Collapse isOpen={this.state.expertSettingsOpen}>
@@ -192,7 +192,7 @@ class ConfigForm extends React.Component {
                                              placeholder="Enter port"/>
                         <FormLabelField>
                             <FormButton onClick={this.onResetConfiguration}
-                                        hint="Reset factory settings.">Reset
+                                        hint="Reset factory settings."> <IconDanger /> Reset
                             </FormButton>
                         </FormLabelField>
                     </FormFieldset>

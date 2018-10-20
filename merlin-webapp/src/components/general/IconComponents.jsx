@@ -1,6 +1,7 @@
 import React from 'react';
 import {
     faCheck,
+    faExclamationTriangle,
     faInfoCircle,
     faPlus,
     faSync,
@@ -59,6 +60,12 @@ function IconUpload() {
     );
 }
 
+function IconWarning() {
+    return (
+        <FontAwesomeIcon icon={faExclamationTriangle}/>
+    );
+}
+
 export {
-    IconAdd, IconCancel, IconCheck, IconDanger, IconInfo, IconRefresh, IconRemove, IconUpload
+    IconAdd, IconCancel, IconCheck, IconDanger, IconInfo, IconRefresh, IconRemove, IconUpload, IconWarning
 };
