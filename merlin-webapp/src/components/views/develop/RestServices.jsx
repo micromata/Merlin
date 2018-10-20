@@ -110,7 +110,7 @@ class RestServices extends React.Component {
                     <li>You will receive a template including its template definition if assigned.</li>
                     <li>Run template with <a
                         href={getRestServiceUrl('templates/example-run-data') + '?prettyPrinter=true'}>json post parameter</a> for service<br/>
-                        <a tabIndex={1} onClick={this.onRun}>rest/templates/run</a>
+                        <a tabIndex={1} href="#" onClick={this.onRun}>rest/templates/run</a>
                     </li>
                 </ol>
                 <h3>
