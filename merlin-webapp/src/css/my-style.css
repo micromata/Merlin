@@ -51,6 +51,10 @@ a.nav-link {
 	font-weight: bold;
 }
 
+a.nav-link.danger {
+	color: #dc3545 !important;
+}
+
 a.nav-link.active {
 	color: #47a7eb !important;
 }

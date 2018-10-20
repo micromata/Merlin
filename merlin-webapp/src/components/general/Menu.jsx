@@ -1,16 +1,40 @@
 import React from 'react';
 import {NavLink as ReactRouterNavLink} from 'react-router-dom';
-import {
-    Collapse,
-    Navbar,
-    NavbarToggler,
-    NavbarBrand,
-    Nav,
-    NavItem,
-    NavLink
-} from 'reactstrap';
+import {Collapse, Nav, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink} from 'reactstrap';
 
 class Menu extends React.Component {
+    getNavElement = (route, index) => {
+        if (index === 0) {
+            return '';
+        }
+
+        let addition = '';
+        let className = '';
+
+        // Additional Route Settings
+        if (route.length >= 4) {
+            if (route[3].badge) {
+                addition = route[3].badge;
+            }
+
+            if (route[3].className) {
+                className = route[3].className;
+            }
+        }
+
+        return (
+            <NavItem key={index}>
+                <NavLink
+                    to={route[1]}
+                    tag={ReactRouterNavLink}
+                    className={className}
+                >
+                    {route[0]} {addition}
+                </NavLink>
+            </NavItem>
+        );
+    };
+
     constructor(props) {
         super(props);
 
@@ -26,20 +50,11 @@ class Menu extends React.Component {
         });
     }
 
-    getNavElement = (route, index) => {
-        if (index === 0) {
-            return '';
-        }
-        return <NavItem key={index}>
-            <NavLink to={route[1]} tag={ReactRouterNavLink}>{route[0]}</NavLink>
-        </NavItem>
-    }
-
     render() {
         return (
             <Navbar className={'fixed-top'} color="light" light expand="md">
-                <NavbarBrand href="/">Merlin</NavbarBrand>
-                <NavbarToggler onClick={this.toggle}/>
+                <NavbarBrand to="/" tag={ReactRouterNavLink}>Merlin</NavbarBrand>
+                <NavbarToggler onClick={this.toggle} />
                 <Collapse isOpen={this.state.isOpen} navbar>
                     <Nav className="ml-auto" navbar>
                         {
