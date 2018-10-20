@@ -9,14 +9,10 @@ import com.install4j.api.update.UpdateDescriptor;
 import com.install4j.api.update.UpdateDescriptorEntry;
 import de.reinhard.merlin.app.Version;
 import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.swing.*;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
@@ -64,63 +60,22 @@ public class AppUpdater {
             log.info("Nothing to install. No valid update available.");
             return false;
         }
-        if (!validUpdateDescriptorEntry.isDownloaded()) {
-            log.info("First, downloading update...");
-            downloadAndUpdate();
-        } else if (UpdateChecker.isUpdateScheduled()) {
-            log.info("Update is ready...");
-            executeUpdate();
+        try {
+            log.info("Launching updater on local desktop.");
+            ApplicationLauncher.launchApplication("428", null, false, new ApplicationLauncher.Callback() {
+                        public void exited(int exitValue) {
+                            log.info("Launcher exited.");
+                        }
+
+                        public void prepareShutdown() {
+                            log.info("Shutdown in progress.");
+                        }
+                    }
+            );
+        } catch (IOException ex) {
+            log.error("Error while updating: " + ex.getMessage(), ex);
         }
         return true;
-    }
-
-    private void downloadAndUpdate() {
-        // Here the background update downloader is launched in the background
-        new SwingWorker<Object, Object>() {
-            @Override
-            protected Object doInBackground() throws Exception {
-                log.info("Launching update application...");
-                // Note the third argument which makes the call to the background updater blocking.
-                ApplicationLauncher.launchApplication(APPLICATION_ID, null, true, null);
-                // At this point the update downloader has returned and we can check if the "Schedule update installation"
-                // action has registered an update installer for execution
-                // We now switch to the EDT in done() for terminating the application
-                return null;
-            }
-
-            @Override
-            protected void done() {
-                try {
-                    get(); // rethrow exceptions that occurred in doInBackground() wrapped in an ExecutionException
-                    if (!UpdateChecker.isUpdateScheduled()) {
-                        Alert alert = alert("Software update failed. Update could not be downloaded.", Alert.AlertType.ERROR);
-                        alert.showAndWait();
-                        return;
-                    }
-                    Alert alert = alert("Merlin is now ready for updating. Do you like to proceed (recommended)?", Alert.AlertType.CONFIRMATION);
-                    Optional<ButtonType> result = alert.showAndWait();
-                    if (result.get() != ButtonType.OK) {
-                        return;
-                    }
-                    // We execute the update immediately, but you could ask the user whether the update should be
-                    // installed now. The scheduling of update installers is persistent, so this will also work
-                    // after a restart of the launcher.
-                    executeUpdate();
-                } catch (InterruptedException ex) {
-                    log.error("Update interrupted: " + ex.getMessage(), ex);
-                } catch (ExecutionException ex) {
-                    log.error("Update error: " + ex.getMessage(), ex);
-                    Alert alert = alert("Software update failed. An error has occured: " + ex.getMessage(), Alert.AlertType.ERROR);
-                    alert.showAndWait();
-                    return;
-                }
-            }
-        }.execute();
-    }
-
-    private void executeUpdate() {
-        log.info("Executing scheduled update.");
-        UpdateChecker.executeScheduledUpdate(Arrays.asList("-q", "-splash", "Updating Hello World GUI ..."), true, null);
     }
 
     private void getUpdateDescriptor(CompletableFuture<UpdateDescriptorEntry> future) {
