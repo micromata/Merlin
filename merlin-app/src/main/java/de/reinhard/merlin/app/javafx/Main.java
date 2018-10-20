@@ -2,6 +2,7 @@ package de.reinhard.merlin.app.javafx;
 
 import de.reinhard.merlin.app.Version;
 import de.reinhard.merlin.app.jetty.JettyServer;
+import de.reinhard.merlin.app.updater.AppUpdater;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -11,7 +12,6 @@ import javafx.stage.Stage;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
@@ -30,6 +30,10 @@ public class Main extends Application {
                 + version.getBuildDate() + " (UTC: " + version.getBuildDateUTC() + "), mode: " + RunningMode.getMode());
         log.info("Current working directory: " + new File(".").getAbsolutePath());
         log.info("Using Java version: " + System.getProperty("java.version"));
+        if (!RunningMode.isDevelopmentMode()) {
+            // No update mechanism in development mode.
+            AppUpdater.update();
+        }
         launch(args);
     }
 

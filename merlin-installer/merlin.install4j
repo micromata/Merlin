@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <install4j version="7.0.8" transformSequenceNumber="7">
   <directoryPresets config="../merlin-app/target/merlin-app-0.2-jar-with-dependencies.jar" />
-  <application name="Merlin" distributionSourceDir="" applicationId="5115-4774-2533-4349" mediaDir="../../Install4j/Merlin" mediaFilePattern="${compiler:sys.shortName}_${compiler:sys.platform}_${compiler:sys.version}" compression="6" lzmaCompression="false" pack200Compression="false" excludeSignedFromPacking="true" commonExternalFiles="false" createMd5Sums="true" shrinkRuntime="true" shortName="merlin" publisher="ProjectForge" publisherWeb="www.projectforge.org" version="0.2" allPathsRelative="true" backupOnSave="false" autoSave="false" convertDotsToUnderscores="true" macSignature="????" macVolumeId="4356b34315fd64b9" javaMinVersion="1.8" javaMaxVersion="" allowBetaVM="false" jdkMode="jdk" jdkName="JDK 1.8">
+  <application name="Merlin" distributionSourceDir="" applicationId="5115-4774-2533-4349" mediaDir="../../Install4j/Merlin" mediaFilePattern="${compiler:sys.shortName}_${compiler:sys.platform}_${compiler:sys.version}" compression="6" lzmaCompression="false" pack200Compression="false" excludeSignedFromPacking="true" commonExternalFiles="false" createMd5Sums="true" shrinkRuntime="true" shortName="merlin" publisher="ProjectForge" publisherWeb="www.projectforge.org" version="0.1" allPathsRelative="true" backupOnSave="false" autoSave="false" convertDotsToUnderscores="true" macSignature="????" macVolumeId="4356b34315fd64b9" javaMinVersion="1.8" javaMaxVersion="" allowBetaVM="false" jdkMode="jdk" jdkName="JDK 1.8">
     <languages skipLanguageSelection="false" languageSelectionInPrincipalLanguage="false">
       <principalLanguage id="en" customLocalizationFile="" />
       <additionalLanguages />
@@ -25,7 +25,7 @@
       <mountPoint id="60" root="" location="" mode="755" />
     </mountPoints>
     <entries>
-      <fileEntry mountPoint="60" file="../merlin-app/target/merlin-app-0.2-jar-with-dependencies.jar" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="false" overrideOverwriteMode="false" overrideUninstallMode="false" />
+      <fileEntry mountPoint="60" file="../merlin-app/target/merlin-app.jar" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="false" overrideOverwriteMode="false" overrideUninstallMode="false" />
       <dirEntry mountPoint="60" file="../merlin-webapp/build" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="false" overrideOverwriteMode="false" overrideUninstallMode="false" entryMode="subdir" subDirectory="web" excludeSuffixes="" dirMode="755" overrideDirMode="false">
         <exclude />
       </dirEntry>
@@ -50,7 +50,7 @@
       </splashScreen>
       <java mainClass="de.reinhard.merlin.app.javafx.Main" mainMode="1" vmParameters="" arguments="" allowVMPassthroughParameters="true" preferredVM="" bundleRuntime="true">
         <classPath>
-          <archive location="merlin-app-1.0-jar-with-dependencies.jar" failOnError="false" />
+          <archive location="merlin-app.jar" failOnError="false" />
         </classPath>
         <modulePath />
         <nativeLibraryDirectories />
@@ -70,10 +70,10 @@
       <iconImageFiles />
     </launcher>
   </launchers>
-  <installerGui installerType="1" addOnAppId="" suggestPreviousLocations="true" autoUpdateDescriptorUrl="https://github.com/kreinhard/merlin/tree/master/merlin-installer/updates.xml" useAutoUpdateBaseUrl="true" autoUpdateBaseUrl="https://github.com/kreinhard/merlin/releases/download/">
+  <installerGui installerType="1" addOnAppId="" suggestPreviousLocations="true" autoUpdateDescriptorUrl="https://raw.githubusercontent.com/kreinhard/merlin/master/merlin-installer/updates.xml" useAutoUpdateBaseUrl="true" autoUpdateBaseUrl="https://github.com/kreinhard/merlin/releases/latest/">
     <staticMembers script="" />
     <customCode />
-    <autoUpdate useMinUpdatableVersion="true" minUpdatableVersion="0.2" useMaxUpdatableVersion="true" maxUpdatableVersion="0.2">
+    <autoUpdate useMinUpdatableVersion="false" minUpdatableVersion="" useMaxUpdatableVersion="false" maxUpdatableVersion="">
       <commentFiles />
       <customAttributes />
     </autoUpdate>
