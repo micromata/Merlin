@@ -59,10 +59,10 @@ public class AppUpdater {
         Version.getInstance().setUpdateVersion(updateDescriptorEntry.getNewVersion());
     }
 
-    public void install() {
+    public boolean install() {
         if (validUpdateDescriptorEntry == null) {
             log.info("Nothing to install. No valid update available.");
-            return;
+            return false;
         }
         if (!validUpdateDescriptorEntry.isDownloaded()) {
             log.info("First, downloading update...");
@@ -71,6 +71,7 @@ public class AppUpdater {
             log.info("Update is ready...");
             executeUpdate();
         }
+        return true;
     }
 
     private void downloadAndUpdate() {
@@ -78,6 +79,7 @@ public class AppUpdater {
         new SwingWorker<Object, Object>() {
             @Override
             protected Object doInBackground() throws Exception {
+                log.info("Launching update application...");
                 // Note the third argument which makes the call to the background updater blocking.
                 ApplicationLauncher.launchApplication(APPLICATION_ID, null, true, null);
                 // At this point the update downloader has returned and we can check if the "Schedule update installation"
@@ -91,15 +93,11 @@ public class AppUpdater {
                 try {
                     get(); // rethrow exceptions that occurred in doInBackground() wrapped in an ExecutionException
                     if (!UpdateChecker.isUpdateScheduled()) {
-                        Alert alert = new Alert(Alert.AlertType.ERROR);
-                        alert.setTitle("Software update");
-                        alert.setContentText("Software update failed. Update could not be downloaded");
+                        Alert alert = alert("Software update failed. Update could not be downloaded.", Alert.AlertType.ERROR);
                         alert.showAndWait();
                         return;
                     }
-                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                    alert.setTitle("Software update");
-                    alert.setContentText("Merlin is now ready for updating. Do you like to proceed (recommended)?");
+                    Alert alert = alert("Merlin is now ready for updating. Do you like to proceed (recommended)?", Alert.AlertType.CONFIRMATION);
                     Optional<ButtonType> result = alert.showAndWait();
                     if (result.get() != ButtonType.OK) {
                         return;
@@ -112,9 +110,7 @@ public class AppUpdater {
                     log.error("Update interrupted: " + ex.getMessage(), ex);
                 } catch (ExecutionException ex) {
                     log.error("Update error: " + ex.getMessage(), ex);
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("Software update");
-                    alert.setContentText("Software update failed. An error has occured: " + ex.getMessage());
+                    Alert alert = alert("Software update failed. An error has occured: " + ex.getMessage(), Alert.AlertType.ERROR);
                     alert.showAndWait();
                     return;
                 }
@@ -123,6 +119,7 @@ public class AppUpdater {
     }
 
     private void executeUpdate() {
+        log.info("Executing scheduled update.");
         UpdateChecker.executeScheduledUpdate(Arrays.asList("-q", "-splash", "Updating Hello World GUI ..."), true, null);
     }
 
@@ -159,5 +156,17 @@ public class AppUpdater {
         // If getPossibleUpdateEntry returns a non-null value, the version number in the updates.xml file
         // is greater than the version number of the local installation.
         future.complete(updateDescriptor.getPossibleUpdateEntry());
+    }
+
+    private Alert alert(String msg, Alert.AlertType type) {
+        if (type == Alert.AlertType.ERROR) {
+            log.error("Error alert: " + msg);
+        } else {
+            log.info("Show dialog: " + msg);
+        }
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Software update");
+        alert.setContentText(msg);
+        return alert;
     }
 }
