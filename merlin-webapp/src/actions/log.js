@@ -26,6 +26,7 @@ const loadLog = (dispatch, getState) => {
         search: filters.search,
         treshold: filters.threshold,
         maxSize: filters.maxSize,
+        showStackTrace: filters.showStackTrace,
         ascendingOrder: filters.ascendingOrder,
         // TODO ADD lastReceivedOrderNumber
     }), {
