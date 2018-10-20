@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
  */
 public abstract class AbstractDirectoryWatcher {
     private Logger log = LoggerFactory.getLogger(AbstractDirectoryWatcher.class);
-    private static final int STANDARD_REFRESH_RATE_MILLIS = 10000; // Refresh only every 10 seconds.
+    private static final int STANDARD_REFRESH_RATE_MILLIS = 5000; // Refresh only every 5 seconds.
 
     protected Path rootDir;
     protected String[] supportedFileExtensions;

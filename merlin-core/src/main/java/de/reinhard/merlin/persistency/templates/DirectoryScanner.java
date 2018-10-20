@@ -21,7 +21,7 @@ import java.util.Set;
  */
 public class DirectoryScanner {
     private Logger log = LoggerFactory.getLogger(DirectoryScanner.class);
-    private static final int MAX_REFRESH_RATE_MILLIS = 10000; // Refresh only every 10 seconds.
+    private static final int MAX_REFRESH_RATE_MILLIS = 5000; // Refresh only every 5 seconds.
 
     private PersistencyInterface persistency = PersistencyRegistry.getDefault();
     private AbstractDirectoryWatcher directoryWatcher;
