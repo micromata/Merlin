@@ -6,7 +6,7 @@ import Menu from '../components/general/Menu';
 import Start from '../components/views/Start';
 import TemplateListView from '../components/views/templates/TemplateListView';
 import TemplateDefinitionListView from '../components/views/templates/TemplateDefinitionListView';
-import Config from '../components/views/config/ConfigurationPage';
+import ConfigurationPage from '../components/views/config/ConfigurationPage';
 import FileUploadView from '../components/views/FileUpload';
 import RestServices from '../components/views/develop/RestServices';
 import {isDevelopmentMode} from '../utilities/global';
@@ -25,7 +25,7 @@ class WebApp extends React.Component {
             ['Templates', '/templates', TemplateListView],
             ['Definitions', '/templateDefinitions', TemplateDefinitionListView],
             ['Log viewer', '/logViewer', LogView],
-            ['Configuration', '/config', Config]
+            ['Configuration', '/config', ConfigurationPage]
         ];
         if (isDevelopmentMode()) {
             routes.push(['File Upload', '/drop', FileUploadView]);
@@ -48,11 +48,11 @@ class WebApp extends React.Component {
                                     />
                                 ))
                             }
-                            <Route path={'/templates/:primaryKey'} component={TemplateView} />
-                            <Route path={'/templateDefinitions/:primaryKey'} component={TemplateDefinition} />
+                            <Route path={'/templates/:primaryKey'} component={TemplateView}/>
+                            <Route path={'/templateDefinitions/:primaryKey'} component={TemplateDefinition}/>
                         </Switch>
                     </div>
-                    <Footer />
+                    <Footer/>
                 </div>
             </Router>
         );
