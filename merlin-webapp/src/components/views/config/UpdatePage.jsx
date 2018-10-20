@@ -4,11 +4,11 @@ import {getRestServiceUrl, isDevelopmentMode} from "../../../utilities/global";
 import {FormButton, FormField} from "../../general/forms/FormComponents";
 
 
-class UdpatePage extends React.Component {
+class UpdatePage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            newVersion: null
+            updateVersion: null
         }
         this.onUpdate = this.onUpdate.bind(this);
     }
@@ -24,8 +24,8 @@ class UdpatePage extends React.Component {
                 return resp.json()
             })
             .then((data) => {
-                if (data.newVersion) {
-                    this.setState({newVersion: data.newVersion});
+                if (data.updateVersion) {
+                    this.setState({updateVersion: data.updateVersion});
                 }
             })
             .catch((error) => {
@@ -34,7 +34,7 @@ class UdpatePage extends React.Component {
     }
 
     onUpdate(event) {
-        fetch(getRestServiceUrl("udpates/update"), {
+        fetch(getRestServiceUrl("updates/update"), {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -44,7 +44,7 @@ class UdpatePage extends React.Component {
 
     render() {
         let content = 'No new version available.';
-        if (this.state.newVersion) {
+        if (this.state.updateVersion) {
             content = <React.Fragment>
                 <h2>New Version</h2>
                 <form>
@@ -61,5 +61,5 @@ class UdpatePage extends React.Component {
     }
 }
 
-export default UdpatePage;
+export default UpdatePage;
 
