@@ -19,10 +19,6 @@ const reducer = (state = initialState, action) => {
                 buildDate: action.payload.buildDate,
                 updateVersion: action.payload.updateVersion
             });
-        case '@@redux/INITx.s.d.d.y.6':
-            return Object.assign({}, state, {
-                loading: false
-            });
         default:
             return state;
     }
