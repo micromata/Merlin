@@ -12,6 +12,7 @@ import java.util.*;
  */
 abstract class AbstractHandler<T extends FileDescriptorInterface> {
     private Logger log = LoggerFactory.getLogger(AbstractHandler.class);
+    private static final int MAX_REFRESH_RATE_MILLIS = 10000; // Refresh only every 10 seconds.
 
     private PersistencyInterface persistency = PersistencyRegistry.getDefault();
     private AbstractDirectoryWatcher directoryWatcher;
@@ -21,6 +22,7 @@ abstract class AbstractHandler<T extends FileDescriptorInterface> {
     protected String[] supportedFileExtensions;
     // Stores the time of last check. If unsupported files are modified, they will be checked for Merlin files again in walkTree.
     private Map<Path, Long> unsupportedFilesMap = new HashMap<>();
+    private long lastRefresh = -1;
 
     AbstractHandler(DirectoryScanner directoryScanner, String itemName) {
         this.directoryScanner = directoryScanner;
@@ -79,7 +81,11 @@ abstract class AbstractHandler<T extends FileDescriptorInterface> {
         log.info("Valid Merlin " + itemName + ": " + path.toAbsolutePath());
     }
 
-    void checkAndRefreshItems() {
+    synchronized void checkAndRefreshItems() {
+        long now = System.currentTimeMillis();
+        if (now < lastRefresh + MAX_REFRESH_RATE_MILLIS) {
+            return;
+        }
         // Check for new, deleted and updated files:
         List<DirectoryWatchEntry> watchEntries = directoryWatcher.listWatchEntries(true, supportedFileExtensions);
         for (DirectoryWatchEntry watchEntry : watchEntries) {
@@ -97,6 +103,7 @@ abstract class AbstractHandler<T extends FileDescriptorInterface> {
                 it.remove();
             }
         }
+        lastRefresh = now;
     }
 
     Collection<T> getItems() {
