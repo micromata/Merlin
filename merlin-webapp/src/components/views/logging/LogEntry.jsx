@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import Highlight from 'react-highlighter';
 
 function LogEntry({entry, search, locationString, showStackTrace}) {
-    console.log(showStackTrace);
     let message = (showStackTrace === 'true' && entry.stackTrace) ? entry.message + <br/> + entry.stackTrace : entry.message;
     return (
         <tr>
