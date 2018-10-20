@@ -179,6 +179,23 @@ public class TemplateDefinition implements Cloneable, FileDescriptorInterface {
     }
 
     /**
+     * @return Name of all master variables defined in a sorted order. A master variable is a variable another
+     * variable depends on.
+     */
+    @Transient
+    public List<String> getAllMasterVariableNames() {
+        Set<String> variables = new HashSet<>();
+        for (DependentVariableDefinition def : dependentVariableDefinitions) {
+            if (def.getDependsOn() != null)
+                variables.add(def.getDependsOn().getName());
+        }
+        List<String> result = new ArrayList<>();
+        result.addAll(variables);
+        Collections.sort(result, String.CASE_INSENSITIVE_ORDER);
+        return result;
+    }
+
+    /**
      * Makes a deep copy, also of the variable lists (the items will be cloned as well).
      *
      * @return
@@ -208,7 +225,6 @@ public class TemplateDefinition implements Cloneable, FileDescriptorInterface {
     }
 
     /**
-     *
      * @return The primary key served by the file descriptor.
      * @see FileDescriptor#getPrimaryKey()
      */

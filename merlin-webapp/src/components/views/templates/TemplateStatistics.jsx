@@ -56,6 +56,17 @@ class TemplateStatistics extends React.Component {
                                 })}</td>
                         </tr>
                         : null}
+                    {arrayNotEmpty(this.props.statistics.masterVariables) ?
+                        <tr>
+                            <td>Master variables</td>
+                            <td>
+                                {this.props.statistics.masterVariables.map((variable, index) => {
+                                    // Return the element. Also pass key
+                                    return (<React.Fragment
+                                        key={index}>{index > 0 && ', '}{`{${variable}}`}</React.Fragment>)
+                                })}</td>
+                        </tr>
+                        : null}
                     {arrayNotEmpty(this.props.statistics.undefinedVariables) ?
                         <tr>
                             <td>Undefinied variables</td>
