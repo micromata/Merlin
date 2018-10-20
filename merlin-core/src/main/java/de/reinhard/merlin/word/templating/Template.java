@@ -122,8 +122,17 @@ public class Template implements Cloneable, FileDescriptorInterface {
         } catch (CloneNotSupportedException ex) {
             throw new UnsupportedOperationException(this.getClass().getCanonicalName() + " isn't cloneable: " + ex.getMessage(), ex);
         }
-        template.fileDescriptor = (FileDescriptor)this.fileDescriptor.clone();
-        template.statistics = (TemplateStatistics)this.statistics.clone();
+        template.fileDescriptor = (FileDescriptor) this.fileDescriptor.clone();
+        template.statistics = (TemplateStatistics) this.statistics.clone();
         return template;
+    }
+
+    /**
+     *
+     * @return The primary key served by the file descriptor.
+     * @see FileDescriptor#getPrimaryKey()
+     */
+    public String getPrimaryKey() {
+        return fileDescriptor != null ? fileDescriptor.getPrimaryKey() : null;
     }
 }
