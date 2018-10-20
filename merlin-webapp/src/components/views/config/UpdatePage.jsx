@@ -8,7 +8,7 @@ import {FormButton} from '../../general/forms/FormComponents';
 class UpdatePage extends React.Component {
 
     onUpdate() {
-        fetch(getRestServiceUrl('updates/update'), {
+        fetch(getRestServiceUrl('updates/install'), {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
