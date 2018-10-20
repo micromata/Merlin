@@ -7,8 +7,6 @@ const initialState = {
 };
 
 const reducer = (state = initialState, action) => {
-    console.log(state, action);
-
     switch (action.type) {
         case VERSION_REQUEST_RELOAD:
             return Object.assign({}, state, {

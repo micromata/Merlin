@@ -10,8 +10,6 @@ class Footer extends React.Component {
     };
 
     render = () => {
-        console.log(this.props);
-
         return <div className={'footer'}>
             <p className={'version'}>Version {this.props.version} * Build Date {this.props.buildDate}</p>
         </div>;
