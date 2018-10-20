@@ -5,6 +5,7 @@ import {
 } from 'reactstrap';
 import EditableTextField from "../../../general/forms/EditableTextField"
 import {arrayNotEmpty} from "../../../../utilities/global";
+import {FormCheckbox} from "../../../general/forms/FormComponents";
 
 class TemplateDefinitionVariables extends React.Component {
 
@@ -33,12 +34,12 @@ class TemplateDefinitionVariables extends React.Component {
                     </td>
                     <td>{variable.type}</td>
                     <td style={{textAlign: 'center'}}>
-                        <input type="checkbox" checked={variable.required}
+                        <FormCheckbox checked={variable.required}
                                name={'required'}
                                onChange={(event) => this.props.handleStateChange(event, index)}/>
                     </td>
                     <td style={{textAlign: 'center'}}>
-                        <input type="checkbox" checked={variable.unique}
+                        <FormCheckbox checked={variable.unique}
                                name={'unique'}
                                onChange={(event) => this.props.handleStateChange(event, index)}/>
                     </td>
