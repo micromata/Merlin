@@ -18,8 +18,7 @@ class TemplateRunTab extends React.Component {
             ...accumulator,
             [current.name]: current.allowedValuesList && current.allowedValuesList.length !== 0 ?
                 current.allowedValuesList[0] : ''
-        }), {}),
-        ...this.props.runConfigurations[this.props.primaryKey]
+        }), {})
     };
 
     variableDefinitions = {
@@ -75,6 +74,15 @@ class TemplateRunTab extends React.Component {
         this.runConfiguration[event.target.name] = event.target.value;
         this.props.saveTemplateRunConfiguration(this.props.primaryKey, this.runConfiguration);
     };
+
+    constructor(props) {
+        super(props);
+
+
+        Object.keys(this.props.runConfigurations[this.props.primaryKey])
+            .filter(key => this.runConfiguration[key] !== undefined)
+            .forEach(key => this.runConfiguration[key] = this.props.runConfigurations[this.props.primaryKey][key]);
+    }
 
     render() {
         let valid = true;
