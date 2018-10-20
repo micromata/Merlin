@@ -14,13 +14,14 @@ import java.util.regex.Pattern;
  */
 public abstract class AbstractDirectoryWatcher {
     private Logger log = LoggerFactory.getLogger(AbstractDirectoryWatcher.class);
+    private static final int STANDARD_REFRESH_RATE_MILLIS = 10000; // Refresh only every 10 seconds.
 
     protected Path rootDir;
     protected String[] supportedFileExtensions;
     protected Pattern[] ignoreFilenamePatterns;
     private Long lastCheck;
     private boolean recursive;
-    private long refreshRateInMillis = 10000; // 10 seconds as default.
+    private long refreshRateInMillis = STANDARD_REFRESH_RATE_MILLIS;
     private boolean dirty;
     private boolean recheckInProgress;
 
