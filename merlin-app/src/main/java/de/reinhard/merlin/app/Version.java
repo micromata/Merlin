@@ -17,6 +17,7 @@ public class Version {
     private String version;
     private String buildDateUTC;
     private Date buildDate;
+    private String updateVersion;
 
     private static final Version instance = new Version();
 
@@ -68,5 +69,16 @@ public class Version {
 
     public Date getBuildDate() {
         return buildDate;
+    }
+
+    /**
+     * @return Version of the available update, if exist. Otherwise null.
+     */
+    public String getUpdateVersion() {
+        return updateVersion;
+    }
+
+    public void setUpdateVersion(String updateVersion) {
+        this.updateVersion = updateVersion;
     }
 }

@@ -32,7 +32,7 @@ public class Main extends Application {
         log.info("Using Java version: " + System.getProperty("java.version"));
         if (!RunningMode.isDevelopmentMode()) {
             // No update mechanism in development mode.
-            AppUpdater.update();
+            AppUpdater.checkUpdate();
         }
         launch(args);
     }

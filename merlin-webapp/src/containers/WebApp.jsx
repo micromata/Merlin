@@ -7,6 +7,7 @@ import Start from '../components/views/Start';
 import TemplateListView from '../components/views/templates/TemplateListView';
 import TemplateDefinitionListView from '../components/views/templates/TemplateDefinitionListView';
 import ConfigurationPage from '../components/views/config/ConfigurationPage';
+import UpdatePage from '../components/views/config/UpdatePage';
 import FileUploadView from '../components/views/FileUpload';
 import RestServices from '../components/views/develop/RestServices';
 import {isDevelopmentMode} from '../utilities/global';
@@ -25,7 +26,8 @@ class WebApp extends React.Component {
             ['Templates', '/templates', TemplateListView],
             ['Definitions', '/templateDefinitions', TemplateDefinitionListView],
             ['Log viewer', '/logViewer', LogView],
-            ['Configuration', '/config', ConfigurationPage]
+            ['Configuration', '/config', ConfigurationPage],
+            ['Update', '/update', UpdatePage]
         ];
         if (isDevelopmentMode()) {
             routes.push(['File Upload', '/drop', FileUploadView]);
