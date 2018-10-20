@@ -33,6 +33,8 @@ public class Main extends Application {
         if (!RunningMode.isDevelopmentMode()) {
             // No update mechanism in development mode.
             AppUpdater.getInstance().checkUpdate();
+        } else {
+            Version.getInstance().setUpdateVersion("10.0"); // Only for testing.
         }
         launch(args);
     }
