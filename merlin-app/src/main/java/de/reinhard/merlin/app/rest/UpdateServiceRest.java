@@ -1,5 +1,6 @@
 package de.reinhard.merlin.app.rest;
 
+import de.reinhard.merlin.app.updater.AppUpdater;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,6 +17,7 @@ public class UpdateServiceRest {
     @Path("/install")
     @Produces(MediaType.TEXT_PLAIN)
     public String downloadUpdate() {
-        return "Not yet implemented.";
+        boolean result = AppUpdater.getInstance().install();
+        return result ? "OK" : "ERROR";
     }
 }
