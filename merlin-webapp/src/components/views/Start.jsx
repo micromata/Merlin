@@ -23,8 +23,6 @@ class Start extends React.Component {
                 {todo}
                 <code><h3>Known issues</h3>
                     <ul>
-                        <li>Aktualisierung der Log-Meldungen im Log-Viewer (bzw. Refresh-Button) funktioniert noch nicht
-                        zuverlässig.</li>
                         <li>Serienbrieffunktion ist noch nicht freigeschaltet.</li>
                     </ul>
                     Viel Spaß!
