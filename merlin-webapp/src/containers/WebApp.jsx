@@ -25,7 +25,6 @@ class WebApp extends React.Component {
     history = createBrowserHistory();
 
     componentDidMount = () => {
-        console.log('mounted');
         this.props.loadVersion();
     };
 

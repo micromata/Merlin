@@ -325,7 +325,7 @@ function FormButton({bsStyle = 'default', type, onClick, hint, disabled, childre
 }
 
 FormButton.propTypes = {
-    bsStyle: PropTypes.oneOf(['primary', null]),
+    bsStyle: PropTypes.oneOf(['primary', 'outline-primary', null]),
     type: PropTypes.string,
     onClick: PropTypes.func,
     hint: PropTypes.string,
