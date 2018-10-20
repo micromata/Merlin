@@ -146,3 +146,7 @@ button:focus {
 	font-weight: bold;
 	color: #50555F;
 }
+
+div.main-view {
+	min-height: calc(100vh - 140px);
+}

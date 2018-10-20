@@ -14,6 +14,7 @@ import TemplateView from '../components/views/templates/TemplateView';
 import LogView from '../components/views/logging/LogView';
 import TemplateDefinition from '../components/views/templates/templatedefinition/TemplateDefinition';
 import '../css/my-style.css';
+import Footer from '../components/views/footer/Footer';
 
 class WebApp extends React.Component {
 
@@ -35,7 +36,7 @@ class WebApp extends React.Component {
             <Router history={history}>
                 <div>
                     <Menu routes={routes}/>
-                    <div className={'container'}>
+                    <div className={'container main-view'}>
                         <Switch>
                             {
                                 routes.map((route, index) => (
@@ -51,6 +52,7 @@ class WebApp extends React.Component {
                             <Route path={'/templateDefinitions/:primaryKey'} component={TemplateDefinition} />
                         </Switch>
                     </div>
+                    <Footer />
                 </div>
             </Router>
         );

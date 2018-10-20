@@ -1,0 +1,12 @@
+div.footer {
+    border-top: 1px solid #ccc;
+    height: 60px;
+}
+
+div.footer p.version {
+    margin-top: 15px;
+    text-align: center;
+    color: #aaa;
+    font-weight: 300;
+    font-size: 12px;
+}
