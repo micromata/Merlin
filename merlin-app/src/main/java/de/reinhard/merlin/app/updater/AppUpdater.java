@@ -1,7 +1,6 @@
 package de.reinhard.merlin.app.updater;
 
 import com.install4j.api.context.UserCanceledException;
-import com.install4j.api.launcher.ApplicationLauncher;
 import com.install4j.api.launcher.Variables;
 import com.install4j.api.update.ApplicationDisplayMode;
 import com.install4j.api.update.UpdateChecker;
@@ -11,7 +10,6 @@ import de.reinhard.merlin.app.Version;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.swing.*;
 import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -68,7 +66,7 @@ public class AppUpdater {
             log.info("Update is ready...");
         }
     }
-
+/*
     private void foo() {
         // Here the background update downloader is launched in the background
         new SwingWorker<Object, Object>() {
@@ -119,7 +117,7 @@ public class AppUpdater {
                 execute();
 
     }
-
+*/
     private void getUpdateDescriptor(CompletableFuture<UpdateDescriptorEntry> future) {
 
         // The compiler variable sys.updatesUrl holds the URL where the updates.xml file is hosted.
