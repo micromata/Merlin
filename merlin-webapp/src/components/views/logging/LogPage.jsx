@@ -7,7 +7,7 @@ import {changeFilter, requestLogReload} from '../../../actions';
 import LogTable from './LogTable';
 import './LogViewer.css';
 
-class LogView extends React.Component {
+class LogPage extends React.Component {
 
     componentDidMount = () => this.props.loadLog();
 
@@ -25,18 +25,20 @@ class LogView extends React.Component {
                 <LogTable
                     search={this.props.filters.search}
                     locationFormat={this.props.filters.locationFormat}
+                    showStackTrace={this.props.filters.showStackTrace}
                     entries={this.props.entries}
                 />
             </React.Fragment>
         );
 }
 
-LogView.propTypes = {
+LogPage.propTypes = {
     changeFilter: PropTypes.func.isRequired,
     filters: PropTypes.shape({
         threshold: PropTypes.oneOf(['error', 'warn', 'info', 'debug', 'trace']),
         search: PropTypes.string,
         locationFormat: PropTypes.oneOf(['none', 'short', 'normal']),
+        showStackTrace: PropTypes.oneOf(['true', 'false']),
         maxSize: PropTypes.oneOf(['50', '100', '500', '1000', '10000']),
         ascendingOrder: PropTypes.oneOf(['true', 'false'])
     }).isRequired,
@@ -50,4 +52,4 @@ const actions = {
     loadLog: requestLogReload
 };
 
-export default connect(mapStateToProps, actions)(LogView);
+export default connect(mapStateToProps, actions)(LogPage);

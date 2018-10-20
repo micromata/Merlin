@@ -8,6 +8,7 @@ public class LogFilter {
     private LogLevel threshold;
     private Integer maxSize;
     private boolean ascendingOrder;
+    private boolean showStackTraces;
     private Integer lastReceivedLogOrderNumber;
 
     /**
@@ -48,6 +49,15 @@ public class LogFilter {
      */
     public boolean isAscendingOrder() {
         return ascendingOrder;
+    }
+
+
+    public boolean isShowStackTraces() {
+        return showStackTraces;
+    }
+
+    public void setShowStackTraces(boolean showStackTraces) {
+        this.showStackTraces = showStackTraces;
     }
 
     /**

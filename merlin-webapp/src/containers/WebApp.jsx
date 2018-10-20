@@ -14,7 +14,7 @@ import FileUploadView from '../components/views/FileUpload';
 import RestServices from '../components/views/develop/RestServices';
 import {isDevelopmentMode} from '../utilities/global';
 import TemplateView from '../components/views/templates/TemplateView';
-import LogView from '../components/views/logging/LogView';
+import LogPage from '../components/views/logging/LogPage';
 import TemplateDefinition from '../components/views/templates/templatedefinition/TemplateDefinition';
 import '../css/my-style.css';
 import Footer from '../components/views/footer/Footer';
@@ -33,7 +33,7 @@ class WebApp extends React.Component {
             ['Start', '/', Start],
             ['Templates', '/templates', TemplateListView],
             ['Definitions', '/templateDefinitions', TemplateDefinitionListView],
-            ['Log viewer', '/logViewer', LogView],
+            ['Log viewer', '/logging', LogPage],
             ['Configuration', '/config', ConfigurationPage]
         ];
 

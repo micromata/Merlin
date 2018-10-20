@@ -30,7 +30,7 @@ function LogFilters({loadLog, changeFilter, filters}) {
                 value={filters.search}
                 name={'search'}
                 onChange={changeFilter}
-                fieldLength={6}
+                fieldLength={5}
             />
 
             <FormSelect
@@ -41,6 +41,15 @@ function LogFilters({loadLog, changeFilter, filters}) {
                 <option>none</option>
                 <option>short</option>
                 <option>normal</option>
+            </FormSelect>
+
+            <FormSelect
+                value={filters.showStackTrace}
+                name={'showStackTrace'}
+                onChange={changeFilter}
+            >
+                <option value={'false'}>no stacktraces</option>
+                <option value={'true'}>show stacktraces</option>
             </FormSelect>
 
             <FormSelect
@@ -77,6 +86,7 @@ LogFilters.propTypes = {
         threshold: PropTypes.oneOf(['error', 'warn', 'info', 'debug', 'trace']),
         search: PropTypes.string,
         locationFormat: PropTypes.oneOf(['none', 'short', 'normal']),
+        showStackTrace: PropTypes.oneOf(['true', 'false']),
         maxSize: PropTypes.oneOf(['50', '100', '500', '1000', '10000']),
         ascendingOrder: PropTypes.oneOf(['true', 'false'])
     }).isRequired,

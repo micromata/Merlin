@@ -5,6 +5,7 @@ const initialState = {
         threshold: 'info',
         search: '',
         locationFormat: 'none',
+        showStackTrace: 'false',
         maxSize: '100',
         ascendingOrder: 'false'
     },

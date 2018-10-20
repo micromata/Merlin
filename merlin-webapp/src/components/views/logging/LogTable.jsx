@@ -14,7 +14,7 @@ const getLocationString = (locationFormat, entry) => {
     }
 };
 
-function LogTable({locationFormat, entries, search}) {
+function LogTable({locationFormat, showStackTrace, entries, search}) {
     const lowercaseSearch = search.toLowerCase();
     return (
         <Table striped bordered hover size={'sm'} responsive>
@@ -28,13 +28,14 @@ function LogTable({locationFormat, entries, search}) {
             </thead>
             <tbody>
             {entries
-                .filter(entry => [entry.message, entry.stackTrace, getLocationString(locationFormat, entry), entry.level, entry.logDate]
+                .filter(entry => [entry.message, (showStackTrace === 'true') ? entry.stackTrace : '', getLocationString(locationFormat, entry), entry.level, entry.logDate]
                     .join('|#|').toLowerCase()
                     .indexOf(lowercaseSearch) !== -1)
                 .map((entry, index) => <LogEntry
                     entry={entry}
                     search={lowercaseSearch}
                     locationString={getLocationString(locationFormat, entry)}
+                    showStackTrace={showStackTrace}
                     key={index}
                 />)}
             </tbody>
@@ -44,12 +45,14 @@ function LogTable({locationFormat, entries, search}) {
 
 LogTable.propTypes = {
     locationFormat: PropTypes.oneOf(['none', 'short', 'normal']),
+    showStackTrace: PropTypes.oneOf(['true', 'false']),
     entries: PropTypes.array,
     search: PropTypes.string
 };
 
 LogTable.defaultProps = {
     locationFormat: 'none',
+    showStackTrace: 'false',
     entries: [],
     search: ''
 };

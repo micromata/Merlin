@@ -70,8 +70,13 @@ public class Log4jMemoryAppender extends AppenderSkeleton {
                     continue;
                 }
             }
-            String str = StringUtils.join(event.getLoggerName(), event.getJavaClass(), event.getMessage(), event.getStackTrace(),
-                    event.getLevel(), event.getLogDate(), "|#|");
+            StringBuilder sb = new StringBuilder();
+            sb.append(event.getLogDate());
+            append(sb, event.getLevel(), true);
+            append(sb, event.getMessage(), true);
+            append(sb, event.getJavaClass(), true);
+            append(sb, event.getStackTrace(), filter.isShowStackTraces());
+            String str = sb.toString();
             if (StringUtils.isEmpty(filter.getSearch()) || matches(str, filter.getSearch())) {
                 if (filter.isAscendingOrder()) {
                     result.add(event);
@@ -84,6 +89,13 @@ public class Log4jMemoryAppender extends AppenderSkeleton {
             }
         }
         return result;
+    }
+
+    private void append(StringBuilder sb, Object value, boolean append) {
+        if (!append || value == null) {
+            return;
+        }
+        sb.append("|#|").append(value);
     }
 
     public void close() {
