@@ -14,7 +14,7 @@ import java.util.*;
  */
 abstract class AbstractHandler<T extends FileDescriptorInterface> {
     private Logger log = LoggerFactory.getLogger(AbstractHandler.class);
-    private static final int MAX_REFRESH_RATE_MILLIS = 10000; // Refresh only every 10 seconds.
+    private static final int MAX_REFRESH_RATE_MILLIS = 5000; // Refresh only every 5 seconds.
 
     private PersistencyInterface persistency = PersistencyRegistry.getDefault();
     private AbstractDirectoryWatcher directoryWatcher;
@@ -97,7 +97,12 @@ abstract class AbstractHandler<T extends FileDescriptorInterface> {
         List<DirectoryWatchEntry> watchEntries = directoryWatcher.listWatchEntries(true, supportedFileExtensions);
         for (DirectoryWatchEntry watchEntry : watchEntries) {
             if (watchEntry.getType() == ModificationType.DELETED) {
-                // Do nothing for now.
+                Path path = directoryWatcher.getCanonicalPath(watchEntry);
+                if (persistency.exists(path)) {
+                    log.info(itemName + " undeleted: " + path);
+                    watchEntry.setType(ModificationType.CREATED);
+                    processItem(watchEntry);
+                }
             } else {
                 processItem(watchEntry);
             }
