@@ -6,7 +6,7 @@ import Menu from '../components/general/Menu';
 import Start from '../components/views/Start';
 import TemplateListView from '../components/views/templates/TemplateListView';
 import TemplateDefinitionListView from '../components/views/templates/TemplateDefinitionListView';
-import Config from '../components/views/config/Configuration';
+import Config from '../components/views/config/ConfigurationPage';
 import FileUploadView from '../components/views/FileUpload';
 import RestServices from '../components/views/develop/RestServices';
 import {isDevelopmentMode} from '../utilities/global';

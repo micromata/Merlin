@@ -212,7 +212,7 @@ class ConfigForm extends React.Component {
     }
 }
 
-class Configuration extends React.Component {
+class ConfigurationPage extends React.Component {
 
     render() {
         let todo = '';
@@ -233,5 +233,5 @@ class Configuration extends React.Component {
     }
 }
 
-export default Configuration;
+export default ConfigurationPage;
 
