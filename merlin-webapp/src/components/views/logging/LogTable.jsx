@@ -35,7 +35,6 @@ function LogTable({locationFormat, showStackTrace, entries, search}) {
                     entry={entry}
                     search={lowercaseSearch}
                     locationString={getLocationString(locationFormat, entry)}
-                    showStackTrace={showStackTrace}
                     key={index}
                 />)}
             </tbody>
@@ -45,14 +44,12 @@ function LogTable({locationFormat, showStackTrace, entries, search}) {
 
 LogTable.propTypes = {
     locationFormat: PropTypes.oneOf(['none', 'short', 'normal']),
-    showStackTrace: PropTypes.oneOf(['true', 'false']),
     entries: PropTypes.array,
     search: PropTypes.string
 };
 
 LogTable.defaultProps = {
     locationFormat: 'none',
-    showStackTrace: 'false',
     entries: [],
     search: ''
 };

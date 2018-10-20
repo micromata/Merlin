@@ -25,7 +25,6 @@ class LogPage extends React.Component {
                 <LogTable
                     search={this.props.filters.search}
                     locationFormat={this.props.filters.locationFormat}
-                    showStackTrace={this.props.filters.showStackTrace}
                     entries={this.props.entries}
                 />
             </React.Fragment>
