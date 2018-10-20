@@ -17,7 +17,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
 public class AppUpdater {
-    private static final String APPLICATION_ID = "5115-4774-2533-4349";
+    private static final String UPDATE_APPLICATION_ID = "428";
     private static Logger log = LoggerFactory.getLogger(AppUpdater.class);
     private static final AppUpdater instance = new AppUpdater();
 
@@ -62,7 +62,7 @@ public class AppUpdater {
         }
         try {
             log.info("Launching updater on local desktop.");
-            ApplicationLauncher.launchApplication("428", null, false, new ApplicationLauncher.Callback() {
+            ApplicationLauncher.launchApplication(UPDATE_APPLICATION_ID, null, false, new ApplicationLauncher.Callback() {
                         public void exited(int exitValue) {
                             log.info("Launcher exited.");
                         }
