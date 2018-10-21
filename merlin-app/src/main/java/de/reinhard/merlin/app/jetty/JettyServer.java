@@ -127,7 +127,7 @@ public class JettyServer {
     }
 
     private int findFreePort(int startPort) {
-        int port = startPort;
+        int port = startPort > 0 ? startPort : 1;
         for (int i = port; i < port + 10; i++) {
             try (ServerSocket socket = new ServerSocket()) {
                 socket.bind(new InetSocketAddress(HOST, i));
