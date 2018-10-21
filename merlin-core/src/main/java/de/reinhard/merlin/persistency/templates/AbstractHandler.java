@@ -67,7 +67,9 @@ abstract class AbstractHandler<T extends FileDescriptorInterface> {
             }
         }
         log.info("Scanning file '" + path + "'.");
+        //long currentMillis = System.currentTimeMillis();
         item = read(watchEntry, path, fileDescriptor);
+        //log.info("Time of scanning: " + (System.currentTimeMillis() - currentMillis)  + "ms.");
         if (item == null) {
             log.info("Skipping file '" + path.toAbsolutePath() + "', no " + itemName + " (OK).");
             watchEntry.setSupportedItem(false);
