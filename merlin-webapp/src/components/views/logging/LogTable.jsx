@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {Table} from 'reactstrap';
 import LogEntry from './LogEntry';
+import {IconSortDown, IconSortUp} from "../../general/IconComponents";
 
 const getLocationString = (locationFormat, entry) => {
     switch (locationFormat) {
@@ -14,13 +15,14 @@ const getLocationString = (locationFormat, entry) => {
     }
 };
 
-function LogTable({locationFormat, showStackTrace, entries, search}) {
+function LogTable({locationFormat, showStackTrace, entries, search, ascendingOrder, toggleOrder}) {
     const lowercaseSearch = search.toLowerCase();
+    let sort = ascendingOrder === 'true' ? <IconSortUp/> : <IconSortDown/>;
     return (
         <Table striped bordered hover size={'sm'} responsive>
             <thead>
             <tr>
-                <th>Timestamp</th>
+                <th>Timestamp <button onClick={toggleOrder} type="button" className="btn btn-link btn-outline-primary btn-sm">{sort}</button></th>
                 <th>Level</th>
                 <th>Message</th>
                 {locationFormat !== 'none' ? <th>Location</th> : null}
@@ -45,11 +47,13 @@ function LogTable({locationFormat, showStackTrace, entries, search}) {
 LogTable.propTypes = {
     locationFormat: PropTypes.oneOf(['none', 'short', 'normal']),
     entries: PropTypes.array,
+    ascendingOrder: PropTypes.oneOf(['true', 'false']),
     search: PropTypes.string
 };
 
 LogTable.defaultProps = {
     locationFormat: 'none',
+    ascendingOrder: 'false',
     entries: [],
     search: ''
 };

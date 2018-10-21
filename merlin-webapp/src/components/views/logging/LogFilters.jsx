@@ -63,16 +63,6 @@ function LogFilters({loadLog, changeFilter, filters}) {
                 <option>1000</option>
                 <option>10000</option>
             </FormSelect>
-
-            <FormSelect
-                value={filters.ascendingOrder}
-                name={'ascendingOrder'}
-                onChange={changeFilter}
-            >
-                <option value={'true'}>ascending</option>
-                <option value={'false'}>descending</option>
-            </FormSelect>
-
             <FormButton type={'submit'} bsStyle={'primary'}>
                 <IconRefresh />
             </FormButton>
