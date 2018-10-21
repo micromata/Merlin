@@ -83,7 +83,6 @@ class TemplateStatistics extends React.Component {
                             <td>Conditionals</td>
                             <td>
                                 {this.props.statistics.conditionals.conditionalsSet.map((conditional, index) => {
-                                    console.log("conditional: " + conditional);
                                     // Return the element. Also pass key
                                     return (<li key={index}>{this.renderConditional(conditional)}</li>)
                                 })}</td>
