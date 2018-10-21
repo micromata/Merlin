@@ -133,7 +133,7 @@ public class DirectoryScanner {
         for (TemplateDefinition templateDefinition : getTemplateDefinitionsHandler().getItems()) {
             if (fileDescriptor.matches(templateDefinition.getFileDescriptor())) {
                 template.assignTemplateDefinition(templateDefinition);
-                log.info("Found matching template definition: " + templateDefinition.getFileDescriptor());
+                log.info("Found matching template definition: " + templateDefinition.getFileDescriptor().getFilename());
                 break;
             }
         }
