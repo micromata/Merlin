@@ -22,8 +22,8 @@ function LogTable({locationFormat, showStackTrace, entries, search}) {
             <tr>
                 <th>Timestamp</th>
                 <th>Level</th>
-                {locationFormat !== 'none' ? <th>Location</th> : null}
                 <th>Message</th>
+                {locationFormat !== 'none' ? <th>Location</th> : null}
             </tr>
             </thead>
             <tbody>
