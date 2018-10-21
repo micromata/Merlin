@@ -1,5 +1,9 @@
 package de.reinhard.merlin.app.logging;
 
+import org.apache.commons.lang3.StringUtils;
+
+import java.beans.Transient;
+
 /**
  * For filtering log messages.
  */
@@ -10,9 +14,10 @@ public class LogFilter {
     private boolean ascendingOrder;
     private boolean showStackTraces;
     private Integer lastReceivedLogOrderNumber;
+    private String mdcTemplatePrimaryKey;
+    private String mdcTemplateDefinitionPrimaryKey;
 
     /**
-     *
      * @return Search string for all fields.
      */
     public String getSearch() {
@@ -21,6 +26,41 @@ public class LogFilter {
 
     public void setSearch(String search) {
         this.search = search;
+    }
+
+    public String getMdcTemplatePrimaryKey() {
+        return mdcTemplatePrimaryKey;
+    }
+
+    /**
+     * If given, only messages containing at least one of the mdc values will be filtered.
+     *
+     * @param mdcTemplatePrimaryKey
+     */
+    public void setMdcTemplatePrimaryKey(String mdcTemplatePrimaryKey) {
+        this.mdcTemplatePrimaryKey = mdcTemplatePrimaryKey;
+    }
+
+    public String getMdcTemplateDefinitionPrimaryKey() {
+        return mdcTemplateDefinitionPrimaryKey;
+    }
+
+    /**
+     * If given, only messages containing at least one of the mdc values will be filtered.
+     *
+     * @param mdcTemplateDefinitionPrimaryKey
+     */
+    public void setMdcTemplateDefinitionPrimaryKey(String mdcTemplateDefinitionPrimaryKey) {
+        this.mdcTemplateDefinitionPrimaryKey = mdcTemplateDefinitionPrimaryKey;
+    }
+
+    /**
+     *
+     * @return true, if at least one mdc value is given.
+     */
+    @Transient
+    public boolean hasMdcFilters() {
+        return StringUtils.isNotEmpty(mdcTemplatePrimaryKey) || StringUtils.isNotEmpty(mdcTemplateDefinitionPrimaryKey);
     }
 
     public LogLevel getThreshold() {
@@ -44,7 +84,6 @@ public class LogFilter {
     }
 
     /**
-     *
      * @return false at default (default is descending order of the result).
      */
     public boolean isAscendingOrder() {
@@ -61,7 +100,6 @@ public class LogFilter {
     }
 
     /**
-     *
      * @return If given, all log entries with order orderNumber higher than this orderNumber will be queried.
      */
     public Integer getLastReceivedLogOrderNumber() {

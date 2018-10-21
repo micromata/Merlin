@@ -61,6 +61,7 @@ public class Log4jMemoryAppender extends AppenderSkeleton {
             maxSize = MAX_RESULT_SIZE;
         }
         int counter = 0;
+        boolean hasMdcFilters = filter.hasMdcFilters();
         for (LoggingEventData event : queue) {
             if (!event.getLevel().matches(filter.getThreshold())) {
                 continue;
@@ -70,14 +71,22 @@ public class Log4jMemoryAppender extends AppenderSkeleton {
                     continue;
                 }
             }
-            StringBuilder sb = new StringBuilder();
-            sb.append(event.getLogDate());
-            append(sb, event.getLevel(), true);
-            append(sb, event.getMessage(), true);
-            append(sb, event.getJavaClass(), true);
-            append(sb, event.getStackTrace(), filter.isShowStackTraces());
-            String str = sb.toString();
-            if (StringUtils.isEmpty(filter.getSearch()) || matches(str, filter.getSearch())) {
+            if (hasMdcFilters) {
+                if (!event.matchesAtLeastOneMdcValue(filter))
+                    // log event doesn't match any mdc value.
+                    continue;
+            }
+            String logString = null;
+            if (StringUtils.isNotBlank(filter.getSearch())) {
+                StringBuilder sb = new StringBuilder();
+                sb.append(event.getLogDate());
+                append(sb, event.getLevel(), true);
+                append(sb, event.getMessage(), true);
+                append(sb, event.getJavaClass(), true);
+                append(sb, event.getStackTrace(), filter.isShowStackTraces());
+                logString = sb.toString();
+            }
+            if (logString == null || matches(logString, filter.getSearch())) {
                 if (filter.isAscendingOrder()) {
                     result.add(event);
                 } else {

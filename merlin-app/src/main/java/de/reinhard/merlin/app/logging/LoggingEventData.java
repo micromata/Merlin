@@ -2,6 +2,7 @@ package de.reinhard.merlin.app.logging;
 
 import de.reinhard.merlin.logging.MDCKey;
 import org.apache.commons.lang3.ClassUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.spi.LocationInfo;
 import org.apache.log4j.spi.LoggingEvent;
 
@@ -44,7 +45,7 @@ public class LoggingEventData {
         Throwable throwable = event.getThrowableInformation() != null ? event.getThrowableInformation().getThrowable() : null;
         if (throwable != null) {
             StringWriter writer = new StringWriter();
-            PrintWriter printWriter= new PrintWriter(writer);
+            PrintWriter printWriter = new PrintWriter(writer);
             throwable.printStackTrace(printWriter);
             stackTrace = writer.toString();
         }
@@ -116,6 +117,21 @@ public class LoggingEventData {
 
     public String getMdcTemplateDefinitionPk() {
         return mdcTemplateDefinitionPk;
+    }
+
+    public boolean matchesAtLeastOneMdcValue(LogFilter filter) {
+        if (mdcTemplatePK == null && mdcTemplateDefinitionPk == null) {
+            return false;
+        }
+        if (StringUtils.isNotEmpty(filter.getMdcTemplatePrimaryKey())) {
+            if (StringUtils.equalsIgnoreCase(mdcTemplatePK, filter.getMdcTemplatePrimaryKey()))
+                return true;
+        }
+        if (StringUtils.isNotEmpty(filter.getMdcTemplateDefinitionPrimaryKey())) {
+            if (StringUtils.equalsIgnoreCase(mdcTemplatePK, filter.getMdcTemplateDefinitionPrimaryKey()))
+                return true;
+        }
+        return false;
     }
 
     private String getIsoLogDate(long millis) {
