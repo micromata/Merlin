@@ -35,6 +35,13 @@ public class Storage implements ConfigurationListener {
         ConfigurationHandler.getInstance().register(this);
     }
 
+    /**
+     * Will be called on start-up of the server. The templates should be scanned already (takes some time).
+     */
+    public void onStartup() {
+        getAllTemplates();
+    }
+
     public void add(DirectoryScanner directoryScanner) {
         directoryScannerMap.put(directoryScanner.getCanonicalPath(), directoryScanner);
     }

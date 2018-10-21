@@ -2,6 +2,7 @@ package de.reinhard.merlin.app.javafx;
 
 import de.reinhard.merlin.app.Version;
 import de.reinhard.merlin.app.jetty.JettyServer;
+import de.reinhard.merlin.app.storage.Storage;
 import de.reinhard.merlin.app.updater.AppUpdater;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -82,6 +83,7 @@ public class Main extends Application {
         server = new JettyServer();
         server.start();
         RunningMode.setRunning(true);
+        Storage.getInstance().onStartup();
     }
 
     @Override
