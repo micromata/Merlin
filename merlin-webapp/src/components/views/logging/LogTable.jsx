@@ -22,7 +22,9 @@ function LogTable({locationFormat, showStackTrace, entries, search, ascendingOrd
         <Table striped bordered hover size={'sm'} responsive>
             <thead>
             <tr>
-                <th>Timestamp <button onClick={toggleOrder} type="button" className="btn btn-link btn-outline-primary btn-sm">{sort}</button></th>
+                <th style={{whiteSpace: 'nowrap'}}>Timestamp <button onClick={toggleOrder} type="button"
+                                                                       className="btn btn-link btn-outline-primary btn-sm">{sort}</button>
+                </th>
                 <th>Level</th>
                 <th>Message</th>
                 {locationFormat !== 'none' ? <th>Location</th> : null}
