@@ -7,7 +7,6 @@ import com.install4j.api.update.ApplicationDisplayMode;
 import com.install4j.api.update.UpdateChecker;
 import com.install4j.api.update.UpdateDescriptor;
 import com.install4j.api.update.UpdateDescriptorEntry;
-import de.reinhard.merlin.app.Version;
 import javafx.scene.control.Alert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +25,9 @@ public class AppUpdater {
     }
 
     private UpdateDescriptorEntry validUpdateDescriptorEntry;
+
+    private AppUpdater() {
+    }
 
     public void checkUpdate() {
         CompletableFuture<UpdateDescriptorEntry> future = new CompletableFuture<>();
@@ -52,7 +54,11 @@ public class AppUpdater {
         validUpdateDescriptorEntry = updateDescriptorEntry;
         log.info("A new version " + updateDescriptorEntry.getNewVersion() + " is available for update: " + updateDescriptorEntry.getFileName()
                 + ". Url=" + updateDescriptorEntry.getURL());
-        Version.getInstance().setUpdateVersion(updateDescriptorEntry.getNewVersion());
+        UpdateInfo updateInfo = UpdateInfo.getInstance();
+        updateInfo.setVersion(updateDescriptorEntry.getNewVersion());
+        updateInfo.setInstallerUrl(String.valueOf(updateDescriptorEntry.getURL()));
+        updateInfo.setFileSize(updateDescriptorEntry.getFileSizeVerbose());
+        updateInfo.setFilename(updateDescriptorEntry.getFileName());
     }
 
     public boolean install() {

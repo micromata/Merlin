@@ -1,6 +1,8 @@
 package de.reinhard.merlin.app.rest;
 
+import de.reinhard.merlin.app.json.JsonUtils;
 import de.reinhard.merlin.app.updater.AppUpdater;
+import de.reinhard.merlin.app.updater.UpdateInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -8,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
@@ -26,5 +29,12 @@ public class UpdateServiceRest {
         }
         boolean result = AppUpdater.getInstance().install();
         return result ? "OK" : "ERROR";
+    }
+
+    @GET
+    @Path("/info")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String info(@QueryParam("prettyPrinter") boolean prettyPrinter) {
+        return JsonUtils.toJson(UpdateInfo.getInstance(), prettyPrinter);
     }
 }

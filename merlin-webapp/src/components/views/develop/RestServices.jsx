@@ -120,6 +120,7 @@ class RestServices extends React.Component {
                     <li><RestUrlLink service='configuration/config'/></li>
                     <li><RestUrlLink service='configuration/config-ui'/> (as a trial for dynamic forms)</li>
                     <li><RestUrlLink service='version'/> Gets the version and build date of the server.</li>
+                    <li><RestUrlLink service='updates/info'/> Gets the update version.</li>
                     <li><RestUrlLink service='i18n/list'/> Gets all translations.</li>
                 </ul>
                 <h3>Browse local filesystem</h3>

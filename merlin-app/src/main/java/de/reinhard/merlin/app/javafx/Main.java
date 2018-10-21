@@ -4,6 +4,7 @@ import de.reinhard.merlin.app.Version;
 import de.reinhard.merlin.app.jetty.JettyServer;
 import de.reinhard.merlin.app.storage.Storage;
 import de.reinhard.merlin.app.updater.AppUpdater;
+import de.reinhard.merlin.app.updater.UpdateInfo;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -13,10 +14,11 @@ import javafx.stage.Stage;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import javax.swing.*;
 import java.awt.*;
-import java.io.IOException;
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 
 public class Main extends Application {
@@ -35,7 +37,7 @@ public class Main extends Application {
             // No update mechanism in development mode.
             AppUpdater.getInstance().checkUpdate();
         } else {
-            Version.getInstance().setUpdateVersion("10.0"); // Only for testing.
+            UpdateInfo.getInstance().setDevelopmentTestData(); // Only for testing.
         }
         launch(args);
     }

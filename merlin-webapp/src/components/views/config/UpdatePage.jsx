@@ -21,6 +21,11 @@ class UpdatePage extends React.Component {
         if (this.props.updateVersion) {
             content = <React.Fragment>
                 <h2>New Version</h2>
+                The new version {this.props.updateVersion} is available.
+                <br/>
+                You can start the update process by simply clicking the update button.
+                <br/>
+                <br/>
                 <form>
                     <FormButton
                         onClick={this.onUpdate}
@@ -29,6 +34,11 @@ class UpdatePage extends React.Component {
                         Update
                     </FormButton>
                 </form>
+                <br/>
+                The update button functions only if your browser is running on the same computer as your Merlin server.
+                <br/>
+                If the installer doesn't start after clicking the update button, please proceed manually by downloading
+                the installer of the new version:
             </React.Fragment>
         }
         return <React.Fragment>
