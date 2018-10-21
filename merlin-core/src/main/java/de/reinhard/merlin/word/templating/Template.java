@@ -19,6 +19,7 @@ public class Template implements Cloneable, FileDescriptorInterface {
     private TemplateDefinition templateDefinition;
     private String templateDefinitionId;
     private FileDescriptor fileDescriptor;
+    private String templateDefinitionReferenceId;
 
     public Template() {
         statistics = new TemplateStatistics(this);
@@ -53,6 +54,19 @@ public class Template implements Cloneable, FileDescriptorInterface {
     public void assignTemplateDefinition(TemplateDefinition templateDefinition) {
         setTemplateDefinition(templateDefinition);
         updateStatistics();
+    }
+
+    /**
+     *
+     * @return The template definition reference if defined in Word document like <tt>${templateDefinition.refid = "..."}</tt>,
+     * otherwise null.
+     */
+    public String getTemplateDefinitionReferenceId() {
+        return templateDefinitionReferenceId;
+    }
+
+    public void setTemplateDefinitionReferenceId(String templateDefinitionReferenceId) {
+        this.templateDefinitionReferenceId = templateDefinitionReferenceId;
     }
 
     /**

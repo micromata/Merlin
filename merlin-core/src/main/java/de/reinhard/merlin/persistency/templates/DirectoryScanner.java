@@ -95,6 +95,10 @@ public class DirectoryScanner {
         return template;
     }
 
+    /**
+     * Check template for modifified template definition.
+     * @param template
+     */
     private void updateTemplate(Template template) {
         if (template == null) {
             return;
@@ -106,6 +110,31 @@ public class DirectoryScanner {
             if (templateDefinition != newTemplateDefinition) {
                 // Template definition was reread:
                 template.assignTemplateDefinition(newTemplateDefinition);
+            }
+        } else if (StringUtils.isNotBlank(template.getTemplateDefinitionReferenceId())) {
+           templateDefinition = getTemplateDefinitionsHandler().getTemplateDefinition(template.getTemplateDefinitionReferenceId());
+            if (templateDefinition != null) {
+                template.assignTemplateDefinition(templateDefinition);
+                log.info("Found referenced template definition: " + templateDefinition.getFileDescriptor());
+            } else {
+                assignMatchingTemplateDefinitionByFilename(template);
+            }
+        }
+    }
+
+    /**
+     * Tries to find a template definition matching the file name of template (same filename and path without file extension).
+     * Any matching template definition will be assigned.
+     * @param template
+     * @see FileDescriptor#matches(FileDescriptor)
+     */
+    public void assignMatchingTemplateDefinitionByFilename(Template template) {
+        FileDescriptor fileDescriptor = template.getFileDescriptor();
+        for (TemplateDefinition templateDefinition : getTemplateDefinitionsHandler().getItems()) {
+            if (fileDescriptor.matches(templateDefinition.getFileDescriptor())) {
+                template.assignTemplateDefinition(templateDefinition);
+                log.info("Found matching template definition: " + templateDefinition.getFileDescriptor());
+                break;
             }
         }
     }

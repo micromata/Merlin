@@ -150,6 +150,10 @@ abstract class AbstractHandler<T extends FileDescriptorInterface> {
 
     abstract T read(DirectoryWatchEntry watchEntry, Path path, FileDescriptor fileDescriptor);
 
+    /**
+     * Each item action should be logged with the primary key of the item stored in the log's MDC.
+     * @return
+     */
     protected MDCKey getMDCKey() {
         return null;
     }

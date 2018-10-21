@@ -48,6 +48,7 @@ class TemplatesHandler extends AbstractHandler<Template> {
             String templateDefinitionId = doc.scanForTemplateDefinitionReference();
             if (templateDefinitionId != null) {
                 log.debug("Template definition reference found: " + templateDefinitionId);
+                templateChecker.getTemplate().setTemplateDefinitionReferenceId(templateDefinitionId);
                 TemplateDefinition templateDefinition = directoryScanner.getTemplateDefinitionsHandler().getTemplateDefinition(templateDefinitionId);
                 if (templateDefinition != null) {
                     templateChecker.getTemplate().assignTemplateDefinition(templateDefinition);
@@ -55,13 +56,9 @@ class TemplatesHandler extends AbstractHandler<Template> {
                     log.warn("Template definition not found: " + templateDefinitionId);
                 }
             } else {
-                for (TemplateDefinition templateDefinition : directoryScanner.getTemplateDefinitionsHandler().getItems()) {
-                    if (fileDescriptor.matches(templateDefinition.getFileDescriptor())) {
-                        templateChecker.getTemplate().assignTemplateDefinition(templateDefinition);
-                        log.info("Found matching template definition: " + templateDefinition.getFileDescriptor());
-                        break;
-                    }
-                }
+                // Needed already here. File descriptor will be set by AbstractHandler too.
+                templateChecker.getTemplate().setFileDescriptor(fileDescriptor);
+                directoryScanner.assignMatchingTemplateDefinitionByFilename(templateChecker.getTemplate());
             }
             return templateChecker.getTemplate();
         } finally {
