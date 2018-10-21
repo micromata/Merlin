@@ -88,7 +88,7 @@ FormInput.defaultProps = {
 function FormSelect({children, id, value, name, onChange, hint, hintPlacement}) {
     let tooltip = null;
     if (!id) {
-        id = revisedRandId();
+        id = `id-${name}`;
     }
     if (hint) {
         tooltip = <UncontrolledTooltip placement={hintPlacement} target={id}>
