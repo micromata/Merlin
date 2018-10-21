@@ -78,10 +78,11 @@ class TemplateRunTab extends React.Component {
     constructor(props) {
         super(props);
 
-
-        Object.keys(this.props.runConfigurations[this.props.primaryKey])
-            .filter(key => this.runConfiguration[key] !== undefined)
-            .forEach(key => this.runConfiguration[key] = this.props.runConfigurations[this.props.primaryKey][key]);
+        if (props.runConfigurations[props.primaryKey]) {
+            Object.keys(this.props.runConfigurations[this.props.primaryKey])
+                .filter(key => this.runConfiguration[key] !== undefined)
+                .forEach(key => this.runConfiguration[key] = this.props.runConfigurations[this.props.primaryKey][key]);
+        }
     }
 
     render() {
