@@ -85,12 +85,28 @@ FormInput.defaultProps = {
 };
 
 
-function FormSelect(props) {
+function FormSelect({children, id, value, name, onChange, hint, hintPlacement}) {
+    let tooltip = null;
+    if (!id) {
+        id = revisedRandId();
+    }
+    if (hint) {
+        tooltip = <UncontrolledTooltip placement={hintPlacement} target={id}>
+                {hint}
+            </UncontrolledTooltip>;
+    }
     return (
-        <select
-            {...props}
-            className={'custom-select form-control form-control-sm mr-1'}
-        />
+        <React.Fragment>
+            <select id={id}
+                    name={name}
+                    value={value}
+                    onChange={onChange}
+                className={'custom-select form-control form-control-sm mr-1'}
+            >
+                {children}
+            </select>
+            {tooltip}
+        </React.Fragment>
     );
 }
 
@@ -99,6 +115,8 @@ FormSelect.propTypes = {
     value: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool]),
     name: PropTypes.string,
     onChange: PropTypes.func,
+    hint: PropTypes.string,
+    hintPlacement: PropTypes.oneOf(['right', 'top']),
     children: PropTypes.node
 };
 
@@ -106,7 +124,9 @@ FormSelect.defaultProps = {
     id: null,
     value: null,
     name: '',
+    hint: '',
     onChange: null,
+    hintPlacement: 'top',
     children: null
 };
 
