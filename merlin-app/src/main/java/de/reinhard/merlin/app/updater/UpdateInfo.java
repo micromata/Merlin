@@ -77,6 +77,7 @@ public class UpdateInfo {
         UpdateInfo updateInfo = UpdateInfo.getInstance();
         updateInfo.setVersion("10.0");
         updateInfo.setInstallerUrl("https://github.com/kreinhard/merlin/releases/download/v0.2/merlin_macos_0_2.dmg");
+        updateInfo.setBaseUrl("https://raw.githubusercontent.com/kreinhard/merlin/master/merlin-installer/updates.xml");
         updateInfo.setFileSize("67.2MB");
         updateInfo.setFilename("merlin_macos_0_2.dmg");
         updateInfo.setComment("Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat.");
