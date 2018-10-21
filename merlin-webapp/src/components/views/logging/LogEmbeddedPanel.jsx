@@ -6,13 +6,13 @@ import PropTypes from "prop-types";
 
 class LogEmbeddedPanel extends React.Component {
 
-    componentDidMount = () => {
+    component = () => {
         this.reload();
     }
 
     handleToggleSortOrder = () => {
         this.setState({
-            ascendingOrder: this.state.ascendingOrder === 'true' ? 'false' : 'true'
+            ascendingOrder: (this.state.ascendingOrder === 'true') ? 'false' : 'true'
         });
         this.reload();
     };
@@ -62,31 +62,28 @@ class LogEmbeddedPanel extends React.Component {
     }
 
 
-    render = () => (
-        <React.Fragment>
-            <LogTable
-                search={''}
-                locationFormat={this.props.locationFormat}
-                entries={this.state.logEntries}
-                ascendingOrder={this.state.ascendingOrder}
-                toggleOrder={this.handleToggleSortOrder}
-                showStackTrace={this.props.showStackTrace}
-            />
-        </React.Fragment>
-    );
+    render = () => {
+        return <LogTable
+            search={''}
+            locationFormat={this.props.locationFormat}
+            entries={this.state.logEntries}
+            ascendingOrder={this.state.ascendingOrder}
+            toggleOrder={this.handleToggleSortOrder}
+            showStackTrace={this.props.showStackTrace}
+        />
+    };
 
     constructor(props) {
         super(props);
         this.state = {
             search: '',
-            ascendingOrder: props.ascendingOrder
+            ascendingOrder: 'false'
         }
     }
 }
 
 LogEmbeddedPanel.propTypes = {
     locationFormat: PropTypes.oneOf(['none', 'short', 'normal']),
-    ascendingOrder: PropTypes.oneOf(['true', 'false']),
     showStackTrace: PropTypes.oneOf(['true', 'false']),
     threshold: PropTypes.oneOf(['error', 'warn', 'info', 'debug', 'trace']),
     maxSize: PropTypes.oneOf(['50', '100', '500', '1000', '10000']),
@@ -97,7 +94,6 @@ LogEmbeddedPanel.propTypes = {
 
 LogEmbeddedPanel.defaultProps = {
     locationFormat: 'none',
-    ascendingOrder: 'false',
     showStackTrace: 'false',
     treshold: 'info',
     maxSize: '50',

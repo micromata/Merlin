@@ -4,7 +4,6 @@ import {
     TabContent,
     TabPane,
     Nav,
-    NavItem,
     NavLink
 } from 'reactstrap';
 import classNames from 'classnames';
