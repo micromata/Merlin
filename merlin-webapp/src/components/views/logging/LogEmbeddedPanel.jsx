@@ -6,7 +6,7 @@ import PropTypes from "prop-types";
 
 class LogEmbeddedPanel extends React.Component {
 
-    component = () => {
+    componentDidMount = () => {
         this.reload();
     }
 
