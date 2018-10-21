@@ -13,9 +13,13 @@ class LogPage extends React.Component {
 
     handleToggleSortOrder = () => {
         let filters = this.props.filters;
-        // ToDo: Need something like this:
-        //this.props.changeFilter('ascendingOrder', filters.ascendingOrder === 'true' ? 'false'  : 'true');
-    }
+        this.props.changeFilter('ascendingOrder', filters.ascendingOrder === 'true' ? 'false'  : 'true');
+        this.props.loadLog();
+    };
+
+    handleInputChange = (event) => {
+        this.props.changeFilter(event.target.name, event.target.value);
+    };
 
 
 
@@ -24,7 +28,7 @@ class LogPage extends React.Component {
                 <PageHeader>Log viewer</PageHeader>
                 <LogFilters
                     filters={this.props.filters}
-                    changeFilter={this.props.changeFilter}
+                    changeFilter={this.handleInputChange}
                     loadLog={(event) => {
                         event.preventDefault();
                         this.props.loadLog();
@@ -39,11 +43,6 @@ class LogPage extends React.Component {
                 />
             </React.Fragment>
         );
-
-    constructor(props) {
-        super(props);
-        this.handleToggleSortOrder = this.handleToggleSortOrder.bind(this);
-    }
 }
 
 LogPage.propTypes = {
