@@ -39,6 +39,7 @@ function LogTable({locationFormat, showStackTrace, entries, search, ascendingOrd
                     entry={entry}
                     search={lowercaseSearch}
                     locationString={getLocationString(locationFormat, entry)}
+                    showStackTrace={showStackTrace}
                     key={index}
                 />)}
             </tbody>

@@ -40,6 +40,7 @@ class LogPage extends React.Component {
                     entries={this.props.entries}
                     ascendingOrder={this.props.filters.ascendingOrder}
                     toggleOrder={this.handleToggleSortOrder}
+                    showStackTrace={this.props.filters.showStackTrace}
                 />
             </React.Fragment>
         );
