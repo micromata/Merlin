@@ -59,6 +59,11 @@ public class AppUpdater {
         updateInfo.setInstallerUrl(String.valueOf(updateDescriptorEntry.getURL()));
         updateInfo.setFileSize(updateDescriptorEntry.getFileSizeVerbose());
         updateInfo.setFilename(updateDescriptorEntry.getFileName());
+        try {
+            updateInfo.setBaseUrl(Variables.getCompilerVariable("sys.updatesUrl"));
+        } catch (IOException ex) {
+            log.error("While getting 'sys.updatesUrl': " + ex.getMessage(), ex);
+        }
     }
 
     public boolean install() {
