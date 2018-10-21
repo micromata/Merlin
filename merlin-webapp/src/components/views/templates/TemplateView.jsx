@@ -8,6 +8,7 @@ import TemplateDefinition from './templatedefinition/TemplateDefinition';
 import TemplateRunTab from './TemplateRunTab';
 import TemplateSerialRunTab from './TemplateSerialRunTab';
 import TemplateStatistics from './TemplateStatistics';
+import LogEmbeddedPanel from "../logging/LogEmbeddedPanel";
 
 class TemplateView extends React.Component {
 
@@ -89,6 +90,12 @@ class TemplateView extends React.Component {
                     >
                         Serial run
                     </NavLink>
+                    <NavLink
+                        className={classNames({active: this.state.activeTab === '5'})}
+                        onClick={this.toggleTab('5')}
+                    >
+                        Logging
+                    </NavLink>
                 </Nav>
                 <TabContent activeTab={this.state.activeTab}>
                     <TabPane tabId={'1'}>
@@ -140,6 +147,13 @@ class TemplateView extends React.Component {
                     <TabPane tabId={'4'}>
                         <TemplateSerialRunTab
                             primaryKey={this.state.primaryKey}
+                        />
+                    </TabPane>
+                    <TabPane tabId={'5'}>
+                        <LogEmbeddedPanel
+                            mdcTemplatePk={this.state.primaryKey}
+                            mdcTemplateDefinitionPk={this.state.template.templateDefinition ?
+                                this.state.template.templateDefinition.primaryKey : null}
                         />
                     </TabPane>
                 </TabContent>

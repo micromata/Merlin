@@ -128,7 +128,7 @@ public class LoggingEventData {
                 return true;
         }
         if (StringUtils.isNotEmpty(filter.getMdcTemplateDefinitionPrimaryKey())) {
-            if (StringUtils.equalsIgnoreCase(mdcTemplatePK, filter.getMdcTemplateDefinitionPrimaryKey()))
+            if (StringUtils.equalsIgnoreCase(mdcTemplateDefinitionPk, filter.getMdcTemplateDefinitionPrimaryKey()))
                 return true;
         }
         return false;

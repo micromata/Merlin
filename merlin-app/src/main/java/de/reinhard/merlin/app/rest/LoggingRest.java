@@ -23,6 +23,8 @@ public class LoggingRest {
      * @param maxSize          Max size of the result list.
      * @param ascendingOrder   Default is false (default is descending order).
      * @param lastReceivedOrderNumber The last received order number for updating log entries (preventing querying all entries again).
+     * @param mdcTemplatePk
+     * @param mdcTemplateDefinitionPk
      * @param prettyPrinter
      * @return
      */
@@ -31,7 +33,10 @@ public class LoggingRest {
     @Produces(MediaType.APPLICATION_JSON)
     public String query(@QueryParam("search") String search, @QueryParam("treshold") String logLevelTreshold,
                         @QueryParam("maxSize") Integer maxSize, @QueryParam("ascendingOrder") Boolean ascendingOrder,
-                        @QueryParam("lastReceivedOrderNumber") Integer lastReceivedOrderNumber, @QueryParam("prettyPrinter") boolean prettyPrinter) {
+                        @QueryParam("lastReceivedOrderNumber") Integer lastReceivedOrderNumber,
+                        @QueryParam("mdcTemplatePk") String mdcTemplatePk,
+                        @QueryParam("mdcTemplateDefinitionPk") String mdcTemplateDefinitionPk,
+                        @QueryParam("prettyPrinter") boolean prettyPrinter) {
         LogFilter filter = new LogFilter();
         filter.setSearch(search);
         if (logLevelTreshold != null) {
@@ -54,6 +59,8 @@ public class LoggingRest {
         if (lastReceivedOrderNumber != null) {
             filter.setLastReceivedLogOrderNumber(lastReceivedOrderNumber);
         }
+        filter.setMdcTemplatePrimaryKey(mdcTemplatePk);
+        filter.setMdcTemplateDefinitionPrimaryKey(mdcTemplateDefinitionPk);
         Log4jMemoryAppender appender = Log4jMemoryAppender.getInstance();
         String json = JsonUtils.toJson(appender.query(filter), prettyPrinter);
         return json;

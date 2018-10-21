@@ -7,12 +7,13 @@ import {
     NavItem,
     NavLink
 } from 'reactstrap';
-import classnames from 'classnames';
+import classNames from 'classnames';
 import ErrorAlert from "../../../general/ErrorAlert";
 import {PageHeader} from "../../../general/BootstrapComponents";
 import TemplateDefinitionMain from "./TemplateDefinitionMain";
 import TemplateDefinitionVariables from "./TemplateDefinitionVariables";
 import TemplateDefinitionDependentVariables from "./TemplateDefinitionDependentVariables";
+import LogEmbeddedPanel from "../../logging/LogEmbeddedPanel";
 
 class TemplateDefinition extends React.Component {
     componentDidMount = () => {
@@ -89,33 +90,34 @@ class TemplateDefinition extends React.Component {
         } else if (this.state.definition) {
             content = <React.Fragment>
                 <Nav tabs>
-                    <NavItem>
-                        <NavLink
-                            className={classnames({active: this.state.activeTab === '1'})}
-                            onClick={() => {
-                                this.toggleTab('1');
-                            }}>
-                            Main
-                        </NavLink>
-                    </NavItem>
-                    <NavItem>
-                        <NavLink
-                            className={classnames({active: this.state.activeTab === '2'})}
-                            onClick={() => {
-                                this.toggleTab('2');
-                            }}>
-                            Variables
-                        </NavLink>
-                    </NavItem>
-                    <NavItem>
-                        <NavLink
-                            className={classnames({active: this.state.activeTab === '3'})}
-                            onClick={() => {
-                                this.toggleTab('3');
-                            }}>
-                            Dependent variables
-                        </NavLink>
-                    </NavItem>
+                    <NavLink
+                        className={classNames({active: this.state.activeTab === '1'})}
+                        onClick={() => {
+                            this.toggleTab('1');
+                        }}>
+                        Main
+                    </NavLink>
+                    <NavLink
+                        className={classNames({active: this.state.activeTab === '2'})}
+                        onClick={() => {
+                            this.toggleTab('2');
+                        }}>
+                        Variables
+                    </NavLink>
+                    <NavLink
+                        className={classNames({active: this.state.activeTab === '3'})}
+                        onClick={() => {
+                            this.toggleTab('3');
+                        }}>
+                        Dependent variables
+                    </NavLink>
+                    <NavLink
+                        className={classNames({active: this.state.activeTab === '4'})}
+                        onClick={() => {
+                            this.toggleTab('4');
+                        }}>
+                        Logging
+                    </NavLink>
                 </Nav>
                 <TabContent activeTab={this.state.activeTab}>
                     <TabPane tabId="1">
@@ -130,6 +132,11 @@ class TemplateDefinition extends React.Component {
                     </TabPane>
                     <TabPane tabId="3">
                         <TemplateDefinitionDependentVariables definition={this.state.definition}/>
+                    </TabPane>
+                    <TabPane tabId={'4'}>
+                        <LogEmbeddedPanel
+                            mdcTemplateDefinitionPk={this.state.primaryKey}
+                        />
                     </TabPane>
                 </TabContent>
 
