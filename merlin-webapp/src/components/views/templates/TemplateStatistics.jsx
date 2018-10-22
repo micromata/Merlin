@@ -102,7 +102,7 @@ class TemplateStatistics extends React.Component {
                         : null}
                     {arrayNotEmpty(this.props.statistics.undefinedVariables) ?
                         <tr>
-                            <td>Undefinied variables</td>
+                            <td>Undefined variables</td>
                             <td>
                                 {this.props.statistics.undefinedVariables.map((variable, index) => {
                                     // Return the element. Also pass key
