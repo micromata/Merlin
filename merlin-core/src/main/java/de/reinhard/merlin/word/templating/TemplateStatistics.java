@@ -7,8 +7,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 /**
  * Some statistics for templates
@@ -23,6 +22,7 @@ public class TemplateStatistics implements Cloneable {
     private Collection<String> undefinedVariables;  // Variables used in the Word template but not defined.
     private Collection<String> masterVariables;     // All variables other variables depend on.
     private Collection<String> dependentVariables;  // All dependent variables.
+    private Collection<VariableDefinition> inputVariables; // All variables a user input is required for.
 
     public TemplateStatistics(Template parent) {
         this.template = parent;
@@ -32,6 +32,29 @@ public class TemplateStatistics implements Cloneable {
      * Analyzes used variables by this template and compares it to the defined variables in the given templateDefinition.
      */
     public void updateStatistics() {
+        this.inputVariables = new ArrayList<>();
+        TemplateDefinition templateDefinition = template.getTemplateDefinition();
+        Set<String> variablesSet = new HashSet<>();
+        for (String variable : usedVariables) {
+            if (templateDefinition != null) {
+                VariableDefinition variableDefinition = templateDefinition.getVariableDefinition(variable, false);
+                if (variableDefinition != null) {
+                    inputVariables.add(variableDefinition);
+                    variablesSet.add(variable);
+                    continue;
+                }
+                DependentVariableDefinition dependentVariableDefinition = templateDefinition.getDependentVariableDefinition(variable, false);
+                if (dependentVariableDefinition != null) {
+                    variableDefinition = dependentVariableDefinition.getDependsOn();
+                    if (!variablesSet.contains(variableDefinition.getName())) {
+                        inputVariables.add(variableDefinition); // Add master variable (dependent variables need no user input).
+                        variablesSet.add(variableDefinition.getName());
+                    }
+                    continue;
+                }
+            }
+            inputVariables.add(new VariableDefinition(variable)); // Undefined variable.
+        }
         if (template.getTemplateDefinition() == null) {
             log.debug("No templateDefinition given. Can't update statistics. Clearing statistics.");
             this.allDefinedVariables = null;
@@ -102,6 +125,13 @@ public class TemplateStatistics implements Cloneable {
 
     public Collection<String> getDependentVariables() {
         return dependentVariables;
+    }
+
+    public Collection<VariableDefinition> getInputVariables() {
+        if (inputVariables == null) {
+            updateStatistics();
+        }
+        return inputVariables;
     }
 
     @Override
