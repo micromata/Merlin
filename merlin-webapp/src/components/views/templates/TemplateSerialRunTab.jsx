@@ -13,12 +13,13 @@ class TemplateSerialRunTab extends React.Component {
 
     getSerialTemplate = () => {
         let filename;
-        let params = [['templatePrimaryKey', this.props.templatePrimaryKey],
-            ['templateDefinitionPrimaryKey', this.props.templateDefinitionPrimaryKey]];
-        fetch(getRestServiceUrl('/templates/get-serial-run-excel', params), {
+        fetch(getRestServiceUrl('templates/get-serial-run-excel', {
+            templatePrimaryKey: this.props.templatePrimaryKey,
+            templateDefinitionPrimaryKey: this.props.templateDefinitionPrimaryKey}), {
             method: 'GET',
-            headers,
-            body: body
+            headers: {
+                "Content-Type": "text/plain; charset=utf-8"
+            }
         })
             .then(response => {
                 if (!response.ok) {
@@ -36,9 +37,9 @@ class TemplateSerialRunTab extends React.Component {
         return (
             <React.Fragment>
                 <h4>Generation from a file:</h4>
-                <a href={this.getSerialTemplate()}><Button className={'btn-outline-primary'}>
+                <Button className={'btn-outline-primary'} onClick={this.getSerialTemplate}>
                     <IconDownload/> Excel serial template
-                </Button></a>
+                </Button>
                 {/*<DropArea upload={this.runSerialTemplate} />*/}
             </React.Fragment>
         );
