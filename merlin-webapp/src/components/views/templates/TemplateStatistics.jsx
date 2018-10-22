@@ -14,9 +14,19 @@ class TemplateStatistics extends React.Component {
             })}</ul>)
         }
         return (<React.Fragment>
-            {statement}
+            <span className={'badge badge-success'}>{statement}</span>
             {childConditionals}
         </React.Fragment>)
+    }
+
+    getVariableColor = (variable) => {
+        if (this.props.statistics.masterVariables.indexOf(variable) >= 0)
+            return "danger";
+        if (this.props.statistics.unusedVariables.indexOf(variable) >= 0)
+            return "light";
+        if (this.props.statistics.allDefinedVariables.indexOf(variable) >= 0)
+            return "success";
+        return "warning";
     }
 
     render() {
@@ -30,8 +40,10 @@ class TemplateStatistics extends React.Component {
                         <td>
                             {this.props.statistics.usedVariables.map((variable, index) => {
                                 // Return the element. Also pass key
-                                return (
-                                    <React.Fragment key={index}>{index > 0 && ', '}{`{${variable}}`}</React.Fragment>)
+                                return (<React.Fragment>
+                                    <span className={`badge badge-${this.getVariableColor(variable)}`}
+                                          key={index}>{variable}</span>{' '}
+                                </React.Fragment>)
                             })}</td>
                     </tr>
                     {arrayNotEmpty(this.props.statistics.unusedVariables) ?
@@ -40,19 +52,23 @@ class TemplateStatistics extends React.Component {
                             <td>
                                 {this.props.statistics.unusedVariables.map((variable, index) => {
                                     // Return the element. Also pass key
-                                    return (<React.Fragment
-                                        key={index}>{index > 0 && ', '}{`{${variable}}`}</React.Fragment>)
+                                    return (<React.Fragment>
+                                        <span className={`badge badge-${this.getVariableColor(variable)}`}
+                                              key={index}>{variable}</span>{' '}
+                                    </React.Fragment>)
                                 })}</td>
                         </tr>
                         : null}
                     {arrayNotEmpty(this.props.statistics.allDefinedVariables) ?
                         <tr>
-                            <td>Definied variables</td>
+                            <td>Defined variables</td>
                             <td>
                                 {this.props.statistics.allDefinedVariables.map((variable, index) => {
                                     // Return the element. Also pass key
-                                    return (<React.Fragment
-                                        key={index}>{index > 0 && ', '}{`{${variable}}`}</React.Fragment>)
+                                    return (<React.Fragment key={index}>
+                                        <span className={`badge badge-${this.getVariableColor(variable)}`}
+                                              key={index}>{variable}</span>{' '}
+                                    </React.Fragment>)
                                 })}</td>
                         </tr>
                         : null}
@@ -62,8 +78,10 @@ class TemplateStatistics extends React.Component {
                             <td>
                                 {this.props.statistics.masterVariables.map((variable, index) => {
                                     // Return the element. Also pass key
-                                    return (<React.Fragment
-                                        key={index}>{index > 0 && ', '}{`{${variable}}`}</React.Fragment>)
+                                    return (<React.Fragment key={index}>
+                                        <span className={`badge badge-${this.getVariableColor(variable)}`}
+                                              key={index}>{variable}</span>{' '}
+                                    </React.Fragment>)
                                 })}</td>
                         </tr>
                         : null}
@@ -73,8 +91,10 @@ class TemplateStatistics extends React.Component {
                             <td>
                                 {this.props.statistics.undefinedVariables.map((variable, index) => {
                                     // Return the element. Also pass key
-                                    return (<React.Fragment
-                                        key={index}>{index > 0 && ', '}{`{${variable}}`}</React.Fragment>)
+                                    return (<React.Fragment key={index}>
+                                        <span className={`badge badge-${this.getVariableColor(variable)}`}
+                                              key={index}>{variable}</span>{' '}
+                                    </React.Fragment>)
                                 })}</td>
                         </tr>
                         : null}
