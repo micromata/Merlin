@@ -4,7 +4,6 @@ import de.reinhard.merlin.persistency.AbstractDirectoryWatcher;
 import de.reinhard.merlin.persistency.FileDescriptor;
 import de.reinhard.merlin.persistency.PersistencyInterface;
 import de.reinhard.merlin.persistency.PersistencyRegistry;
-import de.reinhard.merlin.word.templating.SerialData;
 import de.reinhard.merlin.word.templating.Template;
 import de.reinhard.merlin.word.templating.TemplateDefinition;
 import org.apache.commons.lang3.StringUtils;
@@ -27,7 +26,6 @@ public class DirectoryScanner {
     private AbstractDirectoryWatcher directoryWatcher;
     private TemplatesHandler templatesHandler;
     private TemplateDefinitionsHandler templateDefinitionsHandler;
-    private SerialDatasHandler serialDatasHandler;
     private long lastRefresh = -1;
 
     /**
@@ -40,7 +38,6 @@ public class DirectoryScanner {
         directoryWatcher.setIgnoreFilenamePatterns("^~\\$.*");
         templatesHandler = new TemplatesHandler(this);
         templateDefinitionsHandler = new TemplateDefinitionsHandler(this);
-        serialDatasHandler = new SerialDatasHandler(this);
         clear();
     }
 
@@ -73,7 +70,6 @@ public class DirectoryScanner {
     public void clear() {
         templateDefinitionsHandler.clear();
         templatesHandler.clear();
-        serialDatasHandler.clear();
         directoryWatcher.clear();
     }
 
@@ -164,17 +160,6 @@ public class DirectoryScanner {
     TemplateDefinitionsHandler getTemplateDefinitionsHandler() {
         return templateDefinitionsHandler;
     }
-
-    public Collection<SerialData> getSerialDatas() {
-        checkAndRefreshAllItems();
-        return serialDatasHandler.getItems();
-    }
-
-    public SerialData getSerialData(String primaryKey) {
-        checkAndRefreshAllItems();
-        return serialDatasHandler.getItem(primaryKey);
-    }
-
 
     public Path getDir() {
         return directoryWatcher.getRootDir();
