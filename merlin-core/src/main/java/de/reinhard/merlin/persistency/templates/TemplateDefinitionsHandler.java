@@ -23,9 +23,9 @@ class TemplateDefinitionsHandler extends AbstractHandler<TemplateDefinition> {
     @Override
     TemplateDefinition read(DirectoryWatchEntry watchEntry, Path path, FileDescriptor fileDescriptor) {
         MDCHandler mdc = new MDCHandler();
+        ExcelWorkbook workbook = null;
         try {
             mdc.put(MDCKey.TEMPLATE_PK, fileDescriptor.getPrimaryKey());
-            ExcelWorkbook workbook;
             try {
                 workbook = ExcelWorkbook.create(path);
             } catch (Exception ex) {
@@ -45,6 +45,9 @@ class TemplateDefinitionsHandler extends AbstractHandler<TemplateDefinition> {
             }
             return templateDefinition;
         } finally {
+            if (workbook != null) {
+                workbook.close();
+            }
             mdc.restore();
         }
     }

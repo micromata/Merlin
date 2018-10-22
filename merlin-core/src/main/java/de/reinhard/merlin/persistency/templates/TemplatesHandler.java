@@ -25,9 +25,9 @@ class TemplatesHandler extends AbstractHandler<Template> {
     @Override
     Template read(DirectoryWatchEntry watchEntry, Path path, FileDescriptor fileDescriptor) {
         MDCHandler mdc = new MDCHandler();
+        WordDocument doc = null;
         try {
             mdc.put(MDCKey.TEMPLATE_PK, fileDescriptor.getPrimaryKey());
-            WordDocument doc;
             try {
                 doc = WordDocument.create(path);
             } catch (Exception ex) {
@@ -62,6 +62,9 @@ class TemplatesHandler extends AbstractHandler<Template> {
             }
             return templateChecker.getTemplate();
         } finally {
+            if (doc != null) {
+                doc.close();
+            }
             mdc.restore();
         }
     }
