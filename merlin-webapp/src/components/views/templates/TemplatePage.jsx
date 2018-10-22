@@ -152,7 +152,7 @@ class TemplatePage extends React.Component {
                         <TemplateSerialRunTab
                             templatePrimaryKey={this.state.primaryKey}
                             templateDefinitionPrimaryKey={this.state.template.templateDefinition ?
-                                this.state.template.templateDefinition.primaryKey : null}
+                                this.state.template.templateDefinition.primaryKey : ''}
                         />
                     </TabPane>
                     <TabPane tabId={'5'}>
