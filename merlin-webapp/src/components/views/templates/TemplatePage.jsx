@@ -114,9 +114,13 @@ class TemplatePage extends React.Component {
                                 <td><LinkFile primaryKey={template.fileDescriptor.primaryKey}
                                               filepath={template.fileDescriptor.canonicalPath}/></td>
                             </tr>
+                            <tr>
+                                <td>Primary Key</td>
+                                <td>{this.state.template.primaryKey}</td>
+                            </tr>
                             </tbody>
                         </Table>
-                        <TemplateStatistics statistics={template.statistics} />
+                        <TemplateStatistics statistics={template.statistics}/>
                     </TabPane>
                     {this.state.template.templateDefinition ?
                         <TabPane tabId={'2'}>
@@ -124,10 +128,10 @@ class TemplatePage extends React.Component {
                                 <div className="card-body">
                                     <TemplateDefinitionPage hidePageHeader={'true'}
                                                             match={{
-                                            params: {
-                                                primaryKey: this.state.template.templateDefinition.fileDescriptor.primaryKey
-                                            }
-                                        }}
+                                                                params: {
+                                                                    primaryKey: this.state.template.templateDefinition.fileDescriptor.primaryKey
+                                                                }
+                                                            }}
                                     />
                                 </div>
                             </div>
@@ -136,7 +140,7 @@ class TemplatePage extends React.Component {
                         <TemplateRunTab
                             primaryKey={this.state.primaryKey}
                             templateDefinitionId={this.state.template.templateDefinition ?
-                                this.state.template.templateDefinition.fileDescriptor.primaryKey : ''}
+                                this.state.template.templateDefinition.primaryKey : ''}
                             templateVariables={this.state.template.statistics.usedVariables}
                             definitionVariables={this.state.template.templateDefinition ?
                                 this.state.template.templateDefinition.variableDefinitions : undefined}
@@ -146,7 +150,9 @@ class TemplatePage extends React.Component {
                     </TabPane>
                     <TabPane tabId={'4'}>
                         <TemplateSerialRunTab
-                            primaryKey={this.state.primaryKey}
+                            templatePrimaryKey={this.state.primaryKey}
+                            templateDefinitionPrimaryKey={this.state.template.templateDefinition ?
+                                this.state.template.templateDefinition.primaryKey : null}
                         />
                     </TabPane>
                     <TabPane tabId={'5'}>
