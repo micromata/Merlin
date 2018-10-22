@@ -20,6 +20,8 @@ class TemplateStatistics extends React.Component {
     }
 
     getVariableColor = (variable) => {
+        if (!this.props.statistics.allDefinedVariables)
+            return "info";
         if (this.props.statistics.masterVariables.indexOf(variable) >= 0)
             return "danger";
         if (this.props.statistics.unusedVariables.indexOf(variable) >= 0)
