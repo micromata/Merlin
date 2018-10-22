@@ -21,7 +21,8 @@ public class TemplateStatistics implements Cloneable {
     private List<String> usedVariables;             // All variables used in the Word template.
     private Collection<String> unusedVariables;     // Variables defined but not used in the Word template.
     private Collection<String> undefinedVariables;  // Variables used in the Word template but not defined.
-    private Collection<String> masterVariables;  // All variables other variables depend on.
+    private Collection<String> masterVariables;     // All variables other variables depend on.
+    private Collection<String> dependentVariables;  // All dependent variables.
 
     public TemplateStatistics(Template parent) {
         this.template = parent;
@@ -37,6 +38,7 @@ public class TemplateStatistics implements Cloneable {
             this.unusedVariables = null;
             this.undefinedVariables = null;
             this.masterVariables = null;
+            this.dependentVariables = null;
             return;
         }
         this.allDefinedVariables = template.getTemplateDefinition().getAllDefinedVariableNames();
@@ -46,6 +48,7 @@ public class TemplateStatistics implements Cloneable {
             }
         }
         this.masterVariables = template.getTemplateDefinition().getAllMasterVariableNames();
+        this.dependentVariables = template.getTemplateDefinition().getAllDependentVariableNames();
         this.unusedVariables = CollectionUtils.subtract(allDefinedVariables, usedVariables);
         this.unusedVariables = CollectionUtils.subtract(unusedVariables, masterVariables);
         if (log.isDebugEnabled()) {
@@ -97,6 +100,10 @@ public class TemplateStatistics implements Cloneable {
         return masterVariables;
     }
 
+    public Collection<String> getDependentVariables() {
+        return dependentVariables;
+    }
+
     @Override
     public String toString() {
         ToStringBuilder tos = new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE);
@@ -104,6 +111,7 @@ public class TemplateStatistics implements Cloneable {
         tos.append("unusedVariables", unusedVariables);
         tos.append("undefinedVariables", undefinedVariables);
         tos.append("masterVariables", masterVariables);
+        tos.append("dependentVariables", dependentVariables);
         tos.append("conditionals", conditionals);
         return tos.toString();
     }
