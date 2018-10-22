@@ -4,15 +4,15 @@ import {
     TabContent,
     TabPane,
     Nav,
-    NavItem,
     NavLink
 } from 'reactstrap';
-import classnames from 'classnames';
+import classNames from 'classnames';
 import ErrorAlert from "../../../general/ErrorAlert";
 import {PageHeader} from "../../../general/BootstrapComponents";
 import TemplateDefinitionMain from "./TemplateDefinitionMain";
 import TemplateDefinitionVariables from "./TemplateDefinitionVariables";
 import TemplateDefinitionDependentVariables from "./TemplateDefinitionDependentVariables";
+import LogEmbeddedPanel from "../../logging/LogEmbeddedPanel";
 
 class TemplateDefinition extends React.Component {
     componentDidMount = () => {
@@ -20,29 +20,33 @@ class TemplateDefinition extends React.Component {
     };
 
     handleTextChange = (value, name) => {
-        let definition = this.state.definition;
-        definition[name] = value;
-        this.setState({definition: definition});
+        // Read-only, do nothing.
+        //let definition = this.state.definition;
+        //definition[name] = value;
+        //this.setState({definition: definition});
     }
 
     handleStateChange = event => {
-        let definition = this.state.definition;
-        definition[event.target.name] = event.target.checked;
-        this.setState({definition: definition});
+        // Read-only, do nothing.
+        //let definition = this.state.definition;
+        //definition[event.target.name] = event.target.checked;
+        //this.setState({definition: definition});
     }
 
     handleVariableTextChange = (value, name, index) => {
-        let definition = this.state.definition;
-        const variable = definition.variableDefinitions[index];
-        variable[name] = value;
-        this.setState({definition: definition});
+        // Read-only, do nothing.
+        //let definition = this.state.definition;
+        //const variable = definition.variableDefinitions[index];
+        //variable[name] = value;
+        //this.setState({definition: definition});
     }
 
     handleVariableStateChange = (event, index) => {
-        let definition = this.state.definition;
-        const variable = definition.variableDefinitions[index];
-        variable[event.target.name]= event.target.checked;
-        this.setState({definition: definition});
+        // Read-only, do nothing.
+        //let definition = this.state.definition;
+        //const variable = definition.variableDefinitions[index];
+        //variable[event.target.name] = event.target.checked;
+        //this.setState({definition: definition});
     }
 
     fetchTemplateDefinition = () => {
@@ -85,33 +89,34 @@ class TemplateDefinition extends React.Component {
         } else if (this.state.definition) {
             content = <React.Fragment>
                 <Nav tabs>
-                    <NavItem>
-                        <NavLink
-                            className={classnames({active: this.state.activeTab === '1'})}
-                            onClick={() => {
-                                this.toggleTab('1');
-                            }}>
-                            Main
-                        </NavLink>
-                    </NavItem>
-                    <NavItem>
-                        <NavLink
-                            className={classnames({active: this.state.activeTab === '2'})}
-                            onClick={() => {
-                                this.toggleTab('2');
-                            }}>
-                            Variables
-                        </NavLink>
-                    </NavItem>
-                    <NavItem>
-                        <NavLink
-                            className={classnames({active: this.state.activeTab === '3'})}
-                            onClick={() => {
-                                this.toggleTab('3');
-                            }}>
-                            Dependent variables
-                        </NavLink>
-                    </NavItem>
+                    <NavLink
+                        className={classNames({active: this.state.activeTab === '1'})}
+                        onClick={() => {
+                            this.toggleTab('1');
+                        }}>
+                        Main
+                    </NavLink>
+                    <NavLink
+                        className={classNames({active: this.state.activeTab === '2'})}
+                        onClick={() => {
+                            this.toggleTab('2');
+                        }}>
+                        Variables
+                    </NavLink>
+                    <NavLink
+                        className={classNames({active: this.state.activeTab === '3'})}
+                        onClick={() => {
+                            this.toggleTab('3');
+                        }}>
+                        Dependent variables
+                    </NavLink>
+                    <NavLink
+                        className={classNames({active: this.state.activeTab === '4'})}
+                        onClick={() => {
+                            this.toggleTab('4');
+                        }}>
+                        Logging
+                    </NavLink>
                 </Nav>
                 <TabContent activeTab={this.state.activeTab}>
                     <TabPane tabId="1">
@@ -127,6 +132,11 @@ class TemplateDefinition extends React.Component {
                     <TabPane tabId="3">
                         <TemplateDefinitionDependentVariables definition={this.state.definition}/>
                     </TabPane>
+                    <TabPane tabId={'4'}>
+                        <LogEmbeddedPanel
+                            mdcTemplateDefinitionPk={this.state.primaryKey}
+                        />
+                    </TabPane>
                 </TabContent>
 
             </React.Fragment>;
@@ -140,12 +150,13 @@ class TemplateDefinition extends React.Component {
                 </ul>
             </code>
         }
-        let title = this.state.definition ? 'Template definition: ' + this.state.definition.id : 'Template definition';
+        let title = this.state.definition ? this.state.definition.id : 'Template definition';
+        let pageHeader = !this.props.hidePageHeader ? <PageHeader>
+            {title}
+        </PageHeader> : null;
 
         return <React.Fragment>
-            <PageHeader>
-                {title}
-            </PageHeader>
+            {pageHeader}
             {content}
             {todo}
         </React.Fragment>;

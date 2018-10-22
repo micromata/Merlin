@@ -1,13 +1,13 @@
 import React from 'react';
 import {Table} from 'reactstrap';
-import {notEmpty} from '../../../utilities/global';
+import {arrayNotEmpty} from '../../../utilities/global';
 
 class TemplateStatistics extends React.Component {
 
     renderConditional = (conditional) => {
         const statement = conditional.conditionalStatement;
         let childConditionals = null;
-        if (notEmpty(conditional.childConditionals)) {
+        if (arrayNotEmpty(conditional.childConditionals)) {
             childConditionals = (<ul>{conditional.childConditionals.map((child, index) => {
                 // Return the element. Also pass key
                 return (<li key={index}>{this.renderConditional(child)}</li>)
@@ -34,7 +34,7 @@ class TemplateStatistics extends React.Component {
                                     <React.Fragment key={index}>{index > 0 && ', '}{`{${variable}}`}</React.Fragment>)
                             })}</td>
                     </tr>
-                    {notEmpty(this.props.statistics.unusedVariables) ?
+                    {arrayNotEmpty(this.props.statistics.unusedVariables) ?
                         <tr>
                             <td>Unused variables</td>
                             <td>
@@ -45,7 +45,7 @@ class TemplateStatistics extends React.Component {
                                 })}</td>
                         </tr>
                         : null}
-                    {notEmpty(this.props.statistics.allDefinedVariables) ?
+                    {arrayNotEmpty(this.props.statistics.allDefinedVariables) ?
                         <tr>
                             <td>Definied variables</td>
                             <td>
@@ -56,7 +56,18 @@ class TemplateStatistics extends React.Component {
                                 })}</td>
                         </tr>
                         : null}
-                    {notEmpty(this.props.statistics.undefinedVariables) ?
+                    {arrayNotEmpty(this.props.statistics.masterVariables) ?
+                        <tr>
+                            <td>Master variables</td>
+                            <td>
+                                {this.props.statistics.masterVariables.map((variable, index) => {
+                                    // Return the element. Also pass key
+                                    return (<React.Fragment
+                                        key={index}>{index > 0 && ', '}{`{${variable}}`}</React.Fragment>)
+                                })}</td>
+                        </tr>
+                        : null}
+                    {arrayNotEmpty(this.props.statistics.undefinedVariables) ?
                         <tr>
                             <td>Undefinied variables</td>
                             <td>
@@ -67,12 +78,11 @@ class TemplateStatistics extends React.Component {
                                 })}</td>
                         </tr>
                         : null}
-                    {notEmpty(this.props.statistics.conditionals.conditionalsSet) ?
+                    {arrayNotEmpty(this.props.statistics.conditionals.conditionalsSet) ?
                         <tr>
                             <td>Conditionals</td>
                             <td>
                                 {this.props.statistics.conditionals.conditionalsSet.map((conditional, index) => {
-                                    console.log("conditional: " + conditional);
                                     // Return the element. Also pass key
                                     return (<li key={index}>{this.renderConditional(conditional)}</li>)
                                 })}</td>

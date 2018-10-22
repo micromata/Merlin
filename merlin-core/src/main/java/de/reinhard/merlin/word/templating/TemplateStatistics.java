@@ -18,9 +18,10 @@ public class TemplateStatistics implements Cloneable {
     private Conditionals conditionals;
     private Template template;
     private Collection<String> allDefinedVariables; // All variables defined in TemplateDefinition.
-    private List<String> usedVariables;          // All variables used in the Word template.
+    private List<String> usedVariables;             // All variables used in the Word template.
     private Collection<String> unusedVariables;     // Variables defined but not used in the Word template.
     private Collection<String> undefinedVariables;  // Variables used in the Word template but not defined.
+    private Collection<String> masterVariables;  // All variables other variables depend on.
 
     public TemplateStatistics(Template parent) {
         this.template = parent;
@@ -35,6 +36,7 @@ public class TemplateStatistics implements Cloneable {
             this.allDefinedVariables = null;
             this.unusedVariables = null;
             this.undefinedVariables = null;
+            this.masterVariables = null;
             return;
         }
         this.allDefinedVariables = template.getTemplateDefinition().getAllDefinedVariableNames();
@@ -43,7 +45,9 @@ public class TemplateStatistics implements Cloneable {
                 log.debug("Defined variable: " + variable);
             }
         }
+        this.masterVariables = template.getTemplateDefinition().getAllMasterVariableNames();
         this.unusedVariables = CollectionUtils.subtract(allDefinedVariables, usedVariables);
+        this.unusedVariables = CollectionUtils.subtract(unusedVariables, masterVariables);
         if (log.isDebugEnabled()) {
             for (String variable : unusedVariables) {
                 log.debug("Unused: " + variable);
@@ -85,16 +89,12 @@ public class TemplateStatistics implements Cloneable {
         return unusedVariables;
     }
 
-    public void setUnusedVariables(Collection<String> unusedVariables) {
-        this.unusedVariables = unusedVariables;
-    }
-
     public Collection<String> getUndefinedVariables() {
         return undefinedVariables;
     }
 
-    public void setUndefinedVariables(Collection<String> undefinedVariables) {
-        this.undefinedVariables = undefinedVariables;
+    public Collection<String> getMasterVariables() {
+        return masterVariables;
     }
 
     @Override
@@ -103,6 +103,7 @@ public class TemplateStatistics implements Cloneable {
         tos.append("usedVariables", usedVariables);
         tos.append("unusedVariables", unusedVariables);
         tos.append("undefinedVariables", undefinedVariables);
+        tos.append("masterVariables", masterVariables);
         tos.append("conditionals", conditionals);
         return tos.toString();
     }

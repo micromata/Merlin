@@ -6,8 +6,7 @@
     <parent>
         <groupId>de.reinhard</groupId>
         <artifactId>merlin-parent</artifactId>
-        <version>1.0</version>
-        <relativePath>../merlin-parent</relativePath>
+        <version>0.3</version>
     </parent>
     <artifactId>merlin-smarthome</artifactId>
     <packaging>jar</packaging>
@@ -32,12 +31,12 @@
         <dependency>
             <groupId>de.reinhard</groupId>
             <artifactId>merlin-core</artifactId>
-            <version>1.0</version>
+            <version>${merlin.version}</version>
         </dependency>
         <dependency>
             <groupId>de.reinhard</groupId>
             <artifactId>merlin-velocity</artifactId>
-            <version>1.0</version>
+            <version>${merlin.version}</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-log4j12 -->
         <dependency>

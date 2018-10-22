@@ -51,6 +51,7 @@ public class TemplateDefinition implements Cloneable, FileDescriptorInterface {
 
     /**
      * The name should be unique for refering it. It should be at least unique inside one directory.
+     *
      * @return Unique id. There should not exist multiple templates with the same id.
      * @see FileDescriptor#getDirectory()
      */
@@ -178,6 +179,23 @@ public class TemplateDefinition implements Cloneable, FileDescriptorInterface {
     }
 
     /**
+     * @return Name of all master variables defined in a sorted order. A master variable is a variable another
+     * variable depends on.
+     */
+    @Transient
+    public List<String> getAllMasterVariableNames() {
+        Set<String> variables = new HashSet<>();
+        for (DependentVariableDefinition def : dependentVariableDefinitions) {
+            if (def.getDependsOn() != null)
+                variables.add(def.getDependsOn().getName());
+        }
+        List<String> result = new ArrayList<>();
+        result.addAll(variables);
+        Collections.sort(result, String.CASE_INSENSITIVE_ORDER);
+        return result;
+    }
+
+    /**
      * Makes a deep copy, also of the variable lists (the items will be cloned as well).
      *
      * @return
@@ -193,16 +211,24 @@ public class TemplateDefinition implements Cloneable, FileDescriptorInterface {
         if (this.variableDefinitions != null) {
             templateDefinition.variableDefinitions = new ArrayList<>();
             for (VariableDefinition variableDefinition : this.variableDefinitions) {
-                templateDefinition.variableDefinitions.add((VariableDefinition)variableDefinition.clone());
+                templateDefinition.variableDefinitions.add((VariableDefinition) variableDefinition.clone());
             }
         }
         if (this.dependentVariableDefinitions != null) {
             templateDefinition.dependentVariableDefinitions = new ArrayList<>();
             for (DependentVariableDefinition dependentVariableDefinition : this.dependentVariableDefinitions) {
-                templateDefinition.dependentVariableDefinitions.add((DependentVariableDefinition)dependentVariableDefinition.clone());
+                templateDefinition.dependentVariableDefinitions.add((DependentVariableDefinition) dependentVariableDefinition.clone());
             }
         }
         templateDefinition.dependentVariableDefinitions = new ArrayList<>();
         return templateDefinition;
+    }
+
+    /**
+     * @return The primary key served by the file descriptor.
+     * @see FileDescriptor#getPrimaryKey()
+     */
+    public String getPrimaryKey() {
+        return fileDescriptor != null ? fileDescriptor.getPrimaryKey() : null;
     }
 }

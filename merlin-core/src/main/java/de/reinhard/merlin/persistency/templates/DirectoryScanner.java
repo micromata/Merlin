@@ -21,12 +21,14 @@ import java.util.Set;
  */
 public class DirectoryScanner {
     private Logger log = LoggerFactory.getLogger(DirectoryScanner.class);
+    private static final int MAX_REFRESH_RATE_MILLIS = 5000; // Refresh only every 5 seconds.
 
     private PersistencyInterface persistency = PersistencyRegistry.getDefault();
     private AbstractDirectoryWatcher directoryWatcher;
     private TemplatesHandler templatesHandler;
     private TemplateDefinitionsHandler templateDefinitionsHandler;
     private SerialDatasHandler serialDatasHandler;
+    private long lastRefresh = -1;
 
     /**
      * @param dir
@@ -77,12 +79,64 @@ public class DirectoryScanner {
 
     public Collection<Template> getTemplates() {
         checkAndRefreshAllItems();
-        return templatesHandler.getItems();
+        Collection<Template> templates = templatesHandler.getItems();
+        if (templates != null) {
+            for (Template template : templates) {
+                updateTemplate(template);
+            }
+        }
+        return templates;
     }
 
     public Template getTemplate(String primaryKey) {
         checkAndRefreshAllItems();
-        return templatesHandler.getItem(primaryKey);
+        Template template = templatesHandler.getItem(primaryKey);
+        updateTemplate(template);
+        return template;
+    }
+
+    /**
+     * Check template for modifified template definition.
+     * @param template
+     */
+    private void updateTemplate(Template template) {
+        if (template == null) {
+            return;
+        }
+        TemplateDefinition templateDefinition = template.getTemplateDefinition();
+        if (templateDefinition != null) {
+            // Check updated template definition:
+            TemplateDefinition newTemplateDefinition = templateDefinitionsHandler.getItem(templateDefinition.getPrimaryKey());
+            if (templateDefinition != newTemplateDefinition) {
+                // Template definition was reread:
+                template.assignTemplateDefinition(newTemplateDefinition);
+            }
+        } else if (StringUtils.isNotBlank(template.getTemplateDefinitionReferenceId())) {
+           templateDefinition = getTemplateDefinitionsHandler().getTemplateDefinition(template.getTemplateDefinitionReferenceId());
+            if (templateDefinition != null) {
+                template.assignTemplateDefinition(templateDefinition);
+                log.info("Found referenced template definition: " + templateDefinition.getFileDescriptor());
+            } else {
+                assignMatchingTemplateDefinitionByFilename(template);
+            }
+        }
+    }
+
+    /**
+     * Tries to find a template definition matching the file name of template (same filename and path without file extension).
+     * Any matching template definition will be assigned.
+     * @param template
+     * @see FileDescriptor#matches(FileDescriptor)
+     */
+    public void assignMatchingTemplateDefinitionByFilename(Template template) {
+        FileDescriptor fileDescriptor = template.getFileDescriptor();
+        for (TemplateDefinition templateDefinition : getTemplateDefinitionsHandler().getItems()) {
+            if (fileDescriptor.matches(templateDefinition.getFileDescriptor())) {
+                template.assignTemplateDefinition(templateDefinition);
+                log.info("Found matching template definition: " + templateDefinition.getFileDescriptor().getFilename());
+                break;
+            }
+        }
     }
 
     public Collection<TemplateDefinition> getTemplateDefinitions() {
@@ -126,9 +180,14 @@ public class DirectoryScanner {
         return directoryWatcher.getRootDir();
     }
 
-    private void checkAndRefreshAllItems() {
+    private synchronized void checkAndRefreshAllItems() {
+        long now = System.currentTimeMillis();
+        if (now < lastRefresh + MAX_REFRESH_RATE_MILLIS) {
+            return;
+        }
         templateDefinitionsHandler.checkAndRefreshItems();
         templatesHandler.checkAndRefreshItems();
+        lastRefresh = now;
     }
 
     public AbstractDirectoryWatcher getDirectoryWatcher() {

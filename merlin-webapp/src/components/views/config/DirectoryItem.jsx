@@ -76,7 +76,7 @@ class DirectoryItem extends React.Component {
                     <FormButton onClick={this.browseDirectory}
                             hint="Call rest service for browsing local directories">Browse
                     </FormButton>
-                    <FormButton onClick={this.onClickRemove} bsStyle="danger"
+                    <FormButton onClick={this.onClickRemove}
                             hint="Remove this item"><IconRemove />
                     </FormButton>
                 </FormField>

@@ -8,6 +8,7 @@ import TemplateDefinition from './templatedefinition/TemplateDefinition';
 import TemplateRunTab from './TemplateRunTab';
 import TemplateSerialRunTab from './TemplateSerialRunTab';
 import TemplateStatistics from './TemplateStatistics';
+import LogEmbeddedPanel from "../logging/LogEmbeddedPanel";
 
 class TemplateView extends React.Component {
 
@@ -57,11 +58,11 @@ class TemplateView extends React.Component {
             </Alert>
         }
         const template = this.state.template;
-        let templateId = template.id ? template.id : template.filename;
+        let templateId = template.id ? template.id : template.fileDescriptor.filename;
         return (
             <React.Fragment>
                 <PageHeader>
-                    Template: {templateId}
+                    {templateId}
                 </PageHeader>
                 <Nav tabs>
                     <NavLink
@@ -89,6 +90,12 @@ class TemplateView extends React.Component {
                     >
                         Serial run
                     </NavLink>
+                    <NavLink
+                        className={classNames({active: this.state.activeTab === '5'})}
+                        onClick={this.toggleTab('5')}
+                    >
+                        Logging
+                    </NavLink>
                 </Nav>
                 <TabContent activeTab={this.state.activeTab}>
                     <TabPane tabId={'1'}>
@@ -113,27 +120,40 @@ class TemplateView extends React.Component {
                     </TabPane>
                     {this.state.template.templateDefinition ?
                         <TabPane tabId={'2'}>
-                            <TemplateDefinition
-                                match={{
-                                    params: {
-                                        primaryKey: this.state.template.templateDefinition.fileDescriptor.primaryKey
-                                    }
-                                }}
-                            />
+                            <div className="card border-secondary mb-3">
+                                <div className="card-body">
+                                    <TemplateDefinition hidePageHeader={'true'}
+                                        match={{
+                                            params: {
+                                                primaryKey: this.state.template.templateDefinition.fileDescriptor.primaryKey
+                                            }
+                                        }}
+                                    />
+                                </div>
+                            </div>
                         </TabPane> : undefined}
                     <TabPane tabId={'3'}>
                         <TemplateRunTab
                             primaryKey={this.state.primaryKey}
                             templateDefinitionId={this.state.template.templateDefinition ?
                                 this.state.template.templateDefinition.fileDescriptor.primaryKey : ''}
-                            variableDefinitions={this.state.template.templateDefinition ?
-                                this.state.template.templateDefinition.variableDefinitions :
-                                this.state.template.statistics.usedVariables}
+                            templateVariables={this.state.template.statistics.usedVariables}
+                            definitionVariables={this.state.template.templateDefinition ?
+                                this.state.template.templateDefinition.variableDefinitions : undefined}
+                            definitionDependentVariables={this.state.template.templateDefinition ?
+                                this.state.template.templateDefinition.dependentVariableDefinitions : undefined}
                         />
                     </TabPane>
                     <TabPane tabId={'4'}>
                         <TemplateSerialRunTab
                             primaryKey={this.state.primaryKey}
+                        />
+                    </TabPane>
+                    <TabPane tabId={'5'}>
+                        <LogEmbeddedPanel
+                            mdcTemplatePk={this.state.primaryKey}
+                            mdcTemplateDefinitionPk={this.state.template.templateDefinition ?
+                                this.state.template.templateDefinition.primaryKey : null}
                         />
                     </TabPane>
                 </TabContent>

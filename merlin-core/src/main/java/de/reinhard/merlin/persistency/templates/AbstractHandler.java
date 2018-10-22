@@ -1,5 +1,7 @@
 package de.reinhard.merlin.persistency.templates;
 
+import de.reinhard.merlin.logging.MDCHandler;
+import de.reinhard.merlin.logging.MDCKey;
 import de.reinhard.merlin.persistency.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +14,7 @@ import java.util.*;
  */
 abstract class AbstractHandler<T extends FileDescriptorInterface> {
     private Logger log = LoggerFactory.getLogger(AbstractHandler.class);
+    private static final int MAX_REFRESH_RATE_MILLIS = 5000; // Refresh only every 5 seconds.
 
     private PersistencyInterface persistency = PersistencyRegistry.getDefault();
     private AbstractDirectoryWatcher directoryWatcher;
@@ -21,6 +24,7 @@ abstract class AbstractHandler<T extends FileDescriptorInterface> {
     protected String[] supportedFileExtensions;
     // Stores the time of last check. If unsupported files are modified, they will be checked for Merlin files again in walkTree.
     private Map<Path, Long> unsupportedFilesMap = new HashMap<>();
+    private long lastRefresh = -1;
 
     AbstractHandler(DirectoryScanner directoryScanner, String itemName) {
         this.directoryScanner = directoryScanner;
@@ -62,29 +66,45 @@ abstract class AbstractHandler<T extends FileDescriptorInterface> {
                 return;
             }
         }
-
         log.info("Scanning file '" + path + "'.");
+        //long currentMillis = System.currentTimeMillis();
         item = read(watchEntry, path, fileDescriptor);
+        //log.info("Time of scanning: " + (System.currentTimeMillis() - currentMillis)  + "ms.");
         if (item == null) {
             log.info("Skipping file '" + path.toAbsolutePath() + "', no " + itemName + " (OK).");
             watchEntry.setSupportedItem(false);
             unsupportedFilesMap.put(watchEntry.getPath(), now.getTime());
             return;
         }
-        if (item.getFileDescriptor() == null) {
-            item.setFileDescriptor(fileDescriptor);
+        MDCHandler mdc = new MDCHandler();
+        try {
+            mdc.put(getMDCKey(), fileDescriptor.getPrimaryKey());
+            if (item.getFileDescriptor() == null) {
+                item.setFileDescriptor(fileDescriptor);
+            }
+            watchEntry.setSupportedItem(true);
+            itemsMap.put(path, item);
+            log.info("Valid Merlin " + itemName + ": " + path.toAbsolutePath());
+        } finally {
+            mdc.restore();
         }
-        watchEntry.setSupportedItem(true);
-        itemsMap.put(path, item);
-        log.info("Valid Merlin " + itemName + ": " + path.toAbsolutePath());
     }
 
-    void checkAndRefreshItems() {
+    synchronized void checkAndRefreshItems() {
+        long now = System.currentTimeMillis();
+        if (now < lastRefresh + MAX_REFRESH_RATE_MILLIS) {
+            return;
+        }
         // Check for new, deleted and updated files:
         List<DirectoryWatchEntry> watchEntries = directoryWatcher.listWatchEntries(true, supportedFileExtensions);
         for (DirectoryWatchEntry watchEntry : watchEntries) {
             if (watchEntry.getType() == ModificationType.DELETED) {
-                // Do nothing for now.
+                Path path = directoryWatcher.getCanonicalPath(watchEntry);
+                if (persistency.exists(path)) {
+                    log.info(itemName + " undeleted: " + path);
+                    watchEntry.setType(ModificationType.CREATED);
+                    processItem(watchEntry);
+                }
             } else {
                 processItem(watchEntry);
             }
@@ -92,11 +112,20 @@ abstract class AbstractHandler<T extends FileDescriptorInterface> {
         Iterator<Map.Entry<Path, T>> it = itemsMap.entrySet().iterator();
         while (it.hasNext()) {
             Map.Entry<Path, T> entry = it.next();
-            if (directoryWatcher.isDeleted(entry.getValue().getFileDescriptor().getCanonicalPath())) {
-                log.debug("Remove deleted " + itemName + ": " + entry.getKey());
-                it.remove();
+            FileDescriptor fileDescriptor = entry.getValue().getFileDescriptor();
+            if (directoryWatcher.isDeleted(fileDescriptor.getCanonicalPath())) {
+                MDCHandler mdc = new MDCHandler();
+                try {
+                    entry.getValue();
+                    mdc.put(getMDCKey(), fileDescriptor.getPrimaryKey());
+                    log.debug("Remove deleted " + itemName + ": " + entry.getKey());
+                    it.remove();
+                } finally {
+                    mdc.restore();
+                }
             }
         }
+        lastRefresh = now;
     }
 
     Collection<T> getItems() {
@@ -122,4 +151,12 @@ abstract class AbstractHandler<T extends FileDescriptorInterface> {
     }
 
     abstract T read(DirectoryWatchEntry watchEntry, Path path, FileDescriptor fileDescriptor);
+
+    /**
+     * Each item action should be logged with the primary key of the item stored in the log's MDC.
+     * @return
+     */
+    protected MDCKey getMDCKey() {
+        return null;
+    }
 }

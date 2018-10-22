@@ -9,7 +9,6 @@ class Start extends React.Component {
         if (isDevelopmentMode()) {
             todo = <code><h3>ToDo</h3>
                 <ul>
-                    <li>Use Webpack for handling dev and production mode.</li>
                     <li>I18n: Get the translations from the server via json for labels etc. Do it globally or on every
                         single view?
                     </li>
@@ -22,6 +21,12 @@ class Start extends React.Component {
                     Start
                 </PageHeader>
                 {todo}
+                <code><h3>Known issues</h3>
+                    <ul>
+                        <li>Serienbrieffunktion ist noch nicht freigeschaltet.</li>
+                    </ul>
+                    Viel Spaß!
+                </code>
             </React.Fragment>
         );
     }

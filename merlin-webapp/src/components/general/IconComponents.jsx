@@ -1,8 +1,11 @@
 import React from 'react';
 import {
     faCheck,
+    faExclamationTriangle,
     faInfoCircle,
     faPlus,
+    faSortDown,
+    faSortUp,
     faSync,
     faTrash,
     faTimes,
@@ -53,12 +56,30 @@ function IconRemove() {
     );
 }
 
+function IconSortDown() {
+    return (
+        <FontAwesomeIcon icon={faSortDown}/>
+    );
+}
+
+function IconSortUp() {
+    return (
+        <FontAwesomeIcon icon={faSortUp}/>
+    );
+}
+
 function IconUpload() {
     return (
         <FontAwesomeIcon icon={faUpload}/>
     );
 }
 
+function IconWarning() {
+    return (
+        <FontAwesomeIcon icon={faExclamationTriangle}/>
+    );
+}
+
 export {
-    IconAdd, IconCancel, IconCheck, IconDanger, IconInfo, IconRefresh, IconRemove, IconUpload
+    IconAdd, IconCancel, IconCheck, IconDanger, IconInfo, IconRefresh, IconRemove, IconSortDown, IconSortUp, IconUpload, IconWarning
 };

@@ -27,6 +27,7 @@ import java.util.EnumSet;
 public class JettyServer {
     private Logger log = LoggerFactory.getLogger(JettyServer.class);
     private static final String HOST = "127.0.0.1";
+    private static final int MAX_PORT_NUMBER = 65535;
     private Server server;
     private int port;
 
@@ -127,7 +128,11 @@ public class JettyServer {
     }
 
     private int findFreePort(int startPort) {
-        int port = startPort;
+        int port = startPort > 0 ? startPort : 1;
+        if (port > MAX_PORT_NUMBER) {
+            log.warn("Port can't be higher than " + MAX_PORT_NUMBER + ": " + port + ". It's a possible mis-configuration.");
+            port = ConfigurationHandler.WEBSERVER_PORT_DEFAULT;
+        }
         for (int i = port; i < port + 10; i++) {
             try (ServerSocket socket = new ServerSocket()) {
                 socket.bind(new InetSocketAddress(HOST, i));

@@ -15,10 +15,7 @@ const changedFilter = (name, value) => ({
     payload: {name, value}
 });
 
-export const changeFilter = event => (dispatch, getState) => {
-    dispatch(changedFilter(event.target.name, event.target.value));
-    loadLog(dispatch, getState);
-};
+export const changeFilter = (name, value) => (dispatch) => dispatch(changedFilter(name, value));
 
 const loadLog = (dispatch, getState) => {
     dispatch(requestedLogReload());
@@ -29,6 +26,7 @@ const loadLog = (dispatch, getState) => {
         search: filters.search,
         treshold: filters.threshold,
         maxSize: filters.maxSize,
+        showStackTrace: filters.showStackTrace,
         ascendingOrder: filters.ascendingOrder,
         // TODO ADD lastReceivedOrderNumber
     }), {

@@ -2,6 +2,9 @@ package de.reinhard.merlin.app.javafx;
 
 import de.reinhard.merlin.app.Version;
 import de.reinhard.merlin.app.jetty.JettyServer;
+import de.reinhard.merlin.app.storage.Storage;
+import de.reinhard.merlin.app.updater.AppUpdater;
+import de.reinhard.merlin.app.updater.UpdateInfo;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -14,6 +17,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
@@ -27,6 +31,19 @@ public class Main extends Application {
         Version version = Version.getInstance();
         log.info("Starting " + version.getAppName() + " " + version.getVersion() + ", build time: "
                 + version.getBuildDate() + " (UTC: " + version.getBuildDateUTC() + "), mode: " + RunningMode.getMode());
+        log.info("Current working directory: " + new File(".").getAbsolutePath());
+        log.info("Using Java version: " + System.getProperty("java.version"));
+        try {
+            if (!RunningMode.isDevelopmentMode()) {
+                // No update mechanism in development mode.
+                AppUpdater.getInstance().checkUpdate();
+            } else {
+                UpdateInfo.getInstance().setDevelopmentTestData(); // Only for testing.
+            }
+        } catch (Exception ex) {
+            // Don't stop application due to failed update check.
+            log.error("Exception while checking update: " + ex.getMessage(), ex);
+        }
         launch(args);
     }
 
@@ -73,6 +90,12 @@ public class Main extends Application {
         server = new JettyServer();
         server.start();
         RunningMode.setRunning(true);
+        try {
+            Storage.getInstance().onStartup();
+        } catch (Exception ex) {
+            // Don't stop application due to failed update check.
+            log.error("Error while loading storage data: "+ ex.getMessage(), ex);
+        }
     }
 
     @Override

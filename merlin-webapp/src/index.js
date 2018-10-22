@@ -11,9 +11,21 @@ import reducers from './reducers';
 
 let storedState = window.localStorage.getItem('state');
 
+if (storedState) {
+    storedState = JSON.parse(storedState);
+
+    if (storedState.version) {
+        storedState.version.loading = false;
+    }
+
+    if (storedState.log) {
+        storedState.log.loading = false;
+    }
+}
+
 const store = createStore(
     reducers,
-    storedState ? JSON.parse(storedState) : undefined,
+    storedState || undefined,
     applyMiddleware(thunk)
 );
 

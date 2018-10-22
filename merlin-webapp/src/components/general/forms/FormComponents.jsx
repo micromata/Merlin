@@ -85,12 +85,28 @@ FormInput.defaultProps = {
 };
 
 
-function FormSelect(props) {
+function FormSelect({children, id, value, name, onChange, hint, hintPlacement}) {
+    let tooltip = null;
+    if (!id) {
+        id = `id-${name}`;
+    }
+    if (hint) {
+        tooltip = <UncontrolledTooltip placement={hintPlacement} target={id}>
+                {hint}
+            </UncontrolledTooltip>;
+    }
     return (
-        <select
-            {...props}
-            className={'custom-select form-control form-control-sm mr-1'}
-        />
+        <React.Fragment>
+            <select id={id}
+                    name={name}
+                    value={value}
+                    onChange={onChange}
+                className={'custom-select form-control form-control-sm mr-1'}
+            >
+                {children}
+            </select>
+            {tooltip}
+        </React.Fragment>
     );
 }
 
@@ -99,6 +115,8 @@ FormSelect.propTypes = {
     value: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool]),
     name: PropTypes.string,
     onChange: PropTypes.func,
+    hint: PropTypes.string,
+    hintPlacement: PropTypes.oneOf(['right', 'top']),
     children: PropTypes.node
 };
 
@@ -106,7 +124,9 @@ FormSelect.defaultProps = {
     id: null,
     value: null,
     name: '',
+    hint: '',
     onChange: null,
+    hintPlacement: 'top',
     children: null
 };
 
@@ -123,21 +143,22 @@ function FormCheckbox({id, name, checked, onChange, hint, label}) {
             </UncontrolledTooltip></React.Fragment>;
     }
     let labelNode = <label
-            className={'custom-control-label'}
-            htmlFor={id}>
-            {label}
-        </label>;
+        className={'custom-control-label'}
+        htmlFor={id}>
+        {label}
+    </label>;
     return (
-        <div class="custom-control custom-checkbox">
-    <input class="custom-control-input" id={id} type="checkbox"
-                id={id}
-                name={name}
-                checked={checked}
-                onChange={onChange}
-     />
-     {labelNode}
+        <div className="custom-control custom-checkbox">
+            <input className="custom-control-input"
+                   type="checkbox"
+                   id={id}
+                   name={name}
+                   checked={checked}
+                   onChange={onChange}
+            />
+            {labelNode}
             {tooltip}
-  </div>
+        </div>
     );
 }
 
@@ -313,7 +334,7 @@ function FormButton({bsStyle = 'default', type, onClick, hint, disabled, childre
     return (
         <button
             type={type}
-            className={`btn btn-outline-primary btn-${bsStyle}`}
+            className={`btn btn-${bsStyle}`}
             onClick={onClick}
             title={hint}
             disabled={disabled}
@@ -324,7 +345,7 @@ function FormButton({bsStyle = 'default', type, onClick, hint, disabled, childre
 }
 
 FormButton.propTypes = {
-    bsStyle: PropTypes.oneOf(['default', 'danger', 'success', null]),
+    bsStyle: PropTypes.oneOf(['primary', 'outline-primary', null]),
     type: PropTypes.string,
     onClick: PropTypes.func,
     hint: PropTypes.string,
@@ -332,7 +353,7 @@ FormButton.propTypes = {
     children: PropTypes.node
 };
 FormButton.defaultProps = {
-    bsStyle: 'default',
+    bsStyle: 'outline-primary',
     type: 'button',
     onClick: null,
     hint: '',

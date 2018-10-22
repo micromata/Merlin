@@ -33,6 +33,6 @@ export const formatDateTime = (millis) => {
 }
 
 /* Checks if a given array is definied and is not empty. */
-export const notEmpty = (array) => {
+export const arrayNotEmpty = (array) => {
     return array && array.length;
 }

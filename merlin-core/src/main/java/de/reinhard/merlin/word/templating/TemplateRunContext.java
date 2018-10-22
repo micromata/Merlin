@@ -4,6 +4,7 @@ import de.reinhard.merlin.CoreI18n;
 import de.reinhard.merlin.I18n;
 import de.reinhard.merlin.excel.ExcelCell;
 import de.reinhard.merlin.excel.ExcelWorkbook;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.util.DateFormatConverter;
@@ -89,14 +90,17 @@ public class TemplateRunContext {
                     return ((Number) value).intValue();
                 }
                 if (value instanceof String) {
+                    if (StringUtils.isBlank((String)value)) {
+                        return null;
+                    }
                     try {
                         return new Integer((String) value);
                     } catch (NumberFormatException ex) {
-                        log.error("Can't parse integer '" + value + "': " + ex.getMessage(), ex);
-                        return 0;
+                        log.warn("Can't parse integer '" + value + "': " + ex.getMessage());
+                        return null;
                     }
                 }
-                log.error("Can't get integer from type " + value.getClass().getCanonicalName() + ": " + value);
+                log.warn("Can't get integer from type " + value.getClass().getCanonicalName() + ": " + value);
                 return 0;
             case FLOAT:
                 if (value instanceof Number) {
@@ -107,11 +111,11 @@ public class TemplateRunContext {
                         return new Double((String) value);
                     } catch (NumberFormatException ex) {
                         log.error("Can't parse float '" + value + "': " + ex.getMessage(), ex);
-                        return 0.0;
+                        return null;
                     }
                 }
                 log.error("Can't get float from type " + value.getClass().getCanonicalName() + ": " + value);
-                return 0.0;
+                return null;
             case STRING:
                 return value.toString();
             case DATE:

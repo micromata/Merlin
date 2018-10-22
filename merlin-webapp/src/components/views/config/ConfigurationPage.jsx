@@ -11,7 +11,7 @@ import {
     FormField, FormButton, FormSelect, FormCheckbox
 } from "../../general/forms/FormComponents";
 import {getRestServiceUrl, isDevelopmentMode} from "../../../utilities/global";
-import {IconDanger} from '../../general/IconComponents';
+import {IconDanger, IconWarning} from '../../general/IconComponents';
 
 
 var directoryItems = [];
@@ -137,7 +137,7 @@ class ConfigForm extends React.Component {
     }
 
     onCancel() {
-        this.setRedirect();
+        this.setRedirect()
     }
 
     addDirectoryItem() {
@@ -180,7 +180,7 @@ class ConfigForm extends React.Component {
                 <FormLabelField>
                     <Button className={'btn-outline-primary'}
                             onClick={() => this.setState({expertSettingsOpen: !this.state.expertSettingsOpen})}>
-                        <IconDanger /> For experts only
+                        <IconWarning /> For experts only
                     </Button>
                 </FormLabelField>
                 <Collapse isOpen={this.state.expertSettingsOpen}>
@@ -191,15 +191,15 @@ class ConfigForm extends React.Component {
                                              onChange={this.handleTextChange}
                                              placeholder="Enter port"/>
                         <FormLabelField>
-                            <FormButton onClick={this.onResetConfiguration} bsStyle="danger"
-                                        hint="Reset factory settings.">Reset
+                            <FormButton onClick={this.onResetConfiguration}
+                                        hint="Reset factory settings."> <IconDanger /> Reset
                             </FormButton>
                         </FormLabelField>
                     </FormFieldset>
                 </Collapse>
                 <FormGroup>
                     <FormField length={12}>
-                        <FormButton onClick={this.onCancel} bsStyle="danger"
+                        <FormButton onClick={this.onCancel}
                                     hint="Discard changes and go to Start page.">Cancel
                         </FormButton>
                         <FormButton onClick={this.onSave} bsStyle="primary"
@@ -212,7 +212,7 @@ class ConfigForm extends React.Component {
     }
 }
 
-class Configuration extends React.Component {
+class ConfigurationPage extends React.Component {
 
     render() {
         let todo = '';
@@ -233,5 +233,5 @@ class Configuration extends React.Component {
     }
 }
 
-export default Configuration;
+export default ConfigurationPage;
 

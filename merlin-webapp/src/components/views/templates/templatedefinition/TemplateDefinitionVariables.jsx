@@ -4,6 +4,8 @@ import {
     Table
 } from 'reactstrap';
 import EditableTextField from "../../../general/forms/EditableTextField"
+import {arrayNotEmpty} from "../../../../utilities/global";
+import {FormCheckbox} from "../../../general/forms/FormComponents";
 
 class TemplateDefinitionVariables extends React.Component {
 
@@ -13,6 +15,13 @@ class TemplateDefinitionVariables extends React.Component {
         }
         const rows = [];
         this.props.definition.variableDefinitions.forEach((variable, index) => {
+            let range = '';
+            if (variable.minimumValue || variable.maximumValue) {
+                range = `${variable.minimumValue}-${variable.maximumValue}`;
+            } else if (arrayNotEmpty(variable.allowedValuesList)) {
+                range = variable.allowedValuesList.join(', ');
+            }
+
             rows.push(
                 <tr key={variable.name}>
                     <td>
@@ -25,16 +34,18 @@ class TemplateDefinitionVariables extends React.Component {
                     </td>
                     <td>{variable.type}</td>
                     <td style={{textAlign: 'center'}}>
-                        <input type="checkbox" checked={variable.required}
+                        <FormCheckbox checked={variable.required}
                                name={'required'}
                                onChange={(event) => this.props.handleStateChange(event, index)}/>
                     </td>
                     <td style={{textAlign: 'center'}}>
-                        <input type="checkbox" checked={variable.unique}
+                        <FormCheckbox checked={variable.unique}
                                name={'unique'}
                                onChange={(event) => this.props.handleStateChange(event, index)}/>
                     </td>
-                    <td>{variable.minimum}-{variable.maximum}</td>
+                    <td>
+                        {range}
+                    </td>
                     <td>{variable.description}</td>
                 </tr>
             );

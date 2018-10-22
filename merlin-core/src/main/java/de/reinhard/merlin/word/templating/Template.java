@@ -19,6 +19,7 @@ public class Template implements Cloneable, FileDescriptorInterface {
     private TemplateDefinition templateDefinition;
     private String templateDefinitionId;
     private FileDescriptor fileDescriptor;
+    private String templateDefinitionReferenceId;
 
     public Template() {
         statistics = new TemplateStatistics(this);
@@ -53,6 +54,19 @@ public class Template implements Cloneable, FileDescriptorInterface {
     public void assignTemplateDefinition(TemplateDefinition templateDefinition) {
         setTemplateDefinition(templateDefinition);
         updateStatistics();
+    }
+
+    /**
+     *
+     * @return The template definition reference if defined in Word document like <tt>${templateDefinition.refid = "..."}</tt>,
+     * otherwise null.
+     */
+    public String getTemplateDefinitionReferenceId() {
+        return templateDefinitionReferenceId;
+    }
+
+    public void setTemplateDefinitionReferenceId(String templateDefinitionReferenceId) {
+        this.templateDefinitionReferenceId = templateDefinitionReferenceId;
     }
 
     /**
@@ -122,8 +136,17 @@ public class Template implements Cloneable, FileDescriptorInterface {
         } catch (CloneNotSupportedException ex) {
             throw new UnsupportedOperationException(this.getClass().getCanonicalName() + " isn't cloneable: " + ex.getMessage(), ex);
         }
-        template.fileDescriptor = (FileDescriptor)this.fileDescriptor.clone();
-        template.statistics = (TemplateStatistics)this.statistics.clone();
+        template.fileDescriptor = (FileDescriptor) this.fileDescriptor.clone();
+        template.statistics = (TemplateStatistics) this.statistics.clone();
         return template;
+    }
+
+    /**
+     *
+     * @return The primary key served by the file descriptor.
+     * @see FileDescriptor#getPrimaryKey()
+     */
+    public String getPrimaryKey() {
+        return fileDescriptor != null ? fileDescriptor.getPrimaryKey() : null;
     }
 }

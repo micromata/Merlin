@@ -206,7 +206,7 @@ public class FilesServiceRest {
      * @return null, if the local app (JavaFX) is running and the request is from localhost. Otherwise message, why local
      * service isn't available.
      */
-    private String checkLocalDesktopAvailable(HttpServletRequest requestContext) {
+    static String checkLocalDesktopAvailable(HttpServletRequest requestContext) {
         if (RunningMode.isRunning() == false) {
             return "Service unavailable. No desktop app on localhost available.";
         }

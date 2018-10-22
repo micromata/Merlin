@@ -7,14 +7,16 @@
     <groupId>de.reinhard</groupId>
     <artifactId>merlin-parent</artifactId>
     <packaging>pom</packaging>
-    <version>1.0</version>
+    <version>0.3</version>
     <name>Multi Chapter Merlin Parent Project</name>
-
+    <properties>
+        <merlin.version>0.3</merlin.version>
+    </properties>
     <modules>
-        <module>../merlin-app</module>
-        <module>../merlin-core</module>
-        <module>../merlin-velocity</module>
-        <module>../merlin-smarthome</module>
+        <module>merlin-app</module>
+        <module>merlin-core</module>
+        <module>merlin-velocity</module>
+        <module>merlin-smarthome</module>
     </modules>
 
     <build>
