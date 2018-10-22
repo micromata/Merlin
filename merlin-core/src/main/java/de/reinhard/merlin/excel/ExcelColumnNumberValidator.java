@@ -42,9 +42,9 @@ public class ExcelColumnNumberValidator extends ExcelColumnValidator {
             return null; // Do not check empty cells. If required, it's done by super.
         }
         Double val = null;
-        if (cell.getCellTypeEnum() == CellType.NUMERIC) {
+        if (cell.getCellType() == CellType.NUMERIC) {
             val = cell.getNumericCellValue();
-        } else if (tryToConvertStringToNumber && cell.getCellTypeEnum() == CellType.STRING) {
+        } else if (tryToConvertStringToNumber && cell.getCellType() == CellType.STRING) {
             val = Converter.createDouble(cell.getStringCellValue());
         }
         if (val == null) {

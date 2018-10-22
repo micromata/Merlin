@@ -14,7 +14,7 @@ public class PoiHelper {
         if (cell == null) {
             return null;
         }
-        if (cell.getCellTypeEnum() == CellType.STRING) {
+        if (cell.getCellType() == CellType.STRING) {
             return cell.getStringCellValue();
         }
         DataFormatter formatter = new DataFormatter();
@@ -25,7 +25,7 @@ public class PoiHelper {
         if (cell == null) {
             return null;
         }
-        switch (cell.getCellTypeEnum()) {
+        switch (cell.getCellType()) {
             case BOOLEAN:
                 return cell.getBooleanCellValue();
             case NUMERIC:
@@ -38,7 +38,7 @@ public class PoiHelper {
             case BLANK:
                 return null;
             default:
-                log.warn("Unsupported Excel cell type: " + cell.getCellTypeEnum());
+                log.warn("Unsupported Excel cell type: " + cell.getCellType());
                 return getValueAsString(cell);
         }
     }
@@ -47,10 +47,10 @@ public class PoiHelper {
         if (cell == null) {
             return true;
         }
-        if (cell.getCellTypeEnum() == CellType.BLANK) {
+        if (cell.getCellType() == CellType.BLANK) {
             return true;
         }
-        if (cell.getCellTypeEnum() == CellType.STRING && cell.getStringCellValue().trim().isEmpty()) {
+        if (cell.getCellType() == CellType.STRING && cell.getStringCellValue().trim().isEmpty()) {
             return true;
         }
         return false;
