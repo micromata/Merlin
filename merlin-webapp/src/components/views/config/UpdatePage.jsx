@@ -82,7 +82,7 @@ class UpdatePage extends React.Component {
                     </tr>
                     <tr>
                         <th>Installer url</th>
-                        <td><a href={this.state.installerUrl}>{this.state.installerUrl}</a></td>
+                        <td><a href={this.state.installerUrl} target={'_new'}>{this.state.installerUrl}</a></td>
                     </tr>
                     <tr>
                         <th>File size</th>
