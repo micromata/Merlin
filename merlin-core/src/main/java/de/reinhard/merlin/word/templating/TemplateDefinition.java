@@ -146,7 +146,8 @@ public class TemplateDefinition implements Cloneable, FileDescriptorInterface {
      */
     public VariableDefinition getVariableDefinition(String variableName, boolean logErrors) {
         if (variableDefinitions == null) {
-            log.error("Variable named '" + variableName + "' not found in template definition '" + getId() + "'. No variables defined.");
+            if (logErrors)
+                log.error("Variable named '" + variableName + "' not found in template definition '" + getId() + "'. No variables defined.");
             return null;
         }
         for (VariableDefinition variableDefinition : variableDefinitions) {
@@ -156,6 +157,28 @@ public class TemplateDefinition implements Cloneable, FileDescriptorInterface {
         }
         if (logErrors) {
             log.error("Variable named '" + variableName + "' not found in template definition '" + getId() + "'.");
+        }
+        return null;
+    }
+
+    /**
+     * @param variableName
+     * @param logErrors    If true and a variable definition isn't found, an error message will be logged. Default is false.
+     * @return
+     */
+    public DependentVariableDefinition getDependentVariableDefinition(String variableName, boolean logErrors) {
+        if (dependentVariableDefinitions == null) {
+            if (logErrors)
+                log.error("Dependent variable named '" + variableName + "' not found in template definition '" + getId() + "'. No variables defined.");
+            return null;
+        }
+        for (DependentVariableDefinition variableDefinition : dependentVariableDefinitions) {
+            if (variableName.trim().equals(variableDefinition.getName())) {
+                return variableDefinition;
+            }
+        }
+        if (logErrors) {
+            log.error("Dependent variable named '" + variableName + "' not found in template definition '" + getId() + "'.");
         }
         return null;
     }
