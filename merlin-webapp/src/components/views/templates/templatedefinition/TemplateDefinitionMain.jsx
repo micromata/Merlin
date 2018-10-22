@@ -71,8 +71,12 @@ class TemplateDefinitionMain extends React.Component {
                 </tr>
                 <tr>
                     <td>Path</td>
-                    <td><LinkFile primaryKey={this.props.definition.fileDescriptor.primaryKey}
+                    <td><LinkFile primaryKey={this.props.definition.primaryKey}
                                   filepath={this.props.definition.fileDescriptor.canonicalPath}/></td>
+                </tr>
+                <tr>
+                    <td>Primary Key</td>
+                    <td>{this.props.definition.primaryKey}</td>
                 </tr>
                 </tbody>
             </Table>
