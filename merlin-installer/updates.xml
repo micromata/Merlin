@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<updateDescriptor baseUrl="https://github.com/kreinhard/merlin/releases/latest/">
-  <entry targetMediaFileId="61" updatableVersionMin="" updatableVersionMax="" fileName="merlin_macos_0_3.dmg" newVersion="0.3" newMediaFileId="61" fileSize="73171079" md5Sum="60dccd74e254bf2427e54ee7ca9399eb" bundledJre="macosx-amd64-1.8.0_192" archive="false" singleBundle="true">
+<updateDescriptor baseUrl="https://github.com/kreinhard/merlin/releases/download/v0.3/">
+  <entry targetMediaFileId="61" updatableVersionMin="" updatableVersionMax="" fileName="merlin_macos_0_3.dmg" newVersion="0.3" newMediaFileId="61" fileSize="73171079" md5Sum="73de5aac1fc4eb8274eef7e5b4b01843" bundledJre="macosx-amd64-1.8.0_192" archive="false" singleBundle="true">
     <comment language="en" />
     <comment language="de" />
   </entry>
