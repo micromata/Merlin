@@ -14,7 +14,7 @@ import TemplateDefinitionVariables from "./TemplateDefinitionVariables";
 import TemplateDefinitionDependentVariables from "./TemplateDefinitionDependentVariables";
 import LogEmbeddedPanel from "../../logging/LogEmbeddedPanel";
 
-class TemplateDefinition extends React.Component {
+class TemplateDefinitionPage extends React.Component {
     componentDidMount = () => {
         this.fetchTemplateDefinition();
     };
@@ -188,4 +188,4 @@ class TemplateDefinition extends React.Component {
     }
 }
 
-export default TemplateDefinition;
+export default TemplateDefinitionPage;
