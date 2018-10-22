@@ -1,21 +1,19 @@
 package de.reinhard.merlin.word.templating;
 
-import de.reinhard.merlin.persistency.FileDescriptor;
-import de.reinhard.merlin.persistency.FileDescriptorInterface;
+import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SerialData implements FileDescriptorInterface {
+public class SerialData {
     private static Logger log = LoggerFactory.getLogger(SerialData.class);
 
     private List<SerialDataEntry> entries = new ArrayList<>();
     private String filenamePattern;
-    private String templateCanonicalPath;
-    private String templateDefinitionId;
-    private FileDescriptor fileDescriptor;
+    private Template template;
+    private TemplateDefinition templateDefinition;
 
     public SerialData() {
     }
@@ -40,27 +38,29 @@ public class SerialData implements FileDescriptorInterface {
         this.filenamePattern = filenamePattern;
     }
 
-    public String getTemplateCanonicalPath() {
-        return templateCanonicalPath;
+    public Template getTemplate() {
+        return template;
     }
 
-    public void setTemplateCanonicalPath(String templateCanonicalPath) {
-        this.templateCanonicalPath = templateCanonicalPath;
+    public void setTemplate(Template template) {
+        this.template = template;
     }
 
-    public String getTemplateDefinitionId() {
-        return templateDefinitionId;
+    public TemplateDefinition getTemplateDefinition() {
+        return templateDefinition;
     }
 
-    public void setTemplateDefinitionId(String templateDefinitionId) {
-        this.templateDefinitionId = templateDefinitionId;
+    public void setTemplateDefinition(TemplateDefinition templateDefinition) {
+        this.templateDefinition = templateDefinition;
     }
 
-    public FileDescriptor getFileDescriptor() {
-        return fileDescriptor;
-    }
-
-    public void setFileDescriptor(FileDescriptor fileDescriptor) {
-        this.fileDescriptor = fileDescriptor;
+    /**
+     * @return Filename with suffix '-serial.xlsx' and the name base name as the template file.
+     */
+    public String createFilename() {
+        if (template == null) {
+            return "serial.xlsx";
+        }
+        return FilenameUtils.getBaseName(template.getFileDescriptor().getFilename()) + "-serial.xlsx";
     }
 }
