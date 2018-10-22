@@ -83,6 +83,7 @@ public class WordDocument implements AutoCloseable {
             if (inputStream != null) {
                 inputStream.close();
             }
+            document.close();
         } catch (final IOException ioe) {
             // ignore
         }
