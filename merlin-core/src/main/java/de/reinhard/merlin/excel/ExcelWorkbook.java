@@ -18,7 +18,7 @@ import java.util.Map;
  * Wraps and enhances a POI workbook.
  */
 public class ExcelWorkbook implements AutoCloseable {
-    private Logger log = LoggerFactory.getLogger(ExcelWorkbook.class);
+    private static Logger log = LoggerFactory.getLogger(ExcelWorkbook.class);
 
     private Workbook workbook;
     private List<ExcelSheet> sheetList;
@@ -27,12 +27,13 @@ public class ExcelWorkbook implements AutoCloseable {
     private InputStream inputStream;
 
     public static ExcelWorkbook create(Path path) {
-        File file = PersistencyRegistry.getDefault().getFile(path);
-        if (file != null) {
-            return new ExcelWorkbook(file);
+        InputStream inputStream = PersistencyRegistry.getDefault().getInputStream(path);
+        if (inputStream == null) {
+            log.error("Cam't get input stream for path: " + path.toAbsolutePath());
+            return null;
         }
         String filename = path.getFileName().toString();
-        return new ExcelWorkbook(PersistencyRegistry.getDefault().getInputStream(path), filename);
+        return new ExcelWorkbook(inputStream, filename);
     }
 
 
@@ -54,9 +55,8 @@ public class ExcelWorkbook implements AutoCloseable {
     }
 
     /**
-     *
      * @param inputStream
-     * @param filename Only for logging purposes if any error occurs.
+     * @param filename    Only for logging purposes if any error occurs.
      */
     public ExcelWorkbook(InputStream inputStream, String filename) {
         this.inputStream = inputStream;
