@@ -48,7 +48,7 @@ public class TemplateSerialRunnerRest {
             if (StringUtils.isNotBlank(templateDefinitionPrimaryKey)) {
                 templateDefinition = Storage.getInstance().getTemplateDefinition(templateDefinitionPrimaryKey);
                 if (templateDefinition == null) {
-                    log.error("Template with primary key or id '" + templateDefinitionPrimaryKey + "' not found.");
+                    log.error("Template definition with primary key or id '" + templateDefinitionPrimaryKey + "' not found.");
                 } else {
                     mdc.put(MDCKey.TEMPLATE_DEFINITION_PK, templateDefinitionPrimaryKey);
                 }
