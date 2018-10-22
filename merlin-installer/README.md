@@ -18,6 +18,6 @@
    4. Publish release button (after uploading is finished).
    5. Testing
 9. Enable update mechanism
-   1. `cd merlin`
+   1. `cd ..` (go to merlin top dir.)
    2. `cp ../Install4j/Merlin/updates.xml merlin-installer/`
    3. Commit and push.
