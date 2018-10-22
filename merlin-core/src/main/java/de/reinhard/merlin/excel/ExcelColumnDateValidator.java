@@ -35,7 +35,7 @@ public class ExcelColumnDateValidator extends ExcelColumnValidator {
             return null; // Do not check empty cells. If required, it's done by super.
         }
         boolean isDateFormatted = false;
-        if (cell.getCellTypeEnum() == CellType.NUMERIC) {
+        if (cell.getCellType() == CellType.NUMERIC) {
             try {
                 isDateFormatted = DateUtil.isCellDateFormatted(cell);
             } catch (IllegalStateException ex) {
