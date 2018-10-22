@@ -1,6 +1,7 @@
 import React from 'react';
 import {
     faCheck,
+    faDownload,
     faExclamationTriangle,
     faInfoCircle,
     faPlus,
@@ -35,6 +36,12 @@ function IconCheck() {
 function IconDanger() {
     return (
         <FontAwesomeIcon icon={faSkullCrossbones}/>
+    );
+}
+
+function IconDownload() {
+    return (
+        <FontAwesomeIcon icon={faDownload}/>
     );
 }
 
@@ -81,5 +88,5 @@ function IconWarning() {
 }
 
 export {
-    IconAdd, IconCancel, IconCheck, IconDanger, IconInfo, IconRefresh, IconRemove, IconSortDown, IconSortUp, IconUpload, IconWarning
+    IconAdd, IconCancel, IconCheck, IconDanger, IconDownload, IconInfo, IconRefresh, IconRemove, IconSortDown, IconSortUp, IconUpload, IconWarning
 };
