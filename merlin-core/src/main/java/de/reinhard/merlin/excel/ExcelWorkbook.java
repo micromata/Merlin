@@ -51,9 +51,6 @@ public class ExcelWorkbook implements AutoCloseable {
         } catch (IOException ex) {
             log.error("Couldn't open File '" + excelFile.getAbsolutePath() + "': " + ex.getMessage());
             throw new RuntimeException(ex);
-        } catch (InvalidFormatException ex) {
-            log.error("Unsupported file format '" + excelFile.getAbsolutePath() + "': " + ex.getMessage());
-            throw new RuntimeException(ex);
         }
     }
 
@@ -68,9 +65,6 @@ public class ExcelWorkbook implements AutoCloseable {
             workbook = WorkbookFactory.create(inputStream);
         } catch (IOException ex) {
             log.error("Couldn't open File '" + filename + "' from InputStream: " + ex.getMessage(), ex);
-            throw new RuntimeException(ex);
-        } catch (InvalidFormatException ex) {
-            log.error("Unsupported file format '" + filename + "' from InputStream: " + ex.getMessage(), ex);
             throw new RuntimeException(ex);
         }
     }
