@@ -1,7 +1,6 @@
 package de.reinhard.merlin.excel;
 
 import de.reinhard.merlin.persistency.PersistencyRegistry;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -163,6 +162,7 @@ public class ExcelWorkbook implements AutoCloseable {
             if (inputStream != null) {
                 inputStream.close();
             }
+            workbook.close();
         } catch (final IOException ioe) {
             // ignore
         }
