@@ -27,7 +27,8 @@ public class SerialDataExcelTest {
         template.getFileDescriptor().setDirectory(Definitions.OUTPUT_DIR.toPath()).setRelativePath(".").setFilename("ContractTemplate.doc");
         template.setTemplateDefinition(templateDefinition);
         SerialData origSerialData = createSerialData();
-        SerialDataExcelWriter writer = new SerialDataExcelWriter(origSerialData, template);
+        origSerialData.setTemplate(template);
+        SerialDataExcelWriter writer = new SerialDataExcelWriter(origSerialData);
         ExcelWorkbook workbook = writer.writeToWorkbook();
         File file = new File(Definitions.OUTPUT_DIR, "ContractSerialData.xlsx");
         log.info("Writing modified Excel file: " + file.getAbsolutePath());
@@ -36,9 +37,9 @@ public class SerialDataExcelTest {
         workbook = new ExcelWorkbook(file);
         SerialDataExcelReader reader = new SerialDataExcelReader();
         SerialData serialData = reader.readFromWorkbook(workbook, templateDefinition);
-        assertEquals(template.getFileDescriptor().getCanonicalPathString(), serialData.getTemplateCanonicalPath());
+        assertEquals(template.getFileDescriptor().getCanonicalPathString(), serialData.getTemplate().getPrimaryKey());
         assertEquals(origSerialData.getFilenamePattern(), serialData.getFilenamePattern());
-        assertEquals(templateDefinition.getId(), serialData.getTemplateDefinitionId());
+        assertEquals(templateDefinition.getId(), serialData.getTemplateDefinition().getPrimaryKey());
         assertEquals(origSerialData.getEntries().size(), serialData.getEntries().size());
         for (int i = 0; i < origSerialData.getEntries().size(); i++) {
             Map<String, Object> origMap = origSerialData.getEntries().get(i).getVariables();

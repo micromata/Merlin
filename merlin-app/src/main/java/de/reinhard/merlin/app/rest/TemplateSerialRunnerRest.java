@@ -1,11 +1,14 @@
 package de.reinhard.merlin.app.rest;
 
-import de.reinhard.merlin.app.json.JsonUtils;
 import de.reinhard.merlin.app.storage.Storage;
 import de.reinhard.merlin.excel.ExcelWorkbook;
+import de.reinhard.merlin.logging.MDCHandler;
+import de.reinhard.merlin.logging.MDCKey;
+import de.reinhard.merlin.word.templating.SerialData;
 import de.reinhard.merlin.word.templating.SerialDataExcelWriter;
 import de.reinhard.merlin.word.templating.Template;
 import de.reinhard.merlin.word.templating.TemplateDefinition;
+import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,58 +19,63 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.File;
-import java.io.FileOutputStream;
 
 @Path("/templates")
 public class TemplateSerialRunnerRest {
     private Logger log = LoggerFactory.getLogger(TemplateSerialRunnerRest.class);
 
     @GET
-    @Path("serial-run-excel-template")
+    @Path("get-serial-run-excel")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     /**
-     *
-     * @param templateCanonicalPath Canonical path of the template to run.
-     * @param templateDefinitionId Id or name of the template defintion (if exist)
-     * @see JsonUtils#toJson(Object, boolean)
+     * Generates a Excel file for filling out variables for a serial run for the given template and optional template definition.
+     * @param templatePrimaryKey Primary key of the template to run.
+     * @param templateDefinitionPrimaryKey Primary key of the template definition (if exist)
      */
-    public Response getExampleSerialRundata(@QueryParam("templateCanonicalPath") String templateCanonicalPath,
-                                            @QueryParam("templateDefinitionId") String templateDefinitionId) {
-        log.info("Getting Excel template for serial run: template=" + templateCanonicalPath + ", templateDefinition="
-                + templateDefinitionId);
+    public Response getExampleSerialRundata(@QueryParam("templatePrimaryKey") String templatePrimaryKey,
+                                            @QueryParam("templateDefinitionPrimaryKey") String templateDefinitionPrimaryKey) {
+        log.info("Getting Excel template for serial run: template=" + templatePrimaryKey + ", templateDefinition="
+                + templatePrimaryKey);
         Response response = null;
+        MDCHandler mdc = new MDCHandler();
         try {
-            Template template = Storage.getInstance().getTemplate(templateCanonicalPath);
+            mdc.put(MDCKey.TEMPLATE_PK, templatePrimaryKey);
+            Template template = Storage.getInstance().getTemplate(templatePrimaryKey);
             if (template == null) {
-                return RestUtils.get404Response(log, "Template with canonical path '" + templateCanonicalPath + "' not found.");
+                return RestUtils.get404Response(log, "Template with primary key '" + templatePrimaryKey + "' not found.");
             }
             TemplateDefinition templateDefinition = null;
-            if (StringUtils.isNotBlank(templateDefinitionId)) {
-                templateDefinition = Storage.getInstance().getTemplateDefinition(templateDefinitionId);
+            if (StringUtils.isNotBlank(templateDefinitionPrimaryKey)) {
+                templateDefinition = Storage.getInstance().getTemplateDefinition(templateDefinitionPrimaryKey);
                 if (templateDefinition == null) {
-                    log.error("Template with refid '" + templateDefinitionId + "' not found.");
+                    log.error("Template with primary key or id '" + templateDefinitionPrimaryKey + "' not found.");
+                } else {
+                    mdc.put(MDCKey.TEMPLATE_DEFINITION_PK, templateDefinitionPrimaryKey);
                 }
             }
-            SerialDataExcelWriter writer = new SerialDataExcelWriter(null, null);
-            ExcelWorkbook workbook = null;//writer.writeToWorkbook(templateDefinition, origSerialData);
-            File file = new File("ContractSerialData.xlsx");
-            log.info("Writing modified Excel file: " + file.getAbsolutePath());
-            workbook.getPOIWorkbook().write(new FileOutputStream(file));
+            SerialData serialData = new SerialData();
+            serialData.setTemplate(template);
+            serialData.setTemplateDefinition(templateDefinition);
+            SerialDataExcelWriter writer = new SerialDataExcelWriter(serialData);
+            ExcelWorkbook workbook = writer.writeToWorkbook();
 
-            String filename = "serial.xlsx";//runner.createFilename(file.getName(), data.getVariables());
-            Response.ResponseBuilder builder = Response.ok(null);//result.getAsByteArrayOutputStream().toByteArray());
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            workbook.getPOIWorkbook().write(bos);
+
+            String filename = serialData.createFilename();
+            Response.ResponseBuilder builder = Response.ok(bos.toByteArray());
             builder.header("Content-Disposition", "attachment; filename=" + filename);
             // Needed to get the Content-Disposition by client:
             builder.header("Access-Control-Expose-Headers", "Content-Disposition");
             response = builder.build();
-            //log.info("Downloading file '" + filename + "', length: " + file.length());
+            log.info("Downloading file '" + filename + "', length: " + bos.size());
             return response;
-        } catch (
-                Exception ex) {
-            String errorMsg = "Error while try to create Excel template for a serial run for template '" + templateCanonicalPath + "'.";
+        } catch (Exception ex) {
+            String errorMsg = "Error while try to create Excel serial run template.";
             log.error(errorMsg + " " + ex.getMessage(), ex);
             return RestUtils.get404Response(log, errorMsg);
+        } finally {
+            mdc.restore();
         }
     }
 }

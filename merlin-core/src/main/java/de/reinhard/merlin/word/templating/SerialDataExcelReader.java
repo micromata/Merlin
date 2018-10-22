@@ -38,7 +38,7 @@ public class SerialDataExcelReader {
             return false;
         }
         SerialData serialData = readConfigFromWorkbook();
-        if (serialData == null || serialData.getTemplateCanonicalPath() == null) {
+        if (serialData == null || serialData.getFilenamePattern() == null) {
             return false;
         }
         return true;
@@ -73,8 +73,8 @@ public class SerialDataExcelReader {
             }
         }
         PropertiesStorage props = excelConfigReader.readConfig(workbook);
-        serialData.setTemplateCanonicalPath(props.getConfigString("Template"));
-        serialData.setTemplateDefinitionId(props.getConfigString("TemplateDefinition"));
+        //serialData.setTemplatePrimaryKey(props.getConfigString("Template"));
+        //serialData.setTemplateDefinitionPrimaryKey(props.getConfigString("TemplateDefinition"));
         serialData.setFilenamePattern(props.getConfigString("FilenamePattern"));
         return serialData;
     }
