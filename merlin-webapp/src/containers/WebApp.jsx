@@ -13,9 +13,9 @@ import UpdatePage from '../components/views/config/UpdatePage';
 import FileUploadView from '../components/views/FileUpload';
 import RestServices from '../components/views/develop/RestServices';
 import {isDevelopmentMode} from '../utilities/global';
-import TemplateView from '../components/views/templates/TemplateView';
+import TemplatePage from '../components/views/templates/TemplatePage';
 import LogPage from '../components/views/logging/LogPage';
-import TemplateDefinition from '../components/views/templates/templatedefinition/TemplateDefinition';
+import TemplateDefinitionPage from '../components/views/templates/templatedefinition/TemplateDefinitionPage';
 import '../css/my-style.css';
 import Footer from '../components/views/footer/Footer';
 import {loadVersion} from '../actions';
@@ -65,8 +65,8 @@ class WebApp extends React.Component {
                                     />
                                 ))
                             }
-                            <Route path={'/templates/:primaryKey'} component={TemplateView}/>
-                            <Route path={'/templateDefinitions/:primaryKey'} component={TemplateDefinition}/>
+                            <Route path={'/templates/:primaryKey'} component={TemplatePage}/>
+                            <Route path={'/templateDefinitions/:primaryKey'} component={TemplateDefinitionPage}/>
                         </Switch>
                     </div>
                     <Footer versionInfo={this.props.version} />

@@ -4,13 +4,13 @@ import {formatDateTime, getRestServiceUrl} from '../../../utilities/global';
 import classNames from 'classnames';
 import {PageHeader} from '../../general/BootstrapComponents';
 import LinkFile from '../../general/LinkFile';
-import TemplateDefinition from './templatedefinition/TemplateDefinition';
+import TemplateDefinitionPage from './templatedefinition/TemplateDefinitionPage';
 import TemplateRunTab from './TemplateRunTab';
 import TemplateSerialRunTab from './TemplateSerialRunTab';
 import TemplateStatistics from './TemplateStatistics';
 import LogEmbeddedPanel from "../logging/LogEmbeddedPanel";
 
-class TemplateView extends React.Component {
+class TemplatePage extends React.Component {
 
     state = {
         primaryKey: this.props.match.params.primaryKey,
@@ -122,8 +122,8 @@ class TemplateView extends React.Component {
                         <TabPane tabId={'2'}>
                             <div className="card border-secondary mb-3">
                                 <div className="card-body">
-                                    <TemplateDefinition hidePageHeader={'true'}
-                                        match={{
+                                    <TemplateDefinitionPage hidePageHeader={'true'}
+                                                            match={{
                                             params: {
                                                 primaryKey: this.state.template.templateDefinition.fileDescriptor.primaryKey
                                             }
@@ -169,4 +169,4 @@ class TemplateView extends React.Component {
 }
 
 
-export default TemplateView;
+export default TemplatePage;
