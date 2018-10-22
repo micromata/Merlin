@@ -196,6 +196,21 @@ public class TemplateDefinition implements Cloneable, FileDescriptorInterface {
     }
 
     /**
+     * @return Name of all dependent variables defined in a sorted order.
+     */
+    @Transient
+    public List<String> getAllDependentVariableNames() {
+        Set<String> variables = new HashSet<>();
+        for (DependentVariableDefinition def : dependentVariableDefinitions) {
+            variables.add(def.getName());
+        }
+        List<String> result = new ArrayList<>();
+        result.addAll(variables);
+        Collections.sort(result, String.CASE_INSENSITIVE_ORDER);
+        return result;
+    }
+
+    /**
      * Makes a deep copy, also of the variable lists (the items will be cloned as well).
      *
      * @return
