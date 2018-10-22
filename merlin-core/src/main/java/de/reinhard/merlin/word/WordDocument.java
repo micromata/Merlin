@@ -19,19 +19,20 @@ import java.util.Map;
 import java.util.Set;
 
 public class WordDocument implements AutoCloseable {
-    private Logger log = LoggerFactory.getLogger(WordDocument.class);
+    private static Logger log = LoggerFactory.getLogger(WordDocument.class);
     XWPFDocument document;
     private String filename;
     private File file;
     private InputStream inputStream;
 
     public static WordDocument create(Path path) {
-        File file = PersistencyRegistry.getDefault().getFile(path);
-        if (file != null) {
-            return new WordDocument(file);
+        InputStream inputStream = PersistencyRegistry.getDefault().getInputStream(path);
+        if (inputStream == null) {
+            log.error("Cam't get input stream for path: " + path.toAbsolutePath());
+            return null;
         }
         String filename = path.getFileName().toString();
-        return new WordDocument(PersistencyRegistry.getDefault().getInputStream(path), filename);
+        return new WordDocument(inputStream, filename);
     }
 
     /**
