@@ -1,6 +1,10 @@
 # Merlin
 Magic and customer-friendly Excel, Word and configuration acrobatics.
 
+## Download Desktop app
+* Download from [Sourceforge](https://sourceforge.net/projects/pforge/files/Merlin/)
+
+
 ## Merlin packages
 Merlin is organized as a multi module project.
 * __merlin-core__ is a lightweight library to embed
