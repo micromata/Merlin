@@ -40,6 +40,16 @@ class TemplateStatistics extends React.Component {
                 <Table hover>
                     <tbody>
                     <tr>
+                        <td>Input variables</td>
+                        <td>
+                            {this.props.statistics.inputVariables.map((variable, index) => {
+                                // Return the element. Also pass key
+                                return (<React.Fragment key={index}>
+                                    <span className={`badge badge-${this.getVariableColor(variable.name)}`}>{variable.name}</span>{' '}
+                                </React.Fragment>)
+                            })}</td>
+                    </tr>
+                    <tr>
                         <td>Used variables</td>
                         <td>
                             {this.props.statistics.usedVariables.map((variable, index) => {
