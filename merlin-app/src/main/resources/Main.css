@@ -1,14 +1,7 @@
 .root {
     -fx-background-color: white;
     -fx-font-family: sans-serif;
-    -fx-font-size: 12pt;
-}
-
-#startButton {
-    -fx-font-size: 14pt;
-    -fx-font-weight: bold;
-    -fx-text-fill: #807c7c;
-    -fx-cursor: hand;
+    -fx-font-size: 11pt;
 }
 
 .bottomText {
@@ -16,6 +9,23 @@
 }
 
 .tooltip {
-  -fx-text-fill: white;
+    -fx-text-fill: white;
+}
+
+#startButton {
+    -fx-font-size: 14pt;
+    -fx-font-weight: bold;
+    -fx-text-fill: #807c7c;
+    -fx-cursor: hand;
+    -fx-background-color: #eeeeee;
+    -fx-background-radius: 5;
+    -fx-border-radius: 5;
+    -fx-border-color: transparent;
+    -fx-border-width: 1 1 1 1;
+}
+
+#startButton:hover {
+    -fx-background-color: #e0e0e0;
+    -fx-border-color: #807c7c;
 }
 
