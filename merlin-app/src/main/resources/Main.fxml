@@ -1,17 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import javafx.geometry.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.effect.*?>
+<?import java.lang.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
-<?import java.lang.*?>
 <?import javafx.scene.control.*?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="273.0" prefWidth="361.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.reinhard.merlin.app.javafx.MainController">
-   <children>
-      <ImageView fitHeight="58.0" fitWidth="274.0" layoutX="74.0" layoutY="224.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@Micromata-logo.png" />
-         </image></ImageView>
-      <Button layoutX="157.0" layoutY="117.0" mnemonicParsing="false" onAction="#printOutput" scaleX="2.0" scaleY="2.0" text="Start" textAlignment="CENTER" />
-   </children>
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.reinhard.merlin.app.javafx.MainController">
+    <children>
+      <GridPane prefHeight="300.0" prefWidth="300.0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints maxHeight="96.0" minHeight="1.0" prefHeight="2.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="249.0" minHeight="10.0" prefHeight="249.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="60.0" minHeight="10.0" prefHeight="14.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+              <ImageView fitHeight="58.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.valignment="TOP">
+                  <image>
+                      <Image url="@Micromata-logo.png" />
+                  </image>
+               <GridPane.margin>
+                  <Insets right="10.0" top="10.0" />
+               </GridPane.margin>
+              </ImageView>
+              <Button id="startButton" alignment="CENTER" mnemonicParsing="false" onAction="#printOutput" prefHeight="150.0" prefWidth="200.0" text="GO!" textAlignment="CENTER" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                  <graphic>
+                      <ImageView fitWidth="120.0" pickOnBounds="true" preserveRatio="true">
+                          <image>
+                              <Image url="@icon.png" />
+                          </image>
+                      </ImageView>
+                  </graphic>
+               <cursor>
+                  <Cursor fx:constant="DEFAULT" />
+               </cursor>
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+              </Button>
+            <Text fx:id="versionText" fill="#6bab43" strokeType="OUTSIDE" strokeWidth="0.0" text="Version 0.3" textAlignment="RIGHT" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
+               <GridPane.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" />
+               </GridPane.margin>
+            </Text>
+            <Text fx:id="serverStatusText" fill="#6bab43" strokeType="OUTSIDE" strokeWidth="0.0" text="Merlin Server is running..." textAlignment="RIGHT" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
+               <GridPane.margin>
+                  <Insets bottom="5.0" left="5.0" />
+               </GridPane.margin>
+            </Text>
+         </children>
+      </GridPane>
+    </children>
 </Pane>

@@ -9,7 +9,10 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.Pane;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.slf4j.Logger;
@@ -88,7 +91,20 @@ public class Main extends Application {
         Scene scene = new Scene(root);
 
         stage.setScene(scene);
-        stage.setTitle("Merlin");
+        stage.setTitle("Merlin Server");
+
+        Context context = Context.instance();
+        Tooltip tooltip = new Tooltip();
+        tooltip.setText(context.getString("merlin.server.app.openBrowser.button.tooltip"));
+        Button startButton = (Button) scene.lookup("#startButton");
+        startButton.setText(context.getString("merlin.server.app.openBrowser.button"));
+        startButton.setTooltip(tooltip);
+
+        Text text = (Text) scene.lookup("#serverStatusText");
+        text.setText(context.getString("merlin.server.app.serverStatusText"));
+        text = (Text) scene.lookup("#versionText");
+        text.setText(context.getString("merlin.server.app.versionText") + " " + Version.getInstance().getVersion());
+
         stage.setResizable(false);
         stage.show();
         server = new JettyServer();
@@ -98,7 +114,7 @@ public class Main extends Application {
             Storage.getInstance().onStartup();
         } catch (Exception ex) {
             // Don't stop application due to failed update check.
-            log.error("Error while loading storage data: "+ ex.getMessage(), ex);
+            log.error("Error while loading storage data: " + ex.getMessage(), ex);
         }
     }
 
