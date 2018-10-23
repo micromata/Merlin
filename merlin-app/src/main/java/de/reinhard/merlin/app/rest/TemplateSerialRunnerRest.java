@@ -62,7 +62,7 @@ public class TemplateSerialRunnerRest {
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             workbook.getPOIWorkbook().write(bos);
 
-            String filename = serialData.createFilename();
+            String filename = serialData.createFilenameForSerialTemplate();
             Response.ResponseBuilder builder = Response.ok(bos.toByteArray());
             builder.header("Content-Disposition", "attachment; filename=" + filename);
             // Needed to get the Content-Disposition by client:

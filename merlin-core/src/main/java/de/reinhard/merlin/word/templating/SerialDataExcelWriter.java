@@ -28,10 +28,18 @@ public class SerialDataExcelWriter extends AbstractExcelWriter {
         TemplateDefinition templateDefinition = serialData.getTemplateDefinition();
         createVariablesSheet();
         createConfigurationSheet();
-        addConfigRow("Template", serialData.getTemplate().getPrimaryKey(),
-                "merlin.word.templating.reference.template.primaryKey");
-        addConfigRow("TemplateDefinition", templateDefinition != null ? templateDefinition.getPrimaryKey() : "",
-                "merlin.word.templating.reference.templateDefinition.primaryKey");
+        if (serialData.getTemplate() != null) {
+            addConfigRow("Template", serialData.getTemplate().getPrimaryKey(), serialData.getTemplate().getFileDescriptor().getFilename());
+        } else {
+            addConfigRow("Template", "", "merlin.word.templating.reference.template.primaryKey");
+        }
+        if (templateDefinition != null) {
+            addConfigRow("TemplateDefinition", templateDefinition.getPrimaryKey(),
+                    templateDefinition.getFileDescriptor().getFilename() + ": " + templateDefinition.getId());
+        } else {
+            addConfigRow("TemplateDefinition", "", "merlin.word.templating.reference.templateDefinition.primaryKey");
+        }
+        serialData.createFilenamePattern();
         addConfigRow("FilenamePattern", serialData.getFilenamePattern(), "merlin.word.templating.serial.config.filenamePattern");
         currentSheet.autosize();
         return workbook;
@@ -42,23 +50,20 @@ public class SerialDataExcelWriter extends AbstractExcelWriter {
         addDescriptionRow("merlin.word.templating.sheet_serial_variables_description", -1, false);
         ExcelRow row = currentSheet.createRow();
         int numberOfColumns = 0;
-        TemplateDefinition templateDefinition = serialData.getTemplateDefinition();
-        if (templateDefinition == null) {
-            templateDefinition = serialData.getTemplate().createAutoTemplateDefinition();
-        }
-        for (VariableDefinition variableDefinition : templateDefinition.getVariableDefinitions()) {
+        for (VariableDefinition variableDefinition : serialData.getTemplate().getStatistics().getInputVariables()) {
             row.createCells(headRowStyle, variableDefinition.getName());
             numberOfColumns++;
         }
         currentSheet.getRow(0).addMergeRegion(0, numberOfColumns - 1);
         currentSheet.getRow(1).setHeight(50).addMergeRegion(0, numberOfColumns - 1);
-        if (serialData != null) {
+        if (serialData.getEntries() != null) {
             for (SerialDataEntry entry : serialData.getEntries()) {
                 row = currentSheet.createRow();
-                for (VariableDefinition variableDefinition : templateDefinition.getVariableDefinitions()) {
+                for (VariableDefinition variableDefinition : serialData.getTemplate().getStatistics().getInputVariables()) {
                     Object valueObject = entry.get(variableDefinition.getName());
                     ExcelCell cell = row.createCell();
                     templateRunContext.setCellValue(workbook, cell.getCell(), valueObject, variableDefinition.getType());
+                    numberOfColumns++;
                 }
             }
         }

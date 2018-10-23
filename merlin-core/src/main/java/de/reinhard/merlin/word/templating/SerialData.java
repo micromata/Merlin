@@ -1,6 +1,7 @@
 package de.reinhard.merlin.word.templating;
 
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,10 +58,21 @@ public class SerialData {
     /**
      * @return Filename with suffix '-serial.xlsx' and the name base name as the template file.
      */
-    public String createFilename() {
+    public String createFilenameForSerialTemplate() {
         if (template == null) {
             return "serial.xlsx";
         }
         return FilenameUtils.getBaseName(template.getFileDescriptor().getFilename()) + "-serial.xlsx";
+    }
+
+    public void createFilenamePattern() {
+        if (StringUtils.isNotBlank(filenamePattern)) {
+            return;
+        }
+        if (templateDefinition != null && StringUtils.isNotBlank(templateDefinition.getFilenamePattern())) {
+            filenamePattern = templateDefinition.getFilenamePattern() + "-${counter}";
+            return;
+        }
+        filenamePattern = FilenameUtils.getBaseName(template.getFileDescriptor().getFilename()) + "-${counter}";
     }
 }
