@@ -1,0 +1,21 @@
+.root {
+    -fx-background-color: white;
+    -fx-font-family: sans-serif;
+    -fx-font-size: 12pt;
+}
+
+#startButton {
+    -fx-font-size: 14pt;
+    -fx-font-weight: bold;
+    -fx-text-fill: #807c7c;
+    -fx-cursor: hand;
+}
+
+.bottomText {
+    -fx-fill: #6bab43;
+}
+
+.tooltip {
+  -fx-text-fill: white;
+}
+
