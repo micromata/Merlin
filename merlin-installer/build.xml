@@ -1,0 +1,72 @@
+<project name="Merlin installation" default="pre-dist" basedir=".">
+    <description>
+        Builds a new release.
+    </description>
+    <!-- set global properties for this build -->
+    <property name="merlin-app" location="../merlin-app"/>
+    <property name="merlin-core" location="../merlin-core"/>
+    <property name="merlin-webapp" location="../merlin-webapp"/>
+    <property name="install4j-merlin" location="../../Install4j/Merlin"/>
+    <property name="dist" location="dist"/>
+
+    <target name="pre-dist" description="Prepares a new release." depends="merlin-core, merlin-app, merlin-webapp" />
+
+    <target name="post-dist" description="Prepares a new release." depends="merlin-install4j" />
+
+    <target name="maven">
+        <exec dir="${dir}" executable="sh">
+            <arg line="-c 'mvn ${target}'" />
+        </exec>
+    </target>
+
+    <!-- cd merlin-core; mvn clean install -->
+    <target name="merlin-core">
+        <antcall target="maven">
+            <param name="dir" value="${merlin-core}"/>
+            <param name="target" value="clean install" />
+        </antcall>
+    </target>
+
+    <!-- cd merlin-app; mvn clean compile assembly:single -->
+    <target name="merlin-app">
+        <antcall target="maven">
+            <param name="dir" value="${merlin-app}"/>
+            <param name="target" value="clean compile assembly:single" />
+        </antcall>
+    </target>
+
+    <!-- cd merlin-webapp; npm run build -->
+    <target name="merlin-webapp">
+        <exec dir="${merlin-webapp}" executable="sh">
+            <arg line="-c 'npm run build'" />
+        </exec>
+    </target>
+
+
+    <!-- cp ../Install4j/Merlin/updates.xml merlin-installer/ -->
+    <target name="merlin-install4j">
+        <copy file="${install4j-merlin}/updates.xml" todir="." />
+    </target>
+</project>
+
+<!--
+        Run Install4j
+        General settings -> Application Info -> Version current version
+        Build project
+        cd ..
+        cp ../Install4j/Merlin/updates.xml merlin-installer/
+        Upload updates.xml to SourceForge download dir.
+        Testing
+        Testing update from previous installation.
+        install, test web and java-code.
+        Creating Github release
+        Create new release
+        Specify version, e. g. v0.3.
+        Drag merlin_macos_v0.3.dmg to binary section (upload).
+        Publish release button (after uploading is finished).
+        Testing
+        Enable update mechanism
+        cd .. (go to merlin top dir.)
+        cp ../Install4j/Merlin/updates.xml merlin-installer/
+        Commit and push.
+-->
