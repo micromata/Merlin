@@ -16,7 +16,6 @@ import {isDevelopmentMode} from '../utilities/global';
 import TemplatePage from '../components/views/templates/TemplatePage';
 import LogPage from '../components/views/logging/LogPage';
 import TemplateDefinitionPage from '../components/views/templates/templatedefinition/TemplateDefinitionPage';
-import '../css/my-style.css';
 import Footer from '../components/views/footer/Footer';
 import {loadVersion} from '../actions';
 
