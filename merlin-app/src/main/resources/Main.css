@@ -1,11 +1,11 @@
 .root {
     -fx-background-color: white;
     -fx-font-family: sans-serif;
-    -fx-font-size: 11pt;
+    -fx-font-size: 10pt;
 }
 
 .bottomText {
-    -fx-fill: #6bab43;
+    -fx-fill: #807c7c;
 }
 
 .tooltip {
