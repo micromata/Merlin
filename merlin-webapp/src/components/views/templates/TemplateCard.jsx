@@ -30,7 +30,7 @@ class TemplateCard extends React.Component {
 
         return <React.Fragment>
             <Link to={`/templates/${template.primaryKey}`} className={'card-link'}>
-                <Card outline color="success" className={'template'} style={{backgroundColor: '#fff', width: '20em'}}>
+                <Card outline color="success" className={'template'} style={{backgroundColor: '#fff', width: '100%'}}>
                     <CardHeader>{templateId}</CardHeader>
                     <ul className="list-group list-group-flush">
                         {templateText}
