@@ -141,11 +141,7 @@ class TemplatePage extends React.Component {
                             primaryKey={this.state.primaryKey}
                             templateDefinitionId={this.state.template.templateDefinition ?
                                 this.state.template.templateDefinition.primaryKey : ''}
-                            templateVariables={this.state.template.statistics.usedVariables}
-                            definitionVariables={this.state.template.templateDefinition ?
-                                this.state.template.templateDefinition.variableDefinitions : undefined}
-                            definitionDependentVariables={this.state.template.templateDefinition ?
-                                this.state.template.templateDefinition.dependentVariableDefinitions : undefined}
+                            inputVariables={this.state.template.statistics.inputVariables}
                         />
                     </TabPane>
                     <TabPane tabId={'4'}>
