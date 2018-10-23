@@ -1,5 +1,5 @@
 # Building a new release
-1. 'mvn clean install'
+1. `mvn clean install`
 2. `cd merlin-app`
 3. `mvn clean compile assembly:single && cp target/merlin-app-?.?-jar-with-dependencies.jar target/merlin-app.jar`
 4. `cd ../merlin-webapp`
