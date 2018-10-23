@@ -49,7 +49,7 @@ public class ExcelWorkbook implements AutoCloseable {
     public ExcelWorkbook(File excelFile) {
         try {
             FileInputStream fis = new FileInputStream(excelFile);
-            open(inputStream, excelFile.getName());
+            open(fis, excelFile.getName());
         } catch (IOException ex) {
             log.error("Couldn't open File '" + excelFile.getAbsolutePath() + "': " + ex.getMessage());
             throw new RuntimeException(ex);
