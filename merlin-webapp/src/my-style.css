@@ -1,0 +1,163 @@
+body {
+	color: #50555f !important;
+}
+
+a:hover {
+	color: #47a7eb !important;
+}
+
+a.card-link:hover {
+	color: #50555f !important;
+}
+
+
+/* Scaffolding */
+
+.container {
+	max-width: 1260px;
+	margin-top: 80px;
+}
+
+/* Typo */
+
+h4 {
+	font-size: 18px;
+	font-weight: bold;
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+
+h5 {
+	margin-top: 30px;
+	margin-bottom: 10px;
+}
+
+/* Navbar */
+
+.navbar.bg-light {
+	background: white !important;
+	//box-shadow: 0 0 10px rgba(0,0,0,.1);
+	border-bottom: 1px solid rgba(0,0,0,.1);
+	height: 60px;
+}
+
+.navbar-brand {
+	font-weight: bold;
+}
+
+a.nav-link {
+	color: #7c8495 !important;
+	font-size: 1rem;
+	font-weight: bold;
+}
+
+a.nav-link.active {
+	color: #47a7eb !important;
+}
+
+.pageheader {
+	font-size: 1.5rem !important;
+	color: #414650;
+	margin-bottom: 40px !important;
+}
+
+
+/* Forms */
+
+.form-inline {
+	margin-bottom: 30px;
+}
+
+input:focus,
+select:focus,
+textarea:focus,
+button:focus {
+	outline: none !important;
+	outline-width: 0 !important;
+}
+
+[contenteditable="true"]:focus {
+	outline: none;
+}
+
+.text-truncate.editable-text-field-value:hover {
+	color: #47a7eb;
+}
+
+.input-group > textarea {
+	min-height: 40px;
+}
+
+.custom-checkbox .custom-control-input:checked ~ .custom-control-label::before {
+	background: #7C8495;
+}
+
+/* Buttons */
+
+.btn.btn-outline-primary {
+	color: #47a7eb;
+	background-color: transparent;
+	border-color: #309ce8;
+}
+
+.btn.btn-outline-primary:hover {
+	color: #fff;
+	background-color: #47a7eb;
+	border-color: #47a7eb;
+}
+
+.input-group-append .btn {
+	max-height: 40px;
+	height: 40px
+}
+
+.btn + .btn {
+	margin-left: 10px;
+}
+
+
+/* Tabs */
+
+.nav.nav-tabs {
+	margin-bottom: 25px;
+}
+
+.nav-tabs .nav-link,
+.nav-tabs .nav-link:hover,
+.nav-tabs .nav-link.active {
+	position: relative;
+	top: 1px;
+	border-bottom: none;
+}
+
+.nav-tabs .nav-link:hover {
+	cursor: pointer;
+	color: #47a7eb !important;
+}
+
+.tab-pane.active {
+	padding: 20px;
+}
+
+
+/* Cards */
+
+a.card-link {
+	width: 100%;
+	margin: 0;
+	margin-bottom: 5px;
+}
+
+.card-link + .card-link {
+	margin: 0;
+	margin-bottom: 5px;
+}
+
+.card-header {
+	font-weight: bold;
+	color: #50555F;
+}
+
+.card.border-secondary {
+	border-color: #DEE2E6 !important;
+}
