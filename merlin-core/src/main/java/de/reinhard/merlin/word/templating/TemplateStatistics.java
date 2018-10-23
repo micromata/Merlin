@@ -174,6 +174,9 @@ public class TemplateStatistics implements Cloneable {
     }
 
     private boolean isDependentVariable(TemplateDefinition templateDefinition, String variable) {
+        if (templateDefinition == null) {
+            return false;
+        }
         for (DependentVariableDefinition dependentVariableDefinition : templateDefinition.getDependentVariableDefinitions()) {
             if (dependentVariableDefinition.getName().equals(variable)) {
                 return true;
