@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
@@ -47,7 +48,8 @@ public class ExcelWorkbook implements AutoCloseable {
 
     public ExcelWorkbook(File excelFile) {
         try {
-            workbook = WorkbookFactory.create(excelFile);
+            FileInputStream fis = new FileInputStream(excelFile);
+            open(inputStream, excelFile.getName());
         } catch (IOException ex) {
             log.error("Couldn't open File '" + excelFile.getAbsolutePath() + "': " + ex.getMessage());
             throw new RuntimeException(ex);
@@ -59,6 +61,10 @@ public class ExcelWorkbook implements AutoCloseable {
      * @param filename    Only for logging purposes if any error occurs.
      */
     public ExcelWorkbook(InputStream inputStream, String filename) {
+        open(inputStream, filename);
+    }
+
+    private void open(InputStream inputStream, String filename) {
         this.inputStream = inputStream;
         try {
             workbook = WorkbookFactory.create(inputStream);
