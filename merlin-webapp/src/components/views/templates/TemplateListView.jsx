@@ -86,7 +86,7 @@ class TemplateListView extends React.Component {
 
             content = <React.Fragment>
                 <div
-                    className={'template-list-refresh'}
+                    className={'btn btn-outline-primary template-list-refresh'}
                     onClick={this.fetchTemplates}
                 >
                     <IconRefresh/>
