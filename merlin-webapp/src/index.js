@@ -1,3 +1,4 @@
+import '../node_modules/bootstrap/dist/css/bootstrap.css';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {applyMiddleware, createStore} from 'redux';
@@ -8,6 +9,9 @@ import WebApp from './containers/WebApp';
 
 import registerServiceWorker from './registerServiceWorker';
 import reducers from './reducers';
+
+import './css/my-style.css';
+
 
 let storedState = window.localStorage.getItem('state');
 
