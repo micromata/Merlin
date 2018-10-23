@@ -53,7 +53,7 @@ class Menu extends React.Component {
     render() {
         return (
             <Navbar className={'fixed-top'} color="light" light expand="md">
-                <NavbarBrand to="/" tag={ReactRouterNavLink}>Merlin</NavbarBrand>
+                <NavbarBrand to="/" tag={ReactRouterNavLink}><img src={'../../../images/merlin-icon.png'} width={'50px'} />Merlin</NavbarBrand>
                 <NavbarToggler onClick={this.toggle} />
                 <Collapse isOpen={this.state.isOpen} navbar>
                     <Nav className="ml-auto" navbar>
