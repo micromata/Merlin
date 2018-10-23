@@ -33,17 +33,21 @@ public class Main extends Application {
                 + version.getBuildDate() + " (UTC: " + version.getBuildDateUTC() + "), mode: " + RunningMode.getMode());
         log.info("Current working directory: " + new File(".").getAbsolutePath());
         log.info("Using Java version: " + System.getProperty("java.version"));
-        try {
-            if (!RunningMode.isDevelopmentMode()) {
-                // No update mechanism in development mode.
-                AppUpdater.getInstance().checkUpdate();
-            } else {
-                UpdateInfo.getInstance().setDevelopmentTestData(); // Only for testing.
-            }
-        } catch (Exception ex) {
-            // Don't stop application due to failed update check.
-            log.error("Exception while checking update: " + ex.getMessage(), ex);
-        }
+        new Thread(() -> {
+            new Thread(() -> {
+                try {
+                    if (!RunningMode.isDevelopmentMode()) {
+                        AppUpdater.getInstance().checkUpdate();
+                    } else {
+                        // No update mechanism in development mode.
+                        UpdateInfo.getInstance().setDevelopmentTestData(); // Only for testing.
+                    }
+                } catch (Exception ex) {
+                    // Don't stop application due to failed update check.
+                    log.error("Exception while checking update: " + ex.getMessage(), ex);
+                }
+            }).start();
+        }).start();
         launch(args);
     }
 
