@@ -7,7 +7,9 @@
 6. Run Install4j
    1. General settings -> Application Info -> Version __current version__
    2. Build project
-   3. cp updates.xml from generated release to merlin-installer github dir.
+   3. `cd ..`
+   4. `cp ../Install4j/Merlin/updates.xml merlin-installer/`
+   5. Upload updates.xml to SourceForge download dir.
 7. Testing
    1. Testing update from previous installation.
    2. install, test web and java-code.
@@ -21,3 +23,5 @@
    1. `cd ..` (go to merlin top dir.)
    2. `cp ../Install4j/Merlin/updates.xml merlin-installer/`
    3. Commit and push.
+
+ToDo: bash script or ant script.
