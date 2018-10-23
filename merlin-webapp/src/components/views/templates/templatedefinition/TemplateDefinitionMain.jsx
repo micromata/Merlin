@@ -54,7 +54,7 @@ class TemplateDefinitionMain extends React.Component {
                         onChange={this.props.handleTextChange}
                     />
                 </FormField>
-                <FormField length={2}>
+                <FormField length={3}>
                     <FormCheckbox checked={this.props.definition.stronglyRestrictedFilenames}
                                   name="stronglyRestrictedFilenames" label={'strong file names'}
                                   onChange={this.props.handleStateChange}
