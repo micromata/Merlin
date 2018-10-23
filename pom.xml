@@ -7,7 +7,7 @@
     <groupId>de.reinhard</groupId>
     <artifactId>merlin-parent</artifactId>
     <packaging>pom</packaging>
-    <version>0.3</version>
+    <version>0.4</version>
     <name>Multi Chapter Merlin Parent Project</name>
     <properties>
         <merlin.version>0.3</merlin.version>

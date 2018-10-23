@@ -6,7 +6,7 @@
     <parent>
         <groupId>de.reinhard</groupId>
         <artifactId>merlin-parent</artifactId>
-        <version>0.3</version>
+        <version>0.4</version>
     </parent>
     <artifactId>merlin-app</artifactId>
     <packaging>jar</packaging>
