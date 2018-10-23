@@ -51,10 +51,6 @@ a.nav-link {
 	font-weight: bold;
 }
 
-a.nav-link.danger {
-	color: #dc3545 !important;
-}
-
 a.nav-link.active {
 	color: #47a7eb !important;
 }
@@ -146,11 +142,22 @@ button:focus {
 
 /* Cards */
 
+a.card-link {
+	width: 100%;
+	margin: 0;
+	margin-bottom: 5px;
+}
+
+.card-link + .card-link {
+	margin: 0;
+	margin-bottom: 5px;
+}
+
 .card-header {
 	font-weight: bold;
 	color: #50555F;
 }
 
-div.main-view {
-	min-height: calc(100vh - 140px);
+.card.border-secondary {
+	border-color: #DEE2E6 !important;
 }
