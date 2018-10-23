@@ -32,29 +32,7 @@ public class TemplateStatistics implements Cloneable {
      * Analyzes used variables by this template and compares it to the defined variables in the given templateDefinition.
      */
     public void updateStatistics() {
-        this.inputVariables = new ArrayList<>();
-        TemplateDefinition templateDefinition = template.getTemplateDefinition();
-        Set<String> variablesSet = new HashSet<>();
-        for (String variable : usedVariables) {
-            if (templateDefinition != null) {
-                VariableDefinition variableDefinition = templateDefinition.getVariableDefinition(variable, false);
-                if (variableDefinition != null) {
-                    inputVariables.add(variableDefinition);
-                    variablesSet.add(variable);
-                    continue;
-                }
-                DependentVariableDefinition dependentVariableDefinition = templateDefinition.getDependentVariableDefinition(variable, false);
-                if (dependentVariableDefinition != null) {
-                    variableDefinition = dependentVariableDefinition.getDependsOn();
-                    if (!variablesSet.contains(variableDefinition.getName())) {
-                        inputVariables.add(variableDefinition); // Add master variable (dependent variables need no user input).
-                        variablesSet.add(variableDefinition.getName());
-                    }
-                    continue;
-                }
-            }
-            inputVariables.add(new VariableDefinition(variable)); // Undefined variable.
-        }
+        buildInputVariables();
         if (template.getTemplateDefinition() == null) {
             log.debug("No templateDefinition given. Can't update statistics. Clearing statistics.");
             this.allDefinedVariables = null;
@@ -129,7 +107,7 @@ public class TemplateStatistics implements Cloneable {
 
     public Collection<VariableDefinition> getInputVariables() {
         if (inputVariables == null) {
-            updateStatistics();
+            buildInputVariables();
         }
         return inputVariables;
     }
@@ -155,4 +133,52 @@ public class TemplateStatistics implements Cloneable {
         }
     }
 
+    private void buildInputVariables() {
+        this.inputVariables = new ArrayList<>();
+        TemplateDefinition templateDefinition = template.getTemplateDefinition();
+        Set<String> variablesSet = new HashSet<>();
+        if (templateDefinition != null) {
+            // At first add all definined variables in their order, if used.
+            for (VariableDefinition variableDefinition : templateDefinition.getVariableDefinitions()) {
+                if (usedVariables.contains(variableDefinition.getName())) {
+                    inputVariables.add(variableDefinition);
+                    variablesSet.add(variableDefinition.getName());
+                    continue;
+                }
+                // Check if this is a master variable and any used variable depends on:
+                if (containsDependentVariable(templateDefinition, variableDefinition.getName())) {
+                    inputVariables.add(variableDefinition);
+                    variablesSet.add(variableDefinition.getName());
+                }
+            }
+        }
+        // Now, check for additional undefined but used variables:
+        for (String variable : usedVariables) {
+            if (!variablesSet.contains(variable)) {
+                if (isDependentVariable(templateDefinition, variable))
+                    // Don't use dependent variables as input variables.
+                    continue;
+                inputVariables.add(new VariableDefinition(variable)); // Undefined variable.
+                variablesSet.add(variable);
+            }
+        }
+    }
+
+    private boolean containsDependentVariable(TemplateDefinition templateDefinition, String variable) {
+        for (DependentVariableDefinition dependentVariableDefinition : templateDefinition.getDependentVariableDefinitions()) {
+            if (dependentVariableDefinition.getDependsOn().getName().equals(variable)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean isDependentVariable(TemplateDefinition templateDefinition, String variable) {
+        for (DependentVariableDefinition dependentVariableDefinition : templateDefinition.getDependentVariableDefinitions()) {
+            if (dependentVariableDefinition.getName().equals(variable)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
