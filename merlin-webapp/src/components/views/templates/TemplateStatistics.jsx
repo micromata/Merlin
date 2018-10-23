@@ -24,10 +24,10 @@ class TemplateStatistics extends React.Component {
             return "info";
         if (this.props.statistics.masterVariables.indexOf(variable) >= 0)
             return "danger";
-        if (this.props.statistics.dependentVariables.indexOf(variable) >= 0)
-            return "secondary";
         if (this.props.statistics.unusedVariables.indexOf(variable) >= 0)
             return "light";
+        if (this.props.statistics.dependentVariables.indexOf(variable) >= 0)
+            return "secondary";
         if (this.props.statistics.allDefinedVariables.indexOf(variable) >= 0)
             return "success";
         return "warning";
