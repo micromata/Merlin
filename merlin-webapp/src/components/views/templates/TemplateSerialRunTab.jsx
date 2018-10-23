@@ -40,6 +40,8 @@ class TemplateSerialRunTab extends React.Component {
                 <Button className={'btn-outline-primary'} onClick={this.getSerialTemplate}>
                     <IconDownload/> Excel serial template
                 </Button>
+                <br/><br/>
+                <code>Upload not yet implemented.</code>
                 {/*<DropArea upload={this.runSerialTemplate} />*/}
             </React.Fragment>
         );
