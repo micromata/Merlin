@@ -10,11 +10,7 @@ import {FormButton, FormInput, FormLabelField, FormSelect} from '../../general/f
 class TemplateRunTab extends React.Component {
 
     runConfiguration = {
-        ...this.props.templateVariables.reduce((accumulator, current) => ({
-            ...accumulator,
-            [current]: ''
-        }), {}),
-        ...this.props.definitionVariables.reduce((accumulator, current) => ({
+        ...this.props.inputVariables.reduce((accumulator, current) => ({
             ...accumulator,
             [current.name]: current.allowedValuesList && current.allowedValuesList.length !== 0 ?
                 current.allowedValuesList[0] : ''
@@ -22,17 +18,9 @@ class TemplateRunTab extends React.Component {
     };
 
     variableDefinitions = {
-        ...this.props.templateVariables.reduce((accumulator, current) => ({
-            ...accumulator,
-            [current]: current
-        }), {}),
-        ...this.props.definitionVariables.reduce((accumulator, current) => ({
+        ...this.props.inputVariables.reduce((accumulator, current) => ({
             ...accumulator,
             [current.name]: current
-        }), {}),
-        ...this.props.definitionDependentVariables.reduce((accumulator, current) => ({
-            ...accumulator,
-            [current.name]: undefined
         }), {})
     };
 
@@ -188,20 +176,18 @@ TemplateRunTab.propTypes = {
     primaryKey: PropTypes.string.isRequired,
     templateDefinitionId: PropTypes.string.isRequired,
     templateVariables: PropTypes.arrayOf(PropTypes.string),
-    definitionVariables: PropTypes.arrayOf(PropTypes.shape({
+    inputVariables: PropTypes.arrayOf(PropTypes.shape({
         name: PropTypes.string,
         description: PropTypes.string,
         required: PropTypes.bool,
         unique: PropTypes.bool,
         allowedValuesList: PropTypes.arrayOf(PropTypes.string),
         type: PropTypes.string
-    })),
-    definitionDependentVariables: PropTypes.array
+    }))
 };
 
 TemplateRunTab.defaultProps = {
-    definitionVariables: [],
-    definitionDependentVariables: []
+    inputVariables: []
 };
 
 const mapStateToProps = state => ({
