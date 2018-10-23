@@ -5,7 +5,7 @@
    1. General settings -> Application Info -> Version __current version__
    2. Installer -> Auto-Update Options -> Base url for installers: https://sourceforge.net/projects/pforge/files/Merlin/0.3/
    3. Build project
-4. 'ant post-dist'
+4. `ant post-dist`
 5. Upload updates.xml to SourceForge download dir.
 6. Testing
    1. Testing update from previous installation.
