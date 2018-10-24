@@ -14,6 +14,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,12 +24,14 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.TimerTask;
 
 public class Main extends Application {
     private static Logger log = LoggerFactory.getLogger(Main.class);
     private JettyServer server;
     private static Main main;
     private Stage stage;
+    private java.util.Timer timer;
 
     public static void main(String[] args) {
         Version version = Version.getInstance();
@@ -97,18 +100,32 @@ public class Main extends Application {
         startButton.setText(context.getString("merlin.server.app.openBrowser.button"));
         startButton.setTooltip(tooltip);
 
-        Text text = (Text) scene.lookup("#serverStatusText");
-        text.setText(context.getString("merlin.server.app.serverStatusText"));
-        text = (Text) scene.lookup("#versionText");
-        text.setText(context.getString("merlin.server.app.versionText") + " " + Version.getInstance().getVersion());
+        final Text statusTextField = (Text) scene.lookup("#serverStatusText");
+        final String statusText = context.getString("merlin.server.app.serverStatusText");
+        timer = new java.util.Timer("Timer");
+        timer.schedule(new TimerTask() {
+            int i = 0;
 
+            @Override
+            public void run() {
+                statusTextField.setText(statusText + StringUtils.repeat('.', i));
+                if (++i > 4) {
+                    i = 0;
+                }
+            }
+        }, 1000L, 1000L);
+
+        Text text = (Text) scene.lookup("#versionText");
+        text.setText(context.getString("merlin.server.app.versionText") + " " + Version.getInstance().getVersion());
         stage.setResizable(false);
         stage.show();
         server = new JettyServer();
         server.start();
+
         RunningMode.setRunning(true);
         new Thread(() -> {
             try {
+                // Preload storage already in the background for faster access for the user after opening the client.
                 Storage.getInstance().onStartup();
             } catch (Exception ex) {
                 log.error("Error while loading storage data: " + ex.getMessage(), ex);
@@ -119,6 +136,7 @@ public class Main extends Application {
     @Override
     public void stop() throws Exception {
         super.stop();
+        timer.cancel();
         log.info("Stopping Java FX application.");
         server.stop();
     }
