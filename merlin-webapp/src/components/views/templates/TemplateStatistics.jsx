@@ -143,7 +143,7 @@ class TemplateStatistics extends React.Component {
                 <Table hover>
                     <tbody>
                     <tr>
-                        <td>Input variables <button onClick={this.toggleVariables} type="button"
+                        <td style={{whiteSpace: 'nowrap'}}>Input variables <button onClick={this.toggleVariables} type="button"
                                                          className="btn btn-link btn-outline-primary btn-sm">{caretIcon}</button></td>
                         <td>
                             {this.props.statistics.inputVariables.map((variable, index) => {
