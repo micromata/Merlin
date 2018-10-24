@@ -45,7 +45,7 @@
                         <Insets bottom="5.0" left="5.0" right="5.0" />
                     </GridPane.margin>
                 </Text>
-                <Text fx:id="serverStatusText" styleClass="bottomText" strokeType="OUTSIDE" strokeWidth="0.0" text="Merlin Server is running..." textAlignment="RIGHT" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
+                <Text fx:id="serverStatusText" strokeType="OUTSIDE" strokeWidth="0.0" text="Merlin Server is running..." textAlignment="RIGHT" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
                     <GridPane.margin>
                         <Insets bottom="5.0" left="5.0" />
                     </GridPane.margin>

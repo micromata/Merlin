@@ -109,11 +109,13 @@ public class Main extends Application {
             @Override
             public void run() {
                 statusTextField.setText(statusText + StringUtils.repeat('.', i));
-                if (++i > 4) {
+                statusTextField.getStyleClass().clear();
+                statusTextField.getStyleClass().add("status-" + i);
+                if (++i > 5) {
                     i = 0;
                 }
             }
-        }, 1000L, 1000L);
+        }, 500L, 400L);
 
         Text text = (Text) scene.lookup("#versionText");
         text.setText(context.getString("merlin.server.app.versionText") + " " + Version.getInstance().getVersion());

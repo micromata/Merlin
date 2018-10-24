@@ -29,3 +29,32 @@
     -fx-border-color: #807c7c;
 }
 
+.status-0 {
+    -fx-fill: #807c7c;
+    -fx-opacity: 0.7;
+}
+
+.status-1 {
+    -fx-fill: #807c7c;
+    -fx-opacity: 0.8;
+}
+
+.status-2 {
+    -fx-fill: #807c7c;
+    -fx-opacity: 0.9;
+}
+
+.status-3 {
+    -fx-fill: #807c7c;
+    -fx-opacity: 1.0;
+}
+
+.status-4 {
+    -fx-fill: #807c7c;
+    -fx-opacity: 0.9;
+}
+
+.status-5 {
+    -fx-fill: #807c7c;
+    -fx-opacity: 0.8;
+}
