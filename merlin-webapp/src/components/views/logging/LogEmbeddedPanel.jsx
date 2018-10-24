@@ -13,8 +13,9 @@ class LogEmbeddedPanel extends React.Component {
     handleToggleSortOrder = () => {
         this.setState({
             ascendingOrder: (this.state.ascendingOrder === 'true') ? 'false' : 'true'
+        }, () => {
+            this.reload()
         });
-        this.reload();
     };
 
     handleInputChange = (event) => {
