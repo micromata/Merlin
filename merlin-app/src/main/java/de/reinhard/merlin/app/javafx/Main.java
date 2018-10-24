@@ -6,6 +6,7 @@ import de.reinhard.merlin.app.storage.Storage;
 import de.reinhard.merlin.app.updater.AppUpdater;
 import de.reinhard.merlin.app.updater.UpdateInfo;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -108,9 +109,12 @@ public class Main extends Application {
 
             @Override
             public void run() {
-                statusTextField.setText(statusText + StringUtils.repeat('.', i));
-                statusTextField.getStyleClass().clear();
-                statusTextField.getStyleClass().add("status-" + i);
+                Platform.runLater(() -> {
+                    // RunLater is important: ui elements must be accessed on the fxApplication thread.
+                    statusTextField.setText(statusText + StringUtils.repeat('.', i));
+                    statusTextField.getStyleClass().clear();
+                    statusTextField.getStyleClass().add("status-" + i);
+                });
                 if (++i > 5) {
                     i = 0;
                 }
