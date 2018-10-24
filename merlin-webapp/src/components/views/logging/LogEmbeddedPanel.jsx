@@ -1,14 +1,14 @@
 import React from 'react';
-import {getRestServiceUrl} from "../../../utilities/global";
+import {getRestServiceUrl} from '../../../utilities/global';
 import LogTable from './LogTable';
 import './LogViewer.css';
-import PropTypes from "prop-types";
+import PropTypes from 'prop-types';
 
 class LogEmbeddedPanel extends React.Component {
 
     componentDidMount = () => {
         this.reload();
-    }
+    };
 
     handleToggleSortOrder = () => {
         this.setState({
@@ -59,7 +59,7 @@ class LogEmbeddedPanel extends React.Component {
                 })
             })
             .catch(() => this.setState({isFetching: false, failed: true}));
-    }
+    };
 
 
     render = () => {

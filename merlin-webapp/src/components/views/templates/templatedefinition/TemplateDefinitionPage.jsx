@@ -134,6 +134,7 @@ class TemplateDefinitionPage extends React.Component {
                     </TabPane>
                     <TabPane tabId={'4'}>
                         <LogEmbeddedPanel
+                            ref={this.logComponent}
                             mdcTemplateDefinitionPk={this.state.primaryKey}
                         />
                     </TabPane>
@@ -177,9 +178,15 @@ class TemplateDefinitionPage extends React.Component {
         this.handleVariableTextChange = this.handleVariableTextChange.bind(this);
         this.fetchTemplateDefinition = this.fetchTemplateDefinition.bind(this);
         this.toggleTab = this.toggleTab.bind(this);
+
+        this.logComponent = React.createRef();
     }
 
     toggleTab(tab) {
+        if(tab === '4') {
+            this.logComponent.current.reload();
+        }
+
         if (this.state.activeTab !== tab) {
             this.setState({
                 activeTab: tab
