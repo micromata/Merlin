@@ -97,11 +97,11 @@ public class FilesystemBrowserRest {
         }
         java.nio.file.Path path;
         FileDescriptor fileDescriptor = null;
-        TemplateDefinition templateDefinition = Storage.getInstance().getTemplateDefinition(primaryKey);
+        TemplateDefinition templateDefinition = Storage.getInstance().getTemplateDefinition(primaryKey, true);
         if (templateDefinition != null) {
             fileDescriptor = templateDefinition.getFileDescriptor();
         } else {
-            Template template = Storage.getInstance().getTemplate(primaryKey);
+            Template template = Storage.getInstance().getTemplate(primaryKey, true);
             if (template != null) {
                 fileDescriptor = template.getFileDescriptor();
             }
