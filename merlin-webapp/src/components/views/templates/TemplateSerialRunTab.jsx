@@ -1,11 +1,11 @@
 import React from 'react';
 import {Button} from 'reactstrap';
-import {IconDownload} from "../../general/IconComponents";
-import {getResponseHeaderFilename, getRestServiceUrl} from "../../../utilities/global";
-import DropArea from "../../general/droparea/DropArea";
-import downloadFile from "../../../utilities/download";
+import {IconDownload} from '../../general/IconComponents';
+import {getResponseHeaderFilename, getRestServiceUrl} from '../../../utilities/global';
+import DropArea from '../../general/droparea/DropArea';
+import downloadFile from '../../../utilities/download';
 import {uploadFile} from '../../../actions';
-import connect from "react-redux/es/connect/connect";
+import connect from 'react-redux/es/connect/connect';
 
 class TemplateSerialRunTab extends React.Component {
 
