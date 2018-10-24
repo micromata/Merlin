@@ -15,7 +15,6 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -111,7 +110,7 @@ public class Main extends Application {
             public void run() {
                 Platform.runLater(() -> {
                     // RunLater is important: ui elements must be accessed on the fxApplication thread.
-                    statusTextField.setText(statusText + StringUtils.repeat('.', i));
+                    statusTextField.setText(statusText + statusDots[i]);
                     statusTextField.getStyleClass().clear();
                     statusTextField.getStyleClass().add("status-" + i);
                 });
@@ -154,4 +153,6 @@ public class Main extends Application {
     void openBrowser() {
         getHostServices().showDocument(server.getUrl());
     }
+
+    private String[] statusDots = new String[] {"...", " ...", "  ...", "   ...", "  ...", " ..."};
 }
