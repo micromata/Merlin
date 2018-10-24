@@ -1,9 +1,9 @@
 body {
-	color: #50555f !important;
+	color: #50555f;
 }
 
 a:hover {
-	color: #47a7eb !important;
+	color: #47a7eb;
 }
 
 a.card-link:hover {
@@ -49,22 +49,23 @@ h5 {
 	font-weight: bold;
 }
 
-a.nav-link {
-	color: #7c8495 !important;
+.navbar.navbar-light a.nav-link {
+	color: #7c8495;
 	font-size: 1rem;
 	font-weight: bold;
 }
 
-a.nav-link.danger {
-	color: #dc3545 !important;
+.navbar a.nav-link.danger {
+	color: #dc3545;
 }
 
-a.nav-link.active {
-	color: #47a7eb !important;
+.navbar.navbar-light a.nav-link.active {
+	color: #47a7eb;
 }
 
-.pageheader {
-	font-size: 1.5rem !important;
+div.pageheader {
+	font-weight: bold;
+	font-size: 1.5rem;
 	color: #414650;
 	margin-bottom: 40px !important;
 }
@@ -149,9 +150,9 @@ input[name="search"]{
 	border-bottom: none;
 }
 
-.nav-tabs .nav-link:hover {
+ul.nav-tabs .nav-link:hover {
 	cursor: pointer;
-	color: #47a7eb !important;
+	color: #47a7eb;
 }
 
 .tab-pane.active {
