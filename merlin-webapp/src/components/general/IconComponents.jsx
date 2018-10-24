@@ -1,5 +1,7 @@
 import React from 'react';
 import {
+    faCaretDown,
+    faCaretUp,
     faCheck,
     faDownload,
     faExclamationTriangle,
@@ -30,6 +32,18 @@ function IconCancel() {
 function IconCheck() {
     return (
         <FontAwesomeIcon icon={faCheck}/>
+    );
+}
+
+function IconCollapseClose() {
+    return (
+        <FontAwesomeIcon icon={faCaretUp}/>
+    );
+}
+
+function IconCollapseOpen() {
+    return (
+        <FontAwesomeIcon icon={faCaretDown}/>
     );
 }
 
@@ -88,5 +102,18 @@ function IconWarning() {
 }
 
 export {
-    IconAdd, IconCancel, IconCheck, IconDanger, IconDownload, IconInfo, IconRefresh, IconRemove, IconSortDown, IconSortUp, IconUpload, IconWarning
+    IconAdd,
+    IconCancel,
+    IconCheck,
+    IconCollapseClose,
+    IconCollapseOpen,
+    IconDanger,
+    IconDownload,
+    IconInfo,
+    IconRefresh,
+    IconRemove,
+    IconSortDown,
+    IconSortUp,
+    IconUpload,
+    IconWarning
 };
