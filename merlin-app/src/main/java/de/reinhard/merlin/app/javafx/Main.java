@@ -37,19 +37,16 @@ public class Main extends Application {
         log.info("Current working directory: " + new File(".").getAbsolutePath());
         log.info("Using Java version: " + System.getProperty("java.version"));
         new Thread(() -> {
-            new Thread(() -> {
-                try {
-                    if (!RunningMode.isDevelopmentMode()) {
-                        AppUpdater.getInstance().checkUpdate();
-                    } else {
-                        // No update mechanism in development mode.
-                        UpdateInfo.getInstance().setDevelopmentTestData(); // Only for testing.
-                    }
-                } catch (Exception ex) {
-                    // Don't stop application due to failed update check.
-                    log.error("Exception while checking update: " + ex.getMessage(), ex);
+            try {
+                if (!RunningMode.isDevelopmentMode()) {
+                    AppUpdater.getInstance().checkUpdate();
+                } else {
+                    // No update mechanism in development mode.
+                    UpdateInfo.getInstance().setDevelopmentTestData(); // Only for testing.
                 }
-            }).start();
+            } catch (Exception ex) {
+                log.error("Exception while checking update: " + ex.getMessage(), ex);
+            }
         }).start();
         launch(args);
     }
@@ -110,12 +107,13 @@ public class Main extends Application {
         server = new JettyServer();
         server.start();
         RunningMode.setRunning(true);
-        try {
-            Storage.getInstance().onStartup();
-        } catch (Exception ex) {
-            // Don't stop application due to failed update check.
-            log.error("Error while loading storage data: " + ex.getMessage(), ex);
-        }
+        new Thread(() -> {
+            try {
+                Storage.getInstance().onStartup();
+            } catch (Exception ex) {
+                log.error("Error while loading storage data: " + ex.getMessage(), ex);
+            }
+        }).start();
     }
 
     @Override
