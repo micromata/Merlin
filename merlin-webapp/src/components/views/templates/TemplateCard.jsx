@@ -1,13 +1,14 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
-import {Card, CardFooter, CardHeader} from 'reactstrap';
+import {Card, CardBody, CardFooter, CardHeader} from 'reactstrap';
 import {formatDateTime} from "../../../utilities/global";
 
 class TemplateCard extends React.Component {
 
     buildItem = (label, content) => {
         return <li className="list-group-item">{label}{content.map((line, index) => {
-            return <div className="card-list-entry" key={index}>{line[0]} <span className={`card-list-entry-value ${line[2]}`}>{line[1]}</span>
+            return <div className="card-list-entry" key={index}>{line[0]} <span
+                className={`card-list-entry-value ${line[2]}`}>{line[1]}</span>
             </div>;
         })}</li>;
     }
@@ -29,16 +30,17 @@ class TemplateCard extends React.Component {
         }
 
         return <React.Fragment>
-            <Link to={`/templates/${template.primaryKey}`} className={'card-link'}>
-                <Card outline color="success" className={'template'} style={{backgroundColor: '#fff', width: '100%'}}>
-                    <CardHeader>{templateId}</CardHeader>
+            <Card tag={'a'} href={`/templates/${template.primaryKey}`} outline color="success" className={'template'}
+                  style={{backgroundColor: '#fff', width: '100%'}}>
+                <CardHeader>{templateId}</CardHeader>
+                <CardBody>
                     <ul className="list-group list-group-flush">
                         {templateText}
                         {definitionText}
                     </ul>
-                    <CardFooter>Click to run.<span className={'lastModified'}>{formatDateTime(template.lastModified)}</span></CardFooter>
-                </Card>
-            </Link>
+                </CardBody>
+                <CardFooter>Click to run.<span className={'lastModified'}>{formatDateTime(template.lastModified)}</span></CardFooter>
+            </Card>
         </React.Fragment>
     };
 
