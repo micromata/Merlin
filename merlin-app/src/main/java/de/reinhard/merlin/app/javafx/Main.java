@@ -6,10 +6,14 @@ import de.reinhard.merlin.app.storage.Storage;
 import de.reinhard.merlin.app.updater.AppUpdater;
 import de.reinhard.merlin.app.updater.UpdateInfo;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.Pane;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.slf4j.Logger;
@@ -20,12 +24,14 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.TimerTask;
 
 public class Main extends Application {
     private static Logger log = LoggerFactory.getLogger(Main.class);
     private JettyServer server;
     private static Main main;
     private Stage stage;
+    private java.util.Timer timer;
 
     public static void main(String[] args) {
         Version version = Version.getInstance();
@@ -33,17 +39,18 @@ public class Main extends Application {
                 + version.getBuildDate() + " (UTC: " + version.getBuildDateUTC() + "), mode: " + RunningMode.getMode());
         log.info("Current working directory: " + new File(".").getAbsolutePath());
         log.info("Using Java version: " + System.getProperty("java.version"));
-        try {
-            if (!RunningMode.isDevelopmentMode()) {
-                // No update mechanism in development mode.
-                AppUpdater.getInstance().checkUpdate();
-            } else {
-                UpdateInfo.getInstance().setDevelopmentTestData(); // Only for testing.
+        new Thread(() -> {
+            try {
+                if (!RunningMode.isDevelopmentMode()) {
+                    AppUpdater.getInstance().checkUpdate();
+                } else {
+                    // No update mechanism in development mode.
+                    UpdateInfo.getInstance().setDevelopmentTestData(); // Only for testing.
+                }
+            } catch (Exception ex) {
+                log.error("Exception while checking update: " + ex.getMessage(), ex);
             }
-        } catch (Exception ex) {
-            // Don't stop application due to failed update check.
-            log.error("Exception while checking update: " + ex.getMessage(), ex);
-        }
+        }).start();
         launch(args);
     }
 
@@ -84,23 +91,57 @@ public class Main extends Application {
         Scene scene = new Scene(root);
 
         stage.setScene(scene);
-        stage.setTitle("Merlin");
+        stage.setTitle("Merlin Server");
+
+        Context context = Context.instance();
+        Tooltip tooltip = new Tooltip();
+        tooltip.setText(context.getString("merlin.server.app.openBrowser.button.tooltip"));
+        Button startButton = (Button) scene.lookup("#startButton");
+        startButton.setText(context.getString("merlin.server.app.openBrowser.button"));
+        startButton.setTooltip(tooltip);
+
+        final Text statusTextField = (Text) scene.lookup("#serverStatusText");
+        final String statusText = context.getString("merlin.server.app.serverStatusText");
+        timer = new java.util.Timer("Timer");
+        timer.schedule(new TimerTask() {
+            int i = 0;
+
+            @Override
+            public void run() {
+                Platform.runLater(() -> {
+                    // RunLater is important: ui elements must be accessed on the fxApplication thread.
+                    statusTextField.setText(statusText + statusDots[i]);
+                    statusTextField.getStyleClass().clear();
+                    statusTextField.getStyleClass().add("status-" + i);
+                });
+                if (++i > 5) {
+                    i = 0;
+                }
+            }
+        }, 500L, 400L);
+
+        Text text = (Text) scene.lookup("#versionText");
+        text.setText(context.getString("merlin.server.app.versionText") + " " + Version.getInstance().getVersion());
         stage.setResizable(false);
         stage.show();
         server = new JettyServer();
         server.start();
+
         RunningMode.setRunning(true);
-        try {
-            Storage.getInstance().onStartup();
-        } catch (Exception ex) {
-            // Don't stop application due to failed update check.
-            log.error("Error while loading storage data: "+ ex.getMessage(), ex);
-        }
+        new Thread(() -> {
+            try {
+                // Preload storage already in the background for faster access for the user after opening the client.
+                Storage.getInstance().onStartup();
+            } catch (Exception ex) {
+                log.error("Error while loading storage data: " + ex.getMessage(), ex);
+            }
+        }).start();
     }
 
     @Override
     public void stop() throws Exception {
         super.stop();
+        timer.cancel();
         log.info("Stopping Java FX application.");
         server.stop();
     }
@@ -112,4 +153,6 @@ public class Main extends Application {
     void openBrowser() {
         getHostServices().showDocument(server.getUrl());
     }
+
+    private String[] statusDots = new String[] {"...", " ...", "  ...", "   ...", "  ...", " ..."};
 }

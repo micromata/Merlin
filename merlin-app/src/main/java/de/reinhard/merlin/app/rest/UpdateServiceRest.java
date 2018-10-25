@@ -22,7 +22,7 @@ public class UpdateServiceRest {
     @Path("/install")
     @Produces(MediaType.TEXT_PLAIN)
     public String downloadUpdate(@Context HttpServletRequest requestContext) {
-        String msg = FilesServiceRest.checkLocalDesktopAvailable(requestContext);
+        String msg = RestUtils.checkLocalDesktopAvailable(requestContext);
         if (msg != null) {
             log.error("Can't launch updater from remote client (only from localhost): " + msg);
             return msg;

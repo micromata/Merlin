@@ -14,7 +14,7 @@ import java.util.ResourceBundle;
 
 public class Context {
     private static Logger log = LoggerFactory.getLogger(Context.class);
-    public static final String BUNDLE_NAME = "MerlinAppMessageBundle";
+    public static final String BUNDLE_NAME = "MerlinAppMessagesBundle";
 
     private static Context instance = new Context();
 

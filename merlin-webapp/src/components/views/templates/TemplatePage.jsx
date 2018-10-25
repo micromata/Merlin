@@ -8,7 +8,7 @@ import TemplateDefinitionPage from './templatedefinition/TemplateDefinitionPage'
 import TemplateRunTab from './TemplateRunTab';
 import TemplateSerialRunTab from './TemplateSerialRunTab';
 import TemplateStatistics from './TemplateStatistics';
-import LogEmbeddedPanel from "../logging/LogEmbeddedPanel";
+import LogEmbeddedPanel from '../logging/LogEmbeddedPanel';
 
 class TemplatePage extends React.Component {
 
@@ -40,9 +40,16 @@ class TemplatePage extends React.Component {
             }));
     };
 
-    toggleTab = tab => () => this.setState({
+    toggleTab = tab => () => {
+
+        if (tab === '5') {
+            this.logComponent.current.reload();
+        }
+
+        this.setState({
         activeTab: tab
-    });
+        })
+    };
 
     render = () => {
 
@@ -153,6 +160,7 @@ class TemplatePage extends React.Component {
                     </TabPane>
                     <TabPane tabId={'5'}>
                         <LogEmbeddedPanel
+                            ref={this.logComponent}
                             mdcTemplatePk={this.state.primaryKey}
                             mdcTemplateDefinitionPk={this.state.template.templateDefinition ?
                                 this.state.template.templateDefinition.primaryKey : null}
@@ -165,6 +173,8 @@ class TemplatePage extends React.Component {
 
     constructor(props) {
         super(props);
+
+        this.logComponent = React.createRef();
 
         this.toggleTab = this.toggleTab.bind(this);
     }

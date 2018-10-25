@@ -1,7 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {PageHeader} from '../general/BootstrapComponents';
-import DropArea from '../general/droparea/Component';
+import DropArea from '../general/droparea/DropArea';
 import {uploadFile} from '../../actions';
 
 const FileUploadView = (props) => (

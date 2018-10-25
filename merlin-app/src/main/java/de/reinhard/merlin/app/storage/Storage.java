@@ -60,6 +60,15 @@ public class Storage implements ConfigurationListener {
      * @return
      */
     public TemplateDefinition getTemplateDefinition(String idOrPrimaryKey) {
+        return getTemplateDefinition(idOrPrimaryKey, false);
+    }
+
+    /**
+     * @param idOrPrimaryKey Id or primary key of the template definition to return.
+     * @param quietly        If true, no error message will be logged. Default is false.
+     * @return
+     */
+    public TemplateDefinition getTemplateDefinition(String idOrPrimaryKey, boolean quietly) {
         Validate.notNull(idOrPrimaryKey);
         checkRefresh();
         for (DirectoryScanner directoryScanner : directoryScannerMap.values()) {
@@ -68,7 +77,8 @@ public class Storage implements ConfigurationListener {
                 return templateDefinition;
             }
         }
-        log.error("Template definition with id or primary key '" + idOrPrimaryKey + "' not found.");
+        if (!quietly)
+            log.error("Template definition with id or primary key '" + idOrPrimaryKey + "' not found.");
         return null;
     }
 
@@ -82,6 +92,15 @@ public class Storage implements ConfigurationListener {
     }
 
     public Template getTemplate(String primaryKey) {
+        return getTemplate(primaryKey, false);
+    }
+
+    /**
+     * @param primaryKey Primary key of the template to return.
+     * @param quietly    If true, no error message will be logged. Default is false.
+     * @return
+     */
+    public Template getTemplate(String primaryKey, boolean quietly) {
         Validate.notNull(primaryKey);
         checkRefresh();
         for (DirectoryScanner directoryScanner : directoryScannerMap.values()) {
@@ -90,7 +109,8 @@ public class Storage implements ConfigurationListener {
                 return template;
             }
         }
-        log.info("No template with primaryKey '" + primaryKey + "' found.");
+        if (!quietly)
+            log.info("No template with primaryKey '" + primaryKey + "' found.");
         return null;
     }
 

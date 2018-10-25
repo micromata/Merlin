@@ -1,6 +1,5 @@
 package de.reinhard.merlin.app.updater;
 
-import com.install4j.api.context.UserCanceledException;
 import com.install4j.api.launcher.ApplicationLauncher;
 import com.install4j.api.launcher.Variables;
 import com.install4j.api.update.ApplicationDisplayMode;
@@ -100,13 +99,14 @@ public class AppUpdater {
             updateUrl = Variables.getCompilerVariable("sys.updatesUrl");
         } catch (IOException ex) {
             log.error("Can't check update url: " + ex.getMessage(), ex);
+            future.complete(null);
             return;
         }
         log.info("Checking update: " + updateUrl);
         UpdateDescriptor updateDescriptor;
         try {
             updateDescriptor = UpdateChecker.getUpdateDescriptor(updateUrl, ApplicationDisplayMode.UNATTENDED);
-        } catch (UserCanceledException | IOException ex) {
+        } catch (Exception ex) {
             log.error("Can't get updates: " + ex.getMessage(), ex);
             return;
         }

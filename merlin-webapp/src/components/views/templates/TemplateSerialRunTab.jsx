@@ -1,15 +1,13 @@
 import React from 'react';
 import {Button} from 'reactstrap';
-import {IconDownload} from "../../general/IconComponents";
-import {getResponseHeaderFilename, getRestServiceUrl} from "../../../utilities/global";
-import downloadFile from "../../../utilities/download";
+import {IconDownload} from '../../general/IconComponents';
+import {getResponseHeaderFilename, getRestServiceUrl} from '../../../utilities/global';
+import DropArea from '../../general/droparea/DropArea';
+import downloadFile from '../../../utilities/download';
+import {uploadFile} from '../../../actions';
+import connect from 'react-redux/es/connect/connect';
 
 class TemplateSerialRunTab extends React.Component {
-
-    runSerialTemplate = file => {
-        const formData = new FormData();
-        formData.append('file', file);
-    };
 
     getSerialTemplate = () => {
         let filename;
@@ -40,12 +38,17 @@ class TemplateSerialRunTab extends React.Component {
                 <Button className={'btn-outline-primary'} onClick={this.getSerialTemplate}>
                     <IconDownload/> Excel serial template
                 </Button>
-                <br/><br/>
-                <code>Upload not yet implemented.</code>
-                {/*<DropArea upload={this.runSerialTemplate} />*/}
+                <h4>Upload serial data Excel file:</h4>
+                <DropArea upload={this.props.uploadFile} />
             </React.Fragment>
         );
     }
 }
 
-export default TemplateSerialRunTab;
+const mapStateToProps = () => ({});
+
+const actions = {
+    uploadFile
+};
+
+export default connect(mapStateToProps, actions)(TemplateSerialRunTab);
