@@ -21,37 +21,39 @@ a.card-link:hover {
     text-decoration: none;
 }
 
-div.card.template {
+a.card.template {
     margin: 5pt;
     cursor: pointer;
 }
 
-div.card.template div.card-footer {
+a.card.template div.card-footer {
     color: #666;
     font-size: 12px;
 }
 
-div.card.template:hover div.card-body, div.card.template:hover li.list-group-item {
+a.card.template:hover div.card-body,
+a.card.template:hover div.card-body li.list-group-item {
     background-color: #f5f5f5;
 }
 
-div.card.template div.card-list-entry {
+a.card.template div.card-list-entry {
     color: grey;
     font-size: 80%;
 }
 
-div.card.template div.card-list-entry .card-list-entry-value {
+a.card.template div.card-list-entry .card-list-entry-value {
     font-style: italic;
 }
 
-div.card.template div.card-list-entry .filename {
+a.card.template div.card-list-entry .filename {
     font-family: monospace;
 }
 
-div.card.template div.card-footer .lastModified {
+a.card.template div.card-footer .lastModified {
     float:right;
 }
 
-div.card.template:hover div.card-header, div.card.template:hover div.card-footer {
+a.card.template:hover div.card-header,
+a.card.template:hover div.card-footer {
     background-color: #eeee;
 }
