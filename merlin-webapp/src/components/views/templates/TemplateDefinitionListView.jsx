@@ -1,6 +1,6 @@
 import React from 'react'
 import './TemplateListView.css';
-import {CardGroup} from 'reactstrap';
+import {CardDeck} from 'reactstrap';
 import {PageHeader} from '../../general/BootstrapComponents';
 import {getRestServiceUrl} from '../../../utilities/global';
 import ErrorAlert from '../../general/ErrorAlert';
@@ -65,14 +65,14 @@ class TemplateDefinitionListView extends React.Component {
                 >
                     <IconRefresh/>
                 </div>
-                <CardGroup>
+                <CardDeck>
                     {this.state.definitions.map(definition => {
                         return <TemplateDefinitionCard
                             key={definition.fileDescriptor.primaryKey}
                             definition={definition}
                         />;
                     })}
-                </CardGroup>
+                </CardDeck>
             </React.Fragment>;
 
         }
