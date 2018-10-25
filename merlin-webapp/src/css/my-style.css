@@ -15,7 +15,7 @@ a.card-link:hover {
 
 .container {
 	max-width: 1260px;
-	margin-top: 80px;
+	margin-top: 100px;
 }
 
 div.main-view {
@@ -116,7 +116,7 @@ input[name="search"]{
 
 .btn.btn-outline-primary {
 	color: #47a7eb;
-	background-color: transparent;
+	background-color: #fff;
 	border-color: #309ce8;
 }
 
@@ -168,30 +168,36 @@ ul.nav-tabs .nav-link:hover {
 
 /* Cards */
 
-.card-header {
+.template.card {
+	color: #50555F;
+	max-width: 390px;
+	min-width: 390px;
+	margin-top: 10px;
+	margin-bottom: 20px;
+}
+
+.template.card:hover {
+	text-decoration: none;
+	transform: scale(1.01);
+	transition: 0.1s ease-in-out;
+}
+
+.template.card .card-header {
 	font-weight: bold;
 	color: #50555F;
 }
 
-a.card-link {
-	width: 100%;
-	margin: 0;
-	margin-bottom: 5px;
+.template.card .card-body {
+	padding: 0;
 }
 
-.card-link + .card-link {
-	margin: 0;
-	margin-bottom: 5px;
-}
-
-.card-header {
-	font-weight: bold;
-	color: #50555F;
+.template.card .card-footer {
 }
 
 .card.border-secondary {
 	border-color: #DEE2E6 !important;
 }
+
 
 
 /* Misc */
