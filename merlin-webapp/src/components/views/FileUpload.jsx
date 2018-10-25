@@ -2,7 +2,8 @@ import React from 'react';
 import {PageHeader} from '../general/BootstrapComponents';
 import DropArea from '../general/droparea/DropArea';
 import {IconSpinner} from '../general/IconComponents';
-import {getRestServiceUrl} from '../../utilities/global';
+import {getResponseHeaderFilename, getRestServiceUrl} from '../../utilities/global';
+import downloadFile from '../../utilities/download';
 
 const FileUploadView = () => (
     <React.Fragment>
@@ -33,11 +34,21 @@ const uploadFile = file => {
     const formData = new FormData();
     formData.append('file', file);
 
+    let filename;
+
     return fetch(getRestServiceUrl('files/upload'), {
         method: 'POST',
         body: formData
     })
-        .then(response => console.log(response))
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(response.statusText);
+            }
+
+            filename = getResponseHeaderFilename(response.headers.get('Content-Disposition'));
+            return response.blob();
+        })
+        .then(blob => downloadFile(blob, filename))
         .catch(alert);
 };
 
