@@ -14,6 +14,8 @@ import org.slf4j.LoggerFactory;
 public class AbstractExcelWriter {
     private Logger log = LoggerFactory.getLogger(AbstractExcelWriter.class);
 
+    static final String CONFIGURATION_SHEET_NAME = "merlin.word.templating.sheet.configuration.name";
+
     protected static final int COLUMN_WIDE_LENGTH = 5000;
     protected static final int COLUMN_EXTRA_WIDE_LENGTH = 15000;
 
@@ -148,7 +150,7 @@ public class AbstractExcelWriter {
 
 
     protected void createConfigurationSheet() {
-        currentSheet = workbook.createOrGetSheet("Configuration");
+        currentSheet = workbook.createOrGetSheet(i18n.getMessage(CONFIGURATION_SHEET_NAME));
         ExcelRow row = addDescriptionRow("merlin.word.templating.sheet_configuration_description", 3);
         row = currentSheet.createRow();
         row.createCells(headRowStyle, "Variable", "Value", "Description");

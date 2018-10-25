@@ -18,72 +18,52 @@ public class SerialDataExcelReader {
     private Logger log = LoggerFactory.getLogger(SerialDataExcelReader.class);
 
     private ExcelWorkbook workbook;
+    private SerialData serialData;
     private TemplateRunContext templateRunContext = new TemplateRunContext();
     private ExcelConfigReader excelConfigReader;
     private I18n i18n;
 
-    public SerialDataExcelReader() {
+    public static boolean isMerlinSerialRunDefinition(ExcelWorkbook workbook) {
+        if (workbook.getSheetByLocalizedNames(SerialDataExcelWriter.SERIAL_VARIABLES_SHEET_NAME) == null) {
+            return false;
+        }
+        if (workbook.getSheetByLocalizedNames(SerialDataExcelWriter.CONFIGURATION_SHEET_NAME) == null) {
+            return false;
+        }
+        return true;
+    }
+
+    public SerialDataExcelReader(ExcelWorkbook workbook) {
+        this.workbook = workbook;
         this.i18n = CoreI18n.getDefault();
+        readConfigFromWorkbook();
     }
 
     public TemplateRunContext getTemplateRunContext() {
         return templateRunContext;
     }
 
-    public boolean isMerlinSerialTemplateData(ExcelWorkbook workbook) {
-        if (workbook.getSheet("Serial") == null) {
+    public boolean isValidMerlinSerialTemplateData() {
+        if (isMerlinSerialRunDefinition(workbook) == false) {
             return false;
         }
-        if (workbook.getSheet("Configuration") == null) {
-            return false;
-        }
-        SerialData serialData = readConfigFromWorkbook();
         if (serialData == null || serialData.getFilenamePattern() == null) {
             return false;
         }
         return true;
     }
 
-
-    public TemplateDefinition readTemplateReference(ExcelWorkbook workbook) {
-        TemplateDefinitionExcelReader templateDefinitionExcelReader = new TemplateDefinitionExcelReader();
-        TemplateDefinition templateDefinition = templateDefinitionExcelReader.readConfigFromWorkbook(workbook);
-        return templateDefinition;
-    }
-
-    public SerialData readFromWorkbook(ExcelWorkbook workbook, TemplateDefinition templateDefinition) {
-        this.workbook = workbook;
-        TemplateDefinitionExcelReader templateDefinitionExcelReader = new TemplateDefinitionExcelReader();
-        SerialData serialData = readConfigFromWorkbook();
-        readVariables(templateDefinition, serialData);
-        return serialData;
-    }
-
-    private SerialData readConfigFromWorkbook() {
-        ExcelSheet sheet = workbook.getSheet("Configuration");
+    /**
+     * @param templateStatistics Needed for validating that all required variables are given.
+     */
+    public void readVariables(TemplateStatistics templateStatistics) {
+        ExcelSheet sheet = workbook.getSheetByLocalizedNames(SerialDataExcelWriter.SERIAL_VARIABLES_SHEET_NAME);
         if (sheet == null) {
-            return null;
+            log.error("Can't read variables from serial template. Excel sheet with variables not found (may-be misspelled?");
+            return;
         }
-        SerialData serialData = new SerialData();
-        if (excelConfigReader == null) {
-            excelConfigReader = new ExcelConfigReader(sheet,
-                    "Variable", "Value");
-            for (ExcelValidationErrorMessage msg : excelConfigReader.getSheet().getAllValidationErrors()) {
-                log.error(msg.getMessageWithAllDetails(i18n));
-            }
-        }
-        PropertiesStorage props = excelConfigReader.readConfig(workbook);
-        //serialData.setTemplatePrimaryKey(props.getConfigString("Template"));
-        //serialData.setTemplateDefinitionPrimaryKey(props.getConfigString("TemplateDefinition"));
-        serialData.setFilenamePattern(props.getConfigString("FilenamePattern"));
-        return serialData;
-    }
-
-
-    private void readVariables(TemplateDefinition templateDefinition, SerialData serialData) {
-        ExcelSheet sheet = workbook.getSheet("Variables");
         Map<VariableDefinition, ExcelColumnDef> columnDefMap = new HashMap<>();
-        for (VariableDefinition variableDefinition : templateDefinition.getVariableDefinitions()) {
+        for (VariableDefinition variableDefinition : templateStatistics.getInputVariables()) {
             ExcelColumnValidator validator;
             if (CollectionUtils.isNotEmpty(variableDefinition.getAllowedValuesList())) {
                 validator = new ExcelColumnOptionsValidator(variableDefinition.getAllowedValuesList());
@@ -116,7 +96,7 @@ public class SerialDataExcelReader {
         while (it.hasNext()) {
             Row row = it.next();
             SerialDataEntry serialDataEntry = new SerialDataEntry();
-            for (VariableDefinition variableDefinition : templateDefinition.getVariableDefinitions()) {
+            for (VariableDefinition variableDefinition : templateStatistics.getInputVariables()) {
                 ExcelColumnDef columnDef = columnDefMap.get(variableDefinition);
                 Object value = PoiHelper.getValue(sheet.getCell(row, columnDef));
                 if (value == null) {
@@ -127,5 +107,28 @@ public class SerialDataExcelReader {
             }
             serialData.add(serialDataEntry);
         }
+    }
+
+    private void readConfigFromWorkbook() {
+        ExcelSheet sheet = workbook.getSheetByLocalizedNames(AbstractExcelWriter.CONFIGURATION_SHEET_NAME);
+        if (sheet == null) {
+            return;
+        }
+        serialData = new SerialData();
+        if (excelConfigReader == null) {
+            excelConfigReader = new ExcelConfigReader(sheet,
+                    "Variable", "Value");
+            for (ExcelValidationErrorMessage msg : excelConfigReader.getSheet().getAllValidationErrors()) {
+                log.error(msg.getMessageWithAllDetails(i18n));
+            }
+        }
+        PropertiesStorage props = excelConfigReader.readConfig(workbook);
+        serialData.setReferencedTemplatePrimaryKey(props.getConfigString("Template"));
+        serialData.setReferencedTemplateDefinitionPrimaryKey(props.getConfigString("TemplateDefinition"));
+        serialData.setFilenamePattern(props.getConfigString("FilenamePattern"));
+    }
+
+    public SerialData getSerialData() {
+        return serialData;
     }
 }

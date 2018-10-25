@@ -1,13 +1,21 @@
 package de.reinhard.merlin;
 
-import java.util.Locale;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.*;
 
 /**
  * For internationalization.
  */
 public class CoreI18n extends I18n {
+    private static Logger log = LoggerFactory.getLogger(CoreI18n.class);
+    private static Locale[] DEFAULT_LOCALES = {Locale.ROOT, Locale.GERMAN};
+
     private static CoreI18n defaultInstance = new CoreI18n();
     public static final String BUNDLE_NAME = "MerlinCoreMessagesBundle";
+    private static List<I18n> allResourceBundles = new ArrayList<>();
 
     public static CoreI18n getDefault() {
         return defaultInstance;
@@ -33,6 +41,28 @@ public class CoreI18n extends I18n {
     public static CoreI18n setDefault(Locale locale) {
         defaultInstance = new CoreI18n(locale);
         return defaultInstance;
+    }
+
+    public static Set<String> getAllTranslations(String key) {
+        Set<String> set = new HashSet<>();
+        for (I18n i18n : getAllResourceBundles()) {
+            String translation = i18n.getMessage(key);
+            if (StringUtils.isNotBlank(translation))
+                set.add(translation);
+        }
+        return set;
+    }
+
+    private static List<I18n> getAllResourceBundles() {
+        if (!allResourceBundles.isEmpty()) {
+            return allResourceBundles;
+        }
+        synchronized (allResourceBundles) {
+            for (Locale locale : DEFAULT_LOCALES) {
+                allResourceBundles.add(new CoreI18n(locale));
+            }
+        }
+        return allResourceBundles;
     }
 
     /**

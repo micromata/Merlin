@@ -27,8 +27,8 @@ public class SerialDataExcelTest {
         Template template = new Template();
         template.setFileDescriptor(new FileDescriptor());
         template.getFileDescriptor().setDirectory(Definitions.OUTPUT_DIR.toPath()).setRelativePath(".").setFilename("ContractTemplate.docx");
-        template.setTemplateDefinition(templateDefinition);
         SerialData origSerialData = createSerialData(template);
+        template.assignTemplateDefinition(templateDefinition);
         origSerialData.setTemplate(template);
         SerialDataExcelWriter writer = new SerialDataExcelWriter(origSerialData);
         ExcelWorkbook workbook = writer.writeToWorkbook();
@@ -37,8 +37,10 @@ public class SerialDataExcelTest {
         workbook.getPOIWorkbook().write(new FileOutputStream(file));
 
         workbook = new ExcelWorkbook(file);
-        SerialDataExcelReader reader = new SerialDataExcelReader();
-        SerialData serialData = reader.readFromWorkbook(workbook, templateDefinition);
+        assertTrue(SerialDataExcelReader.isMerlinSerialRunDefinition(workbook));
+        SerialDataExcelReader reader = new SerialDataExcelReader(workbook);
+        SerialData serialData = reader.getSerialData();
+        reader.readVariables(template.getStatistics());
         // assertEquals(template.getFileDescriptor().getPrimaryKey(), serialData.getTemplate().getPrimaryKey());
         assertEquals(origSerialData.getFilenamePattern(), serialData.getFilenamePattern());
         // assertEquals(templateDefinition.getId(), serialData.getTemplateDefinition().getPrimaryKey());

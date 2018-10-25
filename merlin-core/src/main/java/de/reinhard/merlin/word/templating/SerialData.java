@@ -15,6 +15,7 @@ public class SerialData {
     private String filenamePattern;
     private Template template;
     private TemplateDefinition templateDefinition;
+    private String referencedTemplateDefinitionPrimaryKey, referencedTemplatePrimaryKey;
 
     public SerialData() {
     }
@@ -53,6 +54,30 @@ public class SerialData {
 
     public void setTemplateDefinition(TemplateDefinition templateDefinition) {
         this.templateDefinition = templateDefinition;
+    }
+
+    /**
+     *
+     * @return Referenced template definition by primary key or id if specified inside configuration sheet.
+     */
+    public String getReferencedTemplateDefinitionPrimaryKey() {
+        return referencedTemplateDefinitionPrimaryKey;
+    }
+
+    public void setReferencedTemplateDefinitionPrimaryKey(String referencedTemplateDefinitionPrimaryKey) {
+        this.referencedTemplateDefinitionPrimaryKey = referencedTemplateDefinitionPrimaryKey;
+    }
+
+    /**
+     *
+     * @return Referenced template by primary key if specified inside configuration sheet.
+     */
+    public String getReferencedTemplatePrimaryKey() {
+        return referencedTemplatePrimaryKey;
+    }
+
+    public void setReferencedTemplatePrimaryKey(String referencedTemplatePrimaryKey) {
+        this.referencedTemplatePrimaryKey = referencedTemplatePrimaryKey;
     }
 
     /**

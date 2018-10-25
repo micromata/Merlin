@@ -35,7 +35,7 @@ public class TemplateDefinitionExcelReader {
         if (workbook.getSheet("Variables") == null) {
             return false;
         }
-        if (workbook.getSheet("Configuration") == null) {
+        if (workbook.getSheetByLocalizedNames(AbstractExcelWriter.CONFIGURATION_SHEET_NAME) == null) {
             return false;
         }
         templateDefinition = readConfigFromWorkbook(workbook);
@@ -72,7 +72,7 @@ public class TemplateDefinitionExcelReader {
 
     public TemplateDefinition readConfigFromWorkbook(ExcelWorkbook workbook) {
         this.workbook = workbook;
-        ExcelSheet sheet = workbook.getSheet("Configuration");
+        ExcelSheet sheet = workbook.getSheetByLocalizedNames(AbstractExcelWriter.CONFIGURATION_SHEET_NAME);
         if (sheet == null) {
             return null;
         }

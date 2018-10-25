@@ -1,6 +1,8 @@
 package de.reinhard.merlin.excel;
 
+import de.reinhard.merlin.CoreI18n;
 import de.reinhard.merlin.persistency.PersistencyRegistry;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.poi.ss.usermodel.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,10 +12,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Wraps and enhances a POI workbook.
@@ -82,6 +81,36 @@ public class ExcelWorkbook implements AutoCloseable {
         }
         for (ExcelSheet sheet : sheetList) {
             if (sheetName.equals(sheet.getSheetName())) {
+                return sheet;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * A sheet name might be localized, such as "Configuration" and "Konfiguration". Try to get the first sheet matching one
+     * of the given sheetNames.
+     * @param i18nKey of the sheet title
+     * @return
+     */
+    public ExcelSheet getSheetByLocalizedNames(String i18nKey) {
+        return getSheetByLocalizedNames(CoreI18n.getAllTranslations(i18nKey));
+    }
+
+    /**
+     * A sheet name might be localized, such as "Configuration" and "Konfiguration". Try to get the first sheet matching one
+     * of the given sheetNames.
+     * @param sheetNames
+     * @return
+     */
+    public ExcelSheet getSheetByLocalizedNames(Set<String> sheetNames) {
+        if (CollectionUtils.isEmpty(sheetNames)) {
+            return null;
+        }
+        ExcelSheet sheet;
+        for (String sheetName : sheetNames) {
+            sheet = getSheet(sheetName);
+            if (sheet != null) {
                 return sheet;
             }
         }

@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 
 public class SerialDataExcelWriter extends AbstractExcelWriter {
     private Logger log = LoggerFactory.getLogger(SerialDataExcelWriter.class);
+    static final String SERIAL_VARIABLES_SHEET_NAME = "merlin.word.templating.serial.sheet.serialVariables.name";
 
     private SerialData serialData;
 
@@ -46,7 +47,7 @@ public class SerialDataExcelWriter extends AbstractExcelWriter {
     }
 
     private void createVariablesSheet() {
-        currentSheet = workbook.createOrGetSheet("Variables");
+        currentSheet = workbook.createOrGetSheet(i18n.getMessage(SERIAL_VARIABLES_SHEET_NAME));
         addDescriptionRow("merlin.word.templating.sheet_serial_variables_description", -1, false);
         ExcelRow row = currentSheet.createRow();
         int numberOfColumns = 0;

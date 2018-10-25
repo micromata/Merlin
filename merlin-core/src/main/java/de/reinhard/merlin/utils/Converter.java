@@ -1,5 +1,6 @@
 package de.reinhard.merlin.utils;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,5 +35,15 @@ public class Converter {
             log.info("Can't parse string as double value: " + val);
         }
         return null;
+    }
+
+    public static String formatNumber(int number, int maxValue) {
+        int numberOfDigits;
+        if (maxValue < 10) numberOfDigits = 1;
+        else if (maxValue < 100) numberOfDigits = 2;
+        else if (maxValue < 1000) numberOfDigits = 3;
+        else if (maxValue < 10000) numberOfDigits = 4;
+        else numberOfDigits = 5;
+        return StringUtils.leftPad(String.valueOf(number), numberOfDigits, '0');
     }
 }

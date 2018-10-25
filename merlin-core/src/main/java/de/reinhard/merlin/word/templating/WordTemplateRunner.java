@@ -76,19 +76,34 @@ public class WordTemplateRunner {
      * Creates a filename from the file pattern of the template definition (if exist). Otherwise the file name will
      * be the same as the given default filename with suffix '-generated'.
      *
-     * @param defaultFilename Default filename if not file pattern is found in template definition.
-     * @param variables Needed for replacing variable inside the filename.
+     * @param defaultFilenamePattern Default filename if not file pattern is found in template definition.
+     * @param variables              Needed for replacing variable inside the filename.
      * @return File name, Characters not matching letters, digits and {_-.@} are replaced by underscore
      * (also white spaces are replaced).
      */
-    public String createFilename(String defaultFilename, Map<String, Object> variables) {
-        if (templateDefinition != null) {
-            String pattern = FilenameUtils.getBaseName(templateDefinition.getFilenamePattern());
-            if (StringUtils.isNotBlank(pattern)) {
-                String filename = ReplaceUtils.replace(pattern, variables);
-                return ReplaceUtils.encodeFilename(filename, templateDefinition.isStronglyRestrictedFilenames()) + ".docx";
-            }
+    public String createFilename(String defaultFilenamePattern, Map<String, Object> variables) {
+        return createFilename(defaultFilenamePattern, variables, true);
+    }
+
+    /**
+     * Creates a filename from the file pattern of the template definition (if exist). Otherwise the file name will
+     * be the same as the given default filename with suffix '-generated'.
+     *
+     * @param defaultFilenamePattern       Default filename pattern if no file pattern is found in template definition.
+     * @param variables                    Needed for replacing variable inside the filename.
+     * @param useTemplateDefinitionPattern If true, the pattern of the template definition will be used (if given), otherwise the defaultFilenamePattern will be used. Default is true.
+     * @return File name, Characters not matching letters, digits and {_-.@} are replaced by underscore
+     * (also white spaces are replaced).
+     */
+    public String createFilename(String defaultFilenamePattern, Map<String, Object> variables, boolean useTemplateDefinitionPattern) {
+        String pattern = defaultFilenamePattern;
+        if (useTemplateDefinitionPattern && templateDefinition != null) {
+            pattern = FilenameUtils.getBaseName(templateDefinition.getFilenamePattern());
         }
-        return FilenameUtils.getBaseName(defaultFilename) + "-generated." + FilenameUtils.getExtension(defaultFilename);
+        if (StringUtils.isNotBlank(pattern)) {
+            String filename = ReplaceUtils.replace(pattern, variables);
+            return ReplaceUtils.encodeFilename(filename, templateDefinition.isStronglyRestrictedFilenames()) + ".docx";
+        }
+        return FilenameUtils.getBaseName(defaultFilenamePattern) + "-generated." + FilenameUtils.getExtension(defaultFilenamePattern);
     }
 }

@@ -9,6 +9,7 @@ import de.reinhard.merlin.word.WordDocument;
 import de.reinhard.merlin.word.templating.Template;
 import de.reinhard.merlin.word.templating.TemplateDefinition;
 import de.reinhard.merlin.word.templating.WordTemplateRunner;
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -64,14 +65,12 @@ public class TemplateRunnerRest {
                 WordTemplateRunner runner = new WordTemplateRunner(templateDefinition, doc);
                 WordDocument result = runner.run(data.getVariables());
                 String filename = runner.createFilename(path.getFileName().toString(), data.getVariables());
-                //ZipUtil zipUtil = new ZipUtil("result.zip");
-                //zipUtil.addZipEntry("result/" + file.getName(), result.getAsByteArrayOutputStream().toByteArray());
                 Response.ResponseBuilder builder = Response.ok(result.getAsByteArrayOutputStream().toByteArray());
                 builder.header("Content-Disposition", "attachment; filename=" + filename);
                 // Needed to get the Content-Disposition by client:
                 builder.header("Access-Control-Expose-Headers", "Content-Disposition");
                 response = builder.build();
-                log.info("Downloading file '" + filename + "', length: " + doc.getLength());
+                log.info("Downloading file '" + filename + "', length: " + FileUtils.byteCountToDisplaySize(doc.getLength()));
                 return response;
             } catch (Exception ex) {
                 String errorMsg = "Error while try to run template '" + data.getTemplatePrimaryKey() + "'.";
