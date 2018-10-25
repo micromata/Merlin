@@ -39,3 +39,8 @@ hs_err_pid*
 *.ipr
 *.iml
 *.iws
+test/test1.docx
+test/test2.docx
+test/test3.docx
+test/test4.docx
+test/test5.docx
