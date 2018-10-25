@@ -3,6 +3,7 @@ import {
     faCaretDown,
     faCaretUp,
     faCheck,
+    faCircleNotch,
     faDownload,
     faExclamationTriangle,
     faInfoCircle,
@@ -77,6 +78,12 @@ function IconRemove() {
     );
 }
 
+function IconSpinner() {
+    return (
+        <FontAwesomeIcon icon={faCircleNotch} spin={true} size={'3x'} color={'#aaaaaa'} />
+    );
+}
+
 function IconSortDown() {
     return (
         <FontAwesomeIcon icon={faSortDown}/>
@@ -114,6 +121,7 @@ export {
     IconRemove,
     IconSortDown,
     IconSortUp,
+    IconSpinner,
     IconUpload,
     IconWarning
 };

@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import {PageHeader} from '../general/BootstrapComponents';
 import DropArea from '../general/droparea/DropArea';
 import {uploadFile} from '../../actions';
+import {IconSpinner} from "../general/IconComponents";
 
 const FileUploadView = (props) => (
     <React.Fragment>
@@ -14,6 +15,7 @@ const FileUploadView = (props) => (
         />
 
         <h3>ToDo</h3>
+        <IconSpinner/>
         <ul>
             <li>We should skip the upload button and do the action instantly after dropping a file.</li>
             <li>Support the following upload-results:
