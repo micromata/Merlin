@@ -1,6 +1,6 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
-import {Card, CardFooter, CardHeader} from 'reactstrap';
+import {Card, CardBody, CardFooter, CardHeader} from 'reactstrap';
 import {formatDateTime} from "../../../utilities/global";
 
 class TemplateDefinitionCard extends React.Component {
@@ -26,15 +26,15 @@ class TemplateDefinitionCard extends React.Component {
         }
         definitionText = this.buildItem('Info', content);
         return <React.Fragment>
-            <Link to={`/templateDefinitions/${definition.fileDescriptor.primaryKey}`} className={'card-link'}>
-                <Card outline color="success" className={'template'} style={{backgroundColor: '#fff', width: '100%'}}>
-                    <CardHeader>{definition.id}</CardHeader>
-                    <ul className="list-group list-group-flush">
-                        {definitionText}
-                    </ul>
-                    <CardFooter><span className={'lastModified'}>{formatDateTime(definition.fileDescriptor.lastModified)}</span></CardFooter>
-                </Card>
-            </Link>
+            <Card tag={'a'} href={`/templateDefinitions/${definition.fileDescriptor.primaryKey}`} outline
+                  color="success" className={'template'} style={{backgroundColor: '#fff', width: '100%'}}>
+                <CardHeader>{definition.id}</CardHeader>
+                <ul className="list-group list-group-flush">
+                    {definitionText}
+                </ul>
+                <CardFooter><span
+                    className={'lastModified'}>{formatDateTime(definition.fileDescriptor.lastModified)}</span></CardFooter>
+            </Card>
         </React.Fragment>
     };
 
