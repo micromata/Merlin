@@ -23,8 +23,6 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 
 @Path("/files")
@@ -39,6 +37,11 @@ public class FileUploadRest {
     public Response uploadFile(FormDataMultiPart form) {
         MDCHandler mdc = new MDCHandler();
         try {
+            try {
+                Thread.sleep(10000);
+            } catch (InterruptedException ex) {
+                
+            }
             FormDataBodyPart filePart = form.getField("file");
             ContentDisposition headerOfFilePart = filePart.getContentDisposition();
             InputStream fileInputStream = filePart.getValueAs(InputStream.class);
@@ -77,6 +80,7 @@ public class FileUploadRest {
 
                             String zipFilename = RestUtils.getISODate() + "_" + FilenameUtils.getBaseName(filename) + ".zip";
                             ZipUtil zipUtil = new ZipUtil(zipFilename);
+                            zipUtil.addZipEntry(filename, workbook.getAsByteArrayOutputStream().toByteArray());
                             int counter = 0;
                             int maxEntries = serialData.getEntries().size();
                             for (SerialDataEntry entry : serialData.getEntries()) {
@@ -87,11 +91,6 @@ public class FileUploadRest {
                                 zipUtil.addZipEntry("result/" + zipEntryFilename, result.getAsByteArrayOutputStream().toByteArray());
                             }
                             byte[] zipByteArray = zipUtil.closeAndGetByteArray();
-                            try {
-                                FileUtils.writeByteArrayToFile(new File(zipFilename), zipByteArray);
-                            } catch (IOException ex) {
-                                log.error("Can't write file: " + zipFilename);
-                            }
                             Response.ResponseBuilder builder = Response.ok(zipByteArray);
                             builder.header("Content-Disposition", "attachment; filename=" + zipFilename);
                             // Needed to get the Content-Disposition by client:
