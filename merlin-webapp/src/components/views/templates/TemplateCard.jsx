@@ -31,7 +31,7 @@ class TemplateCard extends React.Component {
 
         return <React.Fragment>
             <Card tag={'a'} href={`/templates/${template.primaryKey}`} outline color="success" className={'template'}
-                  style={{backgroundColor: '#fff', width: '100%'}}>
+                  style={{backgroundColor: '#fff'}}>
                 <CardHeader>{templateId}</CardHeader>
                 <CardBody>
                     <ul className="list-group list-group-flush">
