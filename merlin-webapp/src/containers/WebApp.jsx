@@ -10,7 +10,6 @@ import TemplateListView from '../components/views/templates/TemplateListView';
 import TemplateDefinitionListView from '../components/views/templates/TemplateDefinitionListView';
 import ConfigurationPage from '../components/views/config/ConfigurationPage';
 import UpdatePage from '../components/views/config/UpdatePage';
-import FileUploadView from '../components/views/FileUpload';
 import RestServices from '../components/views/develop/RestServices';
 import {isDevelopmentMode} from '../utilities/global';
 import TemplatePage from '../components/views/templates/TemplatePage';
@@ -44,7 +43,6 @@ class WebApp extends React.Component {
         }
 
         if (isDevelopmentMode()) {
-            routes.push(['File Upload', '/drop', FileUploadView]);
             routes.push(['Rest services', '/restServices', RestServices]);
         }
 
@@ -68,7 +66,7 @@ class WebApp extends React.Component {
                             <Route path={'/templateDefinitions/:primaryKey'} component={TemplateDefinitionPage}/>
                         </Switch>
                     </div>
-                    <Footer versionInfo={this.props.version} />
+                    <Footer versionInfo={this.props.version}/>
                 </div>
             </Router>
         );

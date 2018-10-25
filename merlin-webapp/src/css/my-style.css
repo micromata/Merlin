@@ -198,24 +198,6 @@ ul.nav-tabs .nav-link:hover {
 	border-color: #DEE2E6 !important;
 }
 
-
-
-/* Misc */
-
-div.drop-area {
-	border-radius: 5px;
-	margin-bottom: 50px;
-}
-
-div.drop-area div.background {
-	background: #F2F3F5;
-}
-
-div.drop-area div.background:hover {
-	background: #DEE2E6;
-	cursor: grab;
-}
-
 code {
 	padding: 10px;
 	display: inline-block;

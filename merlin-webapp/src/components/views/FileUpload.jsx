@@ -7,12 +7,12 @@ import LoadingOverlay from '../general/loading/LoadingOverlay';
 
 class FileUploadView extends React.Component {
 
-    state = {
-        loading: false
-    };
-
     constructor(props) {
         super(props);
+
+        this.state = {
+            loading: false
+        };
 
         this.uploadFile = this.uploadFile.bind(this);
     }
@@ -49,9 +49,7 @@ class FileUploadView extends React.Component {
                 <PageHeader>
                     File Upload View
                 </PageHeader>
-                <DropArea
-                    upload={this.uploadFile}
-                />
+                <DropArea upload={this.uploadFile}><b> Select a file,</b> or drop one here.</DropArea>
 
                 <h3>ToDo</h3>
                 <ul>
@@ -69,7 +67,7 @@ class FileUploadView extends React.Component {
                     </li>
                 </ul>
 
-                {this.state.loading ? <LoadingOverlay /> : ''}
+                {this.state.loading ? <LoadingOverlay/> : ''}
             </React.Fragment>
         );
     }

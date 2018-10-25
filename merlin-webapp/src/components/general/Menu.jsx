@@ -1,6 +1,10 @@
 import React from 'react';
 import {NavLink as ReactRouterNavLink} from 'react-router-dom';
-import {Collapse, Nav, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink} from 'reactstrap';
+import {Collapse, Nav, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink, UncontrolledTooltip} from 'reactstrap';
+import DropArea from "./droparea/DropArea";
+import {getResponseHeaderFilename, getRestServiceUrl} from "../../utilities/global";
+import downloadFile from "../../utilities/download";
+import LoadingOverlay from "./loading/LoadingOverlay";
 
 class Menu extends React.Component {
     getNavElement = (route, index) => {
@@ -40,8 +44,31 @@ class Menu extends React.Component {
 
         this.toggle = this.toggle.bind(this);
         this.state = {
+            loading: false,
             isOpen: false
         };
+        this.uploadFile = this.uploadFile.bind(this);
+    }
+
+    uploadFile(file) {
+        this.setState({loading: true});
+        const formData = new FormData();
+        formData.append('file', file);
+        let filename;
+        return fetch(getRestServiceUrl('files/upload'), {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => {
+                this.setState({loading: false});
+                if (!response.ok) {
+                    throw new Error(response.statusText);
+                }
+                filename = getResponseHeaderFilename(response.headers.get('Content-Disposition'));
+                return response.blob();
+            })
+            .then(blob => downloadFile(blob, filename))
+            .catch(alert);
     }
 
     toggle() {
@@ -53,8 +80,10 @@ class Menu extends React.Component {
     render() {
         return (
             <Navbar className={'fixed-top'} color="light" light expand="md">
-                <NavbarBrand to="/" tag={ReactRouterNavLink}><img alt={'Merlin logo'} src={'../../../images/merlin-icon.png'} width={'50px'} />Merlin</NavbarBrand>
-                <NavbarToggler onClick={this.toggle} />
+                <NavbarBrand to="/" tag={ReactRouterNavLink}><img alt={'Merlin logo'}
+                                                                  src={'../../../images/merlin-icon.png'}
+                                                                  width={'50px'}/>Merlin</NavbarBrand>
+                <NavbarToggler onClick={this.toggle}/>
                 <Collapse isOpen={this.state.isOpen} navbar>
                     <Nav className="ml-auto" navbar>
                         {
@@ -63,7 +92,13 @@ class Menu extends React.Component {
                             ))
                         }
                     </Nav>
-                </Collapse>
+                    <DropArea id={'menuDropZone'} className={'menu'}
+                              upload={this.uploadFile}
+                    />
+                    <UncontrolledTooltip placement={'left'} target={'menuDropZone'}>
+                        Drop or open your files here (e. g. serial run Excel sheet).
+                    </UncontrolledTooltip> </Collapse>
+                {this.state.loading ? <LoadingOverlay/> : ''}
             </Navbar>
         );
     }

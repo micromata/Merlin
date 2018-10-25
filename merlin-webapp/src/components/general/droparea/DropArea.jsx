@@ -110,7 +110,7 @@ class DropArea extends React.Component {
 
         return (
             <React.Fragment>
-                <div
+                <div id={this.props.id}
                     onClick={() => this.refs.input.click()}
                     className={`drop-area ${this.state.inDrag ? 'onDrag' : ''}`}
                 >
@@ -130,7 +130,7 @@ class DropArea extends React.Component {
                         </form>
                         <span className={'info'}>
                             <IconUpload/>
-                            <b> Select a file,</b> or drop one here.
+                            {this.props.children}
                         </span>
                     </div>
                 </div>
