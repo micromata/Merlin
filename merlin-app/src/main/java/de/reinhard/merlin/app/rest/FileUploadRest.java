@@ -37,11 +37,6 @@ public class FileUploadRest {
     public Response uploadFile(FormDataMultiPart form) {
         MDCHandler mdc = new MDCHandler();
         try {
-            try {
-                Thread.sleep(10000);
-            } catch (InterruptedException ex) {
-                
-            }
             FormDataBodyPart filePart = form.getField("file");
             ContentDisposition headerOfFilePart = filePart.getContentDisposition();
             InputStream fileInputStream = filePart.getValueAs(InputStream.class);
