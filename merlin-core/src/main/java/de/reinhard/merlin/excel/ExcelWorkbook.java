@@ -3,6 +3,7 @@ package de.reinhard.merlin.excel;
 import de.reinhard.merlin.CoreI18n;
 import de.reinhard.merlin.persistency.PersistencyRegistry;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.poi.ss.usermodel.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -190,6 +191,18 @@ public class ExcelWorkbook implements AutoCloseable {
         }
         return font;
     }
+
+    public ByteArrayOutputStream getAsByteArrayOutputStream() {
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        try {
+            workbook.write(bos);
+        } catch (IOException ex) {
+            log.error(ex.getMessage(), ex);
+            throw new RuntimeException(ex);
+        }
+        return bos;
+    }
+
 
     @Override
     public void close() {
