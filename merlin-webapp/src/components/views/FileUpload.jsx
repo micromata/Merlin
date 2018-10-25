@@ -1,17 +1,16 @@
 import React from 'react';
-import {connect} from 'react-redux';
 import {PageHeader} from '../general/BootstrapComponents';
 import DropArea from '../general/droparea/DropArea';
-import {uploadFile} from '../../actions';
-import {IconSpinner} from "../general/IconComponents";
+import {IconSpinner} from '../general/IconComponents';
+import {getRestServiceUrl} from '../../utilities/global';
 
-const FileUploadView = (props) => (
+const FileUploadView = () => (
     <React.Fragment>
         <PageHeader>
             File Upload View
         </PageHeader>
         <DropArea
-            upload={props.uploadFile}
+            upload={uploadFile}
         />
 
         <h3>ToDo</h3>
@@ -30,10 +29,16 @@ const FileUploadView = (props) => (
     </React.Fragment>
 );
 
-const mapStateToProps = () => ({});
+const uploadFile = file => {
+    const formData = new FormData();
+    formData.append('file', file);
 
-const actions = {
-    uploadFile
+    return fetch(getRestServiceUrl('files/upload'), {
+        method: 'POST',
+        body: formData
+    })
+        .then(response => console.log(response))
+        .catch(alert);
 };
 
-export default connect(mapStateToProps, actions)(FileUploadView);
+export default FileUploadView;
