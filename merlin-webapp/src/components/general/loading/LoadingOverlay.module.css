@@ -1,0 +1,18 @@
+div.loadingOverlay {
+    z-index: 99999;
+    display: block;
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: rgba(11, 11, 11, 0.3);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+div.loadingOverlay div.content {
+    z-index: 999999;
+    color: #ff0f03;
+    margin-top: 150px;
+    text-align: center;
+}
