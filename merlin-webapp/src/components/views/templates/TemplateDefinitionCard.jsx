@@ -26,7 +26,7 @@ class TemplateDefinitionCard extends React.Component {
         definitionText = this.buildItem('Info', content);
         return <React.Fragment>
             <Card tag={'a'} href={`/templateDefinitions/${definition.fileDescriptor.primaryKey}`} outline
-                  color="success" className={'template'} style={{backgroundColor: '#fff', width: '100%'}}>
+                  color="success" className={'template'} style={{backgroundColor: '#fff'}}>
                 <CardHeader>{definition.id}</CardHeader>
                 <CardBody>
                     <ul className="list-group list-group-flush">
