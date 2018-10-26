@@ -7,7 +7,6 @@ import {Provider} from 'react-redux';
 
 import WebApp from './containers/WebApp';
 
-import registerServiceWorker from './registerServiceWorker';
 import reducers from './reducers';
 
 import './css/my-style.css';
@@ -43,5 +42,3 @@ ReactDOM.render(
     </Provider>,
     document.getElementById('root')
 );
-
-registerServiceWorker();
