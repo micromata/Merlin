@@ -31,11 +31,11 @@
         <!-- surefire-report:report -Daggregate=true -->
         <antcall target="maven">
             <param name="dir" value=".."/>
-            <param name="target" value="surefire-report:report -Daggregate=true" />
+            <param name="target" value="clean surefire-report:report -Daggregate=true" />
         </antcall>
         <antcall target="maven">
             <param name="dir" value=".."/>
-            <param name="target" value="clean package assembly:single -DskipTests" />
+            <param name="target" value="package assembly:single -DskipTests" />
         </antcall>
         <!-- cp merlin-app-*-jar-with-dependencies.jar merlin-app.jar -->
         <fileset id="fulljar.filename" dir="${merlin-app}/target/" includes="merlin-app-*-jar-with-dependencies.jar"/>
