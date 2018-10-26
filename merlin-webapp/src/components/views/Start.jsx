@@ -23,7 +23,8 @@ class Start extends React.Component {
                 {todo}
                 <code><h3>Known issues</h3>
                     <ul>
-                        <li>Serienbrieffunktion ist noch nicht freigeschaltet.</li>
+                        <li>Fehler beim Ausführen von Templates darstellen (z. B. unbekannte Steuerelemente).</li>
+                        <li>Alles noch runder machen...</li>
                     </ul>
                     Viel Spaß!
                 </code>
