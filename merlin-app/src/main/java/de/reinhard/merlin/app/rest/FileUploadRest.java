@@ -82,7 +82,7 @@ public class FileUploadRest {
                                 WordDocument result = runner.run(entry.getVariables());
                                 entry.getVariables().put("counter", Converter.formatNumber(++counter, maxEntries));
                                 String zipEntryFilename = runner.createFilename(serialData.getFilenamePattern(), entry.getVariables(), false);
-                                zipUtil.addZipEntry("result/" + zipEntryFilename, result.getAsByteArrayOutputStream().toByteArray());
+                                zipUtil.addZipEntry(zipEntryFilename, result.getAsByteArrayOutputStream().toByteArray());
                             }
                             byte[] zipByteArray = zipUtil.closeAndGetByteArray();
                             Response.ResponseBuilder builder = Response.ok(zipByteArray);
