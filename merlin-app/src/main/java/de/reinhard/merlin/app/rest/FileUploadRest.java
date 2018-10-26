@@ -9,7 +9,6 @@ import de.reinhard.merlin.persistency.PersistencyRegistry;
 import de.reinhard.merlin.utils.Converter;
 import de.reinhard.merlin.word.WordDocument;
 import de.reinhard.merlin.word.templating.*;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.glassfish.jersey.media.multipart.ContentDisposition;
@@ -90,7 +89,7 @@ public class FileUploadRest {
                             // Needed to get the Content-Disposition by client:
                             builder.header("Access-Control-Expose-Headers", "Content-Disposition");
                             Response response = builder.build();
-                            log.info("Downloading file '" + zipFilename + "', length: " + FileUtils.byteCountToDisplaySize(zipByteArray.length));
+                            log.info("Downloading file '" + zipFilename + "', length: " + RestUtils.getByteCountToDisplaySize(zipByteArray.length));
                             return response;
                         }
                     }

@@ -1,6 +1,7 @@
 package de.reinhard.merlin.app.rest;
 
 import de.reinhard.merlin.app.javafx.RunningMode;
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -39,5 +40,16 @@ public class RestUtils {
         synchronized (ISO_DATEFORMAT) {
             return ISO_DATEFORMAT.format(new Date());
         }
+    }
+
+    static String getByteCountToDisplaySize(Long length) {
+        if (length == null) {
+            return "0KB";
+        }
+        return FileUtils.byteCountToDisplaySize(length);
+    }
+
+    static String getByteCountToDisplaySize(int length) {
+        return FileUtils.byteCountToDisplaySize(length);
     }
 }
