@@ -62,6 +62,9 @@ public class JettyServer {
         jerseyServlet.setInitOrder(1);
         ctx.addServlet(jerseyServlet, "/rest/*");
         ctx.addFilter(UserFilter.class, "/rest/*", EnumSet.of(DispatcherType.INCLUDE, DispatcherType.REQUEST));
+        // Following code doesn't work:
+        // jerseyServlet.setInitParameter("useFileMappedBuffer", "false");
+        // jerseyServlet.setInitParameter("cacheControl","max-age=0,public");
 
         try {
             // Resolve file to directory
