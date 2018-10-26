@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class CoreI18nTest {
     @Test
     public void testResourceBundles() {
-        Set<String> translations = CoreI18n.getAllTranslations("merlin.word.templating.sheet.configuration");
+        Set<String> translations = CoreI18n.getAllTranslations("merlin.word.templating.sheet.configuration.name");
         assertEquals(2, translations.size());
         assertTrue(translations.contains("Konfiguration"));
         assertTrue(translations.contains("Configuration"));
