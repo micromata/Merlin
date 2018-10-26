@@ -33,12 +33,12 @@
         <dependency>
             <groupId>de.reinhard</groupId>
             <artifactId>merlin-core</artifactId>
-            <version>${merlin.version}</version>
+            <version>${revision}</version>
         </dependency>
         <dependency>
             <groupId>de.reinhard</groupId>
             <artifactId>merlin-velocity</artifactId>
-            <version>${merlin.version}</version>
+            <version>${revision}</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-log4j12 -->
         <dependency>

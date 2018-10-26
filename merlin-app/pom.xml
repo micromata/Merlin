@@ -23,8 +23,6 @@
         </repository>
     </repositories>
 
-    <name>Merlin app</name>
-
     <!-- mvn clean compile assembly:single -->
     <build>
         <plugins>
@@ -60,7 +58,7 @@
         <dependency>
             <groupId>de.reinhard</groupId>
             <artifactId>merlin-core</artifactId>
-            <version>${merlin.version}</version>
+            <version>${revision}</version>
         </dependency>
 
 
