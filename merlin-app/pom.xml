@@ -9,12 +9,14 @@
         <version>${revision}</version>
     </parent>
     <artifactId>merlin-app</artifactId>
+    <version>${revision}</version>
     <name>${project.artifactId}</name>
     <packaging>jar</packaging>
 
     <properties>
         <maven.build.timestamp.format>yyyy-MM-dd' 'HH:mm:ss</maven.build.timestamp.format>
         <timestamp>${maven.build.timestamp}</timestamp>
+        <skip.assembly>false</skip.assembly>
     </properties>
     <repositories>
         <repository>
@@ -23,29 +25,7 @@
         </repository>
     </repositories>
 
-    <!-- mvn clean compile assembly:single -->
     <build>
-        <plugins>
-            <plugin>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <mainClass>de.reinhard.merlin.app.javafx.Main</mainClass>
-                        </manifest>
-                        <manifestEntries>
-                            <Build-Time>${maven.build.timestamp}</Build-Time>
-                            <Project-Version>${project.version}</Project-Version>
-                        </manifestEntries>
-                    </archive>
-                    <descriptorRefs>
-                        <descriptorRef>jar-with-dependencies</descriptorRef>
-                    </descriptorRefs>
-                    <finalName>merlin-app</finalName>
-                    <appendAssemblyId>false</appendAssemblyId>
-                </configuration>
-            </plugin>
-        </plugins>
         <resources>
             <resource>
                 <directory>src/main/resources</directory>

@@ -4,12 +4,19 @@
     </description>
     <!-- set global properties for this build -->
     <property name="merlin-app" location="../merlin-app"/>
-    <property name="merlin-core" location="../merlin-core"/>
     <property name="merlin-webapp" location="../merlin-webapp"/>
     <property name="install4j-merlin" location="../../Install4j/Merlin"/>
     <property name="dist" location="dist"/>
 
-    <target name="pre-dist" description="Prepares a new release." depends="merlin-core, merlin-app, merlin-webapp" />
+    <target name="pre-dist" description="Prepares a new release." depends="merlin-mvn, merlin-webapp">
+        <echo>
+            ***************************************************************************************
+            *** 1. Please refer for ensuring all test where OK: target/site/surefire-report.html **
+            *** 2. Build installation files                                                      **
+            *** 3. ant post-dist                                                                 **
+            ***************************************************************************************
+        </echo>
+    </target>
 
     <target name="post-dist" description="Prepares a new release." depends="merlin-install4j" />
 
@@ -19,20 +26,21 @@
         </exec>
     </target>
 
-    <!-- cd merlin-core; mvn clean install -->
-    <target name="merlin-core">
+    <!-- cd merlin; mvn clean package assembly:single -->
+    <target name="merlin-mvn">
+        <!-- surefire-report:report -Daggregate=true -->
         <antcall target="maven">
-            <param name="dir" value="${merlin-core}"/>
-            <param name="target" value="clean install" />
+            <param name="dir" value=".."/>
+            <param name="target" value="surefire-report:report -Daggregate=true" />
         </antcall>
-    </target>
-
-    <!-- cd merlin-app; mvn clean compile assembly:single -->
-    <target name="merlin-app">
         <antcall target="maven">
-            <param name="dir" value="${merlin-app}"/>
-            <param name="target" value="clean compile assembly:single" />
+            <param name="dir" value=".."/>
+            <param name="target" value="clean package assembly:single -DskipTests" />
         </antcall>
+        <!-- cp merlin-app-*-jar-with-dependencies.jar merlin-app.jar -->
+        <fileset id="fulljar.filename" dir="${merlin-app}/target/" includes="merlin-app-*-jar-with-dependencies.jar"/>
+        <property name="prop.fulljar.filename" refid="fulljar.filename"/>
+        <copy file="${merlin-app}/target/${prop.fulljar.filename}" tofile="${merlin-app}/target/merlin-app.jar" />
     </target>
 
     <!-- cd merlin-webapp; npm run build -->
