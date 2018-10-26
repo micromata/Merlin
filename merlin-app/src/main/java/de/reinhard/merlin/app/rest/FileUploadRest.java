@@ -41,7 +41,6 @@ public class FileUploadRest {
             ContentDisposition headerOfFilePart = filePart.getContentDisposition();
             InputStream fileInputStream = filePart.getValueAs(InputStream.class);
             String filename = headerOfFilePart.getFileName();
-            boolean processed = false;
             if (filename.endsWith(".xlsx") || filename.endsWith(".xls")) {
                 ExcelWorkbook workbook = new ExcelWorkbook(fileInputStream, filename);
                 if (SerialDataExcelReader.isMerlinSerialRunDefinition(workbook)) {
@@ -95,16 +94,11 @@ public class FileUploadRest {
                             return response;
                         }
                     }
-                    processed = true;
                 }
             }
-            if (!processed)
-                log.info("Uploading of unknown file ignored:" + filename);
-
-            // save the file to the server
-            //saveFile(fileInputStream, new File(TEST_OUT_DIR), headerOfFilePart.getFileName());
-            String output = "File upload OK.";
-            return Response.status(200).entity(output).build();
+            log.info("Unsupported file:" + filename);
+            String output = "Unsupported file.";
+            return Response.status(Response.Status.BAD_REQUEST).entity(output).build();
         } finally {
             mdc.restore();
         }

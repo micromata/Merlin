@@ -28,11 +28,11 @@ class TemplateSerialRunTab extends React.Component {
         })
             .then(response => {
                 this.setState({loading: false});
-
                 if (!response.ok) {
-                    throw new Error(response.statusText);
+                    return response.text().then(text => {
+                        throw new Error(text)
+                    });
                 }
-
                 filename = getResponseHeaderFilename(response.headers.get('Content-Disposition'));
                 return response.blob();
             })

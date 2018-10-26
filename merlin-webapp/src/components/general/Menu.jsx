@@ -11,10 +11,8 @@ class Menu extends React.Component {
         if (index === 0) {
             return '';
         }
-
         let addition = '';
         let className = '';
-
         // Additional Route Settings
         if (route.length >= 4) {
             if (route[3].badge) {
@@ -25,7 +23,6 @@ class Menu extends React.Component {
                 className = route[3].className;
             }
         }
-
         return (
             <NavItem key={index}>
                 <NavLink
@@ -62,7 +59,9 @@ class Menu extends React.Component {
             .then(response => {
                 this.setState({loading: false});
                 if (!response.ok) {
-                    throw new Error(response.statusText);
+                    return response.text().then(text => {
+                        throw new Error(text)
+                    });
                 }
                 filename = getResponseHeaderFilename(response.headers.get('Content-Disposition'));
                 return response.blob();
