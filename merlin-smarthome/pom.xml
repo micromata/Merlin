@@ -3,15 +3,17 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
                              http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <groupId>de.reinhard</groupId>
         <artifactId>merlin-parent</artifactId>
-        <version>0.4</version>
+        <version>${revision}</version>
     </parent>
     <artifactId>merlin-smarthome</artifactId>
+    <name>${project.artifactId}</name>
     <packaging>jar</packaging>
 
-    <name>Merlin smarthome package (KNX, Openhab)</name>
+    <description>Merlin smarthome package (KNX, Openhab)</description>
 
     <build>
         <pluginManagement>

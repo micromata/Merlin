@@ -6,12 +6,15 @@
 
     <groupId>de.reinhard</groupId>
     <artifactId>merlin-parent</artifactId>
+    <version>${revision}</version>
+    <name>${project.artifactId}</name>
+    <description>Main POM file for ${project.artifactId}</description>
     <packaging>pom</packaging>
-    <version>0.4</version>
-    <name>Multi Chapter Merlin Parent Project</name>
+
     <properties>
-        <merlin.version>0.4</merlin.version>
+        <revision>0.5</revision>
     </properties>
+
     <modules>
         <module>merlin-app</module>
         <module>merlin-core</module>
