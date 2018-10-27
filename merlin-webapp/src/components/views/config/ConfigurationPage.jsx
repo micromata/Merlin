@@ -34,7 +34,6 @@ class ConfigForm extends React.Component {
         this.onSave = this.onSave.bind(this);
         this.onCancel = this.onCancel.bind(this);
         this.onResetConfiguration = this.onResetConfiguration.bind(this);
-        this.unregisterServiceWorker = this.unregisterServiceWorker.bind(this);
     }
 
     componentDidMount() {
@@ -68,19 +67,6 @@ class ConfigForm extends React.Component {
             .catch((error) => {
                 console.log(error, "Oups, what's happened?")
             })
-    }
-
-    unregisterServiceWorker = () => {
-        if (window.navigator && navigator.serviceWorker) {
-            console.log('Found serviceWorker.');
-            navigator.serviceWorker.getRegistrations()
-                .then(function (registrations) {
-                    for (let registration of registrations) {
-                        console.log('Found serviceWorker registration.');
-                        registration.unregister();
-                    }
-                });
-        }
     }
 
     setRedirect = () => {
@@ -205,14 +191,9 @@ class ConfigForm extends React.Component {
                                              onChange={this.handleTextChange}
                                              placeholder="Enter port"/>
                         <FormLabelField>
-                            <React.Fragment>
-                                <FormButton onClick={this.onResetConfiguration}
-                                            hint="Reset factory settings."> <IconDanger/> Reset
-                                </FormButton>
-                                <FormButton onClick={this.unregisterServiceWorker}
-                                            hint="If you have cache problems from very early versions of Merlin."> Unregister service worker
-                                </FormButton>
-                            </React.Fragment>
+                            <FormButton onClick={this.onResetConfiguration}
+                                        hint="Reset factory settings."> <IconDanger/> Reset
+                            </FormButton>
                         </FormLabelField>
                     </FormFieldset>
                 </Collapse>
