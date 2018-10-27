@@ -6,13 +6,13 @@ import classNames from 'classnames';
 
 class FormCheckbox extends React.Component {
 
-    id = this.props.id || revisedRandId();
+    _id = this.props.id || revisedRandId();
 
     render() {
         let tooltip = null;
         let hintId = null;
         if (this.props.hint) {
-            hintId = `hint-${this.id}`;
+            hintId = `hint-${this._id}`;
             tooltip =
                 <UncontrolledTooltip placement="right" target={hintId}>
                     {this.props.hint}
@@ -20,15 +20,15 @@ class FormCheckbox extends React.Component {
         }
         let labelNode = <label
             className={'custom-control-label'}
-            htmlFor={this.id}>
+            htmlFor={this._id}>
             {this.props.label}
         </label>;
-        var {id, className, ...other} = this.props;
+        const {id, className, ...other} = this.props;
         return (
             <React.Fragment>
                 <div className="custom-control custom-checkbox" id={hintId}>
                     <input type="checkbox"
-                           id={this.id}
+                           id={this._id}
                            className={classNames('custom-control-input', className)}
                            {...other}
                     />
@@ -50,12 +50,8 @@ FormCheckbox.propTypes = {
 };
 
 FormCheckbox.defaultProps = {
-    id: null,
-    name: '',
     checked: false,
-    onChange: null,
-    hint: '',
-    label: ''
+    onChange: null
 };
 
 

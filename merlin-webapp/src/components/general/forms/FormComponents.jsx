@@ -2,8 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {FormFeedback, Input, UncontrolledTooltip} from 'reactstrap';
 import {FormCheckbox} from "./FormCheckbox";
-import classNames from 'classnames';
-// TODO: SPLIT IN DIFFERENT FILES
+import {FormButton} from "./FormButton";
 
 const FormGroup = (props) => {
     return (
@@ -285,50 +284,6 @@ FormFieldset.propTypes = {
 FormFieldset.defaultProps = {
     id: null,
     text: '',
-    children: null
-};
-
-
-const FormButton = (props) => {
-    let tooltip = null;
-    let targetId = props.id || props.name;
-    /*    if (props.hint) {
-            tooltip = <UncontrolledTooltip placement={props.hintPlacement} target={targetId}>
-                {props.hint}
-            </UncontrolledTooltip>;
-        }*/
-    var {className, hint, hintPlacement, id, ...other} = props;
-    return (
-        <React.Fragment>
-            <button
-                {...other}
-                id={targetId}
-                className={classNames(`btn btn-${props.bsStyle}`, props.className)}
-            >
-                {props.children}
-            </button>
-            {tooltip}
-        </React.Fragment>
-    );
-}
-
-FormButton.propTypes = {
-    id: PropTypes.string,
-    bsStyle: PropTypes.oneOf(['primary', 'outline-primary', null]),
-    type: PropTypes.string,
-    onClick: PropTypes.func,
-    hint: PropTypes.string,
-    hintPlacement: PropTypes.oneOf(['right', 'top']),
-    disabled: PropTypes.bool,
-    children: PropTypes.node
-};
-FormButton.defaultProps = {
-    bsStyle: 'outline-primary',
-    type: 'button',
-    onClick: null,
-    hint: null,
-    hintPlacement: 'top',
-    disabled: false,
     children: null
 };
 
