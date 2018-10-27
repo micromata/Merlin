@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {FormFeedback, Input, UncontrolledTooltip} from 'reactstrap';
+import {UncontrolledTooltip} from 'reactstrap';
 import {revisedRandId} from "../../../utilities/global";
+import classNames from 'classnames';
 
 class FormCheckbox extends React.Component {
 
@@ -22,15 +23,14 @@ class FormCheckbox extends React.Component {
             htmlFor={this.id}>
             {this.props.label}
         </label>;
+        var {id, className, ...other} = this.props;
         return (
             <React.Fragment>
                 <div className="custom-control custom-checkbox" id={hintId}>
-                    <input className="custom-control-input"
-                           type="checkbox"
+                    <input type="checkbox"
                            id={this.id}
-                           name={this.props.name}
-                           checked={this.props.checked}
-                           onChange={this.props.onChange}
+                           className={classNames('custom-control-input', className)}
+                           {...other}
                     />
                     {labelNode}
                 </div>

@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {FormFeedback, Input, UncontrolledTooltip} from 'reactstrap';
 import {FormCheckbox} from "./FormCheckbox";
+import classNames from 'classnames';
 // TODO: SPLIT IN DIFFERENT FILES
 
 const FormGroup = (props) => {
@@ -302,7 +303,7 @@ const FormButton = (props) => {
             <button
                 {...other}
                 id={targetId}
-                className={`btn btn-${props.bsStyle}`}
+                className={classNames(`btn btn-${props.bsStyle}`, props.className)}
             >
                 {props.children}
             </button>
