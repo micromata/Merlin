@@ -1,8 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {FormFeedback, Input, UncontrolledTooltip} from 'reactstrap';
-import {revisedRandId} from "../../../utilities/global";
-
+import {FormCheckbox} from "./FormCheckbox";
 // TODO: SPLIT IN DIFFERENT FILES
 
 const FormGroup = (props) => {
@@ -135,56 +134,6 @@ FormSelect.defaultProps = {
     hint: null,
     hintPlacement: 'top',
 };
-
-
-const FormCheckbox = (props) => {
-    let tooltip = null;
-    let hintId = null;
-    if (props.hint) {
-        hintId = `hint-${props.id || revisedRandId() }`;
-        tooltip =
-            <UncontrolledTooltip placement="right" target={hintId}>
-                {props.hint}
-            </UncontrolledTooltip>;
-    }
-    let labelNode = <label
-        className={'custom-control-label'}
-        htmlFor={props.id}>
-        {props.label}
-    </label>;
-    return (
-        <div className="custom-control custom-checkbox" id={hintId}>
-            <input className="custom-control-input"
-                   type="checkbox"
-                   id={props.id}
-                   name={props.name}
-                   checked={props.checked}
-                   onChange={props.onChange}
-            />
-            {labelNode}
-            {tooltip}
-        </div>
-    );
-}
-
-FormCheckbox.propTypes = {
-    id: PropTypes.string,
-    name: PropTypes.string,
-    checked: PropTypes.bool,
-    onChange: PropTypes.func,
-    hint: PropTypes.string,
-    label: PropTypes.node
-};
-
-FormCheckbox.defaultProps = {
-    id: null,
-    name: '',
-    checked: false,
-    onChange: null,
-    hint: '',
-    label: ''
-};
-
 
 const FormField = (props) => {
     return (
@@ -342,11 +291,11 @@ FormFieldset.defaultProps = {
 const FormButton = (props) => {
     let tooltip = null;
     let targetId = props.id || props.name;
-/*    if (props.hint) {
-        tooltip = <UncontrolledTooltip placement={props.hintPlacement} target={targetId}>
-            {props.hint}
-        </UncontrolledTooltip>;
-    }*/
+    /*    if (props.hint) {
+            tooltip = <UncontrolledTooltip placement={props.hintPlacement} target={targetId}>
+                {props.hint}
+            </UncontrolledTooltip>;
+        }*/
     var {className, hint, hintPlacement, id, ...other} = props;
     return (
         <React.Fragment>
