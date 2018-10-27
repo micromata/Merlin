@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {FormFeedback, Input, UncontrolledTooltip} from 'reactstrap';
+import {revisedRandId} from "../../../utilities/global";
 
 // TODO: SPLIT IN DIFFERENT FILES
 
@@ -137,23 +138,10 @@ FormSelect.defaultProps = {
 
 
 const FormCheckbox = (props) => {
-    if (!props.id & props.hint) {
-        /*
-        TODO
-        customProp: function(props, propName, componentName) {
-            if (!/matchme/.test(props[propName])) {
-                return new Error(
-                    'Invalid prop `' + propName + '` supplied to' +
-                    ' `' + componentName + '`. Validation failed.'
-                );
-            }
-        },         */
-        console.log('******** Don\'t forget to specifiy id if you specify a hint: ' + props.hint);
-    }
     let tooltip = null;
     let hintId = null;
     if (props.hint) {
-        hintId = `hint-${props.id}`;
+        hintId = `hint-${props.id || revisedRandId() }`;
         tooltip =
             <UncontrolledTooltip placement="right" target={hintId}>
                 {props.hint}
@@ -229,10 +217,7 @@ FormField.defaultProps = {
 
 
 const FormLabelField = (props) => {
-    if (!props.id & props.hint) {
-        console.log('******** Don\'t forget to specifiy id if you specify a hint: ' + props.hint);
-    }
-    const forId = props.htmlFor || props.id;
+    const forId = props.children.props.id || props.htmlFor;
     return (
         <FormGroup>
             <FormLabel length={props.labelLength} htmlFor={forId}>
@@ -357,14 +342,11 @@ FormFieldset.defaultProps = {
 const FormButton = (props) => {
     let tooltip = null;
     let targetId = props.id || props.name;
-    if (props.hint) {
+/*    if (props.hint) {
         tooltip = <UncontrolledTooltip placement={props.hintPlacement} target={targetId}>
             {props.hint}
         </UncontrolledTooltip>;
-    }
-    if (!targetId) {
-        console.log("******* Specifiy id: " + props.hint);
-    }
+    }*/
     var {className, hint, hintPlacement, id, ...other} = props;
     return (
         <React.Fragment>
