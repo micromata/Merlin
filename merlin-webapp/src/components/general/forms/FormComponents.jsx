@@ -1,19 +1,25 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import classNames from 'classnames';
 import {FormFeedback, Input, UncontrolledTooltip} from 'reactstrap';
 import {FormCheckbox} from "./FormCheckbox";
 import {FormButton} from "./FormButton";
+import {revisedRandId} from "../../../utilities/global";
 
 const FormGroup = (props) => {
+    const {className, ...other} = props;
     return (
-        <div className={`form-group row`}>
+        <div className={classNames('form-group row', className)}
+             {...other}
+        >
             {props.children}
         </div>
     );
 }
 
 FormGroup.propTypes = {
-    children: PropTypes.node
+    children: PropTypes.node,
+    className: PropTypes.string
 };
 
 FormGroup.defaultProps = {
@@ -22,10 +28,10 @@ FormGroup.defaultProps = {
 
 
 const FormLabel = (props) => {
+    const {className, length, ...other} = props;
     return (
-        <label
-            className={`col-sm-${props.length} col-form-label`}
-            htmlFor={props.htmlFor}
+        <label className={classNames(`col-sm-${props.length} col-form-label`, className)}
+               {...other}
         >
             {props.children}
         </label>
@@ -51,13 +57,13 @@ const FormInput = (props) => {
             {props.hint}
         </UncontrolledTooltip>;
     }
-    var {fieldLength, className, hint, hintPlacement, id, ...other} = props;
+    const {fieldLength, className, hint, hintPlacement, id, ...other} = props;
     return (
         <React.Fragment>
-            <Input
-                {...other}
-                id={targetId}
-                className={`col-sm-${props.fieldLength} ${props.className}`}/>
+            <Input id={targetId}
+                   className={classNames(`col-sm-${props.fieldLength}`, className)}
+                   {...other}
+            />
             {tooltip}
         </React.Fragment>
     );
@@ -105,13 +111,12 @@ const FormSelect = (props) => {
             {props.hint}
         </UncontrolledTooltip>;
     }
-    var {hint, hintPlacement, id, ...other} = props;
+    const {className, hint, hintPlacement, id, ...other} = props;
     return (
         <React.Fragment>
-            <select
-                {...other}
-                id={targetId}
-                className={'custom-select form-control form-control-sm mr-1'}
+            <select id={targetId}
+                    className={classNames('custom-select form-control form-control-sm mr-1', className)}
+                    {...other}
             >
                 {props.children}
             </select>
@@ -127,7 +132,8 @@ FormSelect.propTypes = {
     onChange: PropTypes.func,
     hint: PropTypes.string,
     hintPlacement: PropTypes.oneOf(['right', 'top']),
-    children: PropTypes.node
+    children: PropTypes.node,
+    className: PropTypes.string
 };
 
 FormSelect.defaultProps = {
@@ -136,10 +142,11 @@ FormSelect.defaultProps = {
 };
 
 const FormField = (props) => {
+    const {className, id, ...other} = props;
     return (
-        <div
-            className={`col-sm-${props.length}`}
-            id={props.id}
+        <div id={props.id}
+             className={classNames(`col-sm-${props.length}`, className)}
+             {...other}
         >
             {props.children}
             {props.validationMessage ? <FormFeedback>{props.validationMessage}</FormFeedback> : ''}
@@ -153,7 +160,8 @@ FormField.propTypes = {
     hint: PropTypes.node,
     length: PropTypes.number,
     validationMessage: PropTypes.string,
-    children: PropTypes.node
+    children: PropTypes.node,
+    className: PropTypes.string
 };
 
 FormField.defaultProps = {
@@ -166,7 +174,7 @@ FormField.defaultProps = {
 
 
 const FormLabelField = (props) => {
-    const forId = props.children.props.id || props.htmlFor;
+    const forId = props.children.props.id || props.htmlFor || revisedRandId();
     return (
         <FormGroup>
             <FormLabel length={props.labelLength} htmlFor={forId}>
@@ -268,7 +276,9 @@ FormLabelInputField.defaultProps = {
 
 const FormFieldset = (props) => {
     return (
-        <fieldset className={'form-group'} id={props.id}>
+        <fieldset id={props.id}
+                  className={classNames('form-group', props.className)}
+        >
             <legend>{props.text}</legend>
             {props.children}
         </fieldset>
@@ -278,7 +288,8 @@ const FormFieldset = (props) => {
 FormFieldset.propTypes = {
     id: PropTypes.string,
     text: PropTypes.string,
-    children: PropTypes.node
+    children: PropTypes.node,
+    className: PropTypes.string
 };
 
 FormFieldset.defaultProps = {
