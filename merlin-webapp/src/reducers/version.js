@@ -11,7 +11,8 @@ const reducer = (state = initialState, action) => {
     switch (action.type) {
         case VERSION_REQUEST_RELOAD:
             return Object.assign({}, state, {
-                loading: true
+                loading: true,
+                failed: false
             });
         case VERSION_RELOADED:
 
@@ -21,6 +22,7 @@ const reducer = (state = initialState, action) => {
 
             return Object.assign({}, state, {
                 loading: false,
+                failed: false,
                 version: action.payload.version,
                 buildDate: action.payload.buildDate,
                 updateVersion: action.payload.updateVersion
