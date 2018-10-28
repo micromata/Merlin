@@ -1,6 +1,7 @@
 import React from 'react';
+import {Link} from 'react-router-dom';
 import {Card, CardBody, CardFooter, CardHeader} from 'reactstrap';
-import {formatDateTime} from "../../../utilities/global";
+import {formatDateTime} from '../../../utilities/global';
 
 class TemplateDefinitionCard extends React.Component {
 
@@ -25,7 +26,7 @@ class TemplateDefinitionCard extends React.Component {
         }
         definitionText = this.buildItem('Info', content);
         return <React.Fragment>
-            <Card tag={'a'} href={`/templateDefinitions/${definition.fileDescriptor.primaryKey}`} outline
+            <Card tag={Link} to={`/templateDefinitions/${definition.fileDescriptor.primaryKey}`} outline
                   color="success" className={'template'} style={{backgroundColor: '#fff'}}>
                 <CardHeader>{definition.id}</CardHeader>
                 <CardBody>

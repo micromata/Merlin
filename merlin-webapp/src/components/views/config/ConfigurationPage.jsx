@@ -2,8 +2,12 @@ import React from 'react';
 import {Redirect} from 'react-router-dom'
 import {Button, Collapse} from 'reactstrap';
 import {PageHeader} from '../../general/BootstrapComponents';
-import DirectoryItemsFieldset from "./DirectoryItemsFieldset";
+import DirectoryItemsFieldset from './DirectoryItemsFieldset';
 import {
+    FormButton,
+    FormCheckbox,
+    FormField,
+    FormFieldset,
     FormGroup,
     FormLabelField,
     FormLabelInputField,
@@ -14,21 +18,66 @@ import {getRestServiceUrl, isDevelopmentMode} from "../../../utilities/global";
 import {IconDanger, IconWarning} from '../../general/IconComponents';
 import {getTranslation} from "../../../utilities/i18n";
 import I18n from "../../general/translation/I18n";
+import ErrorAlert from '../../general/ErrorAlert';
 
 
 var directoryItems = [];
 
 class ConfigForm extends React.Component {
+    loadConfig = () => {
+        this.setState({
+            loading: true,
+            failed: false
+        });
+        fetch(getRestServiceUrl('configuration/config'), {
+            method: 'GET',
+            dataType: 'JSON',
+            headers: {
+                'Content-Type': 'text/plain; charset=utf-8'
+            }
+        })
+            .then((resp) => {
+                return resp.json()
+            })
+            .then((data) => {
+                const {templatesDirModified, templatesDirs, ...config} = data;
+
+                directoryItems.splice(0, directoryItems.length);
+                if (templatesDirModified) {
+                    let idx = 0;
+                    templatesDirs.forEach(function (item) {
+                        directoryItems.push({index: idx++, directory: item.directory, recursive: item.recursive});
+                    });
+                    config.directoryItems = directoryItems;
+                }
+
+                this.setState({
+                    loading: false,
+                    ...config
+                })
+            })
+            .catch(() => {
+                this.setState({
+                    loading: false,
+                    failed: true
+                });
+            })
+    };
+
     constructor(props) {
         super(props);
+
         this.state = {
+            loading: true,
+            failed: false,
             port: 8042,
             showTestData: true,
             language: 'default',
             directoryItems: [],
             redirect: false,
             expertSettingsOpen: false
-        }
+        };
+
         this.handleTextChange = this.handleTextChange.bind(this);
         this.handleCheckboxChange = this.handleCheckboxChange.bind(this);
         this.addDirectoryItem = this.addDirectoryItem.bind(this);
@@ -36,39 +85,11 @@ class ConfigForm extends React.Component {
         this.onSave = this.onSave.bind(this);
         this.onCancel = this.onCancel.bind(this);
         this.onResetConfiguration = this.onResetConfiguration.bind(this);
+        this.loadConfig = this.loadConfig.bind(this);
     }
 
     componentDidMount() {
-        fetch(getRestServiceUrl("configuration/config"), {
-            method: "GET",
-            dataType: "JSON",
-            headers: {
-                "Content-Type": "text/plain; charset=utf-8"
-            }
-        })
-            .then((resp) => {
-                return resp.json()
-            })
-            .then((data) => {
-                if (data.port) {
-                    this.setState({port: data.port});
-                }
-                this.setState({showTestData: data.showTestData});
-                if (data.language) {
-                    this.setState({language: data.language});
-                }
-                directoryItems.splice(0, directoryItems.length)
-                if (data.templatesDirs) {
-                    let idx = 0;
-                    data.templatesDirs.forEach(function (item) {
-                        directoryItems.push({index: idx++, directory: item.directory, recursive: item.recursive});
-                    });
-                    this.setState({directoryItems: directoryItems});
-                }
-            })
-            .catch((error) => {
-                console.log(error, "Oups, what's happened?")
-            })
+        this.loadConfig();
     }
 
     setRedirect = () => {
@@ -161,6 +182,28 @@ class ConfigForm extends React.Component {
         if (this.state.redirect) {
             return <Redirect to='/'/>
         }
+
+        if (this.state.loading) {
+            return (
+                <div>
+                    <i>Loading...</i>
+                </div>
+            );
+        }
+
+        if (this.state.failed) {
+            return (
+                <ErrorAlert
+                    title={'Cannot load Configuration'}
+                    description={'Something went wrong during contacting the rest api.'}
+                    action={{
+                        handleClick: this.loadConfig,
+                        title: 'Try again'
+                    }}
+                />
+            );
+        }
+
         return (
             <form>
                 <FormLabelField label={<I18n name={'configuration.language'}/>} fieldLength={2}>

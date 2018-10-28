@@ -1,10 +1,11 @@
 import React from 'react';
 import {NavLink as ReactRouterNavLink} from 'react-router-dom';
 import {Collapse, Nav, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink, UncontrolledTooltip} from 'reactstrap';
-import DropArea from "./droparea/DropArea";
-import {getResponseHeaderFilename, getRestServiceUrl} from "../../utilities/global";
-import downloadFile from "../../utilities/download";
-import LoadingOverlay from "./loading/LoadingOverlay";
+import DropArea from './droparea/DropArea';
+import {getResponseHeaderFilename, getRestServiceUrl} from '../../utilities/global';
+import downloadFile from '../../utilities/download';
+import LoadingOverlay from './loading/LoadingOverlay';
+import FailedOverlay from './loading/failed/Overlay';
 import I18n from "./translation/I18n";
 
 class Menu extends React.Component {
@@ -43,13 +44,14 @@ class Menu extends React.Component {
         this.toggle = this.toggle.bind(this);
         this.state = {
             loading: false,
+            failed: false,
             isOpen: false
         };
         this.uploadFile = this.uploadFile.bind(this);
     }
 
     uploadFile(file) {
-        this.setState({loading: true});
+        this.setState({loading: true, failed: false});
         const formData = new FormData();
         formData.append('file', file);
         let filename;
@@ -68,7 +70,12 @@ class Menu extends React.Component {
                 return response.blob();
             })
             .then(blob => downloadFile(blob, filename))
-            .catch(alert);
+            .catch(error => {
+                this.setState({
+                    loading: false,
+                    failed: error.toString()
+                })
+            });
     }
 
     toggle() {
@@ -96,9 +103,16 @@ class Menu extends React.Component {
                               upload={this.uploadFile}
                     />
                     <UncontrolledTooltip placement={'left'} target={'menuDropZone'}>
-                       <I18n name={'common.droparea.hint'}/>
-                    </UncontrolledTooltip> </Collapse>
-                {this.state.loading ? <LoadingOverlay/> : ''}
+                        <I18n name={'common.droparea.hint'}/>
+                    </UncontrolledTooltip>
+                </Collapse>
+                <LoadingOverlay active={this.state.loading} />
+                <FailedOverlay
+                    title={'File Upload failed'}
+                    text={this.state.failed}
+                    closeModal={() => this.setState({failed: false})}
+                    active={this.state.failed}
+                />
             </Navbar>
         );
     }
