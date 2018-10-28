@@ -1,9 +1,9 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 import {getTranslation} from '../../../utilities/i18n';
+import {isDevelopmentMode} from '../../../utilities/global';
 
 function Translation({name, children, params}) {
-    return getTranslation(name, params) || children;
+    return getTranslation(name, params) || (isDevelopmentMode() ? `??? ${children} ???` : children);
 }
 
 Translation.propTypes = {

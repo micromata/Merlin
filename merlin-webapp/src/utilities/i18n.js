@@ -47,11 +47,16 @@ const saveDictionary = () => window.localStorage.setItem('dictionary', JSON.stri
 }));
 
 const getTranslation = (key, params) => {
+
+    if (!dictionary) {
+        return '';
+    }
+
     let message = dictionary[key];
 
-    if (params) {
+    if (message && params) {
         params.forEach((param, index) => {
-            message = message.replace(`{${index}`, param);
+            message = message.replace(`{${index}}`, param);
         });
     }
 
