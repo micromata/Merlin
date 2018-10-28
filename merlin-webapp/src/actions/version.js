@@ -1,4 +1,4 @@
-import {VERSION_RELOADED, VERSION_REQUEST_RELOAD} from './types';
+import {VERSION_RELOAD_FAILED, VERSION_RELOADED, VERSION_REQUEST_RELOAD} from './types';
 import {getRestServiceUrl} from '../utilities/global';
 
 const requestedVersionReload = () => ({
@@ -12,6 +12,10 @@ const reloadedVersion = (json) => ({
         buildDate: json.buildDate,
         updateVersion: json.updateVersion
     }
+});
+
+const failedReload = () => ({
+    type: VERSION_RELOAD_FAILED
 });
 
 export const loadVersion = () => (dispatch, getState) => {
@@ -29,5 +33,5 @@ export const loadVersion = () => (dispatch, getState) => {
     })
         .then(response => response.json())
         .then(json => dispatch(reloadedVersion(json)))
-        .catch(alert);
+        .catch(dispatch(failedReload()));
 };
