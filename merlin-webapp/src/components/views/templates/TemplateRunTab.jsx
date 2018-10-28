@@ -6,6 +6,8 @@ import {saveTemplateRunConfiguration} from '../../../actions';
 import {getResponseHeaderFilename, getRestServiceUrl} from '../../../utilities/global';
 import downloadFile from '../../../utilities/download';
 import {FormButton, FormInput, FormLabelField, FormSelect} from '../../general/forms/FormComponents';
+import LoadingOverlay from '../../general/loading/LoadingOverlay';
+import FailedOverlay from '../../general/loading/failed/Overlay';
 
 class TemplateRunTab extends React.Component {
 
@@ -24,8 +26,17 @@ class TemplateRunTab extends React.Component {
         }), {})
     };
 
+    state = {
+        running: false,
+        failed: false
+    };
+
     runTemplate = (endpoint, headers, body) => {
         let filename;
+        this.setState({
+            running: true,
+            failed: false
+        });
 
         fetch(endpoint, {
             method: 'POST',
@@ -40,8 +51,18 @@ class TemplateRunTab extends React.Component {
                 filename = getResponseHeaderFilename(response.headers.get('Content-Disposition'));
                 return response.blob();
             })
-            .then(blob => downloadFile(blob, filename))
-            .catch(alert);
+            .then(blob => {
+                this.setState({
+                    running: false
+                });
+                downloadFile(blob, filename)
+            })
+            .catch(error => {
+                this.setState({
+                    running: false,
+                    failed: error.toString()
+                });
+            });
     };
     runSingleTemplate = event => {
         event.preventDefault();
@@ -79,6 +100,12 @@ class TemplateRunTab extends React.Component {
         return (
             <React.Fragment>
                 <h4>Single Generation:</h4>
+                {this.state.running ? <LoadingOverlay /> : ''}
+                {this.state.failed ? <FailedOverlay
+                    title={'Template Run failed'}
+                    text={this.state.failed}
+                    closeModal={() => this.setState({failed: false})}
+                /> : ''}
                 <Form onSubmit={this.runSingleTemplate}>
                     {Object.keys(this.variableDefinitions)
                         .filter(key => this.variableDefinitions[key] !== undefined)
