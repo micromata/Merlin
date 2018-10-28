@@ -1,10 +1,11 @@
 import React from 'react';
 import {NavLink as ReactRouterNavLink} from 'react-router-dom';
 import {Collapse, Nav, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink, UncontrolledTooltip} from 'reactstrap';
-import DropArea from "./droparea/DropArea";
-import {getResponseHeaderFilename, getRestServiceUrl} from "../../utilities/global";
-import downloadFile from "../../utilities/download";
-import LoadingOverlay from "./loading/LoadingOverlay";
+import DropArea from './droparea/DropArea';
+import {getResponseHeaderFilename, getRestServiceUrl} from '../../utilities/global';
+import downloadFile from '../../utilities/download';
+import LoadingOverlay from './loading/LoadingOverlay';
+import FailedOverlay from './loading/failed/Overlay';
 
 class Menu extends React.Component {
     getNavElement = (route, index) => {
@@ -42,13 +43,14 @@ class Menu extends React.Component {
         this.toggle = this.toggle.bind(this);
         this.state = {
             loading: false,
+            failed: false,
             isOpen: false
         };
         this.uploadFile = this.uploadFile.bind(this);
     }
 
     uploadFile(file) {
-        this.setState({loading: true});
+        this.setState({loading: true, failed: false});
         const formData = new FormData();
         formData.append('file', file);
         let filename;
@@ -67,7 +69,12 @@ class Menu extends React.Component {
                 return response.blob();
             })
             .then(blob => downloadFile(blob, filename))
-            .catch(alert);
+            .catch(error => {
+                this.setState({
+                    loading: false,
+                    failed: error.toString()
+                })
+            });
     }
 
     toggle() {
@@ -98,6 +105,12 @@ class Menu extends React.Component {
                         Drop or open your files here (e. g. serial run Excel sheet).
                     </UncontrolledTooltip> </Collapse>
                 {this.state.loading ? <LoadingOverlay/> : ''}
+                {this.state.failed ?
+                    <FailedOverlay
+                        title={'File Upload failed'}
+                        text={this.state.failed}
+                        closeModal={() => this.setState({failed: false})}
+                    /> : ''}
             </Navbar>
         );
     }
