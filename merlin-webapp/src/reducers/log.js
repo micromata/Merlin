@@ -23,7 +23,8 @@ const reducer = (state = initialState, action) => {
     switch (action.type) {
         case LOG_VIEW_REQUEST_RELOAD:
             return Object.assign({}, state, {
-                loading: true
+                loading: true,
+                failed: false
             });
         case LOG_VIEW_RELOADED:
             return Object.assign({}, state, {
