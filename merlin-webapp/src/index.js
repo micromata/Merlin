@@ -10,6 +10,7 @@ import WebApp from './containers/WebApp';
 import reducers from './reducers';
 
 import './css/my-style.css';
+import {loadDictionary} from './utilities/i18n';
 
 
 let storedState = window.localStorage.getItem('state');
@@ -31,6 +32,8 @@ const store = createStore(
     storedState || undefined,
     applyMiddleware(thunk)
 );
+
+loadDictionary(store.getState().version.version);
 
 store.subscribe(() => {
     window.localStorage.setItem('state', JSON.stringify(store.getState()));

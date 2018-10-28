@@ -1,4 +1,5 @@
 import {VERSION_RELOADED, VERSION_REQUEST_RELOAD} from '../actions/types';
+import {fetchNewDictionary} from '../utilities/i18n';
 
 const initialState = {
     version: '0.0.0',
@@ -13,6 +14,11 @@ const reducer = (state = initialState, action) => {
                 loading: true
             });
         case VERSION_RELOADED:
+
+            if (state.version !== action.payload.version) {
+                fetchNewDictionary(action.payload.version);
+            }
+
             return Object.assign({}, state, {
                 loading: false,
                 version: action.payload.version,

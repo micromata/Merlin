@@ -2,7 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {Table} from 'reactstrap';
 import LogEntry from './LogEntry';
-import {IconSortDown, IconSortUp} from "../../general/IconComponents";
+import {IconSortDown, IconSortUp} from '../../general/IconComponents';
+import Translation from '../../general/translation/Translation';
 
 const getLocationString = (locationFormat, entry) => {
     switch (locationFormat) {
@@ -22,8 +23,15 @@ function LogTable({locationFormat, showStackTrace, entries, search, ascendingOrd
         <Table striped bordered hover size={'sm'} responsive>
             <thead>
             <tr>
-                <th style={{whiteSpace: 'nowrap'}}>Timestamp <button onClick={toggleOrder} type="button"
-                                                                       className="btn btn-link btn-outline-primary btn-sm">{sort}</button>
+                <th style={{whiteSpace: 'nowrap'}}>
+                    <Translation name={'merlin.app.logviewer.timestamp'}>Timestamp</Translation>
+                    <button
+                        onClick={toggleOrder}
+                        type="button"
+                        className="btn btn-link btn-outline-primary btn-sm"
+                    >
+                        {sort}
+                    </button>
                 </th>
                 <th>Level</th>
                 <th>Message</th>
