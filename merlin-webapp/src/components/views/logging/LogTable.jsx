@@ -24,7 +24,7 @@ function LogTable({locationFormat, showStackTrace, entries, search, ascendingOrd
             <thead>
             <tr>
                 <th style={{whiteSpace: 'nowrap'}}>
-                    <I18n name={'logviewer.timestamp'}>Timestamp</I18n>
+                    <I18n name={'logviewer.timestamp'}>Timestamp</I18n>{' '}
                     <button
                         onClick={toggleOrder}
                         type="button"

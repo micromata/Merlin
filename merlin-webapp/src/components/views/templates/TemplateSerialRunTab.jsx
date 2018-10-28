@@ -93,10 +93,10 @@ class TemplateSerialRunTab extends React.Component {
         return (
             <React.Fragment>
                 <Button className={'btn-outline-primary'} onClick={this.getSerialTemplate}>
-                    <IconDownload/><I18n name={'templates.serialRun.button.exportExcelTemplate'}/>
+                    <IconDownload/>{' '}<I18n name={'templates.serialRun.button.exportExcelTemplate'}/>
                 </Button>
                 <h4><I18n name={'templates.serialRun.upload.title'}/></h4>
-                <DropArea upload={this.uploadFile}><I18n name={'common.droparea.title'}/></DropArea>
+                <DropArea upload={this.uploadFile}>{' '}<I18n name={'common.droparea.title'}/></DropArea>
                 <LoadingOverlay active={this.state.loading}/>
                 <FailedOverlay
                     title={'Template Serial Generation failed'}
