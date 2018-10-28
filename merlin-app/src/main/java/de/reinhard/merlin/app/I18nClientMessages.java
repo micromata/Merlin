@@ -21,20 +21,26 @@ public class I18nClientMessages {
     private I18nClientMessages() {
     }
 
-    public Map<String, String> getAllMessages(Locale locale) {
+    /**
+     *
+     * @param locale
+     * @param keysOnly If true, only the keys will be returned. Default is false.
+     * @return
+     */
+    public Map<String, String> getAllMessages(Locale locale, boolean keysOnly) {
         Map<String, String> map = new HashMap<>();
-        addAllMessages(map, new AppI18n(locale).getResourceBundle());
-        addAllMessages(map, new CoreI18n(locale).getResourceBundle());
+        addAllMessages(map, new AppI18n(locale).getResourceBundle(), keysOnly);
+        addAllMessages(map, new CoreI18n(locale).getResourceBundle(), keysOnly);
         ResourceBundle.Control utf8Control = new UTF8ResourceBundleControl();
         ResourceBundle bundle = ResourceBundle.getBundle(BUNDLE_NAME, locale, utf8Control);
-        addAllMessages(map, bundle);
+        addAllMessages(map, bundle, keysOnly);
         return new TreeMap<>(map); // Sorted by keys.
     }
 
-    private Map<String, String> addAllMessages(Map<String, String> map, ResourceBundle bundle) {
+    private Map<String, String> addAllMessages(Map<String, String> map, ResourceBundle bundle, boolean keysOnly) {
         for (String key : bundle.keySet()) {
             String value = bundle.getString(key);
-            map.put(key, prepareForReactClient(value));
+            map.put(key, keysOnly ? "" : prepareForReactClient(value));
         }
         return map;
     }
