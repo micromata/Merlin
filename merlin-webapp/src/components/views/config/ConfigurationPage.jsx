@@ -7,12 +7,11 @@ import {
     FormButton,
     FormCheckbox,
     FormField,
-    FormFieldset,
     FormGroup,
     FormLabelField,
     FormLabelInputField,
     FormFieldset,
-    FormField, FormButton, FormSelect, FormOption, FormCheckbox
+    FormSelect, FormOption
 } from "../../general/forms/FormComponents";
 import {getRestServiceUrl, isDevelopmentMode} from "../../../utilities/global";
 import {IconDanger, IconWarning} from '../../general/IconComponents';
