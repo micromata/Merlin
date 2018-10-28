@@ -37,23 +37,23 @@ class ConfigForm extends React.Component {
                 return resp.json()
             })
             .then((data) => {
-                if (data.port) {
-                    this.setState({port: data.port});
-                }
-                this.setState({showTestData: data.showTestData});
-                if (data.language) {
-                    this.setState({language: data.language});
-                }
-                directoryItems.splice(0, directoryItems.length)
-                if (data.templatesDirs) {
+                const {templatesDirModified, templatesDirs, ...config} = data;
+
+                directoryItems.splice(0, directoryItems.length);
+                if (templatesDirModified) {
                     let idx = 0;
-                    data.templatesDirs.forEach(function (item) {
+                    templatesDirs.forEach(function (item) {
                         directoryItems.push({index: idx++, directory: item.directory, recursive: item.recursive});
                     });
-                    this.setState({directoryItems: directoryItems});
+                    config.directoryItems = directoryItems;
                 }
+
+                this.setState({
+                    loading: false,
+                    ...config
+                })
             })
-            .catch((error) => {
+            .catch(() => {
                 this.setState({
                     loading: false,
                     failed: true
