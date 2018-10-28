@@ -1,6 +1,7 @@
 import React from 'react';
+import {Link} from 'react-router-dom';
 import {Card, CardBody, CardFooter, CardHeader} from 'reactstrap';
-import {formatDateTime} from "../../../utilities/global";
+import {formatDateTime} from '../../../utilities/global';
 
 class TemplateCard extends React.Component {
 
@@ -29,7 +30,7 @@ class TemplateCard extends React.Component {
         }
 
         return <React.Fragment>
-            <Card tag={'a'} href={`/templates/${template.primaryKey}`} outline color="success" className={'template'}
+            <Card tag={Link} to={`/templates/${template.primaryKey}`} outline color="success" className={'template'}
                   style={{backgroundColor: '#fff'}}>
                 <CardHeader>{templateId}</CardHeader>
                 <CardBody>
