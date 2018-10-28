@@ -1,21 +1,25 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import classNames from 'classnames';
 import {FormFeedback, Input, UncontrolledTooltip} from 'reactstrap';
-import {revisedRandId} from '../../../utilities/global';
-import {IconInfo} from '../IconComponents';
+import {FormCheckbox} from "./FormCheckbox";
+import {FormButton} from "./FormButton";
+import {revisedRandId} from "../../../utilities/global";
 
-// TODO: SPLIT IN DIFFERENT FILES
-
-function FormGroup({children}) {
+const FormGroup = (props) => {
+    const {className, ...other} = props;
     return (
-        <div className={`form-group row`}>
-            {children}
+        <div className={classNames('form-group row', className)}
+             {...other}
+        >
+            {props.children}
         </div>
     );
 }
 
 FormGroup.propTypes = {
-    children: PropTypes.node
+    children: PropTypes.node,
+    className: PropTypes.string
 };
 
 FormGroup.defaultProps = {
@@ -23,13 +27,13 @@ FormGroup.defaultProps = {
 };
 
 
-function FormLabel({length, htmlFor, children}) {
+const FormLabel = (props) => {
+    const {className, length, ...other} = props;
     return (
-        <label
-            className={`col-sm-${length} col-form-label`}
-            htmlFor={htmlFor}
+        <label className={classNames(`col-sm-${props.length} col-form-label`, className)}
+               {...other}
         >
-            {children}
+            {props.children}
         </label>
     );
 }
@@ -45,19 +49,31 @@ FormLabel.defaultProps = {
 };
 
 
-function FormInput(props) {
-    var {fieldLength, ...other} = props;
+const FormInput = (props) => {
+    let tooltip = null;
+    let targetId = props.id || props.name;
+    if (props.hint) {
+        tooltip = <UncontrolledTooltip placement={props.hintPlacement} target={targetId}>
+            {props.hint}
+        </UncontrolledTooltip>;
+    }
+    const {fieldLength, className, hint, hintPlacement, id, ...other} = props;
     return (
-        <Input
-            {...other}
-            className={`col-sm-${props.fieldLength} ${props.className}`}
-        />
+        <React.Fragment>
+            <Input id={targetId}
+                   className={classNames(`col-sm-${props.fieldLength}`, className)}
+                   {...other}
+            />
+            {tooltip}
+        </React.Fragment>
     );
 }
 
 FormInput.propTypes = {
     id: PropTypes.string,
     name: PropTypes.string,
+    hint: PropTypes.string,
+    hintPlacement: PropTypes.oneOf(['right', 'top']),
     fieldLength: PropTypes.number,
     value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     min: PropTypes.number,
@@ -73,6 +89,8 @@ FormInput.propTypes = {
 FormInput.defaultProps = {
     id: null,
     name: '',
+    hint: null,
+    hintPlacement: 'top',
     fieldLength: 10,
     value: '',
     min: null,
@@ -85,25 +103,22 @@ FormInput.defaultProps = {
 };
 
 
-function FormSelect({children, id, value, name, onChange, hint, hintPlacement}) {
+const FormSelect = (props) => {
     let tooltip = null;
-    if (!id) {
-        id = `id-${name}`;
+    let targetId = props.id || props.name;
+    if (props.hint) {
+        tooltip = <UncontrolledTooltip placement={props.hintPlacement} target={targetId}>
+            {props.hint}
+        </UncontrolledTooltip>;
     }
-    if (hint) {
-        tooltip = <UncontrolledTooltip placement={hintPlacement} target={id}>
-                {hint}
-            </UncontrolledTooltip>;
-    }
+    const {className, hint, hintPlacement, id, ...other} = props;
     return (
         <React.Fragment>
-            <select id={id}
-                    name={name}
-                    value={value}
-                    onChange={onChange}
-                className={'custom-select form-control form-control-sm mr-1'}
+            <select id={targetId}
+                    className={classNames('custom-select form-control form-control-sm mr-1', className)}
+                    {...other}
             >
-                {children}
+                {props.children}
             </select>
             {tooltip}
         </React.Fragment>
@@ -117,79 +132,25 @@ FormSelect.propTypes = {
     onChange: PropTypes.func,
     hint: PropTypes.string,
     hintPlacement: PropTypes.oneOf(['right', 'top']),
-    children: PropTypes.node
+    children: PropTypes.node,
+    className: PropTypes.string
 };
 
 FormSelect.defaultProps = {
-    id: null,
-    value: null,
-    name: '',
-    hint: '',
-    onChange: null,
+    hint: null,
     hintPlacement: 'top',
-    children: null
 };
 
-
-function FormCheckbox({id, name, checked, onChange, hint, label}) {
-    if (!id) {
-        id = revisedRandId();
-    }
-    let tooltip = null;
-    if (hint) {
-        tooltip = <React.Fragment> <span id={`info-${id}`}><IconInfo/></span>
-            <UncontrolledTooltip placement="right" target={`info-${id}`}>
-                {hint}
-            </UncontrolledTooltip></React.Fragment>;
-    }
-    let labelNode = <label
-        className={'custom-control-label'}
-        htmlFor={id}>
-        {label}
-    </label>;
+const FormField = (props) => {
+    const {className, id, ...other} = props;
     return (
-        <div className="custom-control custom-checkbox">
-            <input className="custom-control-input"
-                   type="checkbox"
-                   id={id}
-                   name={name}
-                   checked={checked}
-                   onChange={onChange}
-            />
-            {labelNode}
-            {tooltip}
-        </div>
-    );
-}
-
-FormCheckbox.propTypes = {
-    id: PropTypes.string,
-    name: PropTypes.string,
-    checked: PropTypes.bool,
-    onChange: PropTypes.func,
-    hint: PropTypes.string,
-    label: PropTypes.node
-};
-
-FormCheckbox.defaultProps = {
-    id: null,
-    name: '',
-    checked: false,
-    onChange: null,
-    hint: '',
-    label: ''
-};
-
-
-function FormField({id, hint, length, children, validationMessage}) {
-    return (
-        <div
-            className={`col-sm-${length}`}
-            id={id}
+        <div id={props.id}
+             className={classNames(`col-sm-${props.length}`, className)}
+             {...other}
         >
-            {children}
-            {validationMessage ? <FormFeedback>{validationMessage}</FormFeedback> : ''}
-            {hint ? <small className={'text-muted'}>{hint}</small> : ''}
+            {props.children}
+            {props.validationMessage ? <FormFeedback>{props.validationMessage}</FormFeedback> : ''}
+            {props.hint ? <small className={'text-muted'}>{props.hint}</small> : ''}
         </div>
     );
 }
@@ -199,7 +160,8 @@ FormField.propTypes = {
     hint: PropTypes.node,
     length: PropTypes.number,
     validationMessage: PropTypes.string,
-    children: PropTypes.node
+    children: PropTypes.node,
+    className: PropTypes.string
 };
 
 FormField.defaultProps = {
@@ -211,15 +173,15 @@ FormField.defaultProps = {
 };
 
 
-function FormLabelField({id, htmlFor, validationMessage, labelLength, fieldLength, label, hint, children}) {
-    const forId = htmlFor || id || revisedRandId();
+const FormLabelField = (props) => {
+    const forId = props.children.props.id || props.htmlFor || revisedRandId();
     return (
         <FormGroup>
-            <FormLabel length={labelLength} htmlFor={forId}>
-                {label}
+            <FormLabel length={props.labelLength} htmlFor={forId}>
+                {props.label}
             </FormLabel>
-            <FormField length={fieldLength} hint={hint} validationMessage={validationMessage}>
-                {React.cloneElement(children, {id: forId})}
+            <FormField length={props.fieldLength} hint={props.hint} validationMessage={props.validationMessage}>
+                {React.cloneElement(props.children, {id: forId})}
             </FormField>
         </FormGroup>
     );
@@ -248,20 +210,22 @@ FormLabelField.defaultProps = {
 };
 
 
-function FormLabelInputField({id = revisedRandId(), ...props}) {
+const FormLabelInputField = (props) => {
     return (
         <FormLabelField
-            htmlFor={id}
+            htmlFor={props.id}
             labelLength={props.labelLength}
             label={props.label}
             hint={props.hint}
             validationState={props.validationState}
         >
             <FormInput
-                id={id}
+                id={props.id}
                 name={props.name}
                 type={props.type}
                 min={props.min}
+                hint={props.hint}
+                hintPlacement={props.hintPlacement}
                 max={props.max}
                 step={props.step}
                 value={props.value}
@@ -279,6 +243,7 @@ FormLabelInputField.propTypes = {
     labelLength: PropTypes.number,
     fieldLength: PropTypes.number,
     hint: PropTypes.string,
+    hintPlacement: PropTypes.oneOf(['right', 'top']),
     validationState: PropTypes.oneOf(['success', 'warning', 'error', null]),
     type: PropTypes.string,
     name: PropTypes.string,
@@ -295,7 +260,8 @@ FormLabelInputField.defaultProps = {
     label: '',
     labelLength: 2,
     fieldLength: 10,
-    hint: '',
+    hint: null,
+    hintPlacement: 'top',
     validationState: null,
     type: 'text',
     name: '',
@@ -308,11 +274,13 @@ FormLabelInputField.defaultProps = {
 };
 
 
-function FormFieldset({id, text, children}) {
+const FormFieldset = (props) => {
     return (
-        <fieldset className={'form-group'} id={id}>
-            <legend>{text}</legend>
-            {children}
+        <fieldset id={props.id}
+                  className={classNames('form-group', props.className)}
+        >
+            <legend>{props.text}</legend>
+            {props.children}
         </fieldset>
     );
 }
@@ -320,44 +288,13 @@ function FormFieldset({id, text, children}) {
 FormFieldset.propTypes = {
     id: PropTypes.string,
     text: PropTypes.string,
-    children: PropTypes.node
+    children: PropTypes.node,
+    className: PropTypes.string
 };
 
 FormFieldset.defaultProps = {
     id: null,
     text: '',
-    children: null
-};
-
-
-function FormButton({bsStyle = 'default', type, onClick, hint, disabled, children}) {
-    return (
-        <button
-            type={type}
-            className={`btn btn-${bsStyle}`}
-            onClick={onClick}
-            title={hint}
-            disabled={disabled}
-        >
-            {children}
-        </button>
-    );
-}
-
-FormButton.propTypes = {
-    bsStyle: PropTypes.oneOf(['primary', 'outline-primary', null]),
-    type: PropTypes.string,
-    onClick: PropTypes.func,
-    hint: PropTypes.string,
-    disabled: PropTypes.bool,
-    children: PropTypes.node
-};
-FormButton.defaultProps = {
-    bsStyle: 'outline-primary',
-    type: 'button',
-    onClick: null,
-    hint: '',
-    disabled: false,
     children: null
 };
 
