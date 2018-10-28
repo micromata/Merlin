@@ -17,6 +17,7 @@ import LogPage from '../components/views/logging/LogPage';
 import TemplateDefinitionPage from '../components/views/templates/templatedefinition/TemplateDefinitionPage';
 import Footer from '../components/views/footer/Footer';
 import {loadVersion} from '../actions';
+import {getTranslation} from '../utilities/i18n';
 
 class WebApp extends React.Component {
 
@@ -31,7 +32,7 @@ class WebApp extends React.Component {
             ['Start', '/', Start],
             ['Templates', '/templates', TemplateListView],
             ['Definitions', '/templateDefinitions', TemplateDefinitionListView],
-            ['Log viewer', '/logging', LogPage],
+            [getTranslation('logviewer'), '/logging', LogPage],
             ['Configuration', '/config', ConfigurationPage]
         ];
 

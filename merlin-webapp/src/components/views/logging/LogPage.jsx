@@ -5,6 +5,7 @@ import {PageHeader} from '../../general/BootstrapComponents';
 import LogFilters from './LogFilters';
 import {changeFilter, requestLogReload} from '../../../actions';
 import LogTable from './LogTable';
+import I18n from '../../general/translation/I18n';
 import './LogViewer.css';
 
 class LogPage extends React.Component {
@@ -25,7 +26,7 @@ class LogPage extends React.Component {
 
     render = () => (
             <React.Fragment>
-                <PageHeader>Log viewer</PageHeader>
+                <PageHeader><I18n name={'logviewer'} /></PageHeader>
                 <LogFilters
                     filters={this.props.filters}
                     changeFilter={this.handleInputChange}
