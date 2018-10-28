@@ -2,46 +2,35 @@ import React from 'react';
 import {Redirect} from 'react-router-dom'
 import {Button, Collapse} from 'reactstrap';
 import {PageHeader} from '../../general/BootstrapComponents';
-import DirectoryItemsFieldset from "./DirectoryItemsFieldset";
+import DirectoryItemsFieldset from './DirectoryItemsFieldset';
 import {
+    FormButton,
+    FormCheckbox,
+    FormField,
+    FormFieldset,
     FormGroup,
     FormLabelField,
     FormLabelInputField,
-    FormFieldset,
-    FormField, FormButton, FormSelect, FormCheckbox
-} from "../../general/forms/FormComponents";
-import {getRestServiceUrl, isDevelopmentMode} from "../../../utilities/global";
+    FormSelect
+} from '../../general/forms/FormComponents';
+import {getRestServiceUrl, isDevelopmentMode} from '../../../utilities/global';
 import {IconDanger, IconWarning} from '../../general/IconComponents';
+import ErrorAlert from '../../general/ErrorAlert';
 
 
 var directoryItems = [];
 
 class ConfigForm extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            port: 8042,
-            showTestData: true,
-            language: 'default',
-            directoryItems: [],
-            redirect: false,
-            expertSettingsOpen: false
-        }
-        this.handleTextChange = this.handleTextChange.bind(this);
-        this.handleCheckboxChange = this.handleCheckboxChange.bind(this);
-        this.addDirectoryItem = this.addDirectoryItem.bind(this);
-        this.removeDirectoryItem = this.removeDirectoryItem.bind(this);
-        this.onSave = this.onSave.bind(this);
-        this.onCancel = this.onCancel.bind(this);
-        this.onResetConfiguration = this.onResetConfiguration.bind(this);
-    }
-
-    componentDidMount() {
-        fetch(getRestServiceUrl("configuration/config"), {
-            method: "GET",
-            dataType: "JSON",
+    loadConfig = () => {
+        this.setState({
+            loading: true,
+            failed: false
+        });
+        fetch(getRestServiceUrl('configuration/config'), {
+            method: 'GET',
+            dataType: 'JSON',
             headers: {
-                "Content-Type": "text/plain; charset=utf-8"
+                'Content-Type': 'text/plain; charset=utf-8'
             }
         })
             .then((resp) => {
@@ -65,8 +54,39 @@ class ConfigForm extends React.Component {
                 }
             })
             .catch((error) => {
-                console.log(error, "Oups, what's happened?")
+                this.setState({
+                    loading: false,
+                    failed: true
+                });
             })
+    };
+
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            loading: true,
+            failed: false,
+            port: 8042,
+            showTestData: true,
+            language: 'default',
+            directoryItems: [],
+            redirect: false,
+            expertSettingsOpen: false
+        };
+
+        this.handleTextChange = this.handleTextChange.bind(this);
+        this.handleCheckboxChange = this.handleCheckboxChange.bind(this);
+        this.addDirectoryItem = this.addDirectoryItem.bind(this);
+        this.removeDirectoryItem = this.removeDirectoryItem.bind(this);
+        this.onSave = this.onSave.bind(this);
+        this.onCancel = this.onCancel.bind(this);
+        this.onResetConfiguration = this.onResetConfiguration.bind(this);
+        this.loadConfig = this.loadConfig.bind(this);
+    }
+
+    componentDidMount() {
+        this.loadConfig();
     }
 
     setRedirect = () => {
@@ -159,6 +179,28 @@ class ConfigForm extends React.Component {
         if (this.state.redirect) {
             return <Redirect to='/'/>
         }
+
+        if (this.state.loading) {
+            return (
+                <div>
+                    <i>Loading...</i>
+                </div>
+            );
+        }
+
+        if (this.state.failed) {
+            return (
+                <ErrorAlert
+                    title={'Cannot load Configuration'}
+                    description={'Something went wrong during contacting the rest api.'}
+                    action={{
+                        handleClick: this.loadConfig,
+                        title: 'Try again'
+                    }}
+                />
+            );
+        }
+
         return (
             <form>
                 <FormLabelField label={'Language'} fieldLength={2}>

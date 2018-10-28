@@ -37,9 +37,7 @@ const fetchNewDictionary = (currentVersion) => {
             dictionary = json;
             version = currentVersion;
             saveDictionary();
-        })
-        // CATCH ERROR CORRECTLY AND SMOOTH
-        .catch(alert);
+        });
 };
 
 const saveDictionary = () => window.localStorage.setItem('dictionary', JSON.stringify({
