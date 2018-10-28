@@ -1,6 +1,7 @@
 package de.reinhard.merlin.app.rest;
 
 import de.reinhard.merlin.app.AppI18n;
+import de.reinhard.merlin.app.I18nClientMessages;
 import de.reinhard.merlin.app.json.JsonUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -14,6 +15,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import java.util.Locale;
+import java.util.Map;
 
 @Path("/i18n")
 public class I18nRest {
@@ -36,8 +38,9 @@ public class I18nRest {
         } else {
             localeObject = requestContext.getLocale();
         }
+        Map<String, String> translations = I18nClientMessages.getInstance().getAllMessages(localeObject);
         AppI18n i18n = new AppI18n(localeObject);
-        String json = JsonUtils.toJson(i18n.getAllMessages(true), prettyPrinter);
+        String json = JsonUtils.toJson(translations, prettyPrinter);
         return json;
     }
 }

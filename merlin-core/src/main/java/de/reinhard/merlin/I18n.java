@@ -50,7 +50,7 @@ public class I18n {
         return MessageFormat.format(resourceBundle.getString(messageId), params);
     }
 
-    protected ResourceBundle getResourceBundle() {
+    public ResourceBundle getResourceBundle() {
         return resourceBundle;
     }
 }
