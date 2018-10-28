@@ -33,5 +33,5 @@ export const loadVersion = () => (dispatch, getState) => {
     })
         .then(response => response.json())
         .then(json => dispatch(reloadedVersion(json)))
-        .catch(dispatch(failedReload()));
+        .catch(() => dispatch(failedReload()));
 };

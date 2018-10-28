@@ -97,17 +97,19 @@ class TemplateSerialRunTab extends React.Component {
                 </Button>
                 <h4>Upload serial data Excel file:</h4>
                 <DropArea upload={this.uploadFile}><b> Select a file,</b> or drop one here.</DropArea>
-                {this.state.loading ? <LoadingOverlay/> : ''}
-                {this.state.generationFailed ? <FailedOverlay
+                <LoadingOverlay active={this.state.loading} />
+                <FailedOverlay
                     title={'Template Serial Generation failed'}
                     text={this.state.generationFailed}
+                    active={this.state.generationFailed}
                     closeModal={() => this.setState({generationFailed: false})}
-                /> : ''}
-                {this.state.runFailed ? <FailedOverlay
+                />
+                <FailedOverlay
                     title={'Template Serial Run failed'}
                     text={this.state.runFailed}
+                    active={this.state.runFailed}
                     closeModal={() => this.setState({runFailed: false})}
-                /> : ''}
+                />
             </React.Fragment>
         );
     }

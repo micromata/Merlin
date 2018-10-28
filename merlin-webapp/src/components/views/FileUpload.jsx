@@ -66,8 +66,7 @@ class FileUploadView extends React.Component {
                         </ol>
                     </li>
                 </ul>
-
-                {this.state.loading ? <LoadingOverlay/> : ''}
+                <LoadingOverlay active={this.state.loading} />
             </React.Fragment>
         );
     }

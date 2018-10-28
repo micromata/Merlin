@@ -100,12 +100,13 @@ class TemplateRunTab extends React.Component {
         return (
             <React.Fragment>
                 <h4>Single Generation:</h4>
-                {this.state.running ? <LoadingOverlay /> : ''}
-                {this.state.failed ? <FailedOverlay
+                <LoadingOverlay active={this.state.running} />
+                <FailedOverlay
                     title={'Template Run failed'}
                     text={this.state.failed}
+                    active={this.state.failed}
                     closeModal={() => this.setState({failed: false})}
-                /> : ''}
+                />
                 <Form onSubmit={this.runSingleTemplate}>
                     {Object.keys(this.variableDefinitions)
                         .filter(key => this.variableDefinitions[key] !== undefined)

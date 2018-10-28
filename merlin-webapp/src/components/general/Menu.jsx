@@ -88,8 +88,8 @@ class Menu extends React.Component {
             <Navbar className={'fixed-top'} color="light" light expand="md">
                 <NavbarBrand to="/" tag={ReactRouterNavLink}><img alt={'Merlin logo'}
                                                                   src={'../../../images/merlin-icon.png'}
-                                                                  width={'50px'}/>Merlin</NavbarBrand>
-                <NavbarToggler onClick={this.toggle}/>
+                                                                  width={'50px'} />Merlin</NavbarBrand>
+                <NavbarToggler onClick={this.toggle} />
                 <Collapse isOpen={this.state.isOpen} navbar>
                     <Nav className="ml-auto" navbar>
                         {
@@ -103,14 +103,15 @@ class Menu extends React.Component {
                     />
                     <UncontrolledTooltip placement={'left'} target={'menuDropZone'}>
                         Drop or open your files here (e. g. serial run Excel sheet).
-                    </UncontrolledTooltip> </Collapse>
-                {this.state.loading ? <LoadingOverlay/> : ''}
-                {this.state.failed ?
-                    <FailedOverlay
-                        title={'File Upload failed'}
-                        text={this.state.failed}
-                        closeModal={() => this.setState({failed: false})}
-                    /> : ''}
+                    </UncontrolledTooltip>
+                </Collapse>
+                <LoadingOverlay active={this.state.loading} />
+                <FailedOverlay
+                    title={'File Upload failed'}
+                    text={this.state.failed}
+                    closeModal={() => this.setState({failed: false})}
+                    active={this.state.failed}
+                />
             </Navbar>
         );
     }
