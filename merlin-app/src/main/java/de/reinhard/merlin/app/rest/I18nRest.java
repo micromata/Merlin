@@ -37,7 +37,7 @@ public class I18nRest {
             localeObject = requestContext.getLocale();
         }
         AppI18n i18n = new AppI18n(localeObject);
-        String json = JsonUtils.toJson(i18n.getAllMessages(), prettyPrinter);
+        String json = JsonUtils.toJson(i18n.getAllMessages(true), prettyPrinter);
         return json;
     }
 }
