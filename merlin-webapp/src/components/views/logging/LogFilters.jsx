@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {FormButton, FormInput, FormLabel, FormSelect} from '../../general/forms/FormComponents';
+import {FormButton, FormInput, FormLabel, FormSelect, FormOption} from '../../general/forms/FormComponents';
 import {IconRefresh} from '../../general/IconComponents';
+import I18n from '../../general/translation/I18n';
 
 function LogFilters({loadLog, changeFilter, filters}) {
 
@@ -18,13 +19,13 @@ function LogFilters({loadLog, changeFilter, filters}) {
                 value={filters.threshold}
                 name={'threshold'}
                 onChange={changeFilter}
-                hint={'Minimum displayed log level.'}
+                hint={<I18n name={'logviewer.filter.level.hint'} />}
             >
-                <option>error</option>
-                <option>warn</option>
-                <option>info</option>
-                <option>debug</option>
-                <option>trace</option>
+                <FormOption value={'error'} />
+                <FormOption value={'warn'} />
+                <FormOption value={'info'} />
+                <FormOption value={'debug'} />
+                <FormOption value={'trace'} />
             </FormSelect>
 
             <FormInput
@@ -38,11 +39,11 @@ function LogFilters({loadLog, changeFilter, filters}) {
                 value={filters.locationFormat}
                 name={'locationFormat'}
                 onChange={changeFilter}
-                hint={'Show location of message in source code.'}
+                hint={<I18n name={'logviewer.filter.location.hint'} />}
             >
-                <option>none</option>
-                <option>short</option>
-                <option>normal</option>
+                <FormOption value={'none'} i18nKey={'logviewer.filter.location.option.none'} />
+                <FormOption value={'short'} i18nKey={'logviewer.filter.location.option.short'} />
+                <FormOption value={'normal'} i18nKey={'logviewer.filter.location.option.normal'} />
             </FormSelect>
 
             <FormSelect

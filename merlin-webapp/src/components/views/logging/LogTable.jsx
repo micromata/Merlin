@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {Table} from 'reactstrap';
 import LogEntry from './LogEntry';
 import {IconSortDown, IconSortUp} from '../../general/IconComponents';
-import Translation from '../../general/translation/I18n';
+import I18n from '../../general/translation/I18n';
 
 const getLocationString = (locationFormat, entry) => {
     switch (locationFormat) {
@@ -24,7 +24,7 @@ function LogTable({locationFormat, showStackTrace, entries, search, ascendingOrd
             <thead>
             <tr>
                 <th style={{whiteSpace: 'nowrap'}}>
-                    <Translation name={'merlin.app.logviewer.timestamp'}>Timestamp</Translation>
+                    <I18n name={'logviewer.timestamp'}>Timestamp</I18n>
                     <button
                         onClick={toggleOrder}
                         type="button"
@@ -33,9 +33,9 @@ function LogTable({locationFormat, showStackTrace, entries, search, ascendingOrd
                         {sort}
                     </button>
                 </th>
-                <th>Level</th>
-                <th>Message</th>
-                {locationFormat !== 'none' ? <th>Location</th> : null}
+                <th><I18n name={'logviewer.level'}>Level</I18n></th>
+                <th><I18n name={'logviewer.message'}>Message</I18n></th>
+                {locationFormat !== 'none' ? <th><I18n name={'logviewer.location'}>Location</I18n></th> : null}
             </tr>
             </thead>
             <tbody>

@@ -4,6 +4,7 @@ import classNames from 'classnames';
 import {FormFeedback, Input, UncontrolledTooltip} from 'reactstrap';
 import {FormCheckbox} from "./FormCheckbox";
 import {FormButton} from "./FormButton";
+import {FormSelect, FormOption} from "./FormSelect";
 import {revisedRandId} from "../../../utilities/global";
 
 const FormGroup = (props) => {
@@ -102,44 +103,6 @@ FormInput.defaultProps = {
     invalid: null
 };
 
-
-const FormSelect = (props) => {
-    let tooltip = null;
-    let targetId = props.id || props.name;
-    if (props.hint) {
-        tooltip = <UncontrolledTooltip placement={props.hintPlacement} target={targetId}>
-            {props.hint}
-        </UncontrolledTooltip>;
-    }
-    const {className, hint, hintPlacement, id, ...other} = props;
-    return (
-        <React.Fragment>
-            <select id={targetId}
-                    className={classNames('custom-select form-control form-control-sm mr-1', className)}
-                    {...other}
-            >
-                {props.children}
-            </select>
-            {tooltip}
-        </React.Fragment>
-    );
-}
-
-FormSelect.propTypes = {
-    id: PropTypes.string,
-    value: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool]),
-    name: PropTypes.string,
-    onChange: PropTypes.func,
-    hint: PropTypes.string,
-    hintPlacement: PropTypes.oneOf(['right', 'top']),
-    children: PropTypes.node,
-    className: PropTypes.string
-};
-
-FormSelect.defaultProps = {
-    hint: null,
-    hintPlacement: 'top',
-};
 
 const FormField = (props) => {
     const {className, id, ...other} = props;
@@ -305,6 +268,7 @@ export {
     FormLabelField,
     FormInput,
     FormSelect,
+    FormOption,
     FormCheckbox,
     FormLabelInputField,
     FormFieldset,
