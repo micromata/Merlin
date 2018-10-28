@@ -1,4 +1,4 @@
-package de.reinhard.merlin.app.utils;
+package de.reinhard.merlin.utils;
 
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
@@ -11,14 +11,14 @@ import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-public class ZipUtil {
-    private Logger log = LoggerFactory.getLogger(ZipUtil.class);
+public class ZipUtils {
+    private Logger log = LoggerFactory.getLogger(ZipUtils.class);
     private ZipOutputStream zipOut;
     private ByteArrayOutputStream outStream;
     private String filename;
     private Map<String, Integer> usedFilenames = new HashMap<>();
 
-    public ZipUtil(String zipFilename) {
+    public ZipUtils(String zipFilename) {
         this.filename = zipFilename;
         outStream = new ByteArrayOutputStream();
         zipOut = new ZipOutputStream(outStream);
@@ -58,5 +58,9 @@ public class ZipUtil {
             log.error("Can't close zip archive: '" + filename + "': " + ex.getMessage(), ex);
         }
         return outStream.toByteArray();
+    }
+
+    public String getFilename() {
+        return filename;
     }
 }

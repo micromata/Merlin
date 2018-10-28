@@ -3,6 +3,7 @@ package de.reinhard.merlin.word.templating;
 import de.reinhard.merlin.persistency.FileDescriptor;
 import de.reinhard.merlin.persistency.FileDescriptorInterface;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.slf4j.Logger;
@@ -25,12 +26,30 @@ public class Template implements Cloneable, FileDescriptorInterface {
         statistics = new TemplateStatistics(this);
     }
 
+    /**
+     * Template id definined inside Word document (if given): <tt>{id = “Employment contract template“}</tt>.
+     * This id is useful for referencing templates in serial template definitions.
+     * @return id if specified inside the Word template.
+     */
     public String getId() {
         return id;
     }
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    /**
+     *
+     * @return id if specified in Word template or filename if given or primary key.
+     * @see #getId()
+     * @see FileDescriptor#getFilename()
+     * @see #getPrimaryKey()
+     */
+    public String getDisplayName() {
+        if (StringUtils.isNotBlank(id)) return id;
+        if (fileDescriptor != null) return fileDescriptor.getFilename();
+        return getPrimaryKey();
     }
 
     public TemplateDefinition getTemplateDefinition() {

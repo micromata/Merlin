@@ -29,7 +29,7 @@ class TemplatesHandler extends AbstractHandler<Template> {
         try {
             mdc.put(MDCKey.TEMPLATE_PK, fileDescriptor.getPrimaryKey());
             try {
-                doc = WordDocument.create(path);
+                doc = WordDocument.load(path);
             } catch (Exception ex) {
                 log.info("Ignoring unsupported file: " + path);
                 return null;

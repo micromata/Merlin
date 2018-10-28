@@ -5,6 +5,7 @@ import de.reinhard.merlin.app.storage.Storage;
 import de.reinhard.merlin.logging.MDCHandler;
 import de.reinhard.merlin.logging.MDCKey;
 import de.reinhard.merlin.persistency.PersistencyRegistry;
+import de.reinhard.merlin.utils.MerlinFileUtils;
 import de.reinhard.merlin.word.WordDocument;
 import de.reinhard.merlin.word.templating.Template;
 import de.reinhard.merlin.word.templating.TemplateDefinition;
@@ -60,7 +61,7 @@ public class TemplateRunnerRest {
             }
             Response response = null;
             try {
-                WordDocument doc = WordDocument.create(path);
+                WordDocument doc = WordDocument.load(path);
                 WordTemplateRunner runner = new WordTemplateRunner(templateDefinition, doc);
                 WordDocument result = runner.run(data.getVariables());
                 String filename = runner.createFilename(path.getFileName().toString(), data.getVariables());
@@ -70,7 +71,7 @@ public class TemplateRunnerRest {
                 // Needed to get the Content-Disposition by client:
                 builder.header("Access-Control-Expose-Headers", "Content-Disposition");
                 response = builder.build();
-                log.info("Downloading file '" + filename + "', length: " + RestUtils.getByteCountToDisplaySize(byteArray.length));
+                log.info("Downloading file '" + filename + "', length: " + MerlinFileUtils.getByteCountToDisplaySize(byteArray.length));
                 return response;
             } catch (Exception ex) {
                 String errorMsg = "Error while try to run template '" + data.getTemplatePrimaryKey() + "'.";

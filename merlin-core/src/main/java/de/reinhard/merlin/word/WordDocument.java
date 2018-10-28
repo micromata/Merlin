@@ -25,7 +25,7 @@ public class WordDocument implements AutoCloseable {
     private File file;
     private InputStream inputStream;
 
-    public static WordDocument create(Path path) {
+    public static WordDocument load(Path path) {
         InputStream inputStream = PersistencyRegistry.getDefault().getInputStream(path);
         if (inputStream == null) {
             log.error("Cam't get input stream for path: " + path.toAbsolutePath());

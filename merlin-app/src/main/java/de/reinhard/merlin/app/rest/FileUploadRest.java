@@ -1,15 +1,13 @@
 package de.reinhard.merlin.app.rest;
 
 import de.reinhard.merlin.app.storage.Storage;
-import de.reinhard.merlin.app.utils.ZipUtil;
 import de.reinhard.merlin.excel.ExcelWorkbook;
 import de.reinhard.merlin.logging.MDCHandler;
 import de.reinhard.merlin.logging.MDCKey;
 import de.reinhard.merlin.persistency.PersistencyRegistry;
-import de.reinhard.merlin.utils.Converter;
+import de.reinhard.merlin.utils.MerlinFileUtils;
 import de.reinhard.merlin.word.WordDocument;
 import de.reinhard.merlin.word.templating.*;
-import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.glassfish.jersey.media.multipart.ContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataBodyPart;
@@ -43,56 +41,7 @@ public class FileUploadRest {
             if (filename.endsWith(".xlsx") || filename.endsWith(".xls")) {
                 ExcelWorkbook workbook = new ExcelWorkbook(fileInputStream, filename);
                 if (SerialDataExcelReader.isMerlinSerialRunDefinition(workbook)) {
-                    log.info("Processing Merlin Serial Definition file: " + filename);
-                    SerialDataExcelReader reader = new SerialDataExcelReader(workbook);
-                    SerialData serialData = reader.getSerialData();
-                    String templateDefinitionPrimaryKey = serialData.getReferencedTemplateDefinitionPrimaryKey();
-                    TemplateDefinition templateDefinition = null;
-                    if (StringUtils.isNotBlank(templateDefinitionPrimaryKey)) {
-                        templateDefinition = Storage.getInstance().getTemplateDefinition(templateDefinitionPrimaryKey);
-                        if (templateDefinition != null) {
-                            mdc.put(MDCKey.TEMPLATE_DEFINITION_PK, templateDefinitionPrimaryKey);
-                        }
-                        serialData.setTemplateDefinition(templateDefinition);
-                    }
-                    String templatePrimaryKey = serialData.getReferencedTemplatePrimaryKey();
-                    if (StringUtils.isNotBlank(templatePrimaryKey)) {
-                        Template template = Storage.getInstance().getTemplate(templatePrimaryKey);
-                        if (template == null) {
-                            log.error("Can't load template '" + templatePrimaryKey + "'. Abort serial processing...");
-                        } else {
-                            mdc.put(MDCKey.TEMPLATE_PK, templatePrimaryKey);
-                            java.nio.file.Path path = template.getFileDescriptor().getCanonicalPath();
-                            if (!PersistencyRegistry.getDefault().exists(path)) {
-                                return RestUtils.get404Response(log, "Template file not found by canonical path: " + path);
-                            }
-                            WordDocument doc = WordDocument.create(path);
-                            WordTemplateChecker checker = new WordTemplateChecker(doc);
-                            serialData.setTemplate(checker.getTemplate());
-                            reader.readVariables(serialData.getTemplate().getStatistics());
-
-                            String zipFilename = RestUtils.getISODate() + "_" + FilenameUtils.getBaseName(filename) + ".zip";
-                            ZipUtil zipUtil = new ZipUtil(zipFilename);
-                            zipUtil.addZipEntry(filename, workbook.getAsByteArrayOutputStream().toByteArray());
-                            int counter = 0;
-                            int maxEntries = serialData.getEntries().size();
-                            for (SerialDataEntry entry : serialData.getEntries()) {
-                                WordTemplateRunner runner = new WordTemplateRunner(templateDefinition, doc);
-                                WordDocument result = runner.run(entry.getVariables());
-                                entry.getVariables().put("counter", Converter.formatNumber(++counter, maxEntries));
-                                String zipEntryFilename = runner.createFilename(serialData.getFilenamePattern(), entry.getVariables(), false);
-                                zipUtil.addZipEntry(zipEntryFilename, result.getAsByteArrayOutputStream().toByteArray());
-                            }
-                            byte[] zipByteArray = zipUtil.closeAndGetByteArray();
-                            Response.ResponseBuilder builder = Response.ok(zipByteArray);
-                            builder.header("Content-Disposition", "attachment; filename=" + zipFilename);
-                            // Needed to get the Content-Disposition by client:
-                            builder.header("Access-Control-Expose-Headers", "Content-Disposition");
-                            Response response = builder.build();
-                            log.info("Downloading file '" + zipFilename + "', length: " + RestUtils.getByteCountToDisplaySize(zipByteArray.length));
-                            return response;
-                        }
-                    }
+                    return runSerial(filename, workbook, mdc);
                 }
             }
             log.info("Unsupported file:" + filename);
@@ -101,5 +50,48 @@ public class FileUploadRest {
         } finally {
             mdc.restore();
         }
+    }
+
+
+    private Response runSerial(String filename, ExcelWorkbook workbook, MDCHandler mdc) {
+        log.info("Processing Merlin Serial Definition file: " + filename);
+        SerialDataExcelReader reader = new SerialDataExcelReader(workbook);
+        SerialData serialData = reader.getSerialData();
+        String templateDefinitionPrimaryKey = serialData.getReferencedTemplateDefinitionPrimaryKey();
+        TemplateDefinition templateDefinition = null;
+        if (StringUtils.isNotBlank(templateDefinitionPrimaryKey)) {
+            templateDefinition = Storage.getInstance().getTemplateDefinition(templateDefinitionPrimaryKey);
+            if (templateDefinition != null) {
+                mdc.put(MDCKey.TEMPLATE_DEFINITION_PK, templateDefinitionPrimaryKey);
+            }
+            serialData.setTemplateDefinition(templateDefinition);
+        }
+        String templatePrimaryKey = serialData.getReferencedTemplatePrimaryKey();
+        if (StringUtils.isBlank(templatePrimaryKey)) {
+            return RestUtils.get404Response(log, "No template specified. Abort serial processing...");
+        }
+        Template template = Storage.getInstance().getTemplate(templatePrimaryKey);
+        if (template == null) {
+            return RestUtils.get404Response(log, "Can't load template '\" + templatePrimaryKey + \"'. Abort serial processing...");
+
+        }
+        serialData.setTemplate(template);
+
+        mdc.put(MDCKey.TEMPLATE_PK, templatePrimaryKey);
+        java.nio.file.Path path = template.getFileDescriptor().getCanonicalPath();
+        if (!PersistencyRegistry.getDefault().exists(path)) {
+            return RestUtils.get404Response(log, "Template file not found by canonical path: " + path);
+        }
+        WordDocument templateDocument = WordDocument.load(path);
+        SerialTemplateRunner runner = new SerialTemplateRunner(serialData, templateDocument);
+        reader.readVariables(serialData.getTemplate().getStatistics());
+        byte[] zipByteArray = runner.run(filename);
+        Response.ResponseBuilder builder = Response.ok(zipByteArray);
+        builder.header("Content-Disposition", "attachment; filename=" + runner.getZipFilename());
+        // Needed to get the Content-Disposition by client:
+        builder.header("Access-Control-Expose-Headers", "Content-Disposition");
+        Response response = builder.build();
+        log.info("Downloading file '" + runner.getZipFilename() + "', length: " + MerlinFileUtils.getByteCountToDisplaySize(zipByteArray.length));
+        return response;
     }
 }

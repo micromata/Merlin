@@ -1,17 +1,12 @@
 package de.reinhard.merlin.app.rest;
 
 import de.reinhard.merlin.app.javafx.RunningMode;
-import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Response;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class RestUtils {
-    private static SimpleDateFormat ISO_DATEFORMAT = new SimpleDateFormat("yyyy-MM-dd");
-
     /**
      * @return null, if the local app (JavaFX) is running and the request is from localhost. Otherwise message, why local
      * service isn't available.
@@ -34,22 +29,5 @@ public class RestUtils {
                 type("text/plain").
                 build();
         return response;
-    }
-
-    static String getISODate() {
-        synchronized (ISO_DATEFORMAT) {
-            return ISO_DATEFORMAT.format(new Date());
-        }
-    }
-
-    static String getByteCountToDisplaySize(Long length) {
-        if (length == null) {
-            return "0KB";
-        }
-        return FileUtils.byteCountToDisplaySize(length);
-    }
-
-    static String getByteCountToDisplaySize(int length) {
-        return FileUtils.byteCountToDisplaySize(length);
     }
 }
