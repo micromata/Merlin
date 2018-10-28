@@ -4,6 +4,15 @@ import './style.css'
 import {formatDateTime} from '../../../utilities/global';
 
 function Footer({versionInfo}) {
+
+    if (versionInfo.failed) {
+        return (
+            <div className={'footer'}>
+                <p className={'version'}>Cannot fetch version information.</p>
+            </div>
+        );
+    }
+
     return <div className={'footer'}>
         <p className={'version'}>
             Version {versionInfo.version} * Build Date {formatDateTime(versionInfo.buildDate)}

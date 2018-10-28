@@ -1,4 +1,4 @@
-import {VERSION_RELOADED, VERSION_REQUEST_RELOAD} from '../actions/types';
+import {VERSION_RELOAD_FAILED, VERSION_RELOADED, VERSION_REQUEST_RELOAD} from '../actions/types';
 import {fetchNewDictionary} from '../utilities/i18n';
 
 const initialState = {
@@ -11,7 +11,8 @@ const reducer = (state = initialState, action) => {
     switch (action.type) {
         case VERSION_REQUEST_RELOAD:
             return Object.assign({}, state, {
-                loading: true
+                loading: true,
+                failed: false
             });
         case VERSION_RELOADED:
 
@@ -21,9 +22,15 @@ const reducer = (state = initialState, action) => {
 
             return Object.assign({}, state, {
                 loading: false,
+                failed: false,
                 version: action.payload.version,
                 buildDate: action.payload.buildDate,
                 updateVersion: action.payload.updateVersion
+            });
+        case VERSION_RELOAD_FAILED:
+            return Object.assign({}, state, {
+                loading: false,
+                failed: true
             });
         default:
             return state;

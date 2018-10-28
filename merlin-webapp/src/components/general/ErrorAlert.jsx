@@ -2,7 +2,7 @@ import React from 'react';
 import {Alert, Button} from 'reactstrap';
 
 const ErrorAlert = (props) => <Alert
-    bsStyle={'danger'}
+    color={'danger'}
 >
     <h4>{props.title}</h4>
     <p>{props.description}</p>
