@@ -1,5 +1,5 @@
 import {getRestServiceUrl} from '../utilities/global';
-import {LOG_VIEW_CHANGE_FILTER, LOG_VIEW_RELOADED, LOG_VIEW_REQUEST_RELOAD} from './types';
+import {LOG_VIEW_CHANGE_FILTER, LOG_VIEW_FAILED_RELOAD, LOG_VIEW_RELOADED, LOG_VIEW_REQUEST_RELOAD} from './types';
 
 const requestedLogReload = () => ({
     type: LOG_VIEW_REQUEST_RELOAD
@@ -8,6 +8,10 @@ const requestedLogReload = () => ({
 const reloadedLog = (data) => ({
     type: LOG_VIEW_RELOADED,
     payload: data
+});
+
+const failedLogReload = () => ({
+    type: LOG_VIEW_FAILED_RELOAD
 });
 
 const changedFilter = (name, value) => ({
@@ -39,7 +43,8 @@ const loadLog = (dispatch, getState) => {
         .then(json => dispatch(reloadedLog(json.map(entry => ({
             ...entry,
             level: entry.level.toLowerCase()
-        })))));
+        })))))
+        .catch(() => dispatch(failedLogReload()));
 };
 
 export const requestLogReload = () => (dispatch, getState) => {

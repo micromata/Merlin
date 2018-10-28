@@ -6,6 +6,7 @@ import LogFilters from './LogFilters';
 import {changeFilter, requestLogReload} from '../../../actions';
 import LogTable from './LogTable';
 import './LogViewer.css';
+import ErrorAlert from '../../general/ErrorAlert';
 
 class LogPage extends React.Component {
 
@@ -21,9 +22,33 @@ class LogPage extends React.Component {
         this.props.changeFilter(event.target.name, event.target.value);
     };
 
+    render = () => {
 
+        let content;
 
-    render = () => (
+        if (this.props.loading) {
+            content = <i>Loading...</i>
+        } else if (this.props.failed) {
+            content = <ErrorAlert
+                title={'Cannot load Log'}
+                description={'Something went wrong during contacting the rest api.'}
+                action={{
+                    handleClick: this.props.loadLog,
+                    title: 'Try again'
+                }}
+            />;
+        } else {
+            content = <LogTable
+                search={this.props.filters.search}
+                locationFormat={this.props.filters.locationFormat}
+                entries={this.props.entries}
+                ascendingOrder={this.props.filters.ascendingOrder}
+                toggleOrder={this.handleToggleSortOrder}
+                showStackTrace={this.props.filters.showStackTrace}
+            />;
+        }
+
+        return (
             <React.Fragment>
                 <PageHeader>Log viewer</PageHeader>
                 <LogFilters
@@ -34,16 +59,10 @@ class LogPage extends React.Component {
                         this.props.loadLog();
                     }}
                 />
-                <LogTable
-                    search={this.props.filters.search}
-                    locationFormat={this.props.filters.locationFormat}
-                    entries={this.props.entries}
-                    ascendingOrder={this.props.filters.ascendingOrder}
-                    toggleOrder={this.handleToggleSortOrder}
-                    showStackTrace={this.props.filters.showStackTrace}
-                />
+                {content}
             </React.Fragment>
         );
+    };
 }
 
 LogPage.propTypes = {
