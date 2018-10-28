@@ -40,7 +40,7 @@ class TemplateCard extends React.Component {
                         {definitionText}
                     </ul>
                 </CardBody>
-                <CardFooter><I18n name={'templates.clickToRun'}/><span className={'lastModified'}>{formatDateTime(template.lastModified)}</span></CardFooter>
+                <CardFooter><span className={'lastModified'}>{formatDateTime(template.lastModified)}</span></CardFooter>
             </Card>
         </React.Fragment>
     };

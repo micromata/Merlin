@@ -90,7 +90,7 @@ class UpdatePage extends React.Component {
                         <td>{this.state.fileSize}</td>
                     </tr>
                     <tr>
-                        <th><I18n name={'common.fileName'}/></th>
+                        <th><I18n name={'common.filename'}/></th>
                         <td>{this.state.filename}</td>
                     </tr>
                     {comment}
