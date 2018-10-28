@@ -19,13 +19,13 @@ function LogFilters({loadLog, changeFilter, filters}) {
                 value={filters.threshold}
                 name={'threshold'}
                 onChange={changeFilter}
-                hint={<I18n name={'logviewer.filter.level.hint'} />}
+                hint={<I18n name={'logviewer.filter.level.hint'}/>}
             >
-                <FormOption value={'error'} />
-                <FormOption value={'warn'} />
-                <FormOption value={'info'} />
-                <FormOption value={'debug'} />
-                <FormOption value={'trace'} />
+                <FormOption value={'error'}/>
+                <FormOption value={'warn'}/>
+                <FormOption value={'info'}/>
+                <FormOption value={'debug'}/>
+                <FormOption value={'trace'}/>
             </FormSelect>
 
             <FormInput
@@ -39,37 +39,37 @@ function LogFilters({loadLog, changeFilter, filters}) {
                 value={filters.locationFormat}
                 name={'locationFormat'}
                 onChange={changeFilter}
-                hint={<I18n name={'logviewer.filter.location.hint'} />}
+                hint={<I18n name={'logviewer.filter.location.hint'}/>}
             >
-                <FormOption value={'none'} i18nKey={'logviewer.filter.location.option.none'} />
-                <FormOption value={'short'} i18nKey={'logviewer.filter.location.option.short'} />
-                <FormOption value={'normal'} i18nKey={'logviewer.filter.location.option.normal'} />
+                <FormOption value={'none'} i18nKey={'common.none'}/>
+                <FormOption value={'short'} i18nKey={'logviewer.filter.location.option.short'}/>
+                <FormOption value={'normal'} i18nKey={'logviewer.filter.location.option.normal'}/>
             </FormSelect>
 
             <FormSelect
                 value={filters.showStackTrace}
                 name={'showStackTrace'}
                 onChange={changeFilter}
-                hint={'Show/hide stack traces.'}
+                hint={<I18n name={'logviewer.filter.stacktraces.showHide.hint'}/>}
             >
-                <option value={'false'}>none</option>
-                <option value={'true'}>stacktraces</option>
+                <FormOption value={'false'} i18nKey={'common.none'}/>
+                <FormOption value={'true'} i18nKey={'logviewer.filter.stacktraces'}/>
             </FormSelect>
 
             <FormSelect
                 value={filters.maxSize}
                 name={'maxSize'}
                 onChange={changeFilter}
-                hint={'Limits result size.'}
+                hint={<I18n name={'common.limitsResultSize'} />}
             >
-                <option>50</option>
-                <option>100</option>
-                <option>500</option>
-                <option>1000</option>
-                <option>10000</option>
+                <FormOption value={'50'} />
+                <FormOption value={'100'} />
+                <FormOption value={'500'} />
+                <FormOption value={'1000'} />
+                <FormOption value={'10000'} />
             </FormSelect>
             <FormButton type={'submit'} bsStyle={'primary'}>
-                <IconRefresh />
+                <IconRefresh/>
             </FormButton>
         </form>
     );
