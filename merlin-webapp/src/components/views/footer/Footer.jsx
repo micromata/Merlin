@@ -17,7 +17,7 @@ function Footer({versionInfo}) {
     return <div className={'footer'}>
         <p className={'version'}>
             <I18n name={'version'}/> {versionInfo.version} * <I18n name={'version.buildDate'}/> {formatDateTime(versionInfo.buildDate)}
-            {versionInfo.updateVersion ? <span> * <Link to={'/update'}><I18n name={'version.newVersionAvailable'}/></Link></span> : ''}
+            {versionInfo.updateVersion ? <span> * <Link to={'/update'}><I18n name={'version.updateAvailable'}/></Link></span> : ''}
         </p>
     </div>;
 }

@@ -236,7 +236,7 @@ class ConfigForm extends React.Component {
                                              placeholder="Enter port"/>
                         <FormLabelField>
                             <FormButton id={'resetFactorySettings'} onClick={this.onResetConfiguration}
-                                        hint="Reset factory settings."> <IconDanger/> Reset
+                                        hintKey={'configuration.resetAllSettings.hint'}> <IconDanger/> <I18n name={'configuration.resetAllSettings'}/>
                             </FormButton>
                         </FormLabelField>
                     </FormFieldset>

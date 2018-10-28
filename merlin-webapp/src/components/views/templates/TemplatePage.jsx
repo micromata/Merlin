@@ -9,6 +9,7 @@ import TemplateRunTab from './TemplateRunTab';
 import TemplateSerialRunTab from './TemplateSerialRunTab';
 import TemplateStatistics from './TemplateStatistics';
 import LogEmbeddedPanel from '../logging/LogEmbeddedPanel';
+import I18n from "../../general/translation/I18n";
 
 class TemplatePage extends React.Component {
 
@@ -76,32 +77,32 @@ class TemplatePage extends React.Component {
                         className={classNames({active: this.state.activeTab === '1'})}
                         onClick={this.toggleTab('1')}
                     >
-                        Main
+                        <I18n name={'common.common'}/>
                     </NavLink>
                     {this.state.template.templateDefinition ?
                         <NavLink
                             className={classNames({active: this.state.activeTab === '2'})}
                             onClick={this.toggleTab('2')}
                         >
-                            Template Definition
+                            <I18n name={'template.definition'}/>
                         </NavLink> : undefined}
                     <NavLink
                         className={classNames({active: this.state.activeTab === '3'})}
                         onClick={this.toggleTab('3')}
                     >
-                        Run
+                        <I18n name={'common.run'}/>
                     </NavLink>
                     <NavLink
                         className={classNames({active: this.state.activeTab === '4'})}
                         onClick={this.toggleTab('4')}
                     >
-                        Serial run
+                        <I18n name={'templates.serialRun'}/>
                     </NavLink>
                     <NavLink
                         className={classNames({active: this.state.activeTab === '5'})}
                         onClick={this.toggleTab('5')}
                     >
-                        Logging
+                        <I18n name={'logviewer'}/>
                     </NavLink>
                 </Nav>
                 <TabContent activeTab={this.state.activeTab}>
@@ -109,20 +110,20 @@ class TemplatePage extends React.Component {
                         <Table hover>
                             <tbody>
                             <tr>
-                                <td>Filename</td>
+                                <td><I18n name={'common.filename'}/></td>
                                 <td>{this.state.template.fileDescriptor.filename}</td>
                             </tr>
                             <tr>
-                                <td>Last modified</td>
+                                <td><I18n name={'common.lastModified'}/></td>
                                 <td>{formatDateTime(this.state.template.fileDescriptor.lastModified)}</td>
                             </tr>
                             <tr>
-                                <td>Path</td>
+                                <td><I18n name={'common.path'}/></td>
                                 <td><LinkFile primaryKey={template.fileDescriptor.primaryKey}
                                               filepath={template.fileDescriptor.canonicalPath}/></td>
                             </tr>
                             <tr>
-                                <td>Primary Key</td>
+                                <td><I18n name={'templates.primaryKey'}/></td>
                                 <td>{this.state.template.primaryKey}</td>
                             </tr>
                             </tbody>

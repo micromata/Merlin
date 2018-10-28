@@ -52,7 +52,7 @@ class TemplateStatistics extends React.Component {
         if (this.state.showAllVariableTypes) {
             allVariableTypes = <React.Fragment>
                 <tr>
-                    <td>Used variables</td>
+                    <td><I18n name={'templates.variables.used'} /></td>
                     <td>
                         {this.props.statistics.usedVariables.map((variable, index) => {
                             // Return the element. Also pass key

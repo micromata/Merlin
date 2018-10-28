@@ -95,28 +95,28 @@ class TemplateDefinitionPage extends React.Component {
                         onClick={() => {
                             this.toggleTab('1');
                         }}>
-                        Main
+                        <I18n name={'common.common'}/>
                     </NavLink>
                     <NavLink
                         className={classNames({active: this.state.activeTab === '2'})}
                         onClick={() => {
                             this.toggleTab('2');
                         }}>
-                        Variables
+                        <I18n name={'templates.variables'}/>
                     </NavLink>
                     <NavLink
                         className={classNames({active: this.state.activeTab === '3'})}
                         onClick={() => {
                             this.toggleTab('3');
                         }}>
-                        Dependent variables
+                        <I18n name={'templates.variables.dependent'}/>
                     </NavLink>
                     <NavLink
                         className={classNames({active: this.state.activeTab === '4'})}
                         onClick={() => {
                             this.toggleTab('4');
                         }}>
-                        Logging
+                        <I18n name={'logviewer'}/>
                     </NavLink>
                 </Nav>
                 <TabContent activeTab={this.state.activeTab}>
