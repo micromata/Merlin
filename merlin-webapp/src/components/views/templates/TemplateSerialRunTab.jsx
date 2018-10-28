@@ -7,6 +7,7 @@ import downloadFile from '../../../utilities/download';
 import {uploadFile} from '../../../actions';
 import connect from 'react-redux/es/connect/connect';
 import LoadingOverlay from "../../general/loading/LoadingOverlay";
+import I18n from "../../general/translation/I18n";
 
 class TemplateSerialRunTab extends React.Component {
     constructor(props) {
@@ -66,12 +67,11 @@ class TemplateSerialRunTab extends React.Component {
     render() {
         return (
             <React.Fragment>
-                <h4>Generation from a file:</h4>
                 <Button className={'btn-outline-primary'} onClick={this.getSerialTemplate}>
-                    <IconDownload/> Excel serial template
+                    <IconDownload/><I18n name={'templates.serialRun.button.exportExcelTemplate'} />
                 </Button>
-                <h4>Upload serial data Excel file:</h4>
-                <DropArea upload={this.uploadFile}><b> Select a file,</b> or drop one here.</DropArea>
+                <h4><I18n name={'templates.serialRun.upload.title'} /></h4>
+                <DropArea upload={this.uploadFile}><I18n name={'common.droparea.title'}/></DropArea>
                 {this.state.loading ? <LoadingOverlay/> : ''}
             </React.Fragment>
         );

@@ -6,6 +6,7 @@ import {saveTemplateRunConfiguration} from '../../../actions';
 import {getResponseHeaderFilename, getRestServiceUrl} from '../../../utilities/global';
 import downloadFile from '../../../utilities/download';
 import {FormButton, FormInput, FormLabelField, FormSelect} from '../../general/forms/FormComponents';
+import I18n from "../../general/translation/I18n";
 
 class TemplateRunTab extends React.Component {
 
@@ -78,7 +79,7 @@ class TemplateRunTab extends React.Component {
 
         return (
             <React.Fragment>
-                <h4>Single Generation:</h4>
+                <h4><I18n name={'templates.runner.singleRun'}/></h4>
                 <Form onSubmit={this.runSingleTemplate}>
                     {Object.keys(this.variableDefinitions)
                         .filter(key => this.variableDefinitions[key] !== undefined)
@@ -112,13 +113,13 @@ class TemplateRunTab extends React.Component {
                             } else {
 
                                 if (item.required && (!formControlProps.value || formControlProps.value.trim() === '')) {
-                                    validationMessage = 'This field is required. Please insert a value.';
+                                    validationMessage = <I18n name={'validation.requiredField'}/>;
                                 } else if (item.type === 'INT' && isNaN(formControlProps.value)) {
-                                    validationMessage = 'Value must be a number.';
+                                    validationMessage = <I18n name={'validation.numberExpected'}/>;
                                 } else if (item.minimumValue && item.minimumValue > Number(formControlProps.value)) {
-                                    validationMessage = `The field must be above  ${item.minimumValue}.`;
+                                    validationMessage = <I18n name={'validation.numberMustBeHigher'} params={[item.minimumValue]}/>;
                                 } else if (item.maximumValue && item.maximumValue < Number(formControlProps.value)) {
-                                    validationMessage = `The field must be below ${item.maximumValue}.`;
+                                    validationMessage = <I18n name={'validation.numberMustBeLower'} params={[item.maximumValue]}/>;
                                 }
 
                                 if (validationMessage) {
@@ -162,7 +163,7 @@ class TemplateRunTab extends React.Component {
                         type={'submit'}
                         disabled={!valid}
                     >
-                        Run
+                        <I18n name={'common.run'}/>
                     </FormButton>
                 </Form>
             </React.Fragment>

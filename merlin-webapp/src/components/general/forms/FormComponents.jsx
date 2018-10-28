@@ -6,6 +6,7 @@ import {FormCheckbox} from "./FormCheckbox";
 import {FormButton} from "./FormButton";
 import {FormSelect, FormOption} from "./FormSelect";
 import {revisedRandId} from "../../../utilities/global";
+import I18n from "../translation/I18n";
 
 const FormGroup = (props) => {
     const {className, ...other} = props;
@@ -29,18 +30,19 @@ FormGroup.defaultProps = {
 
 
 const FormLabel = (props) => {
-    const {className, length, ...other} = props;
+    const {className, i18nKey, length, ...other} = props;
     return (
         <label className={classNames(`col-sm-${props.length} col-form-label`, className)}
                {...other}
         >
-            {props.children}
+            {i18nKey ? <I18n name={i18nKey}/> : props.children}
         </label>
     );
 }
 
 FormLabel.propTypes = {
     length: PropTypes.number,
+    i18nKey: PropTypes.string,
     htmlFor: PropTypes.string
 };
 
@@ -105,14 +107,14 @@ FormInput.defaultProps = {
 
 
 const FormField = (props) => {
-    const {className, id, ...other} = props;
+    const {className, id, validationMessage, ...other} = props;
     return (
         <div id={props.id}
              className={classNames(`col-sm-${props.length}`, className)}
              {...other}
         >
             {props.children}
-            {props.validationMessage ? <FormFeedback>{props.validationMessage}</FormFeedback> : ''}
+            {validationMessage ? <FormFeedback>{validationMessage}</FormFeedback> : ''}
             {props.hint ? <small className={'text-muted'}>{props.hint}</small> : ''}
         </div>
     );

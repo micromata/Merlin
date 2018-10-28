@@ -4,6 +4,7 @@ import {PageHeader} from '../../general/BootstrapComponents';
 import {getRestServiceUrl} from '../../../utilities/global';
 import {FormButton} from '../../general/forms/FormComponents';
 import {Table} from 'reactstrap';
+import I18n from "../../general/translation/I18n";
 
 
 class UpdatePage extends React.Component {
@@ -44,52 +45,52 @@ class UpdatePage extends React.Component {
     }
 
     render() {
-        let content = 'No new version available.';
+        let content = <I18n name={'update.noUpdateAvailable'}/>;
         if (this.props.updateVersion) {
             let comment = null;
             if (this.state.comment) {
                 comment = <tr>
-                    <th>Comment</th>
+                    <th><I18n name={'common.comment'}/></th>
                     <td>{this.state.comment}</td>
                 </tr>;
             }
             content = <React.Fragment>
-                <h2>New Version</h2>
-                The new version {this.props.updateVersion} is available.
+                <h2><I18n name={'update.newVersion'}/></h2>
+                <I18n name={'update.newVersionAvailable'} params={[this.props.updateVersion]}/>
                 <br/>
-                You can start the update process by simply clicking the update button.
+                <I18n name={'update.newVersion.simplyClickButton'} />
                 <br/>
                 <br/>
                 <form>
                     <FormButton
                         onClick={this.onUpdate}
-                        hint="Download and starts update."
+                        hintKey={'update.update.button.hint'}
                     >
-                        Update
+                        <I18n name={'common.update'}/>
                     </FormButton>
                 </form>
                 <br/>
-                The update button functions only if your browser is running on the same computer as your Merlin server.
+                <I18n name={'update.description.line1'}/>
                 <br/>
-                If the installer doesn't start after clicking the update button, please proceed manually by downloading
-                the installer of the new version:
+                <I18n name={'update.description.line2'}/>
+                <br/>
                 <br/>
                 <Table striped bordered hover size={'sm'}>
                     <tbody>
                     <tr>
-                        <th>Version</th>
+                        <th><I18n name={'version'}/></th>
                         <td>{this.state.version}</td>
                     </tr>
                     <tr>
-                        <th>Installer url</th>
+                        <th><I18n name={'update.installerUrl'}/></th>
                         <td><a href={this.state.installerUrl} target={'_new'}>{this.state.installerUrl}</a></td>
                     </tr>
                     <tr>
-                        <th>File size</th>
+                        <th><I18n name={'common.fileSize'}/></th>
                         <td>{this.state.fileSize}</td>
                     </tr>
                     <tr>
-                        <th>File name</th>
+                        <th><I18n name={'common.fileName'}/></th>
                         <td>{this.state.filename}</td>
                     </tr>
                     {comment}
@@ -99,7 +100,7 @@ class UpdatePage extends React.Component {
             </React.Fragment>
         }
         return <React.Fragment>
-            <PageHeader>Configuration</PageHeader>
+            <PageHeader><I18n name={'update'}/></PageHeader>
             {content}
         </React.Fragment>;
     }

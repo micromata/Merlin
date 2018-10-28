@@ -1,6 +1,7 @@
 import React from 'react';
 import {Form, Table} from "reactstrap";
 import EditableTextField from "../../../general/forms/EditableTextField";
+import I18n from "../../../general/translation/I18n";
 
 class TemplateDefinitionDependentVariables extends React.Component {
     render = () => {
@@ -34,10 +35,10 @@ class TemplateDefinitionDependentVariables extends React.Component {
                 <Table striped responsive bordered hover>
                     <thead>
                     <tr>
-                        <th>Name</th>
-                        <th>Depends on</th>
-                        <th>Mapping list</th>
-                        <th>Mapping</th>
+                        <th><I18n name={'templates.variable.name'}/></th>
+                        <th><I18n name={'templates.variable.dependsOn'}/></th>
+                        <th><I18n name={'templates.variable.mappingList'}/></th>
+                        <th><I18n name={'templates.variable.mapping'}/></th>
                     </tr>
                     </thead>
                     <tbody>

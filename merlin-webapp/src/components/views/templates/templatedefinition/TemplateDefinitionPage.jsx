@@ -13,6 +13,7 @@ import TemplateDefinitionMain from "./TemplateDefinitionMain";
 import TemplateDefinitionVariables from "./TemplateDefinitionVariables";
 import TemplateDefinitionDependentVariables from "./TemplateDefinitionDependentVariables";
 import LogEmbeddedPanel from "../../logging/LogEmbeddedPanel";
+import I18n from "../../../general/translation/I18n";
 
 class TemplateDefinitionPage extends React.Component {
     componentDidMount = () => {
@@ -151,7 +152,7 @@ class TemplateDefinitionPage extends React.Component {
                 </ul>
             </code>
         }
-        let title = this.state.definition ? this.state.definition.id : 'Template definition';
+        let title = this.state.definition ? this.state.definition.id : <I18n name={'template.definition'}/>;
         let pageHeader = !this.props.hidePageHeader ? <PageHeader>
             {title}
         </PageHeader> : null;

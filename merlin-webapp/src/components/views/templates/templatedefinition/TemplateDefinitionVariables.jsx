@@ -6,6 +6,7 @@ import {
 import EditableTextField from "../../../general/forms/EditableTextField"
 import {arrayNotEmpty} from "../../../../utilities/global";
 import {FormCheckbox} from "../../../general/forms/FormComponents";
+import I18n from "../../../general/translation/I18n";
 
 class TemplateDefinitionVariables extends React.Component {
 
@@ -55,12 +56,12 @@ class TemplateDefinitionVariables extends React.Component {
                 <Table striped responsive bordered hover>
                     <thead>
                     <tr>
-                        <th>Variable</th>
-                        <th>Type</th>
-                        <th>Required</th>
-                        <th>Unique</th>
-                        <th>Range</th>
-                        <th>Description</th>
+                        <th><I18n name={'templates.variable'}/></th>
+                        <th><I18n name={'templates.variable.type'}/></th>
+                        <th><I18n name={'common.required'}/></th>
+                        <th><I18n name={'common.unique'}/></th>
+                        <th><I18n name={'templates.variable.range'}/></th>
+                        <th><I18n name={'common.description'}/></th>
                     </tr>
                     </thead>
                     <tbody>

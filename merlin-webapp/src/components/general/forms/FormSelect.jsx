@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import {UncontrolledTooltip} from 'reactstrap';
-import I18n from "../translation/I18n";
 import {getTranslation} from '../../../utilities/i18n';
 
 const FormSelect = (props) => {

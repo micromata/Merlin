@@ -5,6 +5,7 @@ import DropArea from "./droparea/DropArea";
 import {getResponseHeaderFilename, getRestServiceUrl} from "../../utilities/global";
 import downloadFile from "../../utilities/download";
 import LoadingOverlay from "./loading/LoadingOverlay";
+import I18n from "./translation/I18n";
 
 class Menu extends React.Component {
     getNavElement = (route, index) => {
@@ -81,7 +82,7 @@ class Menu extends React.Component {
             <Navbar className={'fixed-top'} color="light" light expand="md">
                 <NavbarBrand to="/" tag={ReactRouterNavLink}><img alt={'Merlin logo'}
                                                                   src={'../../../images/merlin-icon.png'}
-                                                                  width={'50px'}/>Merlin</NavbarBrand>
+                                                                  width={'50px'}/>Merlin Runner</NavbarBrand>
                 <NavbarToggler onClick={this.toggle}/>
                 <Collapse isOpen={this.state.isOpen} navbar>
                     <Nav className="ml-auto" navbar>
@@ -95,7 +96,7 @@ class Menu extends React.Component {
                               upload={this.uploadFile}
                     />
                     <UncontrolledTooltip placement={'left'} target={'menuDropZone'}>
-                        Drop or open your files here (e. g. serial run Excel sheet).
+                       <I18n name={'common.droparea.hint'}/>
                     </UncontrolledTooltip> </Collapse>
                 {this.state.loading ? <LoadingOverlay/> : ''}
             </Navbar>

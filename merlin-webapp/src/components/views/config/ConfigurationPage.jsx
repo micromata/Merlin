@@ -8,10 +8,12 @@ import {
     FormLabelField,
     FormLabelInputField,
     FormFieldset,
-    FormField, FormButton, FormSelect, FormCheckbox
+    FormField, FormButton, FormSelect, FormOption, FormCheckbox
 } from "../../general/forms/FormComponents";
 import {getRestServiceUrl, isDevelopmentMode} from "../../../utilities/global";
 import {IconDanger, IconWarning} from '../../general/IconComponents';
+import {getTranslation} from "../../../utilities/i18n";
+import I18n from "../../general/translation/I18n";
 
 
 var directoryItems = [];
@@ -124,7 +126,7 @@ class ConfigForm extends React.Component {
     }
 
     onResetConfiguration() {
-        if (window.confirm('Are you sure you want to reset all settings? All settings will be deleted on server.')) {
+        if (window.confirm(getTranslation('configuration.resetAllSettings.question'))) {
             fetch(getRestServiceUrl("configuration/reset?IKnowWhatImDoing=true"), {
                 method: "GET",
                 dataType: "JSON",
@@ -161,14 +163,14 @@ class ConfigForm extends React.Component {
         }
         return (
             <form>
-                <FormLabelField label={'Language'} fieldLength={2}>
+                <FormLabelField label={<I18n name={'configuration.language'}/>} fieldLength={2}>
                     <FormSelect value={this.state.language} name={'language'} onChange={this.handleTextChange}>
-                        <option value={'default'}>Default (server)</option>
-                        <option value={'en'}>English</option>
-                        <option value={'de'}>German</option>
+                        <FormOption value={'default'} i18nKey={'configuration.language.option.default'} />
+                        <FormOption value={'en'} i18nKey={'language.english'} />
+                        <FormOption value={'de'} i18nKey={'language.german'} />
                     </FormSelect>
                 </FormLabelField>
-                <FormLabelField label={'Show test data'} fieldLength={2}>
+                <FormLabelField label={<I18n name={'configuration.showTestData'}/>} fieldLength={2}>
                     <FormCheckbox checked={this.state.showTestData}
                                   name="showTestData"
                                   onChange={this.handleCheckboxChange}/>
@@ -180,7 +182,7 @@ class ConfigForm extends React.Component {
                 <FormLabelField>
                     <Button className={'btn-outline-primary'}
                             onClick={() => this.setState({expertSettingsOpen: !this.state.expertSettingsOpen})}>
-                        <IconWarning/> For experts only
+                        <IconWarning/> <I18n name={'configuration.forExpertsOnly'}/>
                     </Button>
                 </FormLabelField>
                 <Collapse isOpen={this.state.expertSettingsOpen}>
@@ -200,10 +202,10 @@ class ConfigForm extends React.Component {
                 <FormGroup>
                     <FormField length={12}>
                         <FormButton onClick={this.onCancel}
-                                    hint="Discard changes and go to Start page.">Cancel
+                                    hintKey="configuration.cancel.hint"><I18n name={'common.cancel'}/>
                         </FormButton>
                         <FormButton onClick={this.onSave} bsStyle="primary"
-                                    hint="Persist changes and go to Start page.">Save
+                                    hintKey="configuration.save.hint"><I18n name={'common.save'}/>
                         </FormButton>
                     </FormField>
                 </FormGroup>
@@ -227,7 +229,7 @@ class ConfigurationPage
         }
         return (
             <React.Fragment>
-                <PageHeader>Configuration</PageHeader>
+                <PageHeader><I18n name={'configuration'}/></PageHeader>
                 <ConfigForm/>
                 {todo}
             </React.Fragment>

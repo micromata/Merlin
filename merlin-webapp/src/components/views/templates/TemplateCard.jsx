@@ -1,6 +1,7 @@
 import React from 'react';
 import {Card, CardBody, CardFooter, CardHeader} from 'reactstrap';
 import {formatDateTime} from "../../../utilities/global";
+import I18n from "../../general/translation/I18n";
 
 class TemplateCard extends React.Component {
 
@@ -38,7 +39,7 @@ class TemplateCard extends React.Component {
                         {definitionText}
                     </ul>
                 </CardBody>
-                <CardFooter>Click to run.<span className={'lastModified'}>{formatDateTime(template.lastModified)}</span></CardFooter>
+                <CardFooter><I18n name={'templates.clickToRun'}/><span className={'lastModified'}>{formatDateTime(template.lastModified)}</span></CardFooter>
             </Card>
         </React.Fragment>
     };

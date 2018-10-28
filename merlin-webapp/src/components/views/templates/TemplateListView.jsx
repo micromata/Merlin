@@ -6,6 +6,7 @@ import {getRestServiceUrl} from '../../../utilities/global';
 import ErrorAlert from '../../general/ErrorAlert';
 import TemplateCard from './TemplateCard';
 import {IconRefresh} from "../../general/IconComponents";
+import I18n from "../../general/translation/I18n";
 
 class TemplateListView extends React.Component {
 
@@ -108,7 +109,7 @@ class TemplateListView extends React.Component {
 
         return <React.Fragment>
             <PageHeader>
-                Templates
+                <I18n name={'templates'}/>
             </PageHeader>
             {content}
         </React.Fragment>;

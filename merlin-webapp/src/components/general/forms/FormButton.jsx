@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {UncontrolledTooltip} from 'reactstrap';
 import classNames from 'classnames';
 import {revisedRandId} from "../../../utilities/global";
+import I18n from "../translation/I18n";
 
 class FormButton extends React.Component {
 
@@ -10,12 +11,12 @@ class FormButton extends React.Component {
 
     render() {
         let tooltip = null;
-        if (this.props.hint) {
-            tooltip = <UncontrolledTooltip placement={this.props.hintPlacement} target={this._id}>
-                {this.props.hint}
+        const {className, hint, hintKey, hintPlacement, id, bsStyle, ...other} = this.props;
+        if (hint || hintKey) {
+            tooltip = <UncontrolledTooltip placement={hintPlacement} target={this._id}>
+                {hintKey ? <I18n name={hintKey}/> : hint}
             </UncontrolledTooltip>;
         }
-        const {className, hint, hintPlacement, id, bsStyle, ...other} = this.props;
         return (
             <React.Fragment>
                 <button
@@ -37,6 +38,7 @@ FormButton.propTypes = {
     type: PropTypes.string,
     onClick: PropTypes.func,
     hint: PropTypes.string,
+    hintKey: PropTypes.string,
     hintPlacement: PropTypes.oneOf(['right', 'top']),
     disabled: PropTypes.bool,
     children: PropTypes.node

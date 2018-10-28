@@ -18,6 +18,7 @@ import TemplateDefinitionPage from '../components/views/templates/templatedefini
 import Footer from '../components/views/footer/Footer';
 import {loadVersion} from '../actions';
 import {getTranslation} from '../utilities/i18n';
+import I18n from "../components/general/translation/I18n";
 
 class WebApp extends React.Component {
 
@@ -30,15 +31,15 @@ class WebApp extends React.Component {
     render() {
         let routes = [
             ['Start', '/', Start],
-            ['Templates', '/templates', TemplateListView],
-            ['Definitions', '/templateDefinitions', TemplateDefinitionListView],
+            [getTranslation('templates'), '/templates', TemplateListView],
+            [getTranslation('template.definitions'), '/templateDefinitions', TemplateDefinitionListView],
             [getTranslation('logviewer'), '/logging', LogPage],
-            ['Configuration', '/config', ConfigurationPage]
+            [getTranslation('configuration'), '/config', ConfigurationPage]
         ];
 
         if (this.props.version.updateVersion) {
-            routes.push(['Update', '/update', UpdatePage, {
-                badge: <Badge color={'danger'}>New</Badge>,
+            routes.push([getTranslation('update'), '/update', UpdatePage, {
+                badge: <Badge color={'danger'}><I18n name={'common.new'}/></Badge>,
                 className: 'danger'
             }]);
         }

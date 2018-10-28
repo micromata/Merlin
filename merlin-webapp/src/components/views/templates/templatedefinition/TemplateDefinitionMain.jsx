@@ -12,6 +12,7 @@ import {
 } from "../../../general/forms/FormComponents";
 import EditableTextField from "../../../general/forms/EditableTextField";
 import LinkFile from "../../../general/LinkFile"
+import I18n from "../../../general/translation/I18n";
 
 class TemplateDefinitionMain extends React.Component {
     render = () => {
@@ -31,7 +32,7 @@ class TemplateDefinitionMain extends React.Component {
             </FormGroup>
             <FormGroup>
                 <FormLabel htmlFor={'description'}>
-                    Description
+                    <I18n name={'common.description'}/>
                 </FormLabel>
                 <FormField length={6}>
                     <EditableTextField
@@ -43,9 +44,7 @@ class TemplateDefinitionMain extends React.Component {
                 </FormField>
             </FormGroup>
             <FormGroup>
-                <FormLabel htmlFor={'filenamePattern'}>
-                    File name pattern
-                </FormLabel>
+                <FormLabel htmlFor={'filenamePattern'} i18nKey={'templates.config.filenamePattern'} />
                 <FormField length={6}>
                     <EditableTextField
                         type={'text'}
@@ -56,26 +55,26 @@ class TemplateDefinitionMain extends React.Component {
                 </FormField>
                 <FormField length={3}>
                     <FormCheckbox checked={this.props.definition.stronglyRestrictedFilenames}
-                                  name="stronglyRestrictedFilenames" label={'strong file names'}
+                                  name="stronglyRestrictedFilenames" labelKey={'templates.config.strongFilenames'}
                                   onChange={this.props.handleStateChange}
-                                  hint="Merlin will ensure filenames without unallowed chars. If checked, Merlin will only use ASCII-chars and replace e. g. ä by ae (recommended)."/>
+                                  hintKey={'templates.config.strongFilenames.hint'} />
                 </FormField>
             </FormGroup>
         </Form>
-            <h5>Information</h5>
+            <h5><I18n name={'common.information'}/></h5>
             <Table hover>
                 <tbody>
                 <tr>
-                    <td>Last modified</td>
+                    <td><I18n name={'common.lastModified'}/></td>
                     <td>{formatDateTime(this.props.definition.fileDescriptor.lastModified)}</td>
                 </tr>
                 <tr>
-                    <td>Path</td>
+                    <td><I18n name={'common.path'}/></td>
                     <td><LinkFile primaryKey={this.props.definition.primaryKey}
                                   filepath={this.props.definition.fileDescriptor.canonicalPath}/></td>
                 </tr>
                 <tr>
-                    <td>Primary Key</td>
+                    <td><I18n name={'templates.primaryKey'}/></td>
                     <td>{this.props.definition.primaryKey}</td>
                 </tr>
                 </tbody>

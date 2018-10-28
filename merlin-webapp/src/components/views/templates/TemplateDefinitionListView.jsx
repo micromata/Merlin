@@ -6,6 +6,7 @@ import {getRestServiceUrl} from '../../../utilities/global';
 import ErrorAlert from '../../general/ErrorAlert';
 import {IconRefresh} from "../../general/IconComponents";
 import TemplateDefinitionCard from "./TemplateDefinitionCard";
+import I18n from "../../general/translation/I18n";
 
 class TemplateDefinitionListView extends React.Component {
     path = getRestServiceUrl('templates');
@@ -79,7 +80,7 @@ class TemplateDefinitionListView extends React.Component {
 
         return <React.Fragment>
             <PageHeader>
-                Template definitions
+                <I18n name={'template.definitions'}/>
             </PageHeader>
             {content}
         </React.Fragment>;

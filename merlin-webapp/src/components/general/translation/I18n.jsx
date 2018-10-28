@@ -3,7 +3,7 @@ import {getTranslation} from '../../../utilities/i18n';
 import {isDevelopmentMode} from '../../../utilities/global';
 
 function I18n({name, children, params}) {
-    return getTranslation(name, params) || (isDevelopmentMode() ? `??? ${children} ???` : children);
+    return getTranslation(name, params) || (isDevelopmentMode() ? `??? ${children ? children : name} ???` : children);
 }
 
 I18n.propTypes = {

@@ -3,6 +3,7 @@ import {FormGroup, FormLabel, FormField, FormCheckbox, FormButton} from "../../g
 import EditableTextField from "../../general/forms/EditableTextField";
 import {getRestServiceUrl} from "../../../utilities/global";
 import {IconRemove} from '../../general/IconComponents';
+import I18n from "../../general/translation/I18n";
 
 class DirectoryItem extends React.Component {
     constructor(props) {
@@ -55,9 +56,7 @@ class DirectoryItem extends React.Component {
     render() {
         return (
             <FormGroup>
-                <FormLabel>
-                    Directory
-                </FormLabel>
+                <FormLabel i18nKey={'configuration.templatesDirectory'} />
                 <FormField length={6}>
                     <EditableTextField
                         type={'text'}
@@ -68,16 +67,16 @@ class DirectoryItem extends React.Component {
                 </FormField>
                 <FormField length={2}>
                     <FormCheckbox checked={this.props.item.recursive}
-                           name="recursive" label={'recursive'}
+                           name="recursive" labelKey={'configuration.recursive'}
                            onChange={this.handleRecursiveFlagChange}
-                           hint="If checked, Merlin will search for all templates inside this directory including all sub directories. If not checked, the sub directories will be skipped."/>
+                           hintKey={'configuration.recursive.hint'} />
                 </FormField>
                 <FormField length={2}>
                     <FormButton onClick={this.browseDirectory}
-                            hint="Call rest service for browsing local directories">Browse
+                            hintKey={'common.browse.hint'}><I18n name={'common.browse'}/>
                     </FormButton>
                     <FormButton onClick={this.onClickRemove}
-                            hint="Remove this item"><IconRemove />
+                            hintKey={'configuration.removeItem'}><IconRemove />
                     </FormButton>
                 </FormField>
             </FormGroup>

@@ -2,6 +2,7 @@ import React from 'react';
 import {Table} from 'reactstrap';
 import {arrayNotEmpty} from '../../../utilities/global';
 import {IconCollapseClose, IconCollapseOpen} from "../../general/IconComponents";
+import I18n from "../../general/translation/I18n";
 
 class TemplateStatistics extends React.Component {
     constructor(props) {
@@ -56,25 +57,27 @@ class TemplateStatistics extends React.Component {
                         {this.props.statistics.usedVariables.map((variable, index) => {
                             // Return the element. Also pass key
                             return (<React.Fragment key={index}>
-                                <span className={`badge badge-${this.getVariableColor(variable)}`}>{variable}</span>{' '}
+                                <span
+                                    className={`badge badge-${this.getVariableColor(variable)}`}>{variable}</span>{' '}
                             </React.Fragment>)
                         })}</td>
                 </tr>
                 {arrayNotEmpty(this.props.statistics.unusedVariables) ?
                     <tr>
-                        <td>Unused variables</td>
+                        <td><I18n name={'templates.variables.unused'}/></td>
                         <td>
                             {this.props.statistics.unusedVariables.map((variable, index) => {
                                 // Return the element. Also pass key
                                 return (<React.Fragment key={index}>
-                                    <span className={`badge badge-${this.getVariableColor(variable)}`}>{variable}</span>{' '}
+                                    <span
+                                        className={`badge badge-${this.getVariableColor(variable)}`}>{variable}</span>{' '}
                                 </React.Fragment>)
                             })}</td>
                     </tr>
                     : null}
                 {arrayNotEmpty(this.props.statistics.allDefinedVariables) ?
                     <tr>
-                        <td>Defined variables</td>
+                        <td><I18n name={'templates.variables.defined'}/></td>
                         <td>
                             {this.props.statistics.allDefinedVariables.map((variable, index) => {
                                 // Return the element. Also pass key
@@ -87,7 +90,7 @@ class TemplateStatistics extends React.Component {
                     : null}
                 {arrayNotEmpty(this.props.statistics.masterVariables) ?
                     <tr>
-                        <td>Master variables</td>
+                        <td><I18n name={'templates.variables.master'}/></td>
                         <td>
                             {this.props.statistics.masterVariables.map((variable, index) => {
                                 // Return the element. Also pass key
@@ -100,7 +103,7 @@ class TemplateStatistics extends React.Component {
                     : null}
                 {arrayNotEmpty(this.props.statistics.dependentVariables) ?
                     <tr>
-                        <td>Dependent variables</td>
+                        <td><I18n name={'templates.variables.dependent'}/></td>
                         <td>
                             {this.props.statistics.dependentVariables.map((variable, index) => {
                                 // Return the element. Also pass key
@@ -113,7 +116,7 @@ class TemplateStatistics extends React.Component {
                     : null}
                 {arrayNotEmpty(this.props.statistics.undefinedVariables) ?
                     <tr>
-                        <td>Undefined variables</td>
+                        <td><I18n name={'templates.variables.undefined'}/></td>
                         <td>
                             {this.props.statistics.undefinedVariables.map((variable, index) => {
                                 // Return the element. Also pass key
@@ -126,7 +129,7 @@ class TemplateStatistics extends React.Component {
                     : null}
                 {arrayNotEmpty(this.props.statistics.conditionals.conditionalsSet) ?
                     <tr>
-                        <td>Conditionals</td>
+                        <td><I18n name={'templates.conditionals'}/></td>
                         <td>
                             {this.props.statistics.conditionals.conditionalsSet.map((conditional, index) => {
                                 // Return the element. Also pass key
@@ -139,17 +142,20 @@ class TemplateStatistics extends React.Component {
 
         return (
             <React.Fragment>
-                <h4>Statistics</h4>
+                <h4><I18n name={'templates.statistics'}/></h4>
                 <Table hover>
                     <tbody>
                     <tr>
-                        <td style={{whiteSpace: 'nowrap'}}>Input variables <button onClick={this.toggleVariables} type="button"
-                                                         className="btn btn-link btn-outline-primary btn-sm">{caretIcon}</button></td>
+                        <td style={{whiteSpace: 'nowrap'}}><I18n name={'templates.variables.input'}/>{' '}
+                            <button onClick={this.toggleVariables} type="button"
+                                    className="btn btn-link btn-outline-primary btn-sm">{caretIcon}</button>
+                        </td>
                         <td>
                             {this.props.statistics.inputVariables.map((variable, index) => {
                                 // Return the element. Also pass key
                                 return (<React.Fragment key={index}>
-                                    <span className={`badge badge-${this.getVariableColor(variable.name)}`}>{variable.name}</span>{' '}
+                                    <span
+                                        className={`badge badge-${this.getVariableColor(variable.name)}`}>{variable.name}</span>{' '}
                                 </React.Fragment>)
                             })}</td>
                     </tr>

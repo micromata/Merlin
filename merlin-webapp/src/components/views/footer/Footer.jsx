@@ -2,12 +2,13 @@ import React from 'react';
 import {Link} from 'react-router-dom';
 import './style.css'
 import {formatDateTime} from '../../../utilities/global';
+import I18n from "../../general/translation/I18n";
 
 function Footer({versionInfo}) {
     return <div className={'footer'}>
         <p className={'version'}>
-            Version {versionInfo.version} * Build Date {formatDateTime(versionInfo.buildDate)}
-            {versionInfo.updateVersion ? <span> * <Link to={'/update'}>New Version Available</Link></span> : ''}
+            <I18n name={'version'}/> {versionInfo.version} * <I18n name={'version.buildDate'}/> {formatDateTime(versionInfo.buildDate)}
+            {versionInfo.updateVersion ? <span> * <Link to={'/update'}><I18n name={'version.newVersionAvailable'}/></Link></span> : ''}
         </p>
     </div>;
 }
