@@ -21,24 +21,23 @@ public class SerialTemplateRunner {
     }
 
     /**
-     *
      * @param filename Filename of e. g. Serial template xls file. Used for creating name of zip archive based on this file.
      * @return
      */
     public byte[] run(String filename) {
-        WordTemplateChecker checker = new WordTemplateChecker(templateDocument);
-        serialData.setTemplate(checker.getTemplate());
         TemplateDefinition templateDefinition = serialData.getTemplateDefinition();
         Template template = serialData.getTemplate();
+        WordTemplateRunner runner = new WordTemplateRunner(templateDefinition, templateDocument);
+        template.setId(runner.scanForTemplateId());
+
         String tdString = templateDefinition != null ? templateDefinition.getId() : "-";
-        log.info("Processing serial templates for template=" + template.getDisplayName() + ", template definition=" +
-                tdString);
+        log.info("Processing serial templates for template '" + template.getDisplayName() + "' and template definition '" +
+                tdString + "'.");
         this.zipFilename = MerlinFileUtils.getISODate() + "_" + FilenameUtils.getBaseName(filename) + ".zip";
         ZipUtils zipUtil = new ZipUtils(zipFilename);
         int counter = 0;
         int maxEntries = serialData.getEntries().size();
         for (SerialDataEntry entry : serialData.getEntries()) {
-            WordTemplateRunner runner = new WordTemplateRunner(templateDefinition, templateDocument);
             WordDocument result = runner.run(entry.getVariables());
             entry.getVariables().put("counter", Converter.formatNumber(++counter, maxEntries));
             String zipEntryFilename = runner.createFilename(serialData.getFilenamePattern(), entry.getVariables(), false);
