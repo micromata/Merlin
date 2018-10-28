@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {Table} from 'reactstrap';
 import LogEntry from './LogEntry';
 import {IconSortDown, IconSortUp} from '../../general/IconComponents';
-import Translation from '../../general/translation/Translation';
+import Translation from '../../general/translation/I18n';
 
 const getLocationString = (locationFormat, entry) => {
     switch (locationFormat) {
