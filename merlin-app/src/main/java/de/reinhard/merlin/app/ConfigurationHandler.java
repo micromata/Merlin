@@ -58,7 +58,7 @@ public class ConfigurationHandler {
 
     public void load() {
         configuration.setPort(preferences.getInt(WEBSERVER_PORT_PREF, WEBSERVER_PORT_DEFAULT));
-        configuration.setLanguage(preferences.get(LANGUAGE_PREF, LANGUAGE_DEFAULT));
+        configuration.setServerLanguage(preferences.get(LANGUAGE_PREF, LANGUAGE_DEFAULT));
         configuration.setShowTestData(preferences.getBoolean(SHOW_TEST_DATA_PREF, SHOW_TEST_DATA_PREF_DEFAULT));
         String json = preferences.get(TEMPLATES_DIRS, null);
         if (json != null) {
@@ -80,8 +80,8 @@ public class ConfigurationHandler {
         log.info("Saving configuration to user prefs.");
         preferences.putInt(WEBSERVER_PORT_PREF, configuration.getPort());
         preferences.putBoolean(SHOW_TEST_DATA_PREF, configuration.isShowTestData());
-        if (configuration.getLanguage() != null)
-            preferences.put(LANGUAGE_PREF, configuration.getLanguage());
+        if (configuration.getServerLanguage() != null)
+            preferences.put(LANGUAGE_PREF, configuration.getServerLanguage());
         else
             preferences.remove(LANGUAGE_PREF);
         if (CollectionUtils.isNotEmpty(configuration.getTemplatesDirs())) {

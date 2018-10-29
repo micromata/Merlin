@@ -63,7 +63,7 @@ public class Context {
     }
 
     Context() {
-        String lang = ConfigurationHandler.getInstance().getConfiguration().getLanguage();
+        String lang = ConfigurationHandler.getInstance().getConfiguration().getServerLanguage();
         if (lang == null) {
             UserData userData = UserUtils.getUser();
             // Trying to get the locale from the request user:

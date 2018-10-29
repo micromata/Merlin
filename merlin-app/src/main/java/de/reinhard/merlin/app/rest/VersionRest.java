@@ -31,7 +31,7 @@ public class VersionRest {
      * @see JsonUtils#toJson(Object, boolean)
      */
     public String getVersion(@Context HttpServletRequest requestContext, @QueryParam("prettyPrinter") boolean prettyPrinter) {
-        String language = ConfigurationHandler.getDefaultConfiguration().getLanguage();
+        String language = ConfigurationHandler.getDefaultConfiguration().getServerLanguage();
         if (StringUtils.isBlank(language)) {
             Locale locale = requestContext.getLocale();
             language = locale.getLanguage();

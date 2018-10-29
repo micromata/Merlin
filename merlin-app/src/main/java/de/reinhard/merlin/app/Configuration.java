@@ -11,7 +11,7 @@ public class Configuration {
     private final static String[] SUPPORTED_LANGUAGES = {"en", "de"};
 
     private int port;
-    private String language;
+    private String serverLanguage;
     private boolean showTestData = true;
     private List<ConfigurationTemplatesDir> templatesDirs;
     private boolean templatesDirModified = false;
@@ -36,15 +36,15 @@ public class Configuration {
         this.port = port;
     }
 
-    public String getLanguage() {
-        return language;
+    public String getServerLanguage() {
+        return serverLanguage;
     }
 
-    public void setLanguage(String language) {
-        if (language == null || !ArrayUtils.contains(SUPPORTED_LANGUAGES, language))
-            this.language = null;
+    public void setServerLanguage(String serverLanguage) {
+        if (serverLanguage == null || !ArrayUtils.contains(SUPPORTED_LANGUAGES, serverLanguage))
+            this.serverLanguage = null;
         else
-            this.language = language;
+            this.serverLanguage = serverLanguage;
     }
 
     /**
@@ -86,7 +86,7 @@ public class Configuration {
     }
 
     public void copyFrom(Configuration other) {
-        setLanguage(other.language);
+        setServerLanguage(other.serverLanguage);
         this.port = other.port;
         this.showTestData = other.showTestData;
         if (!Objects.equals(this.templatesDirs, other.templatesDirs)) {
