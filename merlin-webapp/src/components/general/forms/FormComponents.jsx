@@ -252,7 +252,7 @@ const FormFieldset = (props) => {
 
 FormFieldset.propTypes = {
     id: PropTypes.string,
-    text: PropTypes.string,
+    text: PropTypes.node,
     children: PropTypes.node,
     className: PropTypes.string
 };
