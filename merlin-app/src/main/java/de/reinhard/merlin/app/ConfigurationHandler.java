@@ -17,7 +17,7 @@ public class ConfigurationHandler {
     private static final String WEBSERVER_PORT_PREF = "webserver-port";
     public static final int WEBSERVER_PORT_DEFAULT = 8042;
     private static final String LANGUAGE_PREF = "language";
-    private static final String LANGUAGE_DEFAULT = "en";
+    private static final String LANGUAGE_DEFAULT = null;
     private static final String SHOW_TEST_DATA_PREF = "show-test-data";
     private static final boolean SHOW_TEST_DATA_PREF_DEFAULT = true;
     static final String TEMPLATES_DIRS = "template-directories";

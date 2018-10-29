@@ -25,6 +25,7 @@ public class I18nRest {
     @Produces(MediaType.APPLICATION_JSON)
     /**
      *
+     * @param requestContext For detecting the user's client locale.
      * @param locale If not given, the client's language (browser) will be used.
      * @param keysOnly If true, only the keys will be returned. Default is false.
      * @param prettyPrinter If true then the json output will be in pretty format.
