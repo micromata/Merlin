@@ -2,24 +2,28 @@ import {getRestServiceUrl} from './global';
 
 let dictionary;
 let version;
+let language;
 
-const loadDictionary = version => {
+const loadDictionary = (version, language) => {
 
     const localDictionary = window.localStorage.getItem('dictionary');
 
     if (localDictionary) {
         const json = JSON.parse(localDictionary);
 
-        if (json.version === version) {
+        if (json.version === version && json.language === language) {
             dictionary = json.dictionary;
             return;
         }
+        console.log("Version=" + version + ", lang="+ language + ", json.version=" + json.version + ", json.language=" + json.language);
+    } else {
+        console.log("Version=" + version + ", lang="+ language + ", json=undefined");
     }
-
-    fetchNewDictionary(version);
+    fetchNewDictionary(version, language);
 };
 
-const fetchNewDictionary = (currentVersion) => {
+const fetchNewDictionary = (currentVersion, currentLanguage) => {
+    console.log(new Date().toISOString() + ": version=" + currentVersion + ", lang=" + currentLanguage);
     fetch(getRestServiceUrl('i18n/list'), {
         method: 'GET',
         headers: {
@@ -36,12 +40,13 @@ const fetchNewDictionary = (currentVersion) => {
         .then(json => {
             dictionary = json;
             version = currentVersion;
+            language = currentLanguage;
             saveDictionary();
         });
 };
 
 const saveDictionary = () => window.localStorage.setItem('dictionary', JSON.stringify({
-    version, dictionary
+    version, language, dictionary
 }));
 
 const getTranslation = (key, params) => {

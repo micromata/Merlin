@@ -9,6 +9,7 @@ const reloadedVersion = (json) => ({
     type: VERSION_RELOADED,
     payload: {
         version: json.version,
+        language: json.language,
         buildDate: json.buildDate,
         updateVersion: json.updateVersion
     }
