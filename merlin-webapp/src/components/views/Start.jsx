@@ -1,6 +1,5 @@
 import React from 'react';
 import {PageHeader} from '../general/BootstrapComponents';
-import {isDevelopmentMode} from '../../utilities/global';
 
 class Start extends React.Component {
 

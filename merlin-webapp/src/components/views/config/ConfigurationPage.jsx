@@ -228,7 +228,7 @@ class ConfigForm extends React.Component {
                     </Button>
                 </FormLabelField>
                 <Collapse isOpen={this.state.expertSettingsOpen}>
-                    <FormFieldset text={'Expert settings'}>
+                    <FormFieldset text={<I18n name={'configuration.expertSettings'}/>}>
                         <FormLabelInputField label={'Port'} fieldLength={2} type="number" min={0} max={65535}
                                              step={1}
                                              name={'port'} value={this.state.port}
