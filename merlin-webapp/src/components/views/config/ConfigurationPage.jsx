@@ -17,7 +17,7 @@ import {getRestServiceUrl, isDevelopmentMode} from "../../../utilities/global";
 import {IconDanger, IconWarning} from '../../general/IconComponents';
 import {getTranslation} from "../../../utilities/i18n";
 import I18n from "../../general/translation/I18n";
-import ErrorAlert from '../../general/ErrorAlert';
+import ErrorAlertGenericRestFailure from '../../general/ErrorAlertGenericRestFailure';
 
 
 var directoryItems = [];
@@ -39,16 +39,14 @@ class ConfigForm extends React.Component {
                 return resp.json()
             })
             .then((data) => {
-                const {templatesDirModified, templatesDirs, ...config} = data;
+                const {templatesDirs, ...config} = data;
 
                 directoryItems.splice(0, directoryItems.length);
-                if (templatesDirModified) {
-                    let idx = 0;
-                    templatesDirs.forEach(function (item) {
-                        directoryItems.push({index: idx++, directory: item.directory, recursive: item.recursive});
-                    });
-                    config.directoryItems = directoryItems;
-                }
+                let idx = 0;
+                templatesDirs.forEach(function (item) {
+                    directoryItems.push({index: idx++, directory: item.directory, recursive: item.recursive});
+                });
+                config.directoryItems = directoryItems;
 
                 this.setState({
                     loading: false,
@@ -192,24 +190,17 @@ class ConfigForm extends React.Component {
 
         if (this.state.failed) {
             return (
-                <ErrorAlert
-                    title={'Cannot load Configuration'}
-                    description={'Something went wrong during contacting the rest api.'}
-                    action={{
-                        handleClick: this.loadConfig,
-                        title: 'Try again'
-                    }}
-                />
+                <ErrorAlertGenericRestFailure handleClick={this.loadConfig} />
             );
         }
 
         return (
             <form>
-                <FormLabelField label={<I18n name={'configuration.language'}/>} fieldLength={2}>
+                <FormLabelField label={<I18n name={'configuration.application.language'}/>} fieldLength={2}>
                     <FormSelect value={this.state.language} name={'language'} onChange={this.handleTextChange}>
-                        <FormOption value={'default'} i18nKey={'configuration.language.option.default'} />
-                        <FormOption value={'en'} i18nKey={'language.english'} />
-                        <FormOption value={'de'} i18nKey={'language.german'} />
+                        <FormOption value={'default'} i18nKey={'configuration.application.language.option.default'}/>
+                        <FormOption value={'en'} i18nKey={'language.english'}/>
+                        <FormOption value={'de'} i18nKey={'language.german'}/>
                     </FormSelect>
                 </FormLabelField>
                 <FormLabelField label={<I18n name={'configuration.showTestData'}/>} fieldLength={2}>
@@ -236,7 +227,8 @@ class ConfigForm extends React.Component {
                                              placeholder="Enter port"/>
                         <FormLabelField>
                             <FormButton id={'resetFactorySettings'} onClick={this.onResetConfiguration}
-                                        hintKey={'configuration.resetAllSettings.hint'}> <IconDanger/> <I18n name={'configuration.resetAllSettings'}/>
+                                        hintKey={'configuration.resetAllSettings.hint'}> <IconDanger/> <I18n
+                                name={'configuration.resetAllSettings'}/>
                             </FormButton>
                         </FormLabelField>
                     </FormFieldset>
