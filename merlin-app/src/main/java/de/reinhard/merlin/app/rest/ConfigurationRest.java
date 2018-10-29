@@ -3,6 +3,8 @@ package de.reinhard.merlin.app.rest;
 import de.reinhard.merlin.app.Configuration;
 import de.reinhard.merlin.app.ConfigurationHandler;
 import de.reinhard.merlin.app.json.JsonUtils;
+import de.reinhard.merlin.app.user.UserData;
+import de.reinhard.merlin.app.user.UserManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,6 +42,28 @@ public class ConfigurationRest {
         Configuration srcConfig = JsonUtils.fromJson(Configuration.class, jsonConfig);
         config.copyFrom(srcConfig);
         configurationHandler.save();
+    }
+
+    @GET
+    @Path("user")
+    @Produces(MediaType.APPLICATION_JSON)
+    /**
+     *
+     * @param prettyPrinter If true then the json output will be in pretty format.
+     * @see JsonUtils#toJson(Object, boolean)
+     */
+    public String getUser(@QueryParam("prettyPrinter") boolean prettyPrinter) {
+        UserData user = UserManager.instance().getUser(null);
+        String json = JsonUtils.toJson(user, prettyPrinter);
+        return json;
+    }
+
+    @POST
+    @Path("user")
+    @Produces(MediaType.TEXT_PLAIN)
+    public void setUser(String jsonConfig) {
+        UserData user = JsonUtils.fromJson(UserData.class, jsonConfig);
+        UserManager.instance().saveUser(user);
     }
 
     /**

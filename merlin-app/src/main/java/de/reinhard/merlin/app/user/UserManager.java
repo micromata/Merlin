@@ -15,4 +15,10 @@ public abstract class UserManager {
     }
 
     public abstract UserData getUser(String id);
+
+    /**
+     * The userData was modified. Persists the given user.
+     * @param userData
+     */
+    public abstract void saveUser(UserData userData);
 }

@@ -98,6 +98,33 @@ public class ConfigurationHandler {
         notifyListeners(false);
     }
 
+    /**
+     * For saving own properties.
+     * Doesn't call {@link #notifyListeners(boolean)}.
+     *
+     * @param key   The key under which to save the given value.
+     * @param value The value to store. If null, any previous stored value under the given key will be removed.
+     */
+    public void save(String key, String value) {
+        if (value == null) {
+            preferences.remove(key);
+        } else {
+            preferences.put("extra." + key, value);
+        }
+        try {
+            preferences.flush();
+        } catch (BackingStoreException ex) {
+            log.error("Couldn't flush user preferences: " + ex.getMessage(), ex);
+        }
+    }
+
+    /**
+     * @param key Gets own property saved with {@link #save()}.
+     */
+    public String get(String key, String defaultValue) {
+        return preferences.get("extra." + key, defaultValue);
+    }
+
     private void notifyListeners(boolean force) {
         if (force || configuration.isTemplatesDirModified()) {
             for (ConfigurationListener listener : configurationListeners) {
