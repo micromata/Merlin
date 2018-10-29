@@ -1,4 +1,4 @@
-package de.reinhard.merlin.app.javafx;
+package de.reinhard.merlin.app;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -7,15 +7,18 @@ import java.io.File;
 
 public class RunningMode {
     private static Logger log = LoggerFactory.getLogger(RunningMode.class);
-    private static OS_TYPE osType;
+    private static OSType osType;
 
-    public enum Mode {PRODUCTION, DEVELOPMENT}
+    public enum Mode {PRODUCTION, DEVELOPMENT};
 
-    public enum OS_TYPE {MAC_OS, WINDOWS, LINUX, OTHER}
+    public enum ServerType {DESKTOP, SERVER};
+
+    public enum OSType {MAC_OS, WINDOWS, LINUX, OTHER};
 
     private static boolean running;
     private static File baseDir;
     private static Boolean development;
+    private static ServerType serverType;
 
     public static Mode getMode() {
         return isDevelopmentMode() ? Mode.DEVELOPMENT : Mode.PRODUCTION;
@@ -31,30 +34,31 @@ public class RunningMode {
         return development;
     }
 
-    public static OS_TYPE getOSType() {
+    public static OSType getOSType() {
         if (osType == null) {
             String osTypeString = System.getProperty("os.name");
             if (osTypeString == null) {
-                osType = OS_TYPE.OTHER;
+                osType = OSType.OTHER;
             } else if (osTypeString.toLowerCase().contains("mac")) {
-                osType = OS_TYPE.MAC_OS;
+                osType = OSType.MAC_OS;
             } else if (osTypeString.toLowerCase().contains("win")) {
-                osType = OS_TYPE.WINDOWS;
+                osType = OSType.WINDOWS;
             } else if (osTypeString.toLowerCase().contains("linux")) {
-                osType = OS_TYPE.LINUX;
+                osType = OSType.LINUX;
             } else {
-                osType = OS_TYPE.OTHER;
+                osType = OSType.OTHER;
             }
         }
         return osType;
     }
 
-    public static boolean isRunning() {
-        return running;
+    public static ServerType getServerType() {
+        return serverType;
     }
 
-    static void setRunning(boolean running) {
-        RunningMode.running = running;
+    public static void setServerType(ServerType serverType) {
+        log.info("Starting server as type: " + serverType);
+        RunningMode.serverType = serverType;
     }
 
     public static File getBaseDir() {

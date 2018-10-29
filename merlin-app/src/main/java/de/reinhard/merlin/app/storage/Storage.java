@@ -3,7 +3,7 @@ package de.reinhard.merlin.app.storage;
 import de.reinhard.merlin.app.ConfigurationHandler;
 import de.reinhard.merlin.app.ConfigurationListener;
 import de.reinhard.merlin.app.ConfigurationTemplatesDir;
-import de.reinhard.merlin.app.javafx.RunningMode;
+import de.reinhard.merlin.app.RunningMode;
 import de.reinhard.merlin.persistency.templates.DirectoryScanner;
 import de.reinhard.merlin.word.templating.Template;
 import de.reinhard.merlin.word.templating.TemplateDefinition;

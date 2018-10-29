@@ -1,6 +1,6 @@
 package de.reinhard.merlin.app.rest;
 
-import de.reinhard.merlin.app.javafx.RunningMode;
+import de.reinhard.merlin.app.RunningMode;
 import org.slf4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,7 +12,7 @@ public class RestUtils {
      * service isn't available.
      */
     static String checkLocalDesktopAvailable(HttpServletRequest requestContext) {
-        if (RunningMode.isRunning() == false) {
+        if (RunningMode.getServerType() != RunningMode.ServerType.DESKTOP) {
             return "Service unavailable. No desktop app on localhost available.";
         }
         String remoteAddr = requestContext.getRemoteAddr();

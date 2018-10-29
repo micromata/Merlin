@@ -1,10 +1,13 @@
 package de.reinhard.merlin.app.javafx;
 
+import de.reinhard.merlin.app.RunningMode;
 import de.reinhard.merlin.app.Version;
 import de.reinhard.merlin.app.jetty.JettyServer;
 import de.reinhard.merlin.app.storage.Storage;
 import de.reinhard.merlin.app.updater.AppUpdater;
 import de.reinhard.merlin.app.updater.UpdateInfo;
+import de.reinhard.merlin.app.user.SingleUserManager;
+import de.reinhard.merlin.app.user.UserManager;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -62,6 +65,7 @@ public class Main extends Application {
     public void start(Stage stage) {
         this.stage = stage;
         log.info("Starting Java FX application in mode: " + RunningMode.getMode());
+        RunningMode.setServerType(RunningMode.ServerType.DESKTOP);
         main = this;
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(Main.class.getResource("/Main.fxml"));
@@ -74,7 +78,7 @@ public class Main extends Application {
             return;
         }
 
-        if (RunningMode.getOSType() == RunningMode.OS_TYPE.MAC_OS) {
+        if (RunningMode.getOSType() == RunningMode.OSType.MAC_OS) {
             URL iconURL = Main.class.getResource("/icon.png");
             Image image = new ImageIcon(iconURL).getImage();
             // com.apple.eawt.Application.getApplication().setDockIconImage(image);
@@ -127,7 +131,8 @@ public class Main extends Application {
         server = new JettyServer();
         server.start();
 
-        RunningMode.setRunning(true);
+        UserManager.setUserManager(new SingleUserManager());
+
         new Thread(() -> {
             try {
                 // Preload storage already in the background for faster access for the user after opening the client.

@@ -1,4 +1,4 @@
-package de.reinhard.merlin.app.rest;
+package de.reinhard.merlin.app.user;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,11 +37,8 @@ public class UserFilter implements Filter {
                 log.error(message);
                 throw new IllegalArgumentException(message);
             }
-            userData = new UserData();
-            userData.setLocale(request.getLocale());
-            userData.setUsername("admin");
-            userData.setAdmin(true);
-            UserUtils.setUser(userData);
+            userData = UserManager.instance().getUser("dummy");
+            UserUtils.setUser(userData, request.getLocale());
             if (log.isDebugEnabled()) log.debug("Request for user: " + userData);
             chain.doFilter(request, response);
         } finally {

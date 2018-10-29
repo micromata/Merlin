@@ -2,8 +2,8 @@ package de.reinhard.merlin.app.javafx;
 
 import de.reinhard.merlin.UTF8ResourceBundleControl;
 import de.reinhard.merlin.app.ConfigurationHandler;
-import de.reinhard.merlin.app.rest.UserData;
-import de.reinhard.merlin.app.rest.UserUtils;
+import de.reinhard.merlin.app.user.UserData;
+import de.reinhard.merlin.app.user.UserUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

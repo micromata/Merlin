@@ -1,7 +1,7 @@
 package de.reinhard.merlin.app.updater;
 
 import de.reinhard.merlin.app.Version;
-import de.reinhard.merlin.app.javafx.RunningMode;
+import de.reinhard.merlin.app.RunningMode;
 
 public class UpdateInfo {
     private String version;
