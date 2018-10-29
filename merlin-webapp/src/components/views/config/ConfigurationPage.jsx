@@ -18,6 +18,7 @@ import {IconDanger, IconWarning} from '../../general/IconComponents';
 import {getTranslation} from "../../../utilities/i18n";
 import I18n from "../../general/translation/I18n";
 import ErrorAlertGenericRestFailure from '../../general/ErrorAlertGenericRestFailure';
+import Loading from "../../general/Loading";
 
 
 var directoryItems = [];
@@ -181,17 +182,11 @@ class ConfigForm extends React.Component {
         }
 
         if (this.state.loading) {
-            return (
-                <div>
-                    <i>Loading...</i>
-                </div>
-            );
+            return <Loading/>;
         }
 
         if (this.state.failed) {
-            return (
-                <ErrorAlertGenericRestFailure handleClick={this.loadConfig} />
-            );
+            return <ErrorAlertGenericRestFailure handleClick={this.loadConfig} />;
         }
 
         return (
