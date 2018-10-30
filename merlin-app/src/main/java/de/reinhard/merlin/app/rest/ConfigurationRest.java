@@ -53,7 +53,7 @@ public class ConfigurationRest {
      * @see JsonUtils#toJson(Object, boolean)
      */
     public String getUser(@QueryParam("prettyPrinter") boolean prettyPrinter) {
-        UserData user = UserManager.instance().getUser(null);
+        UserData user = RestUtils.getUser();
         String json = JsonUtils.toJson(user, prettyPrinter);
         return json;
     }

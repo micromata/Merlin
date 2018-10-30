@@ -5,6 +5,10 @@ import java.util.Locale;
 public class UserUtils {
     private static final ThreadLocal<UserInfo> threadUserInfo = new ThreadLocal<UserInfo>();
 
+    /**
+     * Gets the current user from ThreadLocal.
+     * @return
+     */
     public static UserData getUser() {
         UserInfo user = threadUserInfo.get();
         if (user == null) {

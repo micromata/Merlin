@@ -1,8 +1,9 @@
 package de.reinhard.merlin.app.rest;
 
-import de.reinhard.merlin.app.ConfigurationHandler;
+import de.reinhard.merlin.app.Languages;
 import de.reinhard.merlin.app.Version;
 import de.reinhard.merlin.app.json.JsonUtils;
+import de.reinhard.merlin.app.user.UserData;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +32,8 @@ public class VersionRest {
      * @see JsonUtils#toJson(Object, boolean)
      */
     public String getVersion(@Context HttpServletRequest requestContext, @QueryParam("prettyPrinter") boolean prettyPrinter) {
-        String language = ConfigurationHandler.getDefaultConfiguration().getServerLanguage();
+        UserData user = RestUtils.getUser();
+        String language = Languages.asString(user.getLocale());
         if (StringUtils.isBlank(language)) {
             Locale locale = requestContext.getLocale();
             language = locale.getLanguage();

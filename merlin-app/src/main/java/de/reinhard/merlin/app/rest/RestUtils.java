@@ -1,6 +1,8 @@
 package de.reinhard.merlin.app.rest;
 
 import de.reinhard.merlin.app.RunningMode;
+import de.reinhard.merlin.app.user.UserData;
+import de.reinhard.merlin.app.user.UserUtils;
 import org.slf4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,6 +22,19 @@ public class RestUtils {
             return "Service not available. Can't call this service remote. Run this service on localhost of the running desktop app.";
         }
         return null;
+    }
+
+    /**
+     * @return Returns the user put by the UserFilter.
+     * @see UserUtils#getUser()
+     * @see de.reinhard.merlin.app.user.UserFilter
+     */
+    static UserData getUser() {
+        UserData user = UserUtils.getUser();
+        if (user == null) {
+            throw new IllegalStateException("No user given in rest call.");
+        }
+        return UserUtils.getUser();
     }
 
     static Response get404Response(Logger log, String errorMessage) {
