@@ -61,7 +61,7 @@ class TemplateDefinitionListView extends React.Component {
         } else if (this.state.definitions) {
             content = <React.Fragment>
                 <div
-                    className={'btn btn-outline-primary template-list-refresh'}
+                    className={'btn btn-outline-primary refresh-button-right'}
                     onClick={this.fetchTemplateDefinitions}
                 >
                     <IconRefresh/>

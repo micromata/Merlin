@@ -1,18 +1,3 @@
-div.template-list-refresh {
-    cursor: pointer;
-    color: #555;
-    text-align: right;
-    float: right;
-}
-
-div.template-list-refresh + * {
-    clear: both;
-}
-
-div.template-list-refresh:hover {
-    color: #337ab7;
-}
-
 a.card-link {
     color: #111;
 }
