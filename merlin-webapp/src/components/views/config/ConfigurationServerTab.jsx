@@ -88,6 +88,7 @@ class ConfigServerTab extends React.Component {
     componentWillUnmount() {
         this.props.onRef(undefined)
     }
+
     handleTextChange = event => {
         event.preventDefault();
         this.setState({[event.target.name]: event.target.value});
