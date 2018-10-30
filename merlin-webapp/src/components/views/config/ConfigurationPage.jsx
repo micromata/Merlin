@@ -1,178 +1,49 @@
 import React from 'react';
+import {FormGroup, Nav, NavLink, TabContent, TabPane} from 'reactstrap';
 import {Redirect} from 'react-router-dom'
-import {Button, Collapse} from 'reactstrap';
 import {PageHeader} from '../../general/BootstrapComponents';
-import DirectoryItemsFieldset from './DirectoryItemsFieldset';
-import {
-    FormButton,
-    FormCheckbox,
-    FormField,
-    FormGroup,
-    FormLabelField,
-    FormLabelInputField,
-    FormFieldset,
-    FormSelect, FormOption
-} from "../../general/forms/FormComponents";
-import {getRestServiceUrl, isDevelopmentMode} from "../../../utilities/global";
-import {IconDanger, IconWarning} from '../../general/IconComponents';
-import {getTranslation} from "../../../utilities/i18n";
+import {FormButton, FormField} from '../../general/forms/FormComponents';
+import {isDevelopmentMode} from "../../../utilities/global";
 import I18n from "../../general/translation/I18n";
-import ErrorAlertGenericRestFailure from '../../general/ErrorAlertGenericRestFailure';
-import Loading from "../../general/Loading";
+import classNames from "classnames";
+import ConfigAccountTab from "./ConfigurationAccountTab";
+import ConfigServerTab from "./ConfigurationServerTab";
 
-
-var directoryItems = [];
-
-class ConfigForm extends React.Component {
-    loadConfig = () => {
-        this.setState({
-            loading: true,
-            failed: false
-        });
-        fetch(getRestServiceUrl('configuration/config'), {
-            method: 'GET',
-            dataType: 'JSON',
-            headers: {
-                'Content-Type': 'text/plain; charset=utf-8'
-            }
-        })
-            .then((resp) => {
-                return resp.json()
-            })
-            .then((data) => {
-                const {templatesDirs, ...config} = data;
-
-                directoryItems.splice(0, directoryItems.length);
-                let idx = 0;
-                templatesDirs.forEach(function (item) {
-                    directoryItems.push({index: idx++, directory: item.directory, recursive: item.recursive});
-                });
-                config.directoryItems = directoryItems;
-
-                this.setState({
-                    loading: false,
-                    ...config
-                })
-            })
-            .catch(() => {
-                this.setState({
-                    loading: false,
-                    failed: true
-                });
-            })
-    };
+class ConfigurationPage
+    extends React
+        .Component {
 
     constructor(props) {
         super(props);
 
         this.state = {
-            loading: true,
-            failed: false,
-            port: 8042,
-            showTestData: true,
-            language: 'default',
-            directoryItems: [],
-            redirect: false,
-            expertSettingsOpen: false
+            activeTab: '1',
+            redirect: false
         };
 
-        this.handleTextChange = this.handleTextChange.bind(this);
-        this.handleCheckboxChange = this.handleCheckboxChange.bind(this);
-        this.addDirectoryItem = this.addDirectoryItem.bind(this);
-        this.removeDirectoryItem = this.removeDirectoryItem.bind(this);
         this.onSave = this.onSave.bind(this);
         this.onCancel = this.onCancel.bind(this);
-        this.onResetConfiguration = this.onResetConfiguration.bind(this);
-        this.loadConfig = this.loadConfig.bind(this);
     }
 
-    componentDidMount() {
-        this.loadConfig();
-    }
+    toggleTab = tab => () => {
+        this.setState({
+            activeTab: tab
+        })
+    };
 
     setRedirect = () => {
         this.setState({
             redirect: true
         })
     }
-    handleTextChange = event => {
-        event.preventDefault();
-        this.setState({[event.target.name]: event.target.value});
-    }
-
-    handleCheckboxChange = event => {
-        this.setState({[event.target.name]: event.target.checked});
-    }
-
-    handleDirectoryChange = (index, newDirectory) => {
-        const items = this.state.directoryItems;
-        items[index].directory = newDirectory;
-        // update state
-        this.setState({
-            directoryItems,
-        });
-    }
-
-    handleRecursiveFlagChange = (index, newRecursiveState) => {
-        const items = this.state.directoryItems;
-        items[index].recursive = newRecursiveState;
-        // update state
-        this.setState({
-            directoryItems,
-        });
-    }
 
     onSave(event) {
-        var config = {
-            port: this.state.port,
-            showTestData: this.state.showTestData,
-            language: this.state.language,
-            templatesDirs: []
-        };
-        if (this.state.directoryItems) {
-            this.state.directoryItems.forEach(function (item) {
-                config.templatesDirs.push({directory: item.directory, recursive: item.recursive});
-            });
-        }
-        fetch(getRestServiceUrl("configuration/config"), {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(config)
-        })
+        this.serverTab.save();
         this.setRedirect();
-    }
-
-    onResetConfiguration() {
-        if (window.confirm(getTranslation('configuration.resetAllSettings.question'))) {
-            fetch(getRestServiceUrl("configuration/reset?IKnowWhatImDoing=true"), {
-                method: "GET",
-                dataType: "JSON",
-                headers: {
-                    "Content-Type": "text/plain; charset=utf-8"
-                }
-            })
-            this.setRedirect();
-        }
     }
 
     onCancel() {
         this.setRedirect()
-    }
-
-    addDirectoryItem() {
-        directoryItems.push({
-            index: directoryItems.length + 1,
-            directory: "",
-            recursive: false
-        });
-        this.setState({directoryItems: directoryItems});
-    }
-
-    removeDirectoryItem(itemIndex) {
-        directoryItems.splice(itemIndex, 1);
-        this.setState({directoryItems: directoryItems});
     }
 
     render() {
@@ -181,73 +52,6 @@ class ConfigForm extends React.Component {
             return <Redirect to='/'/>
         }
 
-        if (this.state.loading) {
-            return <Loading/>;
-        }
-
-        if (this.state.failed) {
-            return <ErrorAlertGenericRestFailure handleClick={this.loadConfig} />;
-        }
-
-        return (
-            <form>
-                <FormLabelField label={<I18n name={'configuration.application.language'}/>} fieldLength={2}>
-                    <FormSelect value={this.state.language} name={'language'} onChange={this.handleTextChange}>
-                        <FormOption value={'default'} i18nKey={'configuration.application.language.option.default'}/>
-                        <FormOption value={'en'} i18nKey={'language.english'}/>
-                        <FormOption value={'de'} i18nKey={'language.german'}/>
-                    </FormSelect>
-                </FormLabelField>
-                <FormLabelField label={<I18n name={'configuration.showTestData'}/>} fieldLength={2}>
-                    <FormCheckbox checked={this.state.showTestData}
-                                  name="showTestData"
-                                  onChange={this.handleCheckboxChange}/>
-                </FormLabelField>
-                <DirectoryItemsFieldset items={this.state.directoryItems} addItem={this.addDirectoryItem}
-                                        removeItem={this.removeDirectoryItem}
-                                        onDirectoryChange={this.handleDirectoryChange}
-                                        onRecursiveFlagChange={this.handleRecursiveFlagChange}/>
-                <FormLabelField>
-                    <Button className={'btn-outline-primary'}
-                            onClick={() => this.setState({expertSettingsOpen: !this.state.expertSettingsOpen})}>
-                        <IconWarning/> <I18n name={'configuration.forExpertsOnly'}/>
-                    </Button>
-                </FormLabelField>
-                <Collapse isOpen={this.state.expertSettingsOpen}>
-                    <FormFieldset text={<I18n name={'configuration.expertSettings'}/>}>
-                        <FormLabelInputField label={'Port'} fieldLength={2} type="number" min={0} max={65535}
-                                             step={1}
-                                             name={'port'} value={this.state.port}
-                                             onChange={this.handleTextChange}
-                                             placeholder="Enter port"/>
-                        <FormLabelField>
-                            <FormButton id={'resetFactorySettings'} onClick={this.onResetConfiguration}
-                                        hintKey={'configuration.resetAllSettings.hint'}> <IconDanger/> <I18n
-                                name={'configuration.resetAllSettings'}/>
-                            </FormButton>
-                        </FormLabelField>
-                    </FormFieldset>
-                </Collapse>
-                <FormGroup>
-                    <FormField length={12}>
-                        <FormButton onClick={this.onCancel}
-                                    hintKey="configuration.cancel.hint"><I18n name={'common.cancel'}/>
-                        </FormButton>
-                        <FormButton onClick={this.onSave} bsStyle="primary"
-                                    hintKey="configuration.save.hint"><I18n name={'common.save'}/>
-                        </FormButton>
-                    </FormField>
-                </FormGroup>
-            </form>
-        );
-    }
-}
-
-class ConfigurationPage
-    extends React
-        .Component {
-
-    render() {
         let todo = '';
         if (isDevelopmentMode()) {
             todo = <code><h3>ToDo</h3>
@@ -259,7 +63,40 @@ class ConfigurationPage
         return (
             <React.Fragment>
                 <PageHeader><I18n name={'configuration'}/></PageHeader>
-                <ConfigForm/>
+                <Nav tabs>
+                    <NavLink
+                        className={classNames({active: this.state.activeTab === '1'})}
+                        onClick={this.toggleTab('1')}
+                    >
+                        <I18n name={'configuration.account'}/>
+                    </NavLink>
+                    <NavLink
+                        className={classNames({active: this.state.activeTab === '2'})}
+                        onClick={this.toggleTab('2')}
+                    >
+                        <I18n name={'configuration.server'}/>
+                    </NavLink>
+                </Nav>
+                <TabContent activeTab={this.state.activeTab}>
+                    <TabPane tabId={'1'}>
+                        <ConfigAccountTab/>
+                    </TabPane>
+                </TabContent>
+                <TabContent activeTab={this.state.activeTab}>
+                    <TabPane tabId={'2'}>
+                        <ConfigServerTab onRef={ref => (this.serverTab = ref)}/>
+                    </TabPane>
+                </TabContent>
+                <FormGroup>
+                    <FormField length={12}>
+                        <FormButton onClick={this.onCancel}
+                                    hintKey="configuration.cancel.hint"><I18n name={'common.cancel'}/>
+                        </FormButton>
+                        <FormButton onClick={this.onSave} bsStyle="primary"
+                                    hintKey="configuration.save.hint"><I18n name={'common.save'}/>
+                        </FormButton>
+                    </FormField>
+                </FormGroup>
                 {todo}
             </React.Fragment>
         );
