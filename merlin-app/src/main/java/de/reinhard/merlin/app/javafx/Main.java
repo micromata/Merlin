@@ -107,6 +107,7 @@ public class Main extends Application {
         final Text statusTextField = (Text) scene.lookup("#serverStatusText");
         final String statusText = context.getString("merlin.server.app.serverStatusText");
         timer = new java.util.Timer("Timer");
+        final long startTime = System.currentTimeMillis();
         timer.schedule(new TimerTask() {
             int i = 0;
 
@@ -114,7 +115,13 @@ public class Main extends Application {
             public void run() {
                 Platform.runLater(() -> {
                     // RunLater is important: ui elements must be accessed on the fxApplication thread.
-                    statusTextField.setText(statusText + statusDots[i]);
+                    long duration = (System.currentTimeMillis() - startTime) / 1000;
+                    String formattedDuration = String.format(
+                            "%d:%02d:%02d",
+                            duration / 3600,
+                            (duration % 3600) / 60,
+                            duration % 60);
+                    statusTextField.setText(statusText + ": " + formattedDuration + statusDots[i]);
                     statusTextField.getStyleClass().clear();
                     statusTextField.getStyleClass().add("status-" + i);
                 });
@@ -122,7 +129,7 @@ public class Main extends Application {
                     i = 0;
                 }
             }
-        }, 500L, 400L);
+        }, 500L, 333L);
 
         Text text = (Text) scene.lookup("#versionText");
         text.setText(context.getString("merlin.server.app.versionText") + " " + Version.getInstance().getVersion());
@@ -159,5 +166,5 @@ public class Main extends Application {
         getHostServices().showDocument(server.getUrl());
     }
 
-    private String[] statusDots = new String[] {"...", " ...", "  ...", "   ...", "  ...", " ..."};
+    private String[] statusDots = new String[]{"...", " ...", "  ...", "   ...", "  ...", " ..."};
 }
