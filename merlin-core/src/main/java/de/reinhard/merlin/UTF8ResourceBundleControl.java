@@ -82,6 +82,11 @@ public class UTF8ResourceBundleControl extends ResourceBundle.Control {
         return bundle;
     }
 
+    @Override
+    public Locale getFallbackLocale(String baseName, Locale locale) {
+        return Locale.ROOT;
+    }
+
     private String toResourceName0(String bundleName, String suffix) {
         // application protocol check
         if (bundleName.contains("://")) {
