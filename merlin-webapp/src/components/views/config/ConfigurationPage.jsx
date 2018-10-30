@@ -1,9 +1,9 @@
 import React from 'react';
 import {FormGroup, Nav, NavLink, TabContent, TabPane} from 'reactstrap';
-import {Redirect} from 'react-router-dom'
 import {PageHeader} from '../../general/BootstrapComponents';
 import {FormButton, FormField} from '../../general/forms/FormComponents';
 import {isDevelopmentMode} from "../../../utilities/global";
+import {clearDictionary} from '../../../utilities/i18n';
 import I18n from "../../general/translation/I18n";
 import classNames from "classnames";
 import ConfigAccountTab from "./ConfigurationAccountTab";
@@ -18,7 +18,7 @@ class ConfigurationPage
 
         this.state = {
             activeTab: '1',
-            redirect: false
+            reload: false
         };
 
         this.onSave = this.onSave.bind(this);
@@ -31,28 +31,28 @@ class ConfigurationPage
         })
     };
 
-    setRedirect = () => {
+    setReload = () => {
         this.setState({
-            redirect: true
+            reload: true
         })
     }
 
     onSave(event) {
         this.serverTab.save();
         this.accountTab.save();
-        this.setRedirect();
+        clearDictionary();
+        this.setReload();
     }
 
     onCancel() {
-        this.setRedirect()
+        this.setReload();
     }
 
     render() {
         // https://codepen.io/_arpy/pen/xYoyPW
-        if (this.state.redirect) {
-            return <Redirect to='/'/>
+        if (this.state.reload) {
+            window.location.reload();
         }
-
         let todo = '';
         if (isDevelopmentMode()) {
             todo = <code><h3>ToDo</h3>
