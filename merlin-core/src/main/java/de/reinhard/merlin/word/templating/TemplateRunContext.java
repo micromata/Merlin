@@ -31,11 +31,8 @@ public class TemplateRunContext {
     private I18n i18n;
 
     public TemplateRunContext() {
-        this(Locale.getDefault());
-    }
-
-    public TemplateRunContext(Locale locale) {
         i18n = CoreI18n.getDefault();
+        this.locale = Locale.getDefault();
         dateFormatter = new SimpleDateFormat(DEFAULT_DATE_PATTERN);
         dateFormatters = new DateFormat[]{
                 new SimpleDateFormat("yyyy-MM-dd"),
@@ -90,7 +87,7 @@ public class TemplateRunContext {
                     return ((Number) value).intValue();
                 }
                 if (value instanceof String) {
-                    if (StringUtils.isBlank((String)value)) {
+                    if (StringUtils.isBlank((String) value)) {
                         return null;
                     }
                     try {
@@ -197,5 +194,9 @@ public class TemplateRunContext {
 
     public I18n getI18n() {
         return i18n;
+    }
+
+    public void setLocale(Locale locale) {
+        i18n = new CoreI18n(locale);
     }
 }

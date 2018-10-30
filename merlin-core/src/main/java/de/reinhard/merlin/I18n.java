@@ -1,7 +1,9 @@
 package de.reinhard.merlin;
 
 import java.text.MessageFormat;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 /**
@@ -9,6 +11,19 @@ import java.util.ResourceBundle;
  */
 public class I18n {
     private ResourceBundle resourceBundle;
+    private Map<Locale, I18n> i18nMap = new HashMap<>();
+
+    public I18n get(Locale locale) {
+        I18n i18n = i18nMap.get(locale);
+        if (i18n == null) {
+            i18n = create(locale);
+        }
+        return i18n;
+    }
+
+    protected I18n create(Locale locale) {
+        return new I18n(this.resourceBundle.getBaseBundleName(), locale);
+    }
 
     /**
      * Uses the default message bundle "MessagesBundle" of class path with systems default locale.
@@ -25,6 +40,7 @@ public class I18n {
 
     /**
      * Throws an error if messageId not found.
+     *
      * @param messageId
      * @return localized message.
      */

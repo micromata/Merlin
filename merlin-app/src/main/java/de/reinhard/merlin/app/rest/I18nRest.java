@@ -2,7 +2,6 @@ package de.reinhard.merlin.app.rest;
 
 import de.reinhard.merlin.app.I18nClientMessages;
 import de.reinhard.merlin.app.json.JsonUtils;
-import de.reinhard.merlin.app.user.UserData;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,11 +37,7 @@ public class I18nRest {
         if (StringUtils.isNotBlank(locale)) {
             localeObject = new Locale(locale);
         } else {
-            UserData user = RestUtils.getUser();
-            localeObject = user.getLocale();
-            if (localeObject == null) {
-                localeObject = requestContext.getLocale();
-            }
+            localeObject = RestUtils.getUserLocale(requestContext);
         }
         Map<String, String> translations = I18nClientMessages.getInstance().getAllMessages(localeObject, keysOnly);
         String json = JsonUtils.toJson(translations, prettyPrinter);

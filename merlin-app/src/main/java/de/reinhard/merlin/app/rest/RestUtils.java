@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Response;
+import java.util.Locale;
 
 public class RestUtils {
     /**
@@ -35,6 +36,15 @@ public class RestUtils {
             throw new IllegalStateException("No user given in rest call.");
         }
         return UserUtils.getUser();
+    }
+
+    static Locale getUserLocale(HttpServletRequest requestContext) {
+        UserData user = RestUtils.getUser();
+        Locale locale = user.getLocale();
+        if (locale == null) {
+            locale = requestContext.getLocale();
+        }
+        return locale;
     }
 
     static Response get404Response(Logger log, String errorMessage) {

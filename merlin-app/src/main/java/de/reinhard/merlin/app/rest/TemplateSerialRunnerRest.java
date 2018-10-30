@@ -13,10 +13,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -29,10 +31,12 @@ public class TemplateSerialRunnerRest {
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     /**
      * Generates a Excel file for filling out variables for a serial run for the given template and optional template definition.
+     * @param requestContext For getting client locale.
      * @param templatePrimaryKey Primary key of the template to run.
      * @param templateDefinitionPrimaryKey Primary key of the template definition (if exist)
      */
-    public Response getExampleSerialRundata(@QueryParam("templatePrimaryKey") String templatePrimaryKey,
+    public Response getExampleSerialRundata(@Context HttpServletRequest requestContext,
+                                            @QueryParam("templatePrimaryKey") String templatePrimaryKey,
                                             @QueryParam("templateDefinitionPrimaryKey") String templateDefinitionPrimaryKey) {
         log.info("Getting Excel template for serial run: template=" + templatePrimaryKey + ", templateDefinition="
                 + templatePrimaryKey);
@@ -57,6 +61,7 @@ public class TemplateSerialRunnerRest {
             serialData.setTemplate(template);
             serialData.setTemplateDefinition(templateDefinition);
             SerialDataExcelWriter writer = new SerialDataExcelWriter(serialData);
+            writer.getTemplateRunContext().setLocale(RestUtils.getUserLocale(requestContext));
             ExcelWorkbook workbook = writer.writeToWorkbook();
 
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
