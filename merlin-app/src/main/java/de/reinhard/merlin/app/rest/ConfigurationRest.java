@@ -5,6 +5,7 @@ import de.reinhard.merlin.app.ConfigurationHandler;
 import de.reinhard.merlin.app.json.JsonUtils;
 import de.reinhard.merlin.app.user.UserData;
 import de.reinhard.merlin.app.user.UserManager;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,6 +64,10 @@ public class ConfigurationRest {
     @Produces(MediaType.TEXT_PLAIN)
     public void setUser(String jsonConfig) {
         UserData user = JsonUtils.fromJson(UserData.class, jsonConfig);
+        if (user.getLocale() != null && StringUtils.isBlank(user.getLocale().getLanguage())) {
+            // Don't set locale with "" as language.
+            user.setLocale(null);
+        }
         UserManager.instance().saveUser(user);
     }
 

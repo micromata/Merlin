@@ -1,12 +1,15 @@
 import React from 'react';
+import {UncontrolledTooltip} from 'reactstrap';
 import {
     FormLabelField,
     FormSelect, FormOption
 } from "../../general/forms/FormComponents";
 import {getRestServiceUrl} from "../../../utilities/global";
+import {clearDictionary} from '../../../utilities/i18n';
 import I18n from "../../general/translation/I18n";
 import ErrorAlertGenericRestFailure from "../../general/ErrorAlertGenericRestFailure";
 import Loading from "../../general/Loading";
+import {IconRefresh} from "../../general/IconComponents";
 
 class ConfigAccountTab extends React.Component {
     loadConfig = () => {
@@ -68,7 +71,6 @@ class ConfigAccountTab extends React.Component {
         this.setState({[event.target.name]: event.target.value});
     }
 
-
     save() {
         var user = {
             locale: this.state.locale
@@ -88,16 +90,25 @@ class ConfigAccountTab extends React.Component {
         }
 
         if (this.state.failed) {
-            return <ErrorAlertGenericRestFailure handleClick={this.loadConfig} />;
+            return <ErrorAlertGenericRestFailure handleClick={this.loadConfig}/>;
         }
 
         return (
             <form>
+                <div id={'clearDictionary'}
+                    className={'btn btn-outline-primary refresh-button-right'}
+                    onClick={clearDictionary}
+                >
+                    <IconRefresh />
+                    <UncontrolledTooltip placement={'left'} target={'clearDictionary'}>
+                        <I18n name={'configuration.reloadDictionary.hint'}/>
+                    </UncontrolledTooltip>
+                </div>
                 <FormLabelField label={<I18n name={'configuration.application.language'}/>} fieldLength={2}>
                     <FormSelect value={this.state.locale} name={'locale'} onChange={this.handleTextChange}>
-                        <FormOption value={''} i18nKey={'configuration.application.language.option.default'} />
-                        <FormOption value={'en'} i18nKey={'language.english'} />
-                        <FormOption value={'de'} i18nKey={'language.german'} />
+                        <FormOption value={''} i18nKey={'configuration.application.language.option.default'}/>
+                        <FormOption value={'en'} i18nKey={'language.english'}/>
+                        <FormOption value={'de'} i18nKey={'language.german'}/>
                     </FormSelect>
                 </FormLabelField>
             </form>

@@ -19,7 +19,7 @@ const reducer = (state = initialState, action) => {
 
             if (state.version !== action.payload.version ||
                 state.language !== action.payload.language) {
-                console.log("reducers/version.js: state.version=" + state.version + ", payload.version=" + action.payload.version + ", state.lang=" + state.language + ", payload.lang=" + action.payload.language);
+                //console.log("reducers/version.js: state.version=" + state.version + ", payload.version=" + action.payload.version + ", state.lang=" + state.language + ", payload.lang=" + action.payload.language);
                 fetchNewDictionary(action.payload.version, action.payload.language);
             }
 

@@ -33,7 +33,7 @@ const store = createStore(
     applyMiddleware(thunk)
 );
 
-loadDictionary(store.getState().version.version);
+loadDictionary(store.getState().version.version, store.getState().version.language);
 
 store.subscribe(() => {
     window.localStorage.setItem('state', JSON.stringify(store.getState()));

@@ -4,6 +4,10 @@ let dictionary;
 let version;
 let language;
 
+const clearDictionary = () => {
+    window.localStorage.removeItem('dictionary');
+}
+
 const loadDictionary = (version, language) => {
 
     const localDictionary = window.localStorage.getItem('dictionary');
@@ -15,15 +19,15 @@ const loadDictionary = (version, language) => {
             dictionary = json.dictionary;
             return;
         }
-        console.log("Version=" + version + ", lang="+ language + ", json.version=" + json.version + ", json.language=" + json.language);
+        //console.log("Version=" + version + ", lang="+ language + ", json.version=" + json.version + ", json.language=" + json.language);
     } else {
-        console.log("Version=" + version + ", lang="+ language + ", json=undefined");
+        //console.log("Version=" + version + ", lang="+ language + ", json=undefined");
     }
     fetchNewDictionary(version, language);
 };
 
 const fetchNewDictionary = (currentVersion, currentLanguage) => {
-    console.log(new Date().toISOString() + ": version=" + currentVersion + ", lang=" + currentLanguage);
+    //e.log(new Date().toISOString() + ": version=" + currentVersion + ", lang=" + currentLanguage);
     fetch(getRestServiceUrl('i18n/list'), {
         method: 'GET',
         headers: {
@@ -66,4 +70,4 @@ const getTranslation = (key, params) => {
     return message;
 };
 
-export {getTranslation, loadDictionary, fetchNewDictionary};
+export {clearDictionary, getTranslation, loadDictionary, fetchNewDictionary};
