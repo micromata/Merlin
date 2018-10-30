@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<updateDescriptor baseUrl="https://sourceforge.net/projects/pforge/files/Merlin/0.4/">
-  <entry targetMediaFileId="61" updatableVersionMin="" updatableVersionMax="" fileName="merlin_macos_0_4.dmg" newVersion="0.4" newMediaFileId="61" fileSize="102547591" md5Sum="ea18bb846af5e01e1b4e38eda5be648b" bundledJre="macosx-amd64-10.0.2" archive="false" singleBundle="true">
+<updateDescriptor baseUrl="https://sourceforge.net/projects/merlinrunner/files/0.5/">
+  <entry targetMediaFileId="61" updatableVersionMin="" updatableVersionMax="" fileName="merlin_macos_0_5.dmg" newVersion="0.5" newMediaFileId="61" fileSize="102854791" md5Sum="04e3a4f2f17be4839bea5ed90476dbc9" bundledJre="macosx-amd64-10.0.2" archive="false" singleBundle="true">
     <comment language="en" />
     <comment language="de" />
   </entry>

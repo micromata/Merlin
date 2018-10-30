@@ -1,6 +1,5 @@
 package de.reinhard.merlin.word.templating;
 
-import de.reinhard.merlin.CoreI18n;
 import de.reinhard.merlin.I18n;
 import de.reinhard.merlin.excel.ExcelCell;
 import de.reinhard.merlin.excel.ExcelRow;
@@ -26,16 +25,9 @@ public class AbstractExcelWriter {
     protected CellStyle descriptionStyle;
     protected ExcelSheet currentSheet; // Current working sheet.
     protected TemplateRunContext templateRunContext;
-    protected I18n i18n;
 
     public AbstractExcelWriter() {
-        this(CoreI18n.getDefault());
-    }
-
-    public AbstractExcelWriter(I18n i18n) {
-        this.i18n = i18n;
         templateRunContext = new TemplateRunContext();
-        templateRunContext.setI18n(i18n);
     }
 
     public TemplateRunContext getTemplateRunContext() {
@@ -66,11 +58,11 @@ public class AbstractExcelWriter {
         row = currentSheet.createRow();
         String msg;
         if (dontModify) {
-            msg = i18n.getMessage(descriptionKey)
+            msg = getI18n().getMessage(descriptionKey)
                     + "\n"
-                    + i18n.getMessage("merlin.word.templating.sheet_configuration_hint");
+                    + getI18n().getMessage("merlin.word.templating.sheet_configuration_hint");
         } else {
-            msg = i18n.getMessage(descriptionKey);
+            msg = getI18n().getMessage(descriptionKey);
         }
         row.createCell().setCellStyle(descriptionStyle).setCellValue(msg);
         if (numberOfColumns > 0) {
@@ -98,8 +90,8 @@ public class AbstractExcelWriter {
         // Description
         ExcelCell cell = row.createCell();
         if (description != null) {
-            if (i18n.containsMessage(description)) {
-                cell.setCellValue(i18n.getMessage(description));
+            if (getI18n().containsMessage(description)) {
+                cell.setCellValue(getI18n().getMessage(description));
             } else {
                 cell.setCellValue(description);
             }
@@ -150,9 +142,13 @@ public class AbstractExcelWriter {
 
 
     protected void createConfigurationSheet() {
-        currentSheet = workbook.createOrGetSheet(i18n.getMessage(CONFIGURATION_SHEET_NAME));
+        currentSheet = workbook.createOrGetSheet(getI18n().getMessage(CONFIGURATION_SHEET_NAME));
         ExcelRow row = addDescriptionRow("merlin.word.templating.sheet_configuration_description", 3);
         row = currentSheet.createRow();
         row.createCells(headRowStyle, "Variable", "Value", "Description");
+    }
+
+    protected I18n getI18n() {
+        return this.templateRunContext.getI18n();
     }
 }

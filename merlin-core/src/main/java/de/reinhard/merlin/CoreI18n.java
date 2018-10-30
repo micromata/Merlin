@@ -75,4 +75,10 @@ public class CoreI18n extends I18n {
     public CoreI18n(Locale locale) {
         super(BUNDLE_NAME, locale);
     }
+
+    @Override
+    protected I18n create(Locale locale) {
+        return new CoreI18n(locale);
+    }
+
 }

@@ -47,7 +47,7 @@ public class SerialDataExcelWriter extends AbstractExcelWriter {
     }
 
     private void createVariablesSheet() {
-        currentSheet = workbook.createOrGetSheet(i18n.getMessage(SERIAL_VARIABLES_SHEET_NAME));
+        currentSheet = workbook.createOrGetSheet(getI18n().getMessage(SERIAL_VARIABLES_SHEET_NAME));
         addDescriptionRow("merlin.word.templating.sheet_serial_variables_description", -1, false);
         ExcelRow row = currentSheet.createRow();
         int numberOfColumns = 0;

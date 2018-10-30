@@ -196,7 +196,12 @@ public class TemplateRunContext {
         return i18n;
     }
 
+    /**
+     * Sets i18n and locale. If you want to use your own i18n, please call {@link #setI18n(I18n)} after {@link #setLocale(Locale)}.
+     * @param locale
+     */
     public void setLocale(Locale locale) {
-        i18n = new CoreI18n(locale);
+        i18n = CoreI18n.getDefault().get(locale);
+        this.locale = locale;
     }
 }

@@ -11,12 +11,16 @@ import java.util.ResourceBundle;
  */
 public class I18n {
     private ResourceBundle resourceBundle;
-    private Map<Locale, I18n> i18nMap = new HashMap<>();
+    private Map<Locale, I18n> i18nMap;
 
     public I18n get(Locale locale) {
+        if (i18nMap == null) {
+            i18nMap = new HashMap<>();
+        }
         I18n i18n = i18nMap.get(locale);
         if (i18n == null) {
             i18n = create(locale);
+            i18nMap.put(locale, i18n);
         }
         return i18n;
     }
