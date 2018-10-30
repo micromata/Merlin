@@ -51,11 +51,6 @@
                         <Insets bottom="5.0" left="5.0" />
                     </GridPane.margin>
                 </Text>
-            <Text fx:id="durationText" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="bottomText" text="0:00:00" textAlignment="RIGHT" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
-               <GridPane.margin>
-                  <Insets bottom="5.0" />
-               </GridPane.margin>
-            </Text>
             </children>
         </GridPane>
     </children>
