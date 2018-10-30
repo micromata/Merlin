@@ -8,6 +8,7 @@ import I18n from "../../general/translation/I18n";
 import classNames from "classnames";
 import ConfigAccountTab from "./ConfigurationAccountTab";
 import ConfigServerTab from "./ConfigurationServerTab";
+import LoadingOverlay from '../../general/loading/LoadingOverlay';
 
 class ConfigurationPage
     extends React
@@ -15,9 +16,11 @@ class ConfigurationPage
 
     constructor(props) {
         super(props);
-
+        this.serverTabRef = React.createRef();
+        this.accountTabRef = React.createRef();
         this.state = {
             activeTab: '1',
+            loading: false,
             reload: false
         };
 
@@ -37,10 +40,18 @@ class ConfigurationPage
         })
     }
 
-    onSave(event) {
-        this.serverTab.save();
-        this.accountTab.save();
+    async onSave(event) {
+        this.setState({
+            loading: true
+        })
+        const cb1 = this.serverTabRef.current ? this.serverTabRef.current.save() : null;
+        const cb2 = this.accountTabRef.current ? this.accountTabRef.current.save() : null;
+        if (cb1) await cb1;
+        if (cb2) await cb2;
         clearDictionary();
+        this.setState({
+            loading: false
+        })
         this.setReload();
     }
 
@@ -80,12 +91,12 @@ class ConfigurationPage
                 </Nav>
                 <TabContent activeTab={this.state.activeTab}>
                     <TabPane tabId={'1'}>
-                        <ConfigAccountTab onRef={ref => (this.accountTab = ref)}/>
+                        <ConfigAccountTab ref={this.accountTabRef}/>
                     </TabPane>
                 </TabContent>
                 <TabContent activeTab={this.state.activeTab}>
                     <TabPane tabId={'2'}>
-                        <ConfigServerTab onRef={ref => (this.serverTab = ref)}/>
+                        <ConfigServerTab ref={this.serverTabRef}/>
                     </TabPane>
                 </TabContent>
                 <FormGroup>
@@ -99,6 +110,7 @@ class ConfigurationPage
                     </FormField>
                 </FormGroup>
                 {todo}
+                <LoadingOverlay active={this.state.loading} />
             </React.Fragment>
         );
     }

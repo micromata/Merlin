@@ -81,12 +81,7 @@ class ConfigServerTab extends React.Component {
     }
 
     componentDidMount() {
-        this.props.onRef(this)
         this.loadConfig();
-    }
-
-    componentWillUnmount() {
-        this.props.onRef(undefined)
     }
 
     handleTextChange = event => {
@@ -127,7 +122,7 @@ class ConfigServerTab extends React.Component {
                 config.templatesDirs.push({directory: item.directory, recursive: item.recursive});
             });
         }
-        fetch(getRestServiceUrl("configuration/config"), {
+        return fetch(getRestServiceUrl("configuration/config"), {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

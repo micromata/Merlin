@@ -58,12 +58,7 @@ class ConfigAccountTab extends React.Component {
     }
 
     componentDidMount() {
-        this.props.onRef(this)
         this.loadConfig();
-    }
-
-    componentWillUnmount() {
-        this.props.onRef(undefined)
     }
 
     handleTextChange = event => {
@@ -75,7 +70,7 @@ class ConfigAccountTab extends React.Component {
         var user = {
             locale: this.state.locale
         };
-        fetch(getRestServiceUrl("configuration/user"), {
+        return fetch(getRestServiceUrl("configuration/user"), {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
