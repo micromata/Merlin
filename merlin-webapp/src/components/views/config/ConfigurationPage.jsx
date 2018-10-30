@@ -39,6 +39,7 @@ class ConfigurationPage
 
     onSave(event) {
         this.serverTab.save();
+        this.accountTab.save();
         this.setRedirect();
     }
 
@@ -79,7 +80,7 @@ class ConfigurationPage
                 </Nav>
                 <TabContent activeTab={this.state.activeTab}>
                     <TabPane tabId={'1'}>
-                        <ConfigAccountTab/>
+                        <ConfigAccountTab onRef={ref => (this.accountTab = ref)}/>
                     </TabPane>
                 </TabContent>
                 <TabContent activeTab={this.state.activeTab}>

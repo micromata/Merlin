@@ -3,6 +3,7 @@ package de.reinhard.merlin.app;
 import com.fasterxml.jackson.core.type.TypeReference;
 import de.reinhard.merlin.app.json.JsonUtils;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -106,7 +107,7 @@ public class ConfigurationHandler {
      * @param value The value to store. If null, any previous stored value under the given key will be removed.
      */
     public void save(String key, String value) {
-        if (value == null) {
+        if (StringUtils.isEmpty(value)) {
             preferences.remove(key);
         } else {
             preferences.put("extra." + key, value);

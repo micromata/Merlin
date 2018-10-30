@@ -25,9 +25,11 @@ class ConfigAccountTab extends React.Component {
                 return resp.json()
             })
             .then((data) => {
+                const {locale, ...user} = data;
                 this.setState({
                     loading: false,
-                    ...data
+                    locale: locale ? locale : '',
+                    ...user
                 })
             })
             .catch((error) => {
@@ -45,7 +47,7 @@ class ConfigAccountTab extends React.Component {
         this.state = {
             loading: true,
             failed: false,
-            language: 'default'
+            locale: null
         };
 
         this.handleTextChange = this.handleTextChange.bind(this);
@@ -53,7 +55,12 @@ class ConfigAccountTab extends React.Component {
     }
 
     componentDidMount() {
+        this.props.onRef(this)
         this.loadConfig();
+    }
+
+    componentWillUnmount() {
+        this.props.onRef(undefined)
     }
 
     handleTextChange = event => {
@@ -62,9 +69,9 @@ class ConfigAccountTab extends React.Component {
     }
 
 
-    save(event) {
+    save() {
         var user = {
-            language: this.state.language
+            locale: this.state.locale
         };
         fetch(getRestServiceUrl("configuration/user"), {
             method: 'POST',
@@ -87,8 +94,8 @@ class ConfigAccountTab extends React.Component {
         return (
             <form>
                 <FormLabelField label={<I18n name={'configuration.application.language'}/>} fieldLength={2}>
-                    <FormSelect value={this.state.language} name={'language'} onChange={this.handleTextChange}>
-                        <FormOption value={'default'} i18nKey={'configuration.application.language.option.default'} />
+                    <FormSelect value={this.state.locale} name={'locale'} onChange={this.handleTextChange}>
+                        <FormOption value={''} i18nKey={'configuration.application.language.option.default'} />
                         <FormOption value={'en'} i18nKey={'language.english'} />
                         <FormOption value={'de'} i18nKey={'language.german'} />
                     </FormSelect>

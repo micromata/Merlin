@@ -2,6 +2,7 @@ package de.reinhard.merlin.app.javafx;
 
 import de.reinhard.merlin.UTF8ResourceBundleControl;
 import de.reinhard.merlin.app.ConfigurationHandler;
+import de.reinhard.merlin.app.Languages;
 import de.reinhard.merlin.app.user.UserData;
 import de.reinhard.merlin.app.user.UserUtils;
 import org.slf4j.Logger;
@@ -74,11 +75,7 @@ public class Context {
                 }
             }
         }
-        if ("de".equals(lang)) {
-            locale = new Locale("de", "", "");
-        } else {
-            locale = new Locale("en", "", "");
-        }
+        locale = Languages.asLocale(lang, true);
         ResourceBundle.Control utf8Control = new UTF8ResourceBundleControl();
         resourceBundle = ResourceBundle.getBundle(BUNDLE_NAME, locale, utf8Control);
     }
