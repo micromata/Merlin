@@ -27,35 +27,54 @@ public abstract class AbstractConditional implements Comparable<AbstractConditio
     protected String variable;
     protected ConditionalType type;
 
-    static Pattern beginIfPattern = Pattern.compile("\\{if\\s+(" + ReplaceUtils.IDENTIFIER_REGEXP + ")\\s*(!?=|!?\\s*in|<=?|>=?)\\s*([^\\}]*)\\s*\\}");
+    static Pattern beginIfPattern = Pattern.compile("\\{if\\s+(!|not)?\\s*(" + ReplaceUtils.IDENTIFIER_REGEXP + ")\\s*(!?=|!?\\s*in|<=?|>=?|)\\s*([^\\}]*)\\s*\\}");
     static Pattern notInComparatorPattern = Pattern.compile("!?\\s*in");
     static Pattern endIfPattern = Pattern.compile("\\{endif\\}");
 
     public static AbstractConditional createConditional(Matcher matcher, int bodyElementNumber, RunsProcessor processor) {
-        String str = matcher.group(2);
-        ConditionalType type = ConditionalType.EQUAL;
-        if (str != null) {
-            if ("!=".equals(str)) {
+        //log.info("not=" + matcher.group(1) + ", var=" + matcher.group(2) + ", operator=" + matcher.group(3) + ", value=" + matcher.group(4));
+        String operator = matcher.group(3);
+        ConditionalType type = null;
+        boolean not = false;
+        if (operator == null) {
+            log.warn("Internal error. str shouldn't be null: " + "not=" + matcher.group(1) + ", var=" + matcher.group(2)
+                    + ", operator=" + matcher.group(3) + ", value=" + matcher.group(4));
+            type = ConditionalType.EQUAL;
+        } else {
+            if ("=".equals(operator)) {
+                type = ConditionalType.EQUAL;
+            } else if ("!=".equals(operator)) {
                 type = ConditionalType.NOT_EQUAL;
-            } else if ("in".equals(str)) {
+            } else if ("in".equals(operator)) {
                 type = ConditionalType.IN;
-            } else if (notInComparatorPattern.matcher(str).matches()) {
+            } else if (notInComparatorPattern.matcher(operator).matches()) {
                 type = ConditionalType.NOT_IN;
-            } else if ("<".equals(str)) {
+            } else if ("<".equals(operator)) {
                 type = ConditionalType.LESS;
-            } else if ("<=".equals(str)) {
+            } else if ("<=".equals(operator)) {
                 type = ConditionalType.LESS_EQUAL;
-            } else if (">".equals(str)) {
+            } else if (">".equals(operator)) {
                 type = ConditionalType.GREATER;
-            } else if (">=".equals(str)) {
+            } else if (">=".equals(operator)) {
                 type = ConditionalType.GREATER_EQUAL;
+            } else if (operator.isEmpty()) {
+                type = ConditionalType.EXIST;
+            } else {
+                log.warn("Internal error. str unknown: " + "not=" + matcher.group(1) + ", var=" + matcher.group(2)
+                        + ", operator=" + matcher.group(3) + ", value=" + matcher.group(4));
+                type = ConditionalType.EQUAL;
             }
         }
+        if (matcher.group(1) != null) {
+            not = true;
+        }
+        //log.info("type=" + type + ", not=" + not);
         AbstractConditional conditional;
-        if (type.isIn(ConditionalType.EQUAL, ConditionalType.NOT_EQUAL, ConditionalType.IN, ConditionalType.NOT_IN)) {
-            conditional = new ConditionalString(matcher, bodyElementNumber, processor);
+        if (type.isIn(ConditionalType.EQUAL, ConditionalType.NOT_EQUAL, ConditionalType.IN, ConditionalType.NOT_IN,
+                ConditionalType.EXIST)) {
+            conditional = new ConditionalString(matcher, not, bodyElementNumber, processor);
         } else {
-            conditional = new ConditionalComparator(matcher, bodyElementNumber, processor);
+            conditional = new ConditionalComparator(matcher, not, bodyElementNumber, processor);
         }
         conditional.type = type;
         return conditional;

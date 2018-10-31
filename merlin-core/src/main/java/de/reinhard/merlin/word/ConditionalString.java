@@ -1,6 +1,7 @@
 package de.reinhard.merlin.word;
 
 import de.reinhard.merlin.csv.CSVStringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,12 +15,14 @@ public class ConditionalString extends AbstractConditional {
 
     private String[] values;
     private boolean trimValues = true;
+    private boolean not;
 
-    ConditionalString(Matcher matcher, int bodyElementNumber, RunsProcessor processor) {
+    ConditionalString(Matcher matcher, boolean not, int bodyElementNumber, RunsProcessor processor) {
         super(matcher, bodyElementNumber, processor);
-        variable = matcher.group(1);
+        this.not = not;
+        variable = matcher.group(2);
         // String values
-        values = CSVStringUtils.parseStringList(matcher.group(3), trimValues);
+        values = CSVStringUtils.parseStringList(matcher.group(4), trimValues);
     }
 
     /**
@@ -29,6 +32,11 @@ public class ConditionalString extends AbstractConditional {
      * @return
      */
     boolean matches(Map<String, ?> variables) {
+        boolean result = _matches(variables);
+        return not ? !result : result;
+    }
+
+    boolean _matches(Map<String, ?> variables) {
         if (parent != null && parent.matches(variables) == false) {
             return false;
         }
@@ -49,6 +57,8 @@ public class ConditionalString extends AbstractConditional {
                 }
             }
             return false;
+        } else if (type == ConditionalType.EXIST) {
+            return StringUtils.isNotBlank(value);
         }
         // tpye: not in:
         for (String definedValue : values) {

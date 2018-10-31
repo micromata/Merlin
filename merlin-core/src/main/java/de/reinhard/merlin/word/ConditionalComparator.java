@@ -13,12 +13,14 @@ public class ConditionalComparator extends AbstractConditional {
     final static double EPSILON = 0.00001;
 
     private double doubleValue;
+    private boolean not;
 
-    ConditionalComparator(Matcher matcher, int bodyElementNumber, RunsProcessor processor) {
+    ConditionalComparator(Matcher matcher, boolean not, int bodyElementNumber, RunsProcessor processor) {
         super(matcher, bodyElementNumber, processor);
-        variable = matcher.group(1);
+        this.not = not;
+        variable = matcher.group(2);
         // Number value
-        String valString = matcher.group(3);
+        String valString = matcher.group(4);
         try {
             if (valString.indexOf(',') >= 0) {
                 valString = valString.replace(',', '.');
@@ -36,6 +38,11 @@ public class ConditionalComparator extends AbstractConditional {
      * @return
      */
     boolean matches(Map<String, ?> variables) {
+        boolean result = _matches(variables);
+        return not ? !result : result;
+    }
+
+    boolean _matches(Map<String, ?> variables) {
         if (parent != null && parent.matches(variables) == false) {
             return false;
         }
