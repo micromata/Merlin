@@ -15,7 +15,9 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * For defining formats, such as number formats, date formats etc.
@@ -26,6 +28,8 @@ public class TemplateRunContext {
 
     DateFormat dateFormatter;
     DateFormat[] dateFormatters;
+    DateFormat dateFormatterGerman;
+
     Locale locale;
     private String excelDateFormatPattern;
     private I18n i18n;
@@ -34,16 +38,46 @@ public class TemplateRunContext {
         i18n = CoreI18n.getDefault();
         this.locale = Locale.getDefault();
         dateFormatter = new SimpleDateFormat(DEFAULT_DATE_PATTERN);
+        dateFormatterGerman = new SimpleDateFormat("dd.MM.yyyy");
         dateFormatters = new DateFormat[]{
                 new SimpleDateFormat("yyyy-MM-dd"),
                 new SimpleDateFormat("d/M/yyyy"),
                 new SimpleDateFormat("d/M/yy"),
-                new SimpleDateFormat("dd.MM.yyyy"),
+                dateFormatterGerman,
                 new SimpleDateFormat("dd.MM.yy"),
                 new SimpleDateFormat("d.M.yyyy"),
                 new SimpleDateFormat("d.M.yy")
         };
         excelDateFormatPattern = DateFormatConverter.convert(locale, DEFAULT_DATE_PATTERN);
+    }
+
+    /**
+     * Convert the values matching the user's locale.
+     *
+     * @param variables
+     * @param templateDefinition For getting definitions of variables. If not given, the parameter variables is returen unchanged.
+     * @return
+     */
+    public Map<String, Object> convertVariables(Map<String, Object> variables, TemplateDefinition templateDefinition) {
+        if (templateDefinition == null) {
+            return variables;
+        }
+        Map<String, Object> result = new HashMap<>();
+        for (Map.Entry<String, Object> entry : variables.entrySet()) {
+            String varname = entry.getKey();
+            VariableDefinition variableDefinition = templateDefinition.getVariableDefinition(varname);
+            Object value = entry.getValue();
+            if (variableDefinition != null) {
+                if (variableDefinition.getType() == VariableType.DATE) {
+                    Date date = parseDate(value);
+                    if (date != null) {
+                        value = dateToString(date);
+                    }
+                }
+            }
+            result.put(entry.getKey(), value);
+        }
+        return result;
     }
 
     /**
@@ -167,6 +201,15 @@ public class TemplateRunContext {
         return null;
     }
 
+    public String dateToString(Date date) {
+        if (locale == null) {
+            return dateFormatter.format(date);
+        } else if (locale.getLanguage().equals("de")) {
+            return dateFormatterGerman.format(date);
+        }
+        return dateFormatter.format(date);
+    }
+
     public static String getBooleanAsString(boolean value) {
         return value ? "X" : "";
     }
@@ -198,6 +241,7 @@ public class TemplateRunContext {
 
     /**
      * Sets i18n and locale. If you want to use your own i18n, please call {@link #setI18n(I18n)} after {@link #setLocale(Locale)}.
+     *
      * @param locale
      */
     public void setLocale(Locale locale) {

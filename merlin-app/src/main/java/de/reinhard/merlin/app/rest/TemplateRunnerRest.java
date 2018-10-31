@@ -2,6 +2,7 @@ package de.reinhard.merlin.app.rest;
 
 import de.reinhard.merlin.app.json.JsonUtils;
 import de.reinhard.merlin.app.storage.Storage;
+import de.reinhard.merlin.app.user.UserUtils;
 import de.reinhard.merlin.logging.MDCHandler;
 import de.reinhard.merlin.logging.MDCKey;
 import de.reinhard.merlin.persistency.PersistencyRegistry;
@@ -9,6 +10,7 @@ import de.reinhard.merlin.utils.MerlinFileUtils;
 import de.reinhard.merlin.word.WordDocument;
 import de.reinhard.merlin.word.templating.Template;
 import de.reinhard.merlin.word.templating.TemplateDefinition;
+import de.reinhard.merlin.word.templating.TemplateRunContext;
 import de.reinhard.merlin.word.templating.WordTemplateRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +20,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.Map;
 
 @Path("/templates")
 public class TemplateRunnerRest {
@@ -63,7 +66,10 @@ public class TemplateRunnerRest {
             try {
                 WordDocument doc = WordDocument.load(path);
                 WordTemplateRunner runner = new WordTemplateRunner(templateDefinition, doc);
-                WordDocument result = runner.run(data.getVariables());
+                TemplateRunContext context = new TemplateRunContext();
+                context.setLocale(UserUtils.getUserLocale());
+                Map<String, Object> variables = context.convertVariables(data.getVariables(), templateDefinition);
+                WordDocument result = runner.run(variables);
                 String filename = runner.createFilename(path.getFileName().toString(), data.getVariables());
                 byte[] byteArray = result.getAsByteArrayOutputStream().toByteArray();
                 Response.ResponseBuilder builder = Response.ok(byteArray);
