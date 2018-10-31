@@ -21,7 +21,7 @@
                 <RowConstraints maxHeight="60.0" minHeight="10.0" prefHeight="14.0" vgrow="SOMETIMES" />
             </rowConstraints>
             <children>
-                <ImageView fitHeight="58.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.valignment="TOP">
+                <ImageView fitHeight="17.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.valignment="TOP">
                     <image>
                         <Image url="@Micromata-logo.png" />
                     </image>
