@@ -1,6 +1,8 @@
 Merlin Runner documentation
 ===========================
-Kai Reinhard
+Kai Reinhard, Version {version}
+:toc:
+:toclevels: 4
 
 == Welcome to Merlin Runner application
 
@@ -10,13 +12,16 @@ Congratulations. With Merlin Runner you have started a smart assistant for your 
 
 :sectnums:
 
-
 == Templates
 
 === Template files
+A template file (.docx) is a normal Word document which may contain Merlin specific elements, such as variables to be replaced by their values
+or conditional expressions.+
+You may use conditional expressions to control whether a specific content should be part of the result Word document or not.
+
 Template files (.docx) may contain following expressions supported by Merlin:
 
-[frame="topbot",options="header"]
+[%autowidth, frame="topbot",options="header"]
 |=======
 |Expression | Description
 |+${variable}+|Will be replaced by the value of the variable if given.
@@ -25,8 +30,8 @@ Template files (.docx) may contain following expressions supported by Merlin:
 |+${id = "..."}+|You may specify id for this template for using as reference in serial letter runs.
 |=======
 
-=== Conditionals
-[frame="topbot",options="header"]
+==== Conditionals
+[%autowidth, frame="topbot",options="header"]
 |=======
 |Expression | Description
 |+{if variable='value'}+|  Will be true, if the variable has the given value.
@@ -51,3 +56,45 @@ Template files (.docx) may contain following expressions supported by Merlin:
 +{endif}+ +
 +{if WeeklyHours >= 40}${Mr_Mrs} ${Employee}+ will work full-time.+{endif}+
 ====
+
+.Word template and its result.
+[caption="Figure 1: "]
+image::WordTemplate-and-Result.png[Template_before_after]
+
+
+== Template definitions
+=== Variable types
+With an optional template definition file (Excel) you may declare your variables (such as numbers, dates, strings etc.):
+[%autowidth, frame="topbot",options="header"]
+|=======
+|Variable type | Description
+|string | The variable is a normal text (default).
+|int| The variable should be an integer.
+|date|The variable represents a date.
+|=======
+
+=== Variable properties
+You may also define properties of a variable:
+[%autowidth, frame="topbot",options="header"]
+|=======
+|Variable property | Description
+|required | The value of the variable is required (can't be blank or empty).
+|unique| The variable should be unique (inside one serial letter run).
+|values|If given, the value must match one of the specified values or empty if not required. The values are specified as comma separated values.
+|minimum|The minimal allowed value of the variable.
+|maximum|The maximal allowed value of the variable.
+|=======
+
+=== Dependent variables
+You may define dependent variables. Dependent variables depends on the value of their master variable. An use-case is e. g. the variable *gender* as master variable
+and pronouns as dependent variables e. g. for contracts or letters (+{Mr_Mrs}+, +${his_her}+ etc.).
+
+Definitions for dependent variables:
+[%autowidth, frame="topbot",options="header"]
+|=======
+|Variable property | Description
+|name | Name of the variable. The name should describe the use case, e. g. +${Mr_Mrs}+, +${His_Her}+, +${his_her}+ etc. for a better
+reading of the Word templates.
+|Depends on| The name of the master variable this variable depends on.
+|mapping|A mapping as a comma seperated value list. The length of this list should match the length of the values of the master variable. There will be a 1:1 mapping.
+|=======
