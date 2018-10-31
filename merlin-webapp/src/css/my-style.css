@@ -261,7 +261,17 @@ div.drop-area span.info {
 	z-index: 9000;
 }
 
-
 .navbar-toggler {
 	margin-top: -17px;
 }
+
+
+/* @media only screen and (max-width: 1050px) {
+	.navbar.navbar-light a.nav-link {
+		font-size: 0.8rem;
+	}
+
+	.collapse.show.navbar-collapse a {
+		font-size: 18px;
+	}
+} */
