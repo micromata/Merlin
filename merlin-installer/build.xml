@@ -6,6 +6,7 @@
     <property name="merlin-app" location="../merlin-app"/>
     <property name="merlin-webapp" location="../merlin-webapp"/>
     <property name="install4j-merlin" location="../../Install4j/Merlin"/>
+    <property name="docs" location="../docs"/>
     <property name="dist" location="dist"/>
 
     <target name="pre-dist" description="Prepares a new release." depends="merlin-mvn, merlin-webapp">
@@ -45,6 +46,7 @@
 
     <!-- cd merlin-webapp; npm run build -->
     <target name="merlin-webapp">
+        <ant dir="${docs}"/>
         <exec dir="${merlin-webapp}" executable="sh">
             <arg line="-c 'npm run build'" />
         </exec>
