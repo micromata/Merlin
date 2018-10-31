@@ -93,18 +93,19 @@ Template files (docx) may contain following expressions supported by Merlin:
 
 | Expression | Description |
 |------------|-------------|
-|${templateDefinition.refid = "..."}|You may specify an optional template definition for further functionality for this template such as dependent variables.||
-|${id = "..."}|You may specify id for this template for using as reference in serial letter runs.||
-|${variable}|Will be replaced by the value of the variable if given.|
-|{if expr}...{endif}|The text inside the if-endif-statement will be displayed only and only if the expression will be evaluated to true.
+|```${templateDefinition.refid = "..."}```|You may specify an optional template definition for further functionality for this template such as dependent variables.||
+|```${id = "..."}```|You may specify id for this template for using as reference in serial letter runs.||
+|```${variable}```|Will be replaced by the value of the variable if given.|
+|```{if expr}...{endif}```|The text inside the if-endif-statement will be displayed only and only if the expression will be evaluated to true.
 
 Examples for if-expressions:
-* variable='value': Will be true, if the variable has the given value.
-* variable!='value': Will be true, if the variable has __not__ the given value.
-* variable in "blue", "red", "yellow": Will be true, if the variable has one of the given values.
-* variable ! in "blue", "red", "yellow": Will be true, if the variable has none of the given values.
+* ```variable='value'```: Will be true, if the variable has the given value.
+* ```variable!='value'```: Will be true, if the variable has __not__ the given value.
+* ```variable in "blue", "red", "yellow"```: Will be true, if the variable has one of the given values.
+* ```variable ! in "blue", "red", "yellow"```: Will be true, if the variable has none of the given values.
 * Cascading of if-statements is supported.
-* variable < value, variable <= value, variable > value, variable >= value. Integers and doubles as values are supported.
-
-
+* ```variable < value```, ```variable <= value```, ```variable > value```, ```variable >= value```. Integers and doubles as values are supported.
+* ```variable```: Will be true, if variable is given and not blank.
+* ```!variable```: Will be true, if variable is not given or blank. You may also write ```{if not variable}```
+* With the not-operator (before variable name) you my negate all expressions: ```if{!variable>5}``` or ```if{not variable>5}```.
 
