@@ -5,7 +5,7 @@
     <!-- set global properties for this build -->
     <property name="merlin-app" location="../merlin-app"/>
     <property name="merlin-webapp" location="../merlin-webapp"/>
-    <property name="merlin-webapp-docs" location="${merlin-webapp}/docs"/>
+    <property name="merlin-webapp-docs" location="${merlin-webapp}/public/docs"/>
 
     <target name="build" description="Builds the documentation.">
         <loadproperties srcFile="${merlin-app}/target/classes/version.properties"/>
