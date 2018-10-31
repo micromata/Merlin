@@ -13,6 +13,11 @@
         <antcall target="asciidoc">
             <param name="file" value="index" />
         </antcall>
+        <copy todir="${merlin-webapp-docs}">
+            <fileset dir=".">
+                <include name="**/*.png"/>
+            </fileset>
+        </copy>
     </target>
 
     <!-- cd merlin-webapp; npm run build -->
