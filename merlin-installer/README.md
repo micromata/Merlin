@@ -7,14 +7,13 @@
    2. Installer -> Auto-Update Options -> Base url for installers: https://sourceforge.net/projects/pforge/files/Merlin/0.3/
    3. Build project
 5. `ant post-dist`
-6. Upload updates.xml to SourceForge download dir.
-7. Testing
-   1. Testing update from previous installation.
+6. Testing
+   1. Testing update from previous installation (also with current installatino but with 'faked' old version).
    2. install, test web and java-code.
-8. Creating Github release
+7. Creating Github release
    1. Create new tag, e. g. `v0.3`.
-9. Upload to SourceForge
+8. Upload to SourceForge
    1. Publish `v0.3/merlin_macos_v0.3.dmg`.
    2. Testing
-10. Enable update mechanism
+9. Enable update mechanism
    1. Commit and push.
