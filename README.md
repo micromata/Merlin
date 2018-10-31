@@ -2,7 +2,7 @@
 Magic and customer-friendly Excel, Word and configuration acrobatics.
 
 ## Download Desktop app
-* Download from [Sourceforge](https://sourceforge.net/projects/pforge/files/Merlin/)
+* Download from [Sourceforge](https://sourceforge.net/projects/merlinrunner/)
 
 
 ## Merlin packages
