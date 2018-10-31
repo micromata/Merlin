@@ -148,7 +148,7 @@ class TemplateStatistics extends React.Component {
                     <tr>
                         <td style={{whiteSpace: 'nowrap'}}><I18n name={'templates.variables.input'}/>{' '}
                             <button onClick={this.toggleVariables} type="button"
-                                    className="btn btn-link btn-outline-primary btn-sm">{caretIcon}</button>
+                                    className="btn btn-outline-primary btn-sm">{caretIcon}</button>
                         </td>
                         <td>
                             {this.props.statistics.inputVariables.map((variable, index) => {
