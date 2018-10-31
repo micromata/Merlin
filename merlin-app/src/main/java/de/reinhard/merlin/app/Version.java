@@ -63,6 +63,14 @@ public class Version {
         return version;
     }
 
+    /**
+     * Replaces -SNAPSHOT by dev for snapshot versions. For none snapshot releases the returned value is equal to the version.
+     * @return the version as string.
+     */
+    public String getShortVersion() {
+        return version.replace("-SNAPSHOT", "dev");
+    }
+
     public String getBuildDateUTC() {
         return buildDateUTC;
     }

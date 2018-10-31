@@ -132,7 +132,7 @@ public class Main extends Application {
         }, 500L, 333L);
 
         Text text = (Text) scene.lookup("#versionText");
-        text.setText(context.getString("merlin.server.app.versionText") + " " + Version.getInstance().getVersion());
+        text.setText(context.getString("merlin.server.app.versionText") + " " + Version.getInstance().getShortVersion());
         stage.setResizable(false);
         stage.show();
         server = new JettyServer();
