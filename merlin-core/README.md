@@ -107,5 +107,5 @@ Examples for if-expressions:
 * ```variable < value```, ```variable <= value```, ```variable > value```, ```variable >= value```. Integers and doubles as values are supported.
 * ```variable```: Will be true, if variable is given and not blank.
 * ```!variable```: Will be true, if variable is not given or blank. You may also write ```{if not variable}```
-* With the not-operator (before variable name) you my negate all expressions: ```if{!variable>5}``` or ```if{not variable>5}```.
+* With the not-operator (before variable name) you may negate all expressions: ```if{!variable>5}``` or ```if{not variable>5}```.
 
