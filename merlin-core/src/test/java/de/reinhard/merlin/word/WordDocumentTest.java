@@ -39,9 +39,9 @@ public class WordDocumentTest {
         Matcher matcher = AbstractConditional.beginIfPattern.matcher(str);
         assertEquals(expected, matcher.find());
         if (expected) {
-            assertEquals(var, matcher.group(1), "Variable.");
-            assertEquals(cmp, matcher.group(2), "Comparison.");
-            assertEquals(value, matcher.group(3), "Value.");
+            assertEquals(var, matcher.group(2), "Variable.");
+            assertEquals(cmp, matcher.group(3), "Comparison.");
+            assertEquals(value, matcher.group(4), "Value.");
         }
     }
 

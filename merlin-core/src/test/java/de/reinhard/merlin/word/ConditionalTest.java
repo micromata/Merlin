@@ -29,13 +29,13 @@ public class ConditionalTest {
         if (groups.length == 0) {
             return;
         }
-        assertEquals(3, matcher.groupCount(), "Number of regexp group count.");
-        assertEquals(groups[0], matcher.group(1));
-        assertEquals(groups[1], matcher.group(2));
+        assertEquals(4, matcher.groupCount(), "Number of regexp group count.");
+        assertEquals(groups[0], matcher.group(2));
+        assertEquals(groups[1], matcher.group(3));
         String[] params = CSVStringUtils.parseStringList(matcher.group(3));
         assertEquals(groups.length - 2, params.length, "Number of comma separated values.");
-        for (int i = 2; i < groups.length; i++) {
-            assertEquals(groups[i], params[i - 2]);
+        for (int i = 3; i < groups.length; i++) {
+            assertEquals(groups[i], params[i - 3]);
         }
     }
 
