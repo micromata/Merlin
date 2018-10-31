@@ -265,7 +265,18 @@ div.drop-area span.info {
 	margin-top: -17px;
 }
 
+.welcome-intro {
+}
 
+.welcome-enjoy {
+	padding-top: 20px;
+	font-weight: bold;
+	font-style: italic;
+}
+
+.welcome-documentation-link {
+  padding-top: 20px;
+}
 /* @media only screen and (max-width: 1050px) {
 	.navbar.navbar-light a.nav-link {
 		font-size: 0.8rem;
