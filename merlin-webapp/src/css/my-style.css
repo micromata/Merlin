@@ -166,6 +166,15 @@ ul.nav-tabs .nav-link:hover {
 	margin-bottom: 50px;
 }
 
+.table .btn-outline-primary.btn-sm {
+	margin: 0 10px;
+}
+
+.table .btn.btn-link {
+	padding-left: 0;
+}
+
+
 /* Cards */
 
 .template.card {
@@ -226,3 +235,33 @@ div.refresh-button-right:hover {
 	color: #337ab7;
 }
 
+/* Droparea */
+
+#menuDropZone {
+	border: 1px dashed #888;
+	width: 34px;
+	border-radius: 5px;
+	margin-left: 10px;
+}
+
+#menuDropZone.drop-area svg.fa-upload {
+	width: 0.65em;
+}
+
+div.drop-area span.info {
+	padding: 5px;
+}
+
+/* Menu */
+
+.collapse.show.navbar-collapse {
+	background: #FFF;
+	padding-bottom: 10px;
+	width: 100%;
+	z-index: 9000;
+}
+
+
+.navbar-toggler {
+	margin-top: -17px;
+}
