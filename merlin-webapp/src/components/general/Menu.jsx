@@ -86,7 +86,7 @@ class Menu extends React.Component {
 
     render() {
         return (
-            <Navbar className={'fixed-top'} color="light" light expand="md">
+            <Navbar className={'fixed-top'} color="light" light expand="lg">
                 <NavbarBrand to="/" tag={ReactRouterNavLink}><img alt={'Merlin logo'}
                                                                   src={'../../../images/merlin-icon.png'}
                                                                   width={'50px'}/>Merlin Runner</NavbarBrand>
