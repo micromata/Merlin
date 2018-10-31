@@ -1,2 +1,3 @@
-# Merlin templates
+# [Merlin documentation](./README.md)
+## Merlin templates
 ...
