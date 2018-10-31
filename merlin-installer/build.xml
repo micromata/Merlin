@@ -10,11 +10,11 @@
 
     <target name="pre-dist" description="Prepares a new release." depends="merlin-mvn, merlin-webapp">
         <echo>
-            ***************************************************************************************
-            *** 1. Please refer for ensuring all test where OK: target/site/surefire-report.html **
-            *** 2. Build installation files                                                      **
-            *** 3. ant post-dist                                                                 **
-            ***************************************************************************************
+            ***********************************************************************************************
+            *** 1. Please refer for ensuring all test where OK (>= 44): target/site/surefire-report.html **
+            *** 2. Build installation files                                                              **
+            *** 3. ant post-dist                                                                         **
+            ***********************************************************************************************
         </echo>
     </target>
 
