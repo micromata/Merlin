@@ -9,9 +9,9 @@ class Start extends React.Component {
                 <PageHeader>
                     <I18n name={'startscreen.welcome.title'}/>
                 </PageHeader>
-                <div class="welcome-intro"><I18n name={'startscreen.welcome.text'}/></div>
-                <div class="welcome-enjoy"><I18n name={'startscreen.welcome.enjoy'}/></div>
-                <div class="welcome-documentation-link"><a class={'btn btn-link btn-outline-primary'} href={'/docs/index.html'} target="_blank" rel="noopener noreferrer"><I18n name={'startscreen.welcome.documentation'}/></a></div>
+                <div className="welcome-intro"><I18n name={'startscreen.welcome.text'}/></div>
+                <div className="welcome-enjoy"><I18n name={'startscreen.welcome.enjoy'}/></div>
+                <div className="welcome-documentation-link"><a className={'btn btn-link btn-outline-primary'} href={'/docs/index.html'} target="_blank" rel="noopener noreferrer"><I18n name={'startscreen.welcome.documentation'}/></a></div>
             </React.Fragment>
         );
     }
