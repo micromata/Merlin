@@ -52,7 +52,7 @@ Template files (.docx) may contain following expressions supported by Merlin:
 
 ====
 +{if WeeklyHours < 40}${Mr_Mrs} ${Employee}+ will work part-time. +
-  +{if NumberOfLeaveDays < 25}${He_She}+ will get only +${ NumberOfLeaveDays }+ per year.+{endif}+ +
+  +{if NumberOfLeaveDays < 25}${He_She}+ will get only +${ NumberOfLeaveDays }+ leave days per year.+{endif}+ +
 +{endif}+ +
 +{if WeeklyHours >= 40}${Mr_Mrs} ${Employee}+ will work full-time.+{endif}+
 ====
