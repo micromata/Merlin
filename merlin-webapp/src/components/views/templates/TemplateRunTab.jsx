@@ -104,6 +104,94 @@ class TemplateRunTab extends React.Component {
 
     render() {
         let valid = true;
+        let evenFormInputFields = [];
+        let oddFormInputFields = [];
+        let even = false;
+        {
+            Object.keys(this.variableDefinitions)
+                .filter(key => this.variableDefinitions[key] !== undefined)
+                .map(key => {
+                    const item = this.variableDefinitions[key];
+                    const tagId = revisedRandId();
+                    let formControl;
+                    const name = item.name ? item.name : item;
+                    const formControlProps = {
+                        name,
+                        value: this.runConfiguration[name],
+                        onChange: this.handleVariableChange
+                    };
+                    let validationMessage;
+
+                    if (item.allowedValuesList && item.allowedValuesList.length !== 0) {
+                        formControl = <FormSelect id={tagId}
+                                                  {...formControlProps}
+                        >
+                            {item.allowedValuesList.map(option => <option
+                                key={`template-run-variable-${name}-select-${option}`}
+                                value={option}
+                            >
+                                {option}
+                            </option>)}
+                        </FormSelect>;
+                    } else {
+                        if (item.required && (!formControlProps.value || formControlProps.value.trim() === '')) {
+                            validationMessage = <I18n name={'validation.requiredField'}/>;
+                        } else if (item.type === 'INT' && isNaN(formControlProps.value)) {
+                            validationMessage = <I18n name={'validation.numberExpected'}/>;
+                        } else if (item.minimumValue && item.minimumValue > Number(formControlProps.value)) {
+                            validationMessage =
+                                <I18n name={'validation.numberMustBeHigher'} params={[item.minimumValue]}/>;
+                        } else if (item.maximumValue && item.maximumValue < Number(formControlProps.value)) {
+                            validationMessage =
+                                <I18n name={'validation.numberMustBeLower'} params={[item.maximumValue]}/>;
+                        }
+
+                        if (validationMessage) {
+                            valid = false;
+                            formControlProps.invalid = true;
+                        } else {
+                            formControlProps.valid = true;
+                        }
+
+                        if (item.minimumValue) {
+                            formControlProps.min = item.minimumValue;
+                        }
+
+                        if (item.maximumValue) {
+                            formControlProps.max = item.maximumValue;
+                        }
+
+                        if (item.type === 'INT') {
+                            item.type = 'number';
+                        }
+                        var {fieldLength, ...other} = formControlProps;
+                        const type = (item.type === 'STRING') ? 'text' : item.type;
+                        formControl = <input type={type} id={tagId} className={'form-control form-control-sm'}
+                                             {...other}
+                        />;
+                    }
+                    const tooltip = item.description ?
+                        <UncontrolledTooltip placement={'top'} target={tagId}>
+                            {item.description}
+                        </UncontrolledTooltip> : null;
+                    const validation = validationMessage ?
+                        <div className="invalid-feedback">
+                            {validationMessage}
+                        </div> : null;
+                    const inputField = <div className="form-group col-sm-6">
+                        <label className={'col-form-label-sm'} htmlFor={tagId}>{name}</label>
+                        {formControl}
+                        {validation}
+                        {tooltip}
+                    </div>;
+                    if (even) {
+                        evenFormInputFields.push(inputField);
+                    } else {
+                        oddFormInputFields.push(inputField);
+                    }
+                    even = !even;
+                })
+        }
 
         return (
             <React.Fragment>
@@ -116,86 +204,10 @@ class TemplateRunTab extends React.Component {
                     closeModal={() => this.setState({failed: false})}
                 />
                 <Form onSubmit={this.runSingleTemplate}>
-                    {Object.keys(this.variableDefinitions)
-                        .filter(key => this.variableDefinitions[key] !== undefined)
-                        .map(key => {
-                            const item = this.variableDefinitions[key];
-                            const tagId = revisedRandId();
-                            let formControl;
-                            const name = item.name ? item.name : item;
-                            const formControlProps = {
-                                name,
-                                value: this.runConfiguration[name],
-                                onChange: this.handleVariableChange
-                            };
-                            let validationMessage;
-
-                            if (item.allowedValuesList && item.allowedValuesList.length !== 0) {
-                                formControl = <FormSelect id={tagId}
-                                                          {...formControlProps}
-                                >
-                                    {item.allowedValuesList.map(option => <option
-                                        key={`template-run-variable-${name}-select-${option}`}
-                                        value={option}
-                                    >
-                                        {option}
-                                    </option>)}
-                                </FormSelect>;
-                            } else {
-                                if (item.required && (!formControlProps.value || formControlProps.value.trim() === '')) {
-                                    validationMessage = <I18n name={'validation.requiredField'}/>;
-                                } else if (item.type === 'INT' && isNaN(formControlProps.value)) {
-                                    validationMessage = <I18n name={'validation.numberExpected'}/>;
-                                } else if (item.minimumValue && item.minimumValue > Number(formControlProps.value)) {
-                                    validationMessage =
-                                        <I18n name={'validation.numberMustBeHigher'} params={[item.minimumValue]}/>;
-                                } else if (item.maximumValue && item.maximumValue < Number(formControlProps.value)) {
-                                    validationMessage =
-                                        <I18n name={'validation.numberMustBeLower'} params={[item.maximumValue]}/>;
-                                }
-
-                                if (validationMessage) {
-                                    valid = false;
-                                    formControlProps.invalid = true;
-                                } else {
-                                    formControlProps.valid = true;
-                                }
-
-                                if (item.minimumValue) {
-                                    formControlProps.min = item.minimumValue;
-                                }
-
-                                if (item.maximumValue) {
-                                    formControlProps.max = item.maximumValue;
-                                }
-
-                                if (item.type === 'INT') {
-                                    item.type = 'number';
-                                }
-                                var {fieldLength, ...other} = formControlProps;
-                                const type = (item.type === 'STRING') ? 'text' : item.type;
-                                formControl = <input type={type} id={tagId} className={'form-control form-control-sm'}
-                                                     {...other}
-                                />;
-                            }
-                            let tooltip = item.description ?
-                            <UncontrolledTooltip placement={'top'} target={tagId}>
-                                {item.description}
-                            </UncontrolledTooltip> : null;
-                            let validation = validationMessage ?
-                                <div className="invalid-feedback">
-                                    {validationMessage}
-                                </div> : null;
-                            return <React.Fragment><FormRow key={`template-run-variable-${name}`}>
-                                <div className="form-group col-sm-6">
-                                    <label className={'col-form-label-sm'} htmlFor={tagId}>{name}</label>
-                                    {formControl}
-                                    {validation}
-                                    {tooltip}
-                                </div>
-                            </FormRow>
-                            </React.Fragment>
-                        })}
+                    {oddFormInputFields.map((field, index) => {
+                        return <FormRow key={revisedRandId()}>{field}
+                            {evenFormInputFields[index]}</FormRow>
+                    })}
                     <FormButton
                         bsStyle={'primary'}
                         type={'submit'}
@@ -206,16 +218,6 @@ class TemplateRunTab extends React.Component {
                 </Form>
             </React.Fragment>
         );
-        /*        <FormGroup>
-                    <FormLabel length={3} htmlFor={forId}>
-                        {name}
-                    </FormLabel>
-                    <FormField length={9} hint={item.description ? item.description : ''}
-                               validationMessage={validationMessage}>
-                        {formControl}
-                    </FormField>
-                </FormGroup>*/
-
     }
 }
 
