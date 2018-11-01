@@ -144,10 +144,13 @@ label.custom-control-label {
 	height: 40px
 }
 
+.form-group label {
+    margin-bottom: 0px;
+}
+
 .btn + .btn {
 	margin-left: 10px;
 }
-
 
 /* Tabs */
 
