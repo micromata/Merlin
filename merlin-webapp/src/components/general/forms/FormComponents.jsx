@@ -28,6 +28,25 @@ FormGroup.defaultProps = {
     children: null
 };
 
+const FormRow = (props) => {
+    const {className, ...other} = props;
+    return (
+        <div className={classNames('form-row', className)}
+             {...other}
+        >
+            {props.children}
+        </div>
+    );
+}
+
+FormGroup.propTypes = {
+    children: PropTypes.node,
+    className: PropTypes.string
+};
+
+FormGroup.defaultProps = {
+    children: null
+};
 
 const FormLabel = (props) => {
     const {className, i18nKey, length, ...other} = props;
@@ -274,5 +293,6 @@ export {
     FormCheckbox,
     FormLabelInputField,
     FormFieldset,
-    FormButton
+    FormButton,
+    FormRow
 };

@@ -1,11 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
-import {Form} from 'reactstrap';
+import {Form, UncontrolledTooltip} from 'reactstrap';
 import {saveTemplateRunConfiguration} from '../../../actions';
-import {getResponseHeaderFilename, getRestServiceUrl} from '../../../utilities/global';
+import {getResponseHeaderFilename, getRestServiceUrl, revisedRandId} from '../../../utilities/global';
 import downloadFile from '../../../utilities/download';
-import {FormButton, FormInput, FormLabelField, FormSelect} from '../../general/forms/FormComponents';
+import {
+    FormButton, FormField,
+    FormGroup,
+    FormInput, FormLabel,
+    FormLabelField,
+    FormRow,
+    FormSelect
+} from '../../general/forms/FormComponents';
 import I18n from "../../general/translation/I18n";
 import LoadingOverlay from '../../general/loading/LoadingOverlay';
 import FailedOverlay from '../../general/loading/failed/Overlay';
@@ -101,7 +108,7 @@ class TemplateRunTab extends React.Component {
         return (
             <React.Fragment>
                 <h4><I18n name={'templates.runner.singleRun'}/></h4>
-                <LoadingOverlay active={this.state.running} />
+                <LoadingOverlay active={this.state.running}/>
                 <FailedOverlay
                     title={'Template Run failed'}
                     text={this.state.failed}
@@ -113,6 +120,7 @@ class TemplateRunTab extends React.Component {
                         .filter(key => this.variableDefinitions[key] !== undefined)
                         .map(key => {
                             const item = this.variableDefinitions[key];
+                            const tagId = revisedRandId();
                             let formControl;
                             const name = item.name ? item.name : item;
                             const formControlProps = {
@@ -122,14 +130,9 @@ class TemplateRunTab extends React.Component {
                             };
                             let validationMessage;
 
-                            if (typeof item === 'string') {
-                                formControl = <FormInput
-                                    {...formControlProps}
-                                    type={'text'}
-                                />
-                            } else if (item.allowedValuesList && item.allowedValuesList.length !== 0) {
-                                formControl = <FormSelect
-                                    {...formControlProps}
+                            if (item.allowedValuesList && item.allowedValuesList.length !== 0) {
+                                formControl = <FormSelect id={tagId}
+                                                          {...formControlProps}
                                 >
                                     {item.allowedValuesList.map(option => <option
                                         key={`template-run-variable-${name}-select-${option}`}
@@ -139,15 +142,16 @@ class TemplateRunTab extends React.Component {
                                     </option>)}
                                 </FormSelect>;
                             } else {
-
                                 if (item.required && (!formControlProps.value || formControlProps.value.trim() === '')) {
                                     validationMessage = <I18n name={'validation.requiredField'}/>;
                                 } else if (item.type === 'INT' && isNaN(formControlProps.value)) {
                                     validationMessage = <I18n name={'validation.numberExpected'}/>;
                                 } else if (item.minimumValue && item.minimumValue > Number(formControlProps.value)) {
-                                    validationMessage = <I18n name={'validation.numberMustBeHigher'} params={[item.minimumValue]}/>;
+                                    validationMessage =
+                                        <I18n name={'validation.numberMustBeHigher'} params={[item.minimumValue]}/>;
                                 } else if (item.maximumValue && item.maximumValue < Number(formControlProps.value)) {
-                                    validationMessage = <I18n name={'validation.numberMustBeLower'} params={[item.maximumValue]}/>;
+                                    validationMessage =
+                                        <I18n name={'validation.numberMustBeLower'} params={[item.maximumValue]}/>;
                                 }
 
                                 if (validationMessage) {
@@ -169,22 +173,28 @@ class TemplateRunTab extends React.Component {
                                     item.type = 'number';
                                 }
                                 var {fieldLength, ...other} = formControlProps;
-                                formControl = <FormInput
-                                    {...other}
-                                    type={item.type}
+                                const type = (item.type === 'STRING') ? 'text' : item.type;
+                                formControl = <input type={type} id={tagId} className={'form-control form-control-sm'}
+                                                     {...other}
                                 />;
                             }
-
-                            return <FormLabelField
-                                label={name}
-                                labelLength={3}
-                                fieldLength={9}
-                                key={`template-run-variable-${name}`}
-                                hint={item.description ? item.description : ''}
-                                validationMessage={validationMessage}
-                            >
-                                {formControl}
-                            </FormLabelField>;
+                            let tooltip = item.description ?
+                            <UncontrolledTooltip placement={'top'} target={tagId}>
+                                {item.description}
+                            </UncontrolledTooltip> : null;
+                            let validation = validationMessage ?
+                                <div className="invalid-feedback">
+                                    {validationMessage}
+                                </div> : null;
+                            return <React.Fragment><FormRow key={`template-run-variable-${name}`}>
+                                <div className="form-group col-sm-6">
+                                    <label className={'col-form-label-sm'} htmlFor={tagId}>{name}</label>
+                                    {formControl}
+                                    {validation}
+                                    {tooltip}
+                                </div>
+                            </FormRow>
+                            </React.Fragment>
                         })}
                     <FormButton
                         bsStyle={'primary'}
@@ -196,6 +206,16 @@ class TemplateRunTab extends React.Component {
                 </Form>
             </React.Fragment>
         );
+        /*        <FormGroup>
+                    <FormLabel length={3} htmlFor={forId}>
+                        {name}
+                    </FormLabel>
+                    <FormField length={9} hint={item.description ? item.description : ''}
+                               validationMessage={validationMessage}>
+                        {formControl}
+                    </FormField>
+                </FormGroup>*/
+
     }
 }
 
