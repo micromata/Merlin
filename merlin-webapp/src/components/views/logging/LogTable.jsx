@@ -28,7 +28,7 @@ function LogTable({locationFormat, showStackTrace, entries, search, ascendingOrd
                     <button
                         onClick={toggleOrder}
                         type="button"
-                        className="btn btn-link btn-outline-primary btn-sm"
+                        className="btn btn-outline-primary btn-sm"
                     >
                         {sort}
                     </button>

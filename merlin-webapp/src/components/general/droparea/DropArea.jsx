@@ -1,6 +1,5 @@
 import React from 'react';
 import {IconUpload} from "../IconComponents";
-import './style.css';
 
 class DropArea extends React.Component {
 
