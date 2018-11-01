@@ -1,15 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
-import {Form, UncontrolledTooltip} from 'reactstrap';
+import {Form, FormFeedback, UncontrolledTooltip} from 'reactstrap';
 import {saveTemplateRunConfiguration} from '../../../actions';
-import {getResponseHeaderFilename, getRestServiceUrl, revisedRandId} from '../../../utilities/global';
+import {getResponseHeaderFilename, getRestServiceUrl} from '../../../utilities/global';
 import downloadFile from '../../../utilities/download';
 import {
-    FormButton, FormField,
-    FormGroup,
-    FormInput, FormLabel,
-    FormLabelField,
+    FormButton,
     FormRow,
     FormSelect
 } from '../../general/forms/FormComponents';
@@ -107,95 +104,91 @@ class TemplateRunTab extends React.Component {
         let evenFormInputFields = [];
         let oddFormInputFields = [];
         let even = false;
-        {
-            Object.keys(this.variableDefinitions)
-                .filter(key => this.variableDefinitions[key] !== undefined)
-                .map(key => {
-                    const item = this.variableDefinitions[key];
-                    const tagId = revisedRandId();
-                    let formControl;
-                    const name = item.name ? item.name : item;
-                    const formControlProps = {
-                        name,
-                        value: this.runConfiguration[name],
-                        onChange: this.handleVariableChange
-                    };
-                    let validationMessage;
+        Object.keys(this.variableDefinitions)
+            .filter(key => this.variableDefinitions[key] !== undefined)
+            .map((key, index) => {
+                const item = this.variableDefinitions[key];
+                const tagId = `e${index}`;
+                let formControl;
+                const name = item.name ? item.name : item;
+                const formControlProps = {
+                    name,
+                    value: this.runConfiguration[name],
+                    onChange: this.handleVariableChange
+                };
+                let validationMessage;
 
-                    if (item.allowedValuesList && item.allowedValuesList.length !== 0) {
-                        formControl = <FormSelect id={tagId}
-                                                  {...formControlProps}
+                if (item.allowedValuesList && item.allowedValuesList.length !== 0) {
+                    formControl = <FormSelect id={tagId} name={name}
+                                              {...formControlProps}
+                    >
+                        {item.allowedValuesList.map(option => <option
+                            key={`template-run-variable-${name}-select-${option}`}
+                            value={option}
                         >
-                            {item.allowedValuesList.map(option => <option
-                                key={`template-run-variable-${name}-select-${option}`}
-                                value={option}
-                            >
-                                {option}
-                            </option>)}
-                        </FormSelect>;
-                    } else {
-                        if (item.required && (!formControlProps.value || formControlProps.value.trim() === '')) {
-                            validationMessage = <I18n name={'validation.requiredField'}/>;
-                        } else if (item.type === 'INT' && isNaN(formControlProps.value)) {
-                            validationMessage = <I18n name={'validation.numberExpected'}/>;
-                        } else if (item.minimumValue && item.minimumValue > Number(formControlProps.value)) {
-                            validationMessage =
-                                <I18n name={'validation.numberMustBeHigher'} params={[item.minimumValue]}/>;
-                        } else if (item.maximumValue && item.maximumValue < Number(formControlProps.value)) {
-                            validationMessage =
-                                <I18n name={'validation.numberMustBeLower'} params={[item.maximumValue]}/>;
-                        }
-
-                        if (validationMessage) {
-                            valid = false;
-                            formControlProps.invalid = true;
-                        } else {
-                            formControlProps.valid = true;
-                        }
-
-                        if (item.minimumValue) {
-                            formControlProps.min = item.minimumValue;
-                        }
-
-                        if (item.maximumValue) {
-                            formControlProps.max = item.maximumValue;
-                        }
-
-                        if (item.type === 'INT') {
-                            item.type = 'number';
-                        }
-                        var {fieldLength, ...other} = formControlProps;
-                        const type = (item.type === 'STRING') ? 'text' : item.type;
-                        formControl = <input type={type} id={tagId} className={'form-control form-control-sm'}
-                                             {...other}
-                        />;
+                            {option}
+                        </option>)}
+                    </FormSelect>;
+                } else {
+                    if (item.required && (!formControlProps.value || formControlProps.value.trim() === '')) {
+                        validationMessage = <I18n name={'validation.requiredField'}/>;
+                    } else if (item.type === 'INT' && isNaN(formControlProps.value)) {
+                        validationMessage = <I18n name={'validation.numberExpected'}/>;
+                    } else if (item.minimumValue && item.minimumValue > Number(formControlProps.value)) {
+                        validationMessage =
+                            <I18n name={'validation.numberMustBeHigher'} params={[item.minimumValue]}/>;
+                    } else if (item.maximumValue && item.maximumValue < Number(formControlProps.value)) {
+                        validationMessage =
+                            <I18n name={'validation.numberMustBeLower'} params={[item.maximumValue]}/>;
                     }
-                    const tooltip = item.description ?
-                        <UncontrolledTooltip placement={'top'} target={tagId}>
-                            {item.description}
-                        </UncontrolledTooltip> : null;
-                    const validation = validationMessage ?
-                        <div className="invalid-feedback">
-                            {validationMessage}
-                        </div> : null;
-                    const inputField = <div className="form-group col-sm-6">
-                        <label className={'col-form-label-sm'} htmlFor={tagId}>{name}</label>
-                        {formControl}
-                        {validation}
-                        {tooltip}
-                    </div>;
-                    if (even) {
-                        evenFormInputFields.push(inputField);
+
+                    if (validationMessage) {
+                        valid = false;
+                        formControlProps.invalid = 'true';
                     } else {
-                        oddFormInputFields.push(inputField);
+                        formControlProps.valid = 'true';
                     }
-                    even = !even;
-                })
-        }
+
+                    if (item.minimumValue) {
+                        formControlProps.min = item.minimumValue;
+                    }
+
+                    if (item.maximumValue) {
+                        formControlProps.max = item.maximumValue;
+                    }
+
+                    if (item.type === 'INT') {
+                        item.type = 'number';
+                    }
+                    var {fieldLength, ...other} = formControlProps;
+                    const type = (item.type === 'STRING') ? 'text' : item.type;
+                    formControl = <input type={type} id={tagId} name={name} className={'form-control form-control-sm'}
+                                         {...other}
+                    />;
+                }
+                const tooltip = item.description ?
+                    <UncontrolledTooltip placement={'top'} target={tagId}>
+                        {item.description}
+                    </UncontrolledTooltip> : null;
+                const validation = validationMessage ?
+                    <FormFeedback>{validationMessage}</FormFeedback> : null;
+                const inputField = <div className="form-group col-sm-6">
+                    <label className={'col-form-label-sm'} htmlFor={tagId}>{name}</label>
+                    {formControl}
+                    {validation}
+                    {tooltip}
+                </div>;
+                if (even) {
+                    evenFormInputFields.push(inputField);
+                } else {
+                    oddFormInputFields.push(inputField);
+                }
+                even = !even;
+                return null;
+            })
 
         return (
             <React.Fragment>
-                <h4><I18n name={'templates.runner.singleRun'}/></h4>
                 <LoadingOverlay active={this.state.running}/>
                 <FailedOverlay
                     title={'Template Run failed'}
@@ -203,9 +196,9 @@ class TemplateRunTab extends React.Component {
                     active={this.state.failed}
                     closeModal={() => this.setState({failed: false})}
                 />
-                <Form onSubmit={this.runSingleTemplate}>
+                <Form onSubmit={this.runSingleTemplate} was-validated={'true'}>
                     {oddFormInputFields.map((field, index) => {
-                        return <FormRow key={revisedRandId()}>{field}
+                        return <FormRow key={`template-run-variable-${index}`}>{field}
                             {evenFormInputFields[index]}</FormRow>
                     })}
                     <FormButton
