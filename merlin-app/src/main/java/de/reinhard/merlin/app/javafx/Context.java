@@ -3,8 +3,7 @@ package de.reinhard.merlin.app.javafx;
 import de.reinhard.merlin.UTF8ResourceBundleControl;
 import de.reinhard.merlin.app.ConfigurationHandler;
 import de.reinhard.merlin.app.Languages;
-import de.reinhard.merlin.app.user.UserData;
-import de.reinhard.merlin.app.user.UserUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -65,17 +64,11 @@ public class Context {
 
     Context() {
         String lang = ConfigurationHandler.getInstance().getConfiguration().getServerLanguage();
-        if (lang == null) {
-            UserData userData = UserUtils.getUser();
-            // Trying to get the locale from the request user:
-            if (userData != null) {
-                locale = userData.getLocale();
-                if (locale != null) {
-                    return;
-                }
-            }
+        if (StringUtils.isNotBlank(lang)) {
+            locale = Languages.asLocale(lang, true);
+        } else {
+            locale = Locale.getDefault();
         }
-        locale = Languages.asLocale(lang, true);
         ResourceBundle.Control utf8Control = new UTF8ResourceBundleControl();
         resourceBundle = ResourceBundle.getBundle(BUNDLE_NAME, locale, utf8Control);
     }

@@ -8,7 +8,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
@@ -26,6 +28,7 @@ public class ConfigurationHandler {
     private Preferences preferences;
     private Configuration configuration = new Configuration();
     private List<ConfigurationListener> configurationListeners = new ArrayList<>();
+    private Set<String> extraPreferences = new HashSet<>();
 
     /**
      * Only for test case.
@@ -107,10 +110,12 @@ public class ConfigurationHandler {
      * @param value The value to store. If null, any previous stored value under the given key will be removed.
      */
     public void save(String key, String value) {
+        String extraKey = "extra." + key;
         if (StringUtils.isEmpty(value)) {
-            preferences.remove(key);
+            preferences.remove(extraKey);
         } else {
-            preferences.put("extra." + key, value);
+            preferences.put(extraKey, value);
+            extraPreferences.add(extraKey);
         }
         try {
             preferences.flush();
@@ -123,7 +128,9 @@ public class ConfigurationHandler {
      * @param key Gets own property saved with {@link #save()}.
      */
     public String get(String key, String defaultValue) {
-        return preferences.get("extra." + key, defaultValue);
+        String extraKey = "extra." + key;
+        extraPreferences.add(extraKey);
+        return preferences.get(extraKey, defaultValue);
     }
 
     private void notifyListeners(boolean force) {
@@ -140,6 +147,9 @@ public class ConfigurationHandler {
         preferences.remove(LANGUAGE_PREF);
         preferences.remove(TEMPLATES_DIRS);
         preferences.remove(SHOW_TEST_DATA_PREF);
+        for(String extraKey : extraPreferences) {
+            preferences.remove(extraKey);
+        }
         try {
             preferences.flush();
         } catch (BackingStoreException ex) {
