@@ -62,7 +62,6 @@ public class ConfigurationHandler {
 
     public void load() {
         configuration.setPort(preferences.getInt(WEBSERVER_PORT_PREF, WEBSERVER_PORT_DEFAULT));
-        configuration.setServerLanguage(preferences.get(LANGUAGE_PREF, LANGUAGE_DEFAULT));
         configuration.setShowTestData(preferences.getBoolean(SHOW_TEST_DATA_PREF, SHOW_TEST_DATA_PREF_DEFAULT));
         String json = preferences.get(TEMPLATES_DIRS, null);
         if (json != null) {
@@ -84,10 +83,6 @@ public class ConfigurationHandler {
         log.info("Saving configuration to user prefs.");
         preferences.putInt(WEBSERVER_PORT_PREF, configuration.getPort());
         preferences.putBoolean(SHOW_TEST_DATA_PREF, configuration.isShowTestData());
-        if (configuration.getServerLanguage() != null)
-            preferences.put(LANGUAGE_PREF, configuration.getServerLanguage());
-        else
-            preferences.remove(LANGUAGE_PREF);
         if (CollectionUtils.isNotEmpty(configuration.getTemplatesDirs())) {
             String json = JsonUtils.toJson(configuration.getTemplatesDirs());
             preferences.put(TEMPLATES_DIRS, json);
@@ -110,12 +105,11 @@ public class ConfigurationHandler {
      * @param value The value to store. If null, any previous stored value under the given key will be removed.
      */
     public void save(String key, String value) {
-        String extraKey = "extra." + key;
         if (StringUtils.isEmpty(value)) {
-            preferences.remove(extraKey);
+            preferences.remove(key);
         } else {
-            preferences.put(extraKey, value);
-            extraPreferences.add(extraKey);
+            preferences.put(key, value);
+            extraPreferences.add(key);
         }
         try {
             preferences.flush();
@@ -128,9 +122,8 @@ public class ConfigurationHandler {
      * @param key Gets own property saved with {@link #save()}.
      */
     public String get(String key, String defaultValue) {
-        String extraKey = "extra." + key;
-        extraPreferences.add(extraKey);
-        return preferences.get(extraKey, defaultValue);
+        extraPreferences.add(key);
+        return preferences.get(key, defaultValue);
     }
 
     private void notifyListeners(boolean force) {

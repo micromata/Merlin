@@ -3,7 +3,6 @@ package de.reinhard.merlin.app.javafx;
 import de.reinhard.merlin.UTF8ResourceBundleControl;
 import de.reinhard.merlin.app.ConfigurationHandler;
 import de.reinhard.merlin.app.Languages;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,11 +62,20 @@ public class Context {
     }
 
     Context() {
-        String lang = ConfigurationHandler.getInstance().getConfiguration().getServerLanguage();
-        if (StringUtils.isNotBlank(lang)) {
-            locale = Languages.asLocale(lang, true);
+        // Install4j:
+        // Installer -> Screens & Actions -> Installation -> + (Add action)
+        // Action: Set a key in the Java preference store
+        //         Package name:    de.micromata.merlin
+        //         Key:             language
+        //         Value:           ${installer:sys.languageId}
+        //         Preference root: User specific
+        String language = ConfigurationHandler.getInstance().get("language", null);
+        if (language != null) {
+            locale = Languages.asLocale(language, true);
+            log.info("Using the language defined by the installer (user's preferences): code=" + language + ", locale=" + locale);
         } else {
             locale = Locale.getDefault();
+            log.info("Using the default language of the server host: " + locale);
         }
         ResourceBundle.Control utf8Control = new UTF8ResourceBundleControl();
         resourceBundle = ResourceBundle.getBundle(BUNDLE_NAME, locale, utf8Control);

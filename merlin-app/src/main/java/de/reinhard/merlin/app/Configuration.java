@@ -1,6 +1,5 @@
 package de.reinhard.merlin.app;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.beans.Transient;
@@ -12,7 +11,6 @@ public class Configuration {
     private final static String[] SUPPORTED_LANGUAGES = {"en", "de"};
 
     private int port;
-    private String serverLanguage;
     private boolean showTestData = true;
     private List<ConfigurationTemplatesDir> templatesDirs;
     private boolean templatesDirModified = false;
@@ -36,17 +34,6 @@ public class Configuration {
 
     public void setPort(int port) {
         this.port = port;
-    }
-
-    public String getServerLanguage() {
-        return serverLanguage;
-    }
-
-    public void setServerLanguage(String serverLanguage) {
-        if (serverLanguage == null || !ArrayUtils.contains(SUPPORTED_LANGUAGES, serverLanguage))
-            this.serverLanguage = null;
-        else
-            this.serverLanguage = serverLanguage;
     }
 
     /**
@@ -88,7 +75,6 @@ public class Configuration {
     }
 
     public void copyFrom(Configuration other) {
-        setServerLanguage(other.serverLanguage);
         this.port = other.port;
         this.showTestData = other.showTestData;
         if (!Objects.equals(this.templatesDirs, other.templatesDirs)) {

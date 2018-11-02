@@ -27,9 +27,6 @@ public class ConfigurationRest {
     public String getConfig(@QueryParam("prettyPrinter") boolean prettyPrinter) {
         Configuration config = new Configuration();
         config.copyFrom(ConfigurationHandler.getInstance().getConfiguration());
-        if (config.getServerLanguage() == null) {
-            config.setServerLanguage("default");
-        }
         String json = JsonUtils.toJson(config, prettyPrinter);
         return json;
     }
