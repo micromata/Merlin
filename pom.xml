@@ -12,7 +12,7 @@
     <packaging>pom</packaging>
 
     <properties>
-        <revision>0.8-SNAPSHOT</revision>
+        <revision>0.8</revision>
         <skip.assembly>true</skip.assembly>
         <skip.site>true</skip.site>
     </properties>
