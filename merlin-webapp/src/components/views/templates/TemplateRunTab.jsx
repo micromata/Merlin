@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
-import {Form, FormFeedback, UncontrolledTooltip} from 'reactstrap';
+import {Form, FormFeedback, Input, UncontrolledTooltip} from 'reactstrap';
 import {saveTemplateRunConfiguration} from '../../../actions';
 import {getResponseHeaderFilename, getRestServiceUrl} from '../../../utilities/global';
 import downloadFile from '../../../utilities/download';
@@ -162,7 +162,7 @@ class TemplateRunTab extends React.Component {
                     }
                     var {fieldLength, ...other} = formControlProps;
                     const type = (item.type === 'STRING') ? 'text' : item.type;
-                    formControl = <input type={type} id={tagId} name={name} className={'form-control form-control-sm'}
+                    formControl = <Input type={type} id={tagId} name={name} className={'form-control form-control-sm'}
                                          {...other}
                     />;
                 }
