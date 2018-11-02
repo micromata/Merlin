@@ -26,6 +26,6 @@
             <arg line="-c 'asciidoctor -a toc -a version=${version} ${file}.txt'" />
         </exec>
         <mkdir dir="${merlin-webapp-docs}" />
-        <move file="${file}.html" todir="${merlin-webapp-docs}" />
+        <copy file="${file}.html" todir="${merlin-webapp-docs}" />
     </target>
 </project>
