@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import {Form, FormFeedback, Input, UncontrolledTooltip} from 'reactstrap';
 import {saveTemplateRunConfiguration} from '../../../actions';
 import {getResponseHeaderFilename, getRestServiceUrl} from '../../../utilities/global';
-import downloadFile from '../../../utilities/download';
+import fileDownload from 'js-file-download';
 import {
     FormButton,
     FormRow,
@@ -60,7 +60,7 @@ class TemplateRunTab extends React.Component {
                 this.setState({
                     running: false
                 });
-                downloadFile(blob, filename)
+                fileDownload(blob, filename)
             })
             .catch(error => {
                 this.setState({

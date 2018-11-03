@@ -2,7 +2,7 @@ import React from 'react';
 import {PageHeader} from '../general/BootstrapComponents';
 import DropArea from '../general/droparea/DropArea';
 import {getResponseHeaderFilename, getRestServiceUrl} from '../../utilities/global';
-import downloadFile from '../../utilities/download';
+import fileDownload from 'js-file-download';
 import LoadingOverlay from '../general/loading/LoadingOverlay';
 
 class FileUploadView extends React.Component {
@@ -39,7 +39,7 @@ class FileUploadView extends React.Component {
                 filename = getResponseHeaderFilename(response.headers.get('Content-Disposition'));
                 return response.blob();
             })
-            .then(blob => downloadFile(blob, filename))
+            .then(blob => fileDownload(blob, filename))
             .catch(alert);
     }
 

@@ -3,7 +3,7 @@ import {NavLink as ReactRouterNavLink} from 'react-router-dom';
 import {Collapse, Nav, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink, UncontrolledTooltip} from 'reactstrap';
 import DropArea from './droparea/DropArea';
 import {getResponseHeaderFilename, getRestServiceUrl} from '../../utilities/global';
-import downloadFile from '../../utilities/download';
+import fileDownload from 'js-file-download';
 import LoadingOverlay from './loading/LoadingOverlay';
 import FailedOverlay from './loading/failed/Overlay';
 import I18n from "./translation/I18n";
@@ -69,7 +69,7 @@ class Menu extends React.Component {
                 filename = getResponseHeaderFilename(response.headers.get('Content-Disposition'));
                 return response.blob();
             })
-            .then(blob => downloadFile(blob, filename))
+            .then(blob => fileDownload(blob, filename))
             .catch(error => {
                 this.setState({
                     loading: false,

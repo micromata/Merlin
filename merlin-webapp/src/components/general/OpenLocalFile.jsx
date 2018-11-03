@@ -1,11 +1,9 @@
 import React from 'react';
 import {Button} from 'reactstrap';
-import {getResponseHeaderFilename, getRestServiceUrl} from "../../utilities/global";
-import downloadFile from "../../utilities/download";
+import {getRestServiceUrl} from "../../utilities/global";
 
 class OpenLocalFile extends React.Component {
     openFile() {
-        let filename;
         fetch(getRestServiceUrl('files/open-local-file', {filepath: this.props.filepath}), {
             method: "GET",
             dataType: "text",

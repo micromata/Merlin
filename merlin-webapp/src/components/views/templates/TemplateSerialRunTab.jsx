@@ -3,7 +3,7 @@ import {Button} from 'reactstrap';
 import {IconDownload} from '../../general/IconComponents';
 import {getResponseHeaderFilename, getRestServiceUrl} from '../../../utilities/global';
 import DropArea from '../../general/droparea/DropArea';
-import downloadFile from '../../../utilities/download';
+import fileDownload from 'js-file-download';
 import {uploadFile} from '../../../actions';
 import connect from 'react-redux/es/connect/connect';
 import I18n from "../../general/translation/I18n";
@@ -39,7 +39,7 @@ class TemplateSerialRunTab extends React.Component {
                 this.setState({
                     loading: false
                 });
-                downloadFile(blob, filename);
+                fileDownload(blob, filename);
             })
             .catch(error => {
                 this.setState({
@@ -79,7 +79,7 @@ class TemplateSerialRunTab extends React.Component {
             })
             .then(blob => {
                 this.setState({loading: false});
-                downloadFile(blob, filename);
+                fileDownload(blob, filename);
             })
             .catch(error => {
                 this.setState({

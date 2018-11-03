@@ -1,7 +1,7 @@
 import React from 'react';
 import {PageHeader} from '../../general/BootstrapComponents';
 import {getRestServiceUrl, getResponseHeaderFilename} from "../../../utilities/global";
-import downloadFile from "../../../utilities/download";
+import fileDownload from 'js-file-download';
 
 class RestUrlLink extends React.Component {
     render() {
@@ -79,7 +79,7 @@ class RestServices extends React.Component {
                         //this.setState({downloadFilename: filename});
                         return response.blob();
                     })
-                    .then(blob => downloadFile(blob, filename));
+                    .then(blob => fileDownload(blob, filename));
             })
             .catch((error) => {
                 console.log(error, "Oups, what's happened?")
