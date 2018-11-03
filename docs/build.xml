@@ -15,6 +15,7 @@
         </antcall>
         <copy todir="${merlin-webapp-docs}">
             <fileset dir=".">
+                <include name="**/*.jpg"/>
                 <include name="**/*.png"/>
             </fileset>
         </copy>

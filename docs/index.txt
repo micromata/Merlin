@@ -12,6 +12,25 @@ Congratulations. With Merlin Runner you have started a smart assistant for your 
 
 :sectnums:
 
+== Installation
+=== Download installer
+You may download the latest installer version ready to run: +
+[.text-center]
+https://sourceforge.net/projects/merlinrunner/[Merlin on SourceForge^] +
+[.text-left]
+Currently only MacOS X is supported, Windows and Linux is coming soon.
+
+=== Start the Desktop application
+After installation you may start Merlin:
+
+.The Merlin server (as Desktop application).
+[caption="Figure 1: "]
+image::images/Merlin-StartScreen.jpg[Merlin_Startscreen]
+
+
+
+== First steps
+
 == Templates
 
 === Template files
@@ -58,12 +77,12 @@ Template files (.docx) may contain following expressions supported by Merlin:
 ====
 
 .Word template and its result.
-[caption="Figure 1: "]
-image::WordTemplate-and-Result.png[Template_before_after]
+[caption="Figure 2: "]
+image::images/WordTemplate-and-Result.png[Template_before_after]
 
 
-== Template definitions
-=== Variable types
+=== Template definitions
+==== Variable types
 With an optional template definition file (Excel) you may declare your variables (such as numbers, dates, strings etc.):
 [%autowidth, frame="topbot",options="header"]
 |=======
@@ -73,7 +92,7 @@ With an optional template definition file (Excel) you may declare your variables
 |date|The variable represents a date.
 |=======
 
-=== Variable properties
+==== Variable properties
 You may also define properties of a variable:
 [%autowidth, frame="topbot",options="header"]
 |=======
@@ -85,7 +104,7 @@ You may also define properties of a variable:
 |maximum|The maximal allowed value of the variable.
 |=======
 
-=== Dependent variables
+==== Dependent variables
 You may define dependent variables. Dependent variables depends on the value of their master variable. An use-case is e. g. the variable *gender* as master variable
 and pronouns as dependent variables e. g. for contracts or letters (+{Mr_Mrs}+, +${his_her}+ etc.).
 
@@ -98,3 +117,11 @@ reading of the Word templates.
 |Depends on| The name of the master variable this variable depends on.
 |mapping|A mapping as a comma seperated value list. The length of this list should match the length of the values of the master variable. There will be a 1:1 mapping.
 |=======
+
+== For developers
+=== Developers are welcome!
+The full source code of Merlin is hosted by Github:
+[.text-center]
+https://github.com/micromata/MerlinRunner/[Merlin on GitHub^] +
+[.text-left]
+
