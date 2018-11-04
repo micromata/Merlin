@@ -33,6 +33,8 @@ The desktop application contains the whole server including all the magic templa
 By clicking on the button of the desktop application a web browser will be opened. You can do everything through this
 web server (working with templates as well as administration stuff such as looking in log files or configuration of the server.
 
+ToDo: Technologies, Java embedded, platforms, ...
+
 == First steps
 
 == Templates

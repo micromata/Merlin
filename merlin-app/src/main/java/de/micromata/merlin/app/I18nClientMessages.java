@@ -51,6 +51,6 @@ public class I18nClientMessages {
      * @see MessageFormat#format(Object)
      */
     static String prepareForReactClient(String str) {
-        return MessageFormat.format(str, params);
+        return MessageFormat.format(str, (Object)params);
     }
 }
