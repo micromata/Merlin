@@ -41,17 +41,19 @@
             <version>${revision}</version>
         </dependency>
 
-        <!--dependency>
+        <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
-            <version>11</version>
-        </dependency-->
+            <version>11.0.1-ea+1</version>
+            <scope>provided</scope>
+        </dependency>
         <!-- https://mvnrepository.com/artifact/org.openjfx/javafx-fxml -->
-        <!--dependency>
+        <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
-            <version>11</version>
-        </dependency-->
+            <version>11.0.1-ea+1</version>
+            <scope>provided</scope>
+        </dependency>
 
 
         <!-- https://mvnrepository.com/artifact/com.install4j/install4j-runtime -->
