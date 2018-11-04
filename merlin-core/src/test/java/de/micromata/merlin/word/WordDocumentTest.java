@@ -59,7 +59,7 @@ public class WordDocumentTest {
         variables.put("endlessLoop3", "....................................... ${endlessLoop} ...");
 
         XWPFDocument doc = new XWPFDocument();
-        List<Entry> exptected = new ArrayList<>();
+        List<WordDocumentTestEntry> exptected = new ArrayList<>();
         add(exptected, TestHelper.createParagraph(doc, "1: Hello ${var}."),
                 new String[]{"1: Hello world."});
         add(exptected, TestHelper.createParagraph(doc, "2: Hello ${var}"),
@@ -93,7 +93,7 @@ public class WordDocumentTest {
         WordDocument word = new WordDocument(doc);
         word.process(variables);
         int no = 0;
-        for (Entry entry : exptected) {
+        for (WordDocumentTestEntry entry : exptected) {
             TestHelper.assertRuns(entry.par, no++, entry.expected);
         }
         /*
@@ -113,7 +113,7 @@ public class WordDocumentTest {
         variables.put("endlessLoop3", "....................................... ${endlessLoop} ...");
 
         XWPFDocument doc = new XWPFDocument();
-        List<Entry> exptected = new ArrayList<>();
+        List<WordDocumentTestEntry> exptected = new ArrayList<>();
         add(exptected, TestHelper.createParagraph(doc, "1: Hello {if var = 'world'}Super world{endif}{if var != 'world'}${world}{endif}."),
                 new String[]{"1: Hello Super world."});
         add(exptected, TestHelper.createParagraph(doc, "2: {if counter > 5}We have more than 5 elements: ${counter}{endif}"),
@@ -130,7 +130,7 @@ public class WordDocumentTest {
         WordDocument word = new WordDocument(doc);
         word.process(variables);
         int no = 0;
-        for (Entry entry : exptected) {
+        for (WordDocumentTestEntry entry : exptected) {
             TestHelper.assertRuns(entry.par, no++, entry.expected);
         }
         /*
@@ -141,17 +141,7 @@ public class WordDocumentTest {
         }*/
     }
 
-    private void add(List<Entry> list, XWPFParagraph par, String... expected) {
-        list.add(new Entry(par, expected));
-    }
-
-    private class Entry {
-        XWPFParagraph par;
-        String[] expected;
-
-        Entry(XWPFParagraph par, String... expected) {
-            this.par = par;
-            this.expected = expected;
-        }
+    private void add(List<WordDocumentTestEntry> list, XWPFParagraph par, String... expected) {
+        list.add(new WordDocumentTestEntry(par, expected));
     }
 }
