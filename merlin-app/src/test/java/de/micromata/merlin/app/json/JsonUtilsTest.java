@@ -2,11 +2,11 @@ package de.micromata.merlin.app.json;
 
 import de.micromata.merlin.app.storage.Storage;
 import de.micromata.merlin.app.storage.TestData;
-import de.reinhard.merlin.persistency.PersistencyRegistry;
-import de.reinhard.merlin.word.templating.DependentVariableDefinition;
-import de.reinhard.merlin.persistency.FileDescriptor;
-import de.reinhard.merlin.word.templating.TemplateDefinition;
-import de.reinhard.merlin.word.templating.VariableDefinition;
+import de.micromata.merlin.persistency.PersistencyRegistry;
+import de.micromata.merlin.word.templating.DependentVariableDefinition;
+import de.micromata.merlin.persistency.FileDescriptor;
+import de.micromata.merlin.word.templating.TemplateDefinition;
+import de.micromata.merlin.word.templating.VariableDefinition;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

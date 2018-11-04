@@ -1,6 +1,6 @@
 package de.micromata.merlin.app.logging;
 
-import de.reinhard.merlin.logging.MDCKey;
+import de.micromata.merlin.logging.MDCKey;
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.spi.LocationInfo;

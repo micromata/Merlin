@@ -1,6 +1,6 @@
 package de.micromata.merlin.app.storage;
 
-import de.reinhard.merlin.persistency.templates.DirectoryScanner;
+import de.micromata.merlin.persistency.templates.DirectoryScanner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

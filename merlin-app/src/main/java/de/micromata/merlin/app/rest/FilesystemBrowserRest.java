@@ -2,9 +2,9 @@ package de.micromata.merlin.app.rest;
 
 import de.micromata.merlin.app.javafx.FileSystemBrowser;
 import de.micromata.merlin.app.storage.Storage;
-import de.reinhard.merlin.persistency.FileDescriptor;
-import de.reinhard.merlin.word.templating.Template;
-import de.reinhard.merlin.word.templating.TemplateDefinition;
+import de.micromata.merlin.persistency.FileDescriptor;
+import de.micromata.merlin.word.templating.Template;
+import de.micromata.merlin.word.templating.TemplateDefinition;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

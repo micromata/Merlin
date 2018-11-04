@@ -1,6 +1,6 @@
 package de.micromata.merlin.app;
 
-import de.reinhard.merlin.I18n;
+import de.micromata.merlin.I18n;
 
 import java.util.Locale;
 

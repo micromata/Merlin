@@ -2,7 +2,7 @@ package de.micromata.merlin.app.rest;
 
 import de.micromata.merlin.app.json.JsonUtils;
 import de.micromata.merlin.app.storage.Storage;
-import de.reinhard.merlin.word.templating.Template;
+import de.micromata.merlin.word.templating.Template;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

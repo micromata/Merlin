@@ -31,12 +31,12 @@
 
     <dependencies>
         <dependency>
-            <groupId>de.reinhard</groupId>
+            <groupId>de.micromata.merlin</groupId>
             <artifactId>merlin-core</artifactId>
             <version>${revision}</version>
         </dependency>
         <dependency>
-            <groupId>de.reinhard</groupId>
+            <groupId>de.micromata.merlin</groupId>
             <artifactId>merlin-velocity</artifactId>
             <version>${revision}</version>
         </dependency>

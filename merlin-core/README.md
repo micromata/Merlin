@@ -13,9 +13,9 @@ Merlin core contains the base library supporting:
   for having dynamic content in the result word file. Support of serial letters.
 
 ## Excel validation
-tbd. Refer e. g. de.reinhard.merlin.word.templating.TemplateDefinitionExcelReader as a full example of
+tbd. Refer e. g. TemplateDefinitionExcelReader as a full example of
 reading and validating an excel file.
-Refer e. g.  de.reinhard.merlin.excel.ExcelWorkbookTest for returning Excel files with marked validation
+Refer e. g.  ExcelWorkbookTest for returning Excel files with marked validation
 errors.
 
 ## Templating

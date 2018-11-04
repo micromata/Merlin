@@ -1,7 +1,7 @@
 package de.micromata.merlin.app;
 
-import de.reinhard.merlin.CoreI18n;
-import de.reinhard.merlin.UTF8ResourceBundleControl;
+import de.micromata.merlin.CoreI18n;
+import de.micromata.merlin.UTF8ResourceBundleControl;
 
 import java.text.MessageFormat;
 import java.util.*;

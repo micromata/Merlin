@@ -1,8 +1,8 @@
 package de.micromata.merlin.app.rest;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import de.reinhard.merlin.word.templating.Template;
-import de.reinhard.merlin.word.templating.TemplateDefinition;
+import de.micromata.merlin.word.templating.Template;
+import de.micromata.merlin.word.templating.TemplateDefinition;
 
 import java.util.List;
 
