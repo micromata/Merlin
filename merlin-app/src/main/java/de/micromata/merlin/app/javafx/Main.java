@@ -26,6 +26,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.TimerTask;
 
@@ -85,8 +86,12 @@ public class Main extends Application {
             // Use reflection for avoiding compiling errors on non Mac OS development systems.
             try {
                 Class<?> c = Class.forName("com.apple.eawt.Application");
-                Object application = MethodUtils.invokeStaticMethod(c, "getApplication", (Object[]) null);
-                MethodUtils.invokeMethod(application, "setDockIconImage", image);
+                Method method = c.getMethod("getApplication");
+                method.setAccessible(true);
+                Object application = method.invoke(null);
+                method = application.getClass().getMethod("setDockIconImage", Image.class);
+                method.setAccessible(true);
+                method.invoke(application, image);
             } catch (Exception ex) {
                 log.error("Can't call com.apple.eawt.Application.getApplication().setDockIconImage(image): " + ex.getMessage(), ex);
             }
