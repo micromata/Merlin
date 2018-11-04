@@ -49,3 +49,5 @@ merlin-webapp/public/docs
 .gradle
 merlin-app/build
 merlin-core/build
+merlin-smarthome/build
+merlin-velocity/build

@@ -19,19 +19,21 @@ dependencies {
     compile group: 'org.eclipse.jetty', name: 'jetty-server', version: '9.4.12.v20180830'
     compile group: 'org.eclipse.jetty', name: 'jetty-servlet', version: '9.4.12.v20180830'
     compile group: 'org.eclipse.jetty', name: 'jetty-servlets', version: '9.4.12.v20180830'
-    compile group: 'org.glassfish.jersey.core', name: 'jersey-server', version: '2.25'
-    compile group: 'org.glassfish.jersey.containers', name: 'jersey-container-servlet-core', version: '2.25'
-    compile group: 'org.glassfish.jersey.media', name: 'jersey-media-multipart', version: '2.25'
+    compile group: 'org.glassfish.jersey.containers', name: 'jersey-container-servlet', version: '2.27'
+    compile group: 'org.glassfish.jersey.media', name: 'jersey-media-multipart', version: '2.27'
+    compile group: 'org.glassfish.jersey.media', name: 'jersey-media-json-jackson', version: '2.27'
+    compile group: 'org.glassfish.jersey.inject', name: 'jersey-hk2', version: '2.27'
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.6'
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.9.6'
-    compile group: 'org.glassfish.jersey.media', name: 'jersey-media-json-jackson', version: '2.27'
+    compile group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.1'
+    compile group: 'javax.xml.ws', name: 'jaxws-api', version: '2.3.1'
     compile group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.25'
-    testCompile group: 'org.mockito', name: 'mockito-core', version: '2.21.0'
-    compile"org.openjfx:javafx-base:11.0.1-ea+1:$platform"
+    compile "org.openjfx:javafx-base:11.0.1-ea+1:$platform"
     compile "org.openjfx:javafx-graphics:11.0.1-ea+1:$platform"
     compile "org.openjfx:javafx-controls:11.0.1-ea+1:$platform"
     compile "org.openjfx:javafx-fxml:11.0.1-ea+1:$platform"
 
+    testCompile group: 'org.mockito', name: 'mockito-core', version: '2.21.0'
     compileOnly group: 'com.install4j', name: 'install4j-runtime', version: '7.0.8'
 }
 
