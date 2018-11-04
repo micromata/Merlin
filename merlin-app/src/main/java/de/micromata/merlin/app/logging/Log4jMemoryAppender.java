@@ -33,7 +33,7 @@ public class Log4jMemoryAppender extends AppenderSkeleton {
 
     }
 
-    CircularFifoQueue<LoggingEventData> queue = new CircularFifoQueue(QUEUE_SIZE);
+    CircularFifoQueue<LoggingEventData> queue = new CircularFifoQueue<>(QUEUE_SIZE);
 
     @Override
     protected void append(LoggingEvent event) {
