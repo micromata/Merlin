@@ -1,0 +1,10 @@
+rootProject.name = 'merlin-parent'
+include ':merlin-app'
+include ':merlin-core'
+include ':merlin-velocity'
+include ':merlin-smarthome'
+
+project(':merlin-app').projectDir = "$rootDir/merlin-app" as File
+project(':merlin-core').projectDir = "$rootDir/merlin-core" as File
+project(':merlin-velocity').projectDir = "$rootDir/merlin-velocity" as File
+project(':merlin-smarthome').projectDir = "$rootDir/merlin-smarthome" as File

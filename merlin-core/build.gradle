@@ -1,0 +1,7 @@
+
+description = 'merlin-core'
+dependencies {
+    compile group: 'org.apache.poi', name: 'poi', version:'4.0.0'
+    compile group: 'org.apache.poi', name: 'poi-ooxml', version:'4.0.0'
+    testCompile group: 'org.mockito', name: 'mockito-core', version:'2.21.0'
+}

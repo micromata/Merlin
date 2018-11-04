@@ -1,0 +1,6 @@
+
+description = 'merlin-smarthome'
+dependencies {
+  compile project(':merlin-core')
+  compile project(':merlin-velocity')
+}

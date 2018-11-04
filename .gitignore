@@ -46,3 +46,6 @@ test/test4.docx
 test/test5.docx
 target
 merlin-webapp/public/docs
+.gradle
+merlin-app/build
+merlin-core/build
