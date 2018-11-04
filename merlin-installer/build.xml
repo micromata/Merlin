@@ -36,7 +36,7 @@
         </antcall>
         <antcall target="maven">
             <param name="dir" value=".."/>
-            <param name="target" value="package assembly:single -DskipTests" />
+            <param name="target" value="package assembly:single -Dmaven.test.skip=true" />
         </antcall>
         <!-- cp merlin-app-*-jar-with-dependencies.jar merlin-app.jar -->
         <fileset id="fulljar.filename" dir="${merlin-app}/target/" includes="merlin-app-*-jar-with-dependencies.jar"/>
