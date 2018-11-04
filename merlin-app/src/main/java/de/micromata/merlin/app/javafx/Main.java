@@ -1,13 +1,13 @@
-package de.reinhard.merlin.app.javafx;
+package de.micromata.merlin.app.javafx;
 
-import de.reinhard.merlin.app.RunningMode;
-import de.reinhard.merlin.app.Version;
-import de.reinhard.merlin.app.jetty.JettyServer;
-import de.reinhard.merlin.app.storage.Storage;
-import de.reinhard.merlin.app.updater.AppUpdater;
-import de.reinhard.merlin.app.updater.UpdateInfo;
-import de.reinhard.merlin.app.user.SingleUserManager;
-import de.reinhard.merlin.app.user.UserManager;
+import de.micromata.merlin.app.Version;
+import de.micromata.merlin.app.jetty.JettyServer;
+import de.micromata.merlin.app.storage.Storage;
+import de.micromata.merlin.app.updater.AppUpdater;
+import de.micromata.merlin.app.updater.UpdateInfo;
+import de.micromata.merlin.app.user.UserManager;
+import de.micromata.merlin.app.RunningMode;
+import de.micromata.merlin.app.user.SingleUserManager;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;

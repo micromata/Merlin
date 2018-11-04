@@ -1,4 +1,4 @@
-package de.reinhard.merlin.app;
+package de.micromata.merlin.app;
 
 import org.junit.jupiter.api.Test;
 

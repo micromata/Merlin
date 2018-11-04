@@ -1,10 +1,10 @@
-package de.reinhard.merlin.app.ui.rest;
+package de.micromata.merlin.app.ui.rest;
 
-import de.reinhard.merlin.app.json.JsonUtils;
-import de.reinhard.merlin.app.ui.Form;
-import de.reinhard.merlin.app.ui.FormContainer;
-import de.reinhard.merlin.app.ui.FormLabelField;
-import de.reinhard.merlin.app.ui.FormLabelFieldValueType;
+import de.micromata.merlin.app.json.JsonUtils;
+import de.micromata.merlin.app.ui.Form;
+import de.micromata.merlin.app.ui.FormContainer;
+import de.micromata.merlin.app.ui.FormLabelField;
+import de.micromata.merlin.app.ui.FormLabelFieldValueType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

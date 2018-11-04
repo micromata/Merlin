@@ -1,4 +1,4 @@
-package de.reinhard.merlin.app.logging;
+package de.micromata.merlin.app.logging;
 
 import org.apache.commons.collections4.queue.CircularFifoQueue;
 import org.apache.commons.lang3.StringUtils;

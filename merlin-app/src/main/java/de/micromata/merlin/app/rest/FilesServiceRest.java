@@ -1,4 +1,4 @@
-package de.reinhard.merlin.app.rest;
+package de.micromata.merlin.app.rest;
 
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;

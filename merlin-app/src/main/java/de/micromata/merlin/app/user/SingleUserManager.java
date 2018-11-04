@@ -1,8 +1,8 @@
-package de.reinhard.merlin.app.user;
+package de.micromata.merlin.app.user;
 
-import de.reinhard.merlin.app.ConfigurationHandler;
-import de.reinhard.merlin.app.Languages;
-import de.reinhard.merlin.app.RunningMode;
+import de.micromata.merlin.app.ConfigurationHandler;
+import de.micromata.merlin.app.Languages;
+import de.micromata.merlin.app.RunningMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

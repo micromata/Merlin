@@ -1,7 +1,7 @@
-package de.reinhard.merlin.app.json;
+package de.micromata.merlin.app.json;
 
-import de.reinhard.merlin.app.storage.Storage;
-import de.reinhard.merlin.app.storage.TestData;
+import de.micromata.merlin.app.storage.Storage;
+import de.micromata.merlin.app.storage.TestData;
 import de.reinhard.merlin.persistency.PersistencyRegistry;
 import de.reinhard.merlin.word.templating.DependentVariableDefinition;
 import de.reinhard.merlin.persistency.FileDescriptor;

@@ -1,4 +1,4 @@
-package de.reinhard.merlin.app;
+package de.micromata.merlin.app;
 
 import de.reinhard.merlin.CoreI18n;
 import de.reinhard.merlin.UTF8ResourceBundleControl;
@@ -51,6 +51,6 @@ public class I18nClientMessages {
      * @see MessageFormat#format(Object)
      */
     static String prepareForReactClient(String str) {
-        return MessageFormat.format(str, (Object)params);
+        return MessageFormat.format(str, (Object[])params);
     }
 }

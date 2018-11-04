@@ -1,9 +1,9 @@
-package de.reinhard.merlin.app.rest;
+package de.micromata.merlin.app.rest;
 
-import de.reinhard.merlin.app.json.JsonUtils;
-import de.reinhard.merlin.app.logging.Log4jMemoryAppender;
-import de.reinhard.merlin.app.logging.LogFilter;
-import de.reinhard.merlin.app.logging.LogLevel;
+import de.micromata.merlin.app.json.JsonUtils;
+import de.micromata.merlin.app.logging.Log4jMemoryAppender;
+import de.micromata.merlin.app.logging.LogFilter;
+import de.micromata.merlin.app.logging.LogLevel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -1,10 +1,10 @@
-package de.reinhard.merlin.app.rest;
+package de.micromata.merlin.app.rest;
 
-import de.reinhard.merlin.app.Configuration;
-import de.reinhard.merlin.app.ConfigurationHandler;
-import de.reinhard.merlin.app.json.JsonUtils;
-import de.reinhard.merlin.app.user.UserData;
-import de.reinhard.merlin.app.user.UserManager;
+import de.micromata.merlin.app.ConfigurationHandler;
+import de.micromata.merlin.app.json.JsonUtils;
+import de.micromata.merlin.app.user.UserManager;
+import de.micromata.merlin.app.Configuration;
+import de.micromata.merlin.app.user.UserData;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

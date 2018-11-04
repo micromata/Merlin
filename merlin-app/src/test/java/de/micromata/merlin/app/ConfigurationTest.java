@@ -1,4 +1,4 @@
-package de.reinhard.merlin.app;
+package de.micromata.merlin.app;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.InOrder;
@@ -6,7 +6,6 @@ import org.mockito.Mockito;
 
 import java.util.prefs.Preferences;
 
-import static de.reinhard.merlin.app.ConfigurationHandler.TEMPLATES_DIRS;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -39,14 +38,14 @@ public class ConfigurationTest {
         configurationHandler.save();
 
         InOrder inOrder = Mockito.inOrder(preferences);
-        inOrder.verify(preferences).remove(TEMPLATES_DIRS);
-        inOrder.verify(preferences).remove(TEMPLATES_DIRS);
-        inOrder.verify(preferences).remove(TEMPLATES_DIRS);
-        inOrder.verify(preferences).remove(TEMPLATES_DIRS);
-        inOrder.verify(preferences).put(TEMPLATES_DIRS, "[{\"directory\":\"" + DIR1 + "\",\"recursive\":false}]");
-        inOrder.verify(preferences).put(TEMPLATES_DIRS, "[{\"directory\":\"" + DIR1 + "\",\"recursive\":false},{\"directory\":\"" +
+        inOrder.verify(preferences).remove(ConfigurationHandler.TEMPLATES_DIRS);
+        inOrder.verify(preferences).remove(ConfigurationHandler.TEMPLATES_DIRS);
+        inOrder.verify(preferences).remove(ConfigurationHandler.TEMPLATES_DIRS);
+        inOrder.verify(preferences).remove(ConfigurationHandler.TEMPLATES_DIRS);
+        inOrder.verify(preferences).put(ConfigurationHandler.TEMPLATES_DIRS, "[{\"directory\":\"" + DIR1 + "\",\"recursive\":false}]");
+        inOrder.verify(preferences).put(ConfigurationHandler.TEMPLATES_DIRS, "[{\"directory\":\"" + DIR1 + "\",\"recursive\":false},{\"directory\":\"" +
                 DIR2 + "\",\"recursive\":false}]");
-        inOrder.verify(preferences).put(TEMPLATES_DIRS, "[{\"directory\":\"" + DIR1 + "\",\"recursive\":false},{\"directory\":\"" +
+        inOrder.verify(preferences).put(ConfigurationHandler.TEMPLATES_DIRS, "[{\"directory\":\"" + DIR1 + "\",\"recursive\":false},{\"directory\":\"" +
                 DIR2 + "\",\"recursive\":false},{\"directory\":\"" + DIR3b + "\",\"recursive\":false}]");
         inOrder.verify(preferences).flush();
         inOrder.verifyNoMoreInteractions();
@@ -57,7 +56,7 @@ public class ConfigurationTest {
         Preferences preferences = mock(Preferences.class);
         ConfigurationHandler configurationHandler = new ConfigurationHandler(preferences);
         Configuration configuration = configurationHandler.getConfiguration();
-        when(preferences.get(TEMPLATES_DIRS, null)).thenReturn(null)
+        when(preferences.get(ConfigurationHandler.TEMPLATES_DIRS, null)).thenReturn(null)
                 .thenReturn("[{\"directory\":\"" + DIR1 + "\",\"recursive\":false}]")
                 .thenReturn("[{\"directory\":\"" + DIR1 + "\",\"recursive\":false},{\"directory\":\"" +
                         DIR2 + "\",\"recursive\":false},{\"directory\":\"" + DIR3b + "\",\"recursive\":false}]");

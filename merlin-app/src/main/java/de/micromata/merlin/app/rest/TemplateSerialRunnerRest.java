@@ -1,6 +1,6 @@
-package de.reinhard.merlin.app.rest;
+package de.micromata.merlin.app.rest;
 
-import de.reinhard.merlin.app.storage.Storage;
+import de.micromata.merlin.app.storage.Storage;
 import de.reinhard.merlin.excel.ExcelWorkbook;
 import de.reinhard.merlin.logging.MDCHandler;
 import de.reinhard.merlin.logging.MDCKey;

@@ -1,4 +1,4 @@
-package de.reinhard.merlin.app.updater;
+package de.micromata.merlin.app.updater;
 
 import com.install4j.api.launcher.ApplicationLauncher;
 import com.install4j.api.launcher.Variables;

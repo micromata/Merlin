@@ -1,4 +1,4 @@
-package de.reinhard.merlin.app.rest;
+package de.micromata.merlin.app.rest;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import de.reinhard.merlin.word.templating.Template;

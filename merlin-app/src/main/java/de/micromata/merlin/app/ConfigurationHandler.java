@@ -1,7 +1,7 @@
-package de.reinhard.merlin.app;
+package de.micromata.merlin.app;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import de.reinhard.merlin.app.json.JsonUtils;
+import de.micromata.merlin.app.json.JsonUtils;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;

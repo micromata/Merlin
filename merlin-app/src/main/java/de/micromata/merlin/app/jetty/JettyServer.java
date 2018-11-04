@@ -1,10 +1,10 @@
-package de.reinhard.merlin.app.jetty;
+package de.micromata.merlin.app.jetty;
 
-import de.reinhard.merlin.app.ConfigurationHandler;
-import de.reinhard.merlin.app.RunningMode;
-import de.reinhard.merlin.app.rest.ConfigurationRest;
-import de.reinhard.merlin.app.user.UserFilter;
-import de.reinhard.merlin.app.ui.rest.ConfigurationUIRest;
+import de.micromata.merlin.app.ui.rest.ConfigurationUIRest;
+import de.micromata.merlin.app.ConfigurationHandler;
+import de.micromata.merlin.app.RunningMode;
+import de.micromata.merlin.app.rest.ConfigurationRest;
+import de.micromata.merlin.app.user.UserFilter;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;

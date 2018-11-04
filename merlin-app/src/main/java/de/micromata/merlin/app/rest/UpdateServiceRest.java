@@ -1,8 +1,8 @@
-package de.reinhard.merlin.app.rest;
+package de.micromata.merlin.app.rest;
 
-import de.reinhard.merlin.app.json.JsonUtils;
-import de.reinhard.merlin.app.updater.AppUpdater;
-import de.reinhard.merlin.app.updater.UpdateInfo;
+import de.micromata.merlin.app.json.JsonUtils;
+import de.micromata.merlin.app.updater.AppUpdater;
+import de.micromata.merlin.app.updater.UpdateInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

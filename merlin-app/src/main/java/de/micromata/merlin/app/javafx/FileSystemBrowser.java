@@ -1,4 +1,4 @@
-package de.reinhard.merlin.app.javafx;
+package de.micromata.merlin.app.javafx;
 
 import javafx.application.Platform;
 import javafx.stage.DirectoryChooser;

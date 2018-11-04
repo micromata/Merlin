@@ -1,4 +1,4 @@
-package de.reinhard.merlin.app.rest;
+package de.micromata.merlin.app.rest;
 
 public class TemplateRunnerCheckData {
     private String status;

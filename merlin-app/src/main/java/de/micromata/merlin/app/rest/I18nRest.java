@@ -1,7 +1,7 @@
-package de.reinhard.merlin.app.rest;
+package de.micromata.merlin.app.rest;
 
-import de.reinhard.merlin.app.I18nClientMessages;
-import de.reinhard.merlin.app.json.JsonUtils;
+import de.micromata.merlin.app.I18nClientMessages;
+import de.micromata.merlin.app.json.JsonUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

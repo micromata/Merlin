@@ -1,6 +1,6 @@
-package de.reinhard.merlin.app.ui;
+package de.micromata.merlin.app.ui;
 
-import de.reinhard.merlin.app.json.JsonUtils;
+import de.micromata.merlin.app.json.JsonUtils;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,7 +1,7 @@
-package de.reinhard.merlin.app.rest;
+package de.micromata.merlin.app.rest;
 
-import de.reinhard.merlin.app.json.JsonUtils;
-import de.reinhard.merlin.app.storage.Storage;
+import de.micromata.merlin.app.json.JsonUtils;
+import de.micromata.merlin.app.storage.Storage;
 import de.reinhard.merlin.word.templating.Template;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

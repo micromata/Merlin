@@ -1,4 +1,4 @@
-package de.reinhard.merlin.app.ui;
+package de.micromata.merlin.app.ui;
 
 /**
  * Represents a option entry of a FormEntry. The label is displayed for the user.

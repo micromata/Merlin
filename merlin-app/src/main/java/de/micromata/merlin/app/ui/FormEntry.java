@@ -1,4 +1,4 @@
-package de.reinhard.merlin.app.ui;
+package de.micromata.merlin.app.ui;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;

@@ -1,4 +1,4 @@
-package de.reinhard.merlin.app.ui;
+package de.micromata.merlin.app.ui;
 
 import java.util.ArrayList;
 import java.util.List;

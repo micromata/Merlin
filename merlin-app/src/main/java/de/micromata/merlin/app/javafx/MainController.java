@@ -1,4 +1,4 @@
-package de.reinhard.merlin.app.javafx;
+package de.micromata.merlin.app.javafx;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;

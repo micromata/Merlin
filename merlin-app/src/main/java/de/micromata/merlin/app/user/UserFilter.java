@@ -1,4 +1,4 @@
-package de.reinhard.merlin.app.user;
+package de.micromata.merlin.app.user;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

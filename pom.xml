@@ -4,7 +4,7 @@
                              http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>de.reinhard</groupId>
+    <groupId>de.micromata.merlin</groupId>
     <artifactId>merlin-parent</artifactId>
     <version>${revision}</version>
     <name>${project.artifactId}</name>
@@ -46,7 +46,7 @@
                     <configuration>
                         <archive>
                             <manifest>
-                                <mainClass>de.reinhard.merlin.app.javafx.Main</mainClass>
+                                <mainClass>Main</mainClass>
                             </manifest>
                             <manifestEntries>
                                 <Build-Time>${maven.build.timestamp}</Build-Time>

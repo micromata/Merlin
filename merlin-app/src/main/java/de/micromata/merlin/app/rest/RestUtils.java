@@ -1,8 +1,9 @@
-package de.reinhard.merlin.app.rest;
+package de.micromata.merlin.app.rest;
 
-import de.reinhard.merlin.app.RunningMode;
-import de.reinhard.merlin.app.user.UserData;
-import de.reinhard.merlin.app.user.UserUtils;
+import de.micromata.merlin.app.user.UserFilter;
+import de.micromata.merlin.app.RunningMode;
+import de.micromata.merlin.app.user.UserData;
+import de.micromata.merlin.app.user.UserUtils;
 import org.slf4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -28,7 +29,7 @@ public class RestUtils {
     /**
      * @return Returns the user put by the UserFilter.
      * @see UserUtils#getUser()
-     * @see de.reinhard.merlin.app.user.UserFilter
+     * @see UserFilter
      */
     static UserData getUser() {
         UserData user = UserUtils.getUser();

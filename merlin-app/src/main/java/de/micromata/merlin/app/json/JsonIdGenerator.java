@@ -1,4 +1,4 @@
-package de.reinhard.merlin.app.json;
+package de.micromata.merlin.app.json;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;

@@ -1,9 +1,9 @@
-package de.reinhard.merlin.app.storage;
+package de.micromata.merlin.app.storage;
 
-import de.reinhard.merlin.app.ConfigurationHandler;
-import de.reinhard.merlin.app.ConfigurationListener;
-import de.reinhard.merlin.app.ConfigurationTemplatesDir;
-import de.reinhard.merlin.app.RunningMode;
+import de.micromata.merlin.app.ConfigurationHandler;
+import de.micromata.merlin.app.ConfigurationListener;
+import de.micromata.merlin.app.ConfigurationTemplatesDir;
+import de.micromata.merlin.app.RunningMode;
 import de.reinhard.merlin.persistency.templates.DirectoryScanner;
 import de.reinhard.merlin.word.templating.Template;
 import de.reinhard.merlin.word.templating.TemplateDefinition;
