@@ -46,7 +46,7 @@
                     <configuration>
                         <archive>
                             <manifest>
-                                <mainClass>Main</mainClass>
+                                <mainClass>de.micromata.merlin.app.javafx.Main</mainClass>
                             </manifest>
                             <manifestEntries>
                                 <Build-Time>${maven.build.timestamp}</Build-Time>
