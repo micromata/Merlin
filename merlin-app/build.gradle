@@ -55,4 +55,20 @@ run {
     }
 }
 
+task createVersionProperties(dependsOn: processResources) {
+    doLast {
+        new File("$buildDir/resources/main/version.properties").withWriter { w ->
+            Properties p = new Properties()
+            p['version'] = project.version.toString()
+            p['name'] = project.name
+            p['build.date.millis'] = '' + System.currentTimeMillis()
+            p.store w, null
+        }
+    }
+}
+
+classes {
+    dependsOn createVersionProperties
+}
+
 mainClassName = 'de.micromata.merlin.app.javafx.Main'

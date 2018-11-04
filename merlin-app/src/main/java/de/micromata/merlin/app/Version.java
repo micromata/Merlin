@@ -3,9 +3,7 @@ package de.micromata.merlin.app;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Properties;
@@ -36,9 +34,17 @@ public class Version {
                 props.load(inputStream);
                 appName = props.getProperty("name");
                 version = props.getProperty("version");
-                buildDateUTC = props.getProperty("build.date.utc");
-
-            } catch (IOException ex) {
+                String buildDateMillisString = props.getProperty("build.date.millis");
+                long buildDateMillis = 0;
+                if (buildDateMillisString != null) {
+                    try {
+                        buildDateMillis = Long.parseLong(buildDateMillisString);
+                    } catch (NumberFormatException ex) {
+                        log.error("Can't parse build date (millis expected): " + buildDateMillisString + ": " + ex.getMessage(), ex);
+                    }
+                }
+                buildDate = new Date(buildDateMillis);
+            } catch (Exception ex) {
                 log.error("Can't load version information from classpath. File 'version.properties' not found: " + ex.getMessage(), ex);
                 appName = "Merlin";
                 version = "?.?";
@@ -46,12 +52,8 @@ public class Version {
             }
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd' 'HH:mm:ss");
             formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
-            try {
-                buildDate = formatter.parse(buildDateUTC);
-            } catch (ParseException ex) {
-                log.error("Can't parse date string '" + buildDateUTC + "' of version file: "+ ex.getMessage(), ex);
-                buildDate = new Date(0);
-            }
+            buildDateUTC = formatter.format(buildDate);
+            log.debug("appName=" + appName + ", version=" + version + ", buildDateUTC=" + buildDateUTC);
         }
     }
 
@@ -65,6 +67,7 @@ public class Version {
 
     /**
      * Replaces -SNAPSHOT by dev for snapshot versions. For none snapshot releases the returned value is equal to the version.
+     *
      * @return the version as string.
      */
     public String getShortVersion() {
