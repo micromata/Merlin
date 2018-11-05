@@ -1,4 +1,3 @@
-
 description = 'merlin-docs'
 
 buildscript {
@@ -19,4 +18,20 @@ asciidoctor {
         include '*.adoc'
     }
     outputDir = file('.')
+    //options doctype: 'book', ruby: 'erubis'
+
+    attributes toc: '',
+            version: project.version
 }
+
+task buildWebDoc(dependsOn: asciidoctor) {
+    def merlinWebDocs = file("${project(':merlin-webapp').projectDir}/public/docs")
+    doLast {
+        merlinWebDocs.mkdirs()
+        copy {
+            from "$projectDir/html5"
+            into merlinWebDocs
+        }
+    }
+}
+buildWebDoc.mustRunAfter(asciidoctor)
