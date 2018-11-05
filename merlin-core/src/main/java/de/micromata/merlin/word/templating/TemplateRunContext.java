@@ -125,7 +125,7 @@ public class TemplateRunContext {
                         return null;
                     }
                     try {
-                        return new Integer((String) value);
+                        return Integer.parseInt((String) value);
                     } catch (NumberFormatException ex) {
                         log.warn("Can't parse integer '" + value + "': " + ex.getMessage());
                         return null;
@@ -139,7 +139,7 @@ public class TemplateRunContext {
                 }
                 if (value instanceof String) {
                     try {
-                        return new Double((String) value);
+                        return Double.parseDouble((String) value);
                     } catch (NumberFormatException ex) {
                         log.error("Can't parse float '" + value + "': " + ex.getMessage(), ex);
                         return null;

@@ -25,7 +25,7 @@ public class ConditionalComparator extends AbstractConditional {
             if (valString.indexOf(',') >= 0) {
                 valString = valString.replace(',', '.');
             }
-            doubleValue = new Double(valString);
+            doubleValue = Double.parseDouble(valString);
         } catch (NumberFormatException ex) {
             log.error("Can't parse integer value if statement: " + getConditionalStatement());
         }
@@ -55,7 +55,7 @@ public class ConditionalComparator extends AbstractConditional {
             variableValue = ((Number) valueObject).doubleValue();
         } else {
             try {
-                variableValue = new Double(valueObject.toString());
+                variableValue = Double.parseDouble(valueObject.toString());
             } catch (NumberFormatException ex) {
                 log.error("Can't parse variable ${" + variable + "} as integer: " + valueObject
                         + " in if-statement: " + getConditionalStatement());
