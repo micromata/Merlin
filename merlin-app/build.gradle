@@ -8,11 +8,8 @@ buildscript {
         classpath 'com.google.gradle:osdetector-gradle-plugin:1.6.0'
     }
 }
-
-apply plugin: 'application'
 apply plugin: 'com.google.osdetector'
-
-ext.platform = osdetector.os == 'osx' ? 'mac' : osdetector.os == 'windows' ? 'win' : osdetector.os
+ext.platform = osdetector.os == 'osx' ? 'mac' : osdetector.os == 'windows' ? 'win' : 'linux'
 
 dependencies {
     compile project(':merlin-core')
@@ -49,6 +46,9 @@ compileJava {
     }
 }
 
+apply plugin: 'application'
+mainClassName = "de.micromata.merlin.app.javafx.Main"
+
 run {
     doFirst {
         jvmArgs = [
@@ -75,4 +75,23 @@ classes {
     dependsOn createVersionProperties
 }
 
-mainClassName = 'de.micromata.merlin.app.javafx.Main'
+
+executableDir = "dist"
+
+task prepareDir {
+    def build = file("$buildDir/web-app/build")
+    outputs.dir build
+    doLast {
+        build.mkdirs()
+        new File(build, "readme.txt").write("Read me!")
+    }
+}
+distributions {
+    main {
+        contents {
+            from(prepareDir) {
+                into "build"
+            }
+        }
+    }
+}
