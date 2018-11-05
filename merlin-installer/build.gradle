@@ -1,0 +1,23 @@
+description = 'merlin-installer'
+
+task copyUpdatesXml(type: Copy) {
+    from file("../../Install4j/Merlin/updates.xml")
+    into file(".")
+}
+
+task preDist {
+}
+
+preDist.dependsOn ':merlin-webapp:npmBuild'
+preDist.dependsOn ':merlin-docs:asciidoctor'
+preDist.dependsOn ':merlin-app:distZip'
+
+//         <copy file="${install4j-merlin}/updates.xml" todir="." />
+
+/*unzip(type: Copy) {
+    def zipFile = file('src/dists/dist.zip')
+    def outputDir = file("${buildDir}/unpacked/dist")
+
+    from zipTree(zipFile)
+    into outputDir
+}*/

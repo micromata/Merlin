@@ -1,0 +1,8 @@
+description = 'merlin-webapp'
+
+task npmBuild(type: Exec) {
+    workingDir '.'
+
+    executable 'sh'
+    commandLine 'npm', 'run', 'build'
+}

@@ -49,7 +49,7 @@ compileJava {
 apply plugin: 'application'
 mainClassName = "de.micromata.merlin.app.javafx.Main"
 
-run () {
+run() {
     doFirst {
         jvmArgs = [
                 '--module-path', classpath.asPath,
@@ -77,24 +77,20 @@ classes {
 
 apply plugin: 'distribution'
 
-executableDir = "dist"
-
-task prepareDir {
+/*task prepareDir {
     def build = file("$buildDir/web-app/build")
     outputs.dir build
     doLast {
         build.mkdirs()
         new File(build, "readme.txt").write("Read me!")
     }
-}
-prepareDir.dependsOn ':merlin-docs:asciidoctor'
+}*/
 
-distributions {
+//distZip.dependsOn prepareDir
+distributions() {
     main {
-        contents {
-            from(prepareDir) {
-                into "build"
-            }
-        }
+//        contents {
+//            from { "${project(':merlin-webapp').projectDir}/build" }
+//        }
     }
 }
