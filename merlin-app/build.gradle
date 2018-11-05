@@ -75,10 +75,11 @@ classes {
     dependsOn createVersionProperties
 }
 
+apply plugin: 'distribution'
 
 executableDir = "dist"
 
-task prepareDir(dependsOn: ':merlin-docs:asciidoctor') {
+task prepareDir {
     def build = file("$buildDir/web-app/build")
     outputs.dir build
     doLast {
@@ -86,6 +87,8 @@ task prepareDir(dependsOn: ':merlin-docs:asciidoctor') {
         new File(build, "readme.txt").write("Read me!")
     }
 }
+prepareDir.dependsOn ':merlin-docs:asciidoctor'
+
 distributions {
     main {
         contents {
