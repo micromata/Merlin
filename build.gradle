@@ -22,15 +22,12 @@ subprojects {
         compile group: 'commons-io', name: 'commons-io', version: '2.6'
         compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
         testCompile group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.25'
-        testCompileOnly(
-                'junit:junit:4.12'
-        )
         testImplementation(
-                'org.junit.jupiter:junit-jupiter-api:5.1.0'
+                'org.junit.jupiter:junit-jupiter-api:5.3.0'
         )
         testRuntimeOnly(
-                'org.junit.jupiter:junit-jupiter-engine:5.1.0',
-                'org.junit.vintage:junit-vintage-engine:5.1.0'
+                'org.junit.jupiter:junit-jupiter-engine:5.3.0',
+                'org.junit.vintage:junit-vintage-engine:5.3.0'
         )
     }
 
@@ -38,7 +35,8 @@ subprojects {
         useJUnitPlatform()
     }
 
-    /*tasks.withType(Test) {
+    /*
+    tasks.withType(Test) {
         testLogging {
             // set options for log level LIFECYCLE
             events TestLogEvent.FAILED,
