@@ -30,20 +30,28 @@ public class Version {
                 return;
             }
             try (InputStream inputStream = ClassLoader.getSystemResourceAsStream("version.properties")) {
-                Properties props = new Properties();
-                props.load(inputStream);
-                appName = props.getProperty("name");
-                version = props.getProperty("version");
-                String buildDateMillisString = props.getProperty("build.date.millis");
-                long buildDateMillis = 0;
-                if (buildDateMillisString != null) {
-                    try {
-                        buildDateMillis = Long.parseLong(buildDateMillisString);
-                    } catch (NumberFormatException ex) {
-                        log.error("Can't parse build date (millis expected): " + buildDateMillisString + ": " + ex.getMessage(), ex);
+                if (inputStream == null) {
+                    log.warn("version.properties not found (OK, if started e. g. in IDE");
+                    version = "99.0";
+                    appName = "Merlin";
+                    buildDate = new Date();
+                    return;
+                } else {
+                    Properties props = new Properties();
+                    props.load(inputStream);
+                    appName = props.getProperty("name");
+                    version = props.getProperty("version");
+                    String buildDateMillisString = props.getProperty("build.date.millis");
+                    long buildDateMillis = 0;
+                    if (buildDateMillisString != null) {
+                        try {
+                            buildDateMillis = Long.parseLong(buildDateMillisString);
+                        } catch (NumberFormatException ex) {
+                            log.error("Can't parse build date (millis expected): " + buildDateMillisString + ": " + ex.getMessage(), ex);
+                        }
                     }
+                    buildDate = new Date(buildDateMillis);
                 }
-                buildDate = new Date(buildDateMillis);
             } catch (Exception ex) {
                 log.error("Can't load version information from classpath. File 'version.properties' not found: " + ex.getMessage(), ex);
                 appName = "Merlin";
