@@ -85,7 +85,3 @@ Forget Copy&Paste and vi (in this context). Make your changes convenient in Exce
 
 Please refer [OpenHab-KNX-Definitions.xlsx](https://github.com/kreinhard/merlin/raw/master/merlin-smarthome/examples/openhab-knx/OpenHab-KNX-Definitions.xlsx) for a first impression including the
 result files: [open-knx](https://github.com/kreinhard/merlin/tree/master/merlin-smarthome/examples/openhab-knx)
-
-# To-Do
-* Multiple Template files (Word, AsciiDoc, Text etc.) for one TemplateDefinition.xlsx. (def-Tag in Word-Template?)
-* Separate Java FX and web for supporting desktop version as well as a web server version.
