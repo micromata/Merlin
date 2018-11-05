@@ -1,0 +1,22 @@
+
+description = 'merlin-docs'
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.9.1'
+    }
+}
+
+apply plugin: 'org.asciidoctor.convert'
+
+asciidoctor {
+    sourceDir = file('.')
+    sources {
+        include '*.adoc'
+    }
+    outputDir = file('.')
+}

@@ -52,3 +52,5 @@ merlin-core/build
 merlin-smarthome/build
 merlin-velocity/build
 merlin-app/out
+docs/html5
+docs/build
