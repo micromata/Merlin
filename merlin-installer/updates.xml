@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<updateDescriptor baseUrl="https://sourceforge.net/projects/merlinrunner/files/0.8/">
-  <entry targetMediaFileId="61" updatableVersionMin="" updatableVersionMax="" fileName="merlin_macos_0_8.dmg" newVersion="0.8" newMediaFileId="61" fileSize="104611975" md5Sum="3fb7b08ecafa962b1cdfcf1d741c3b39" bundledJre="macosx-amd64-10.0.2" archive="false" singleBundle="true">
-    <comment language="en" />
-    <comment language="de" />
-  </entry>
-</updateDescriptor>

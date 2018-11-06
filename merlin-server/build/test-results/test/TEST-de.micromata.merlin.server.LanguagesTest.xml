@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="de.micromata.merlin.server.LanguagesTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2018-11-06T15:51:09" hostname="sokoban.fritz.box" time="0.002">
+  <properties/>
+  <testcase name="asLocaleTest()" classname="de.micromata.merlin.server.LanguagesTest" time="0.001"/>
+  <testcase name="asStringTest()" classname="de.micromata.merlin.server.LanguagesTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

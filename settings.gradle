@@ -1,16 +1,18 @@
 rootProject.name = 'merlin-parent'
-include ':merlin-app'
 include ':merlin-core'
-include ':merlin-velocity'
-include ':merlin-smarthome'
+include ':merlin-desktop'
+include ':merlin-desktop-installer'
 include ':merlin-docs'
-include ':merlin-installer'
+include ':merlin-smarthome'
+include ':merlin-server'
+include ':merlin-velocity'
 include ':merlin-webapp'
 
-project(':merlin-app').projectDir = "$rootDir/merlin-app" as File
 project(':merlin-core').projectDir = "$rootDir/merlin-core" as File
-project(':merlin-velocity').projectDir = "$rootDir/merlin-velocity" as File
-project(':merlin-smarthome').projectDir = "$rootDir/merlin-smarthome" as File
+project(':merlin-desktop').projectDir = "$rootDir/merlin-desktop" as File
+project(':merlin-desktop-installer').projectDir = "$rootDir/merlin-desktop-installer" as File
 project(':merlin-docs').projectDir = "$rootDir/docs" as File
-project(':merlin-installer').projectDir = "$rootDir/merlin-installer" as File
+project(':merlin-server').projectDir = "$rootDir/merlin-server" as File
+project(':merlin-smarthome').projectDir = "$rootDir/merlin-smarthome" as File
+project(':merlin-velocity').projectDir = "$rootDir/merlin-velocity" as File
 project(':merlin-webapp').projectDir = "$rootDir/merlin-webapp" as File

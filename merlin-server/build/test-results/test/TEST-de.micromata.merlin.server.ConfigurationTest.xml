@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="de.micromata.merlin.server.ConfigurationTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2018-11-06T15:51:09" hostname="sokoban.fritz.box" time="0.352">
+  <properties/>
+  <testcase name="configurationSaveTest()" classname="de.micromata.merlin.server.ConfigurationTest" time="0.348"/>
+  <testcase name="configurationLoadTest()" classname="de.micromata.merlin.server.ConfigurationTest" time="0.003"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

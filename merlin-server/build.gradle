@@ -1,0 +1,48 @@
+description = 'merlin-server'
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+}
+
+dependencies {
+    compile project(':merlin-core')
+    compile group: 'org.eclipse.jetty', name: 'jetty-server', version: '9.4.12.v20180830'
+    compile group: 'org.eclipse.jetty', name: 'jetty-servlet', version: '9.4.12.v20180830'
+    compile group: 'org.eclipse.jetty', name: 'jetty-servlets', version: '9.4.12.v20180830'
+    compile group: 'org.glassfish.jaxb', name: 'jaxb-core', version: '2.3.0.1'
+    compile group: 'org.glassfish.jaxb', name: 'jaxb-runtime', version: '2.3.1'
+    compile group: 'org.glassfish.jersey.containers', name: 'jersey-container-servlet', version: '2.27'
+    compile group: 'org.glassfish.jersey.media', name: 'jersey-media-multipart', version: '2.27'
+    compile group: 'org.glassfish.jersey.media', name: 'jersey-media-json-jackson', version: '2.27'
+    compile group: 'org.glassfish.jersey.inject', name: 'jersey-hk2', version: '2.27'
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.6'
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.9.6'
+    compile group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.1'
+    compile group: 'javax.xml.ws', name: 'jaxws-api', version: '2.3.1'
+    compile group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.25'
+
+    // https://mvnrepository.com/artifact/commons-cli/commons-cli
+    compile group: 'commons-cli', name: 'commons-cli', version: '1.4'
+    testCompile group: 'org.mockito', name: 'mockito-core', version: '2.21.0'
+}
+
+apply plugin: 'application'
+mainClassName = "de.micromata.merlin.server.Main"
+
+task createVersionProperties(dependsOn: processResources) {
+    doLast {
+        new File("$buildDir/resources/main/version.properties").withWriter { w ->
+            Properties p = new Properties()
+            p['version'] = project.version.toString()
+            p['name'] = project.name
+            p['build.date.millis'] = '' + System.currentTimeMillis()
+            p.store w, null
+        }
+    }
+}
+
+classes {
+    dependsOn createVersionProperties
+}

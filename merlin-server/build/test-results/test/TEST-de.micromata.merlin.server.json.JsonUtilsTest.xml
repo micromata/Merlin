@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="de.micromata.merlin.server.json.JsonUtilsTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2018-11-06T15:51:08" hostname="sokoban.fritz.box" time="0.746">
+  <properties/>
+  <testcase name="toJsonTest()" classname="de.micromata.merlin.server.json.JsonUtilsTest" time="0.018"/>
+  <testcase name="testData()" classname="de.micromata.merlin.server.json.JsonUtilsTest" time="0.722"/>
+  <testcase name="fileDescriptorTest()" classname="de.micromata.merlin.server.json.JsonUtilsTest" time="0.004"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[log4j:WARN No appenders could be found for logger (de.micromata.merlin.server.storage.TestData).
+log4j:WARN Please initialize the log4j system properly.
+log4j:WARN See http://logging.apache.org/log4j/1.2/faq.html#noconfig for more info.
+]]></system-err>
+</testsuite>

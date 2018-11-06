@@ -1,0 +1,43 @@
+description = 'merlin-desktop-installer'
+
+task postDist(type: Copy) {
+    from file("../../Install4j/Merlin/updates.xml")
+    into file(".")
+}
+
+task getDependencies(type: Copy) {
+    into "${buildDir}/lib"
+    from project(':merlin-desktop').configurations.runtime {
+        exclude "javafx-*-win.jar" // Ignore platform specific javafx files.
+        exclude "javafx-*-linux.jar" // Ignore platform specific javafx files.
+    }
+}
+
+task deleteDependencies(type: Delete) {
+    delete "${buildDir}/dist"
+}
+
+task copyMerlinApp(type: Copy) {
+    into "${buildDir}/lib"
+    from project(':merlin-desktop').jar.archivePath
+}
+
+copyMerlinApp.dependsOn ':merlin-desktop:build'
+
+getDependencies.dependsOn deleteDependencies
+getDependencies.dependsOn copyMerlinApp
+getDependencies.mustRunAfter(deleteDependencies)
+
+task dist {
+    doLast {
+        println "*************************************************"
+        println "*** 1. Build installation files with Install4j **"
+        println "*** 2. gradle postDist                         **"
+        println "*************************************************"
+    }
+}
+
+dist.dependsOn ':merlin-webapp:npmBuild'
+dist.dependsOn ':merlin-docs:buildWebDoc'
+dist.dependsOn getDependencies
+task('merlin-docs:buildWebDoc').mustRunAfter('merlin-webapp:npmBuild')
