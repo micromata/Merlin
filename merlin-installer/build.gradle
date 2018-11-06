@@ -5,14 +5,25 @@ task postDist(type: Copy) {
     into file(".")
 }
 
-task dist << {
-    println "*************************************************"
-    println "*** 1. Build installation files with Install4j **"
-    println "*** 2. gradle postDist                         **"
-    println "*************************************************"
+task unpackZip(type: Copy) {
+    def basename = "merlin-app-${project.version.toString()}"
+    def zipFile = file("${project(':merlin-app').projectDir}/build/distributions/${basename}.zip")
+    from zipTree(zipFile)
+    into "${buildDir}/dist"
+}
+
+task dist {
+    doLast {
+        println "*************************************************"
+        println "*** 1. Build installation files with Install4j **"
+        println "*** 2. gradle postDist                         **"
+        println "*************************************************"
+    }
 }
 
 dist.dependsOn ':merlin-webapp:npmBuild'
 dist.dependsOn ':merlin-docs:buildWebDoc'
 dist.dependsOn ':merlin-app:distZip'
-task(':merlin-docs:buildWebDoc').mustRunAfter(':merlin-webapp:npmBuild')
+dist.dependsOn unpackZip
+task('merlin-docs:buildWebDoc').mustRunAfter('merlin-webapp:npmBuild')
+unpackZip.mustRunAfter('merlin-app:distZip')
