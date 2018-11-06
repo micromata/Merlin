@@ -1,10 +1,11 @@
 package de.micromata.merlin.server.jetty;
 
-import de.micromata.merlin.server.ui.rest.ConfigurationUIRest;
 import de.micromata.merlin.server.ConfigurationHandler;
 import de.micromata.merlin.server.RunningMode;
 import de.micromata.merlin.server.rest.ConfigurationRest;
+import de.micromata.merlin.server.ui.rest.ConfigurationUIRest;
 import de.micromata.merlin.server.user.UserFilter;
+import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
@@ -31,7 +32,7 @@ public class JettyServer {
     private Server server;
     private int port;
 
-    public void start() {
+    public void start(String... restPackageNames) {
         port = findFreePort();
         if (port == -1) {
             return;
@@ -48,17 +49,19 @@ public class JettyServer {
                 new ServletContextHandler(ServletContextHandler.NO_SESSIONS);
         ctx.setContextPath("/");
 
+        ResourceConfig resourceConfig = new ResourceConfig();
+        String[] packageNames = {ConfigurationRest.class.getPackage().getName(), ConfigurationUIRest.class.getPackage().getName()};
+        if (restPackageNames != null && restPackageNames.length > 0) {
+            packageNames = (String[]) ArrayUtils.addAll(packageNames, restPackageNames);
+        }
+        resourceConfig.packages(packageNames);
+        resourceConfig.register(MultiPartFeature.class)
+                .register(JacksonFeature.class);
+        //   .register(LoggingFilter.class)
+        //   .property("jersey.config.server.tracing.type", "ALL")
+        //   .property("jersey.config.server.tracing.threshold", "VERBOSE"))
         ServletHolder jerseyServlet = new ServletHolder(
-                new ServletContainer(
-                        new ResourceConfig()
-                                .packages(ConfigurationRest.class.getPackage().getName(),
-                                        ConfigurationUIRest.class.getPackage().getName())
-                                .register(MultiPartFeature.class)
-                                .register(JacksonFeature.class)
-                        //   .register(LoggingFilter.class)
-                        //   .property("jersey.config.server.tracing.type", "ALL")
-                        //   .property("jersey.config.server.tracing.threshold", "VERBOSE"))
-                ));
+                new ServletContainer(resourceConfig));
         jerseyServlet.setInitOrder(1);
         ctx.addServlet(jerseyServlet, "/rest/*");
         ctx.addFilter(UserFilter.class, "/rest/*", EnumSet.of(DispatcherType.INCLUDE, DispatcherType.REQUEST));

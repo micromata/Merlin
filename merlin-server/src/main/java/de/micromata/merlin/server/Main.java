@@ -49,9 +49,9 @@ public class Main {
         }
     }
 
-    public static JettyServer startUp() {
+    public static JettyServer startUp(String... restPackageNames) {
         JettyServer server = new JettyServer();
-        server.start();
+        server.start(restPackageNames);
 
         UserManager.setUserManager(new SingleUserManager());
 
