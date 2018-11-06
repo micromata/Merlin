@@ -6,12 +6,16 @@ task postDist(type: Copy) {
 }
 
 task getDependencies(type: Copy) {
-    into "${buildDir}/dist"
+    into "${buildDir}/lib"
     from project(':merlin-app').configurations.runtime {
-        exclude "javafx-*-mac.jar" // Ignore platform specific javafx files.
         exclude "javafx-*-win.jar" // Ignore platform specific javafx files.
         exclude "javafx-*-linux.jar" // Ignore platform specific javafx files.
     }
+}
+
+task copyMerlinApp(type: Copy) {
+    into "${buildDir}/lib"
+    from project(':merlin-app').jar.archivePath
 }
 
 task deleteDependencies(type: Delete) {
@@ -19,6 +23,7 @@ task deleteDependencies(type: Delete) {
 }
 
 getDependencies.dependsOn deleteDependencies
+getDependencies.dependsOn copyMerlinApp
 getDependencies.mustRunAfter(deleteDependencies)
 
 task dist {
