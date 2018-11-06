@@ -12,5 +12,5 @@ Run ```gradle run```
 
 1. File -> Project Structure -> Modules -> Add lib directory of JavaFX: (```<path>/javafx-sdk-11/lib```).
 2. Then in Run->Edit Configurations -> VM Options, put:
-```--module-path="<path>/javafx-sdk-11/lib" --add-modules=javafx.controls```
+```--module-path="<path>/javafx-sdk-11/lib" --add-modules=javafx.controls,javafx.fxml```
 
