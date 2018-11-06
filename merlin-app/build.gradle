@@ -77,14 +77,7 @@ classes {
 
 apply plugin: 'distribution'
 
-/*task prepareDir {
-    def build = file("$buildDir/web-app/build")
-    outputs.dir build
-    doLast {
-        build.mkdirs()
-        new File(build, "readme.txt").write("Read me!")
-    }
-}*/
+//applicationDefaultJvmArgs = ["--module-path=DOLLAR_LIB --add-modules=javafx.controls --add-modules=javafx.fxml"]
 
 //distZip.dependsOn prepareDir
 distributions() {
@@ -94,3 +87,11 @@ distributions() {
 //        }
     }
 }
+
+/*startScripts {
+    doLast {
+        def bashFile = new File(getOutputDir(), applicationName)
+        String bashContent = bashFile.text
+        bashFile.text = bashContent.replaceFirst('DOLLAR_LIB', Matcher.quoteReplacement('/Users/kai/workspace/Java/javafx-sdk-11/lib'))
+    }
+}*/
