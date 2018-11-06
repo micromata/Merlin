@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <install4j version="7.0.8" transformSequenceNumber="7">
-  <directoryPresets config="" />
+  <directoryPresets config="../../Install4j/Merlin/javafx-11" />
   <application name="Merlin" distributionSourceDir="" applicationId="5115-4774-2533-4349" mediaDir="../../Install4j/Merlin" mediaFilePattern="${compiler:sys.shortName}_${compiler:sys.platform}_${compiler:sys.version}" compression="6" lzmaCompression="false" pack200Compression="false" excludeSignedFromPacking="true" commonExternalFiles="false" createMd5Sums="true" shrinkRuntime="true" shortName="merlin" publisher="ProjectForge" publisherWeb="www.projectforge.org" version="0.9dev" allPathsRelative="true" backupOnSave="false" autoSave="false" convertDotsToUnderscores="true" macSignature="????" macVolumeId="4356b34315fd64b9" javaMinVersion="11" javaMaxVersion="" allowBetaVM="false" jdkMode="jdk" jdkName="JDK 1.8">
     <languages skipLanguageSelection="false" languageSelectionInPrincipalLanguage="false">
       <principalLanguage id="en" customLocalizationFile="" />
@@ -39,7 +39,11 @@
     </mountPoints>
     <entries>
       <dirEntry mountPoint="60" file="./build/lib" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="false" overrideOverwriteMode="false" overrideUninstallMode="false" entryMode="subdir" subDirectory="lib" excludeSuffixes="" dirMode="755" overrideDirMode="false">
-        <exclude />
+        <exclude>
+          <entry location="javafx-graphics-11.0.1-ea+1.jar" fileType="regular" />
+          <entry location="javafx-controls-11.0.1-ea+1.jar" fileType="regular" />
+          <entry location="javafx-base-11.0.1-ea+1.jar" fileType="regular" />
+        </exclude>
       </dirEntry>
       <dirEntry mountPoint="60" file="../merlin-webapp/build" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="false" overrideOverwriteMode="false" overrideUninstallMode="false" entryMode="subdir" subDirectory="web" excludeSuffixes="" dirMode="755" overrideDirMode="false">
         <exclude />
@@ -72,13 +76,11 @@
           <versionLine x="20" y="40" text="version ${compiler:sys.version}" fontSize="8" fontColor="0,0,0" bold="false" />
         </text>
       </splashScreen>
-      <java mainClass="de.micromata.merlin.app.javafx.Main" mainMode="1" vmParameters="" arguments="" allowVMPassthroughParameters="true" preferredVM="" bundleRuntime="true">
+      <java mainClass="de.micromata.merlin.app.javafx.Main" mainMode="1" vmParameters="--add-modules=javafx.controls,javafx.fxml" arguments="" allowVMPassthroughParameters="true" preferredVM="" bundleRuntime="true">
         <classPath>
           <scanDirectory location="lib" failOnError="false" />
         </classPath>
-        <modulePath>
-          <directory location="javafx" failOnError="false" />
-        </modulePath>
+        <modulePath />
         <nativeLibraryDirectories />
         <vmOptions>
           <options version="9" line="--add-modules=javafx.controls --add-modules=javafx.fxml" />
@@ -86,9 +88,10 @@
       </java>
       <includedFiles />
       <unextractableFiles />
-      <vmOptionsFile mode="content" overwriteMode="0" fileMode="644">
-        <content>--add-modules=javafx.controls
---add-modules=javafx.fxml</content>
+      <vmOptionsFile mode="none" overwriteMode="0" fileMode="644">
+        <content>--module-path=/Users/kai/Applications/Merlin.app/Contents/java/app/javafx
+--module-path=/Users/kai/Applications/Merlin.app/Contents/java/app/javafx
+--add-modules=javafx.controls,javafx.fxml</content>
       </vmOptionsFile>
       <customScript mode="1" file="">
         <content />
@@ -451,10 +454,42 @@ return console.askOkCancel(message, true);
             <preActivation />
             <postActivation />
             <actions>
+              <action name="" id="950" customizedId="" beanClass="com.install4j.runtime.beans.actions.control.RunScriptAction" enabled="true" commentSet="false" comment="" actionElevationType="inherit" rollbackBarrier="false" rollbackBarrierExitCode="0" multiExec="false" failureStrategy="1" errorMessage="">
+                <serializedBean>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.actions.control.RunScriptAction">
+                      <void property="script">
+                        <object class="com.install4j.api.beans.ScriptProperty">
+                          <void property="value">
+                            <string>String dir = (String)context.getVariable("sys.contentDir");
+String platform = context.getCompilerVariable("sys.platform");
+
+String javafxDir = dir + File.separatorChar + "javafx";
+File file;
+if ("macos".equals(platform)) {
+  file = new File(dir + "/../../", "vmoptions.txt");
+} else {
+  file = new File(dir, "vmoptions.txt");
+}
+FileWriter writer = new FileWriter(file);
+writer.write("--module-path=" + javafxDir + "\n");
+writer.close();
+return true;</string>
+                          </void>
+                        </object>
+                      </void>
+                    </object>
+                  </java>
+                </serializedBean>
+                <condition />
+              </action>
               <action name="" id="584" customizedId="" beanClass="com.install4j.runtime.beans.actions.finish.ExecuteLauncherAction" enabled="true" commentSet="false" comment="" actionElevationType="none" rollbackBarrier="false" rollbackBarrierExitCode="0" multiExec="false" failureStrategy="1" errorMessage="">
                 <serializedBean>
                   <java class="java.beans.XMLDecoder">
                     <object class="com.install4j.runtime.beans.actions.finish.ExecuteLauncherAction">
+                      <void property="arguments">
+                        <array class="java.lang.String" length="0" />
+                      </void>
                       <void property="launcherId">
                         <string>58</string>
                       </void>
