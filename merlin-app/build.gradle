@@ -74,24 +74,3 @@ task createVersionProperties(dependsOn: processResources) {
 classes {
     dependsOn createVersionProperties
 }
-
-apply plugin: 'distribution'
-
-//applicationDefaultJvmArgs = ["--module-path=DOLLAR_LIB --add-modules=javafx.controls --add-modules=javafx.fxml"]
-
-//distZip.dependsOn prepareDir
-distributions() {
-    main {
-//        contents {
-//            from { "${project(':merlin-webapp').projectDir}/build" }
-//        }
-    }
-}
-
-/*startScripts {
-    doLast {
-        def bashFile = new File(getOutputDir(), applicationName)
-        String bashContent = bashFile.text
-        bashFile.text = bashContent.replaceFirst('DOLLAR_LIB', Matcher.quoteReplacement('/Users/kai/workspace/Java/javafx-sdk-11/lib'))
-    }
-}*/

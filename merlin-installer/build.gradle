@@ -5,12 +5,21 @@ task postDist(type: Copy) {
     into file(".")
 }
 
-task unpackZip(type: Copy) {
-    def basename = "merlin-app-${project.version.toString()}"
-    def zipFile = file("${project(':merlin-app').projectDir}/build/distributions/${basename}.zip")
-    from zipTree(zipFile)
+task getDependencies(type: Copy) {
     into "${buildDir}/dist"
+    from project(':merlin-app').configurations.runtime {
+        exclude "javafx-*-mac.jar" // Ignore platform specific javafx files.
+        exclude "javafx-*-win.jar" // Ignore platform specific javafx files.
+        exclude "javafx-*-linux.jar" // Ignore platform specific javafx files.
+    }
 }
+
+task deleteDependencies(type: Delete) {
+    delete "${buildDir}/dist"
+}
+
+getDependencies.dependsOn deleteDependencies
+getDependencies.mustRunAfter(deleteDependencies)
 
 task dist {
     doLast {
@@ -23,7 +32,5 @@ task dist {
 
 dist.dependsOn ':merlin-webapp:npmBuild'
 dist.dependsOn ':merlin-docs:buildWebDoc'
-dist.dependsOn ':merlin-app:distZip'
-dist.dependsOn unpackZip
+dist.dependsOn getDependencies
 task('merlin-docs:buildWebDoc').mustRunAfter('merlin-webapp:npmBuild')
-unpackZip.mustRunAfter('merlin-app:distZip')
