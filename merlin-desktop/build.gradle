@@ -32,7 +32,7 @@ compileJava {
 }
 
 apply plugin: 'application'
-mainClassName = "de.micromata.merlin.app.javafx.Main"
+mainClassName = "de.micromata.merlin.app.javafx.DesktopMain"
 
 run() {
     doFirst {

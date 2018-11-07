@@ -95,16 +95,16 @@ public class FileSystemBrowser {
             @Override
             public void run() {
                 if (filter == SelectFilter.DIRECTORY) {
-                    future.complete(directoryChooser.showDialog(Main.getInstance().getStage()));
+                    future.complete(directoryChooser.showDialog(DesktopMain.getInstance().getStage()));
                 } else {
-                    future.complete(fileChooser.showOpenDialog(Main.getInstance().getStage()));
+                    future.complete(fileChooser.showOpenDialog(DesktopMain.getInstance().getStage()));
                 }
             }
         });
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                Main.getInstance().getStage().toFront();
+                DesktopMain.getInstance().getStage().toFront();
             }
         });
     }

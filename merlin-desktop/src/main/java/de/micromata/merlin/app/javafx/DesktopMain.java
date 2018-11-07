@@ -27,10 +27,10 @@ import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.TimerTask;
 
-public class Main extends Application {
-    private static Logger log = LoggerFactory.getLogger(Main.class);
+public class DesktopMain extends Application {
+    private static Logger log = LoggerFactory.getLogger(DesktopMain.class);
     private JettyServer server;
-    private static Main main;
+    private static DesktopMain main;
     private Stage stage;
     private java.util.Timer timer;
 
@@ -55,7 +55,7 @@ public class Main extends Application {
         launch(args);
     }
 
-    static Main getInstance() {
+    static DesktopMain getInstance() {
         return main;
     }
 
@@ -66,7 +66,7 @@ public class Main extends Application {
         RunningMode.setServerType(RunningMode.ServerType.DESKTOP);
         main = this;
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(Main.class.getResource("/Main.fxml"));
+        loader.setLocation(DesktopMain.class.getResource("/Main.fxml"));
         ClassLoader cl = this.getClass().getClassLoader();
         Parent root;
         try {
@@ -77,7 +77,7 @@ public class Main extends Application {
         }
 
         if (RunningMode.getOSType() == RunningMode.OSType.MAC_OS) {
-            URL iconURL = Main.class.getResource("/icon.png");
+            URL iconURL = DesktopMain.class.getResource("/icon.png");
             Image image = new ImageIcon(iconURL).getImage();
             // com.apple.eawt.Application.getApplication().setDockIconImage(image);
             // Use reflection for avoiding compiling errors on non Mac OS development systems.
@@ -146,6 +146,15 @@ public class Main extends Application {
         timer.cancel();
         log.info("Stopping Java FX application.");
         server.stop();
+        int stopCounter = 10;
+        while (server.isStopped() == false) {
+            Thread.sleep(1000);
+            log.info("Server not yet stopped.");
+            if (stopCounter-- <= 0) {
+                log.info("Forcing server stop.");
+                System.exit(0);
+            }
+        }
     }
 
     public Stage getStage() {

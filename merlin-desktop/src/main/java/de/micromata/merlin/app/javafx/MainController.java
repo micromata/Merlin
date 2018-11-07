@@ -19,6 +19,6 @@ public class MainController {
 
     @FXML
     private void printOutput() {
-        Main.getInstance().openBrowser();
+        DesktopMain.getInstance().openBrowser();
     }
 }
