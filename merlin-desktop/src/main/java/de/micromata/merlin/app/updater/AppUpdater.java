@@ -6,6 +6,7 @@ import com.install4j.api.update.ApplicationDisplayMode;
 import com.install4j.api.update.UpdateChecker;
 import com.install4j.api.update.UpdateDescriptor;
 import com.install4j.api.update.UpdateDescriptorEntry;
+import de.micromata.merlin.app.javafx.DesktopMain;
 import javafx.scene.control.Alert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,7 +40,11 @@ public class AppUpdater {
         try {
             updateDescriptorEntry = future.get(); // wait for future to be assigned a result and retrieve it
         } catch (InterruptedException | ExecutionException ex) {
-            log.error("While waiting for file browser: " + ex.getMessage(), ex);
+            if (DesktopMain.getInstance().isShutdownInProgress()) {
+                log.info("Shutting down update process.");
+            } else {
+                log.error("While waiting for file browser: " + ex.getMessage(), ex);
+            }
         }
         if (updateDescriptorEntry == null) {
             log.info("No updates found (OK).");
