@@ -3,12 +3,21 @@
 # Word temporary files #
 ~$*.docx
 
-merlin-app/target
+merlin-core/build
 merlin-core/out/
 merlin-core/target/
+merlin-desktop/build
+merlin-desktop/out
+merlin-smarthome/build
 merlin-smarthome/out/
 merlin-smarthome/target/
+merlin-velocity/build
 merlin-velocity/target/
+merlin-webapp/public/docs
+
+.gradle
+docs/html5
+docs/build
 
 # Compiled class file
 *.class
@@ -45,12 +54,3 @@ test/test3.docx
 test/test4.docx
 test/test5.docx
 target
-merlin-webapp/public/docs
-.gradle
-merlin-app/build
-merlin-core/build
-merlin-smarthome/build
-merlin-velocity/build
-merlin-app/out
-docs/html5
-docs/build
