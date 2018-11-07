@@ -98,7 +98,7 @@ public class AppUpdater {
         try {
             updateUrl = Variables.getCompilerVariable("sys.updatesUrl");
         } catch (IOException ex) {
-            log.error("Can't check update url: " + ex.getMessage(), ex);
+            log.error("Can't check update url: " + ex.getMessage());
             future.complete(null);
             return;
         }
@@ -107,7 +107,7 @@ public class AppUpdater {
         try {
             updateDescriptor = UpdateChecker.getUpdateDescriptor(updateUrl, ApplicationDisplayMode.UNATTENDED);
         } catch (Exception ex) {
-            log.error("Can't get updates: " + ex.getMessage(), ex);
+            log.error("Can't get updates: " + ex.getMessage());
             return;
         }
         //log.info("UpdateDescriptor base url: " + updateDescriptor.getBaseUrl());
