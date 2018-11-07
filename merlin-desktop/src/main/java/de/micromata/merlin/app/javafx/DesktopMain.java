@@ -35,22 +35,21 @@ public class DesktopMain extends Application {
     private Stage stage;
     private java.util.Timer timer;
     private static Thread updateThread;
+    private boolean shutdownInProgress;
 
     public static void main(String[] args) {
         Version version = Version.getInstance();
-        String startLogMessage = "Starting " + version.getAppName() + " " + version.getVersion() + ", build time: "
-                + version.getBuildDate() + " (UTC: " + version.getBuildDateUTC() + "), mode: " + RunningMode.getMode();
-        log.info(startLogMessage);
+        log.info("Starting " + version.getAppName() + " " + version.getVersion() + ", build time: "
+                + version.getBuildDate() + " (UTC: " + version.getBuildDateUTC() + "), mode: " + RunningMode.getMode());
         try {
             org.apache.log4j.Logger rootLogger = org.apache.log4j.Logger.getRootLogger();
             FileAppender appender = (FileAppender) rootLogger.getAppender("file");
             String logFilename = appender.getFile();
-            File logFile = new File(logFilename);
-            if (!logFile.canWrite()) {
+            File logFile = logFilename != null ? new File(logFilename) : null; // On Windows logFilename is null!
+            if (logFile == null || !logFile.canWrite()) {
                 logFile = new File(System.getProperty("java.io.tmpdir"), "merlin.log");
                 appender.setFile(logFile.getAbsolutePath());
                 appender.activateOptions();
-                log.info(startLogMessage);
             }
             log.info("Writing logs to " + logFile.getAbsolutePath());
         } catch (Exception ex) {
@@ -77,7 +76,7 @@ public class DesktopMain extends Application {
         launch(args);
     }
 
-    static DesktopMain getInstance() {
+    public static DesktopMain getInstance() {
         return main;
     }
 
@@ -165,10 +164,15 @@ public class DesktopMain extends Application {
     @Override
     public void stop() throws Exception {
         super.stop();
+        shutdownInProgress = true;
         log.info("Stopping Java FX application.");
         timer.cancel();
         updateThread.interrupt(); // Thread hangs if now connection to update server. Force to stop.
         server.stop();
+    }
+
+    public boolean isShutdownInProgress() {
+        return shutdownInProgress;
     }
 
     public Stage getStage() {
