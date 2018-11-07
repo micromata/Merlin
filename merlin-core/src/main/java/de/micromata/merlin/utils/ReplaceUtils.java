@@ -45,11 +45,10 @@ public class ReplaceUtils {
         Matcher matcher = VARIABLE_PATTERN.matcher(text);
         while (matcher.find()) {
             String variableName = matcher.group(1);
-            Object objectValue = variables.get(variableName);
-            if (objectValue == null) {
+            if (!variables.contains(variableName)) {
                 continue; // Variable not found. Ignore this finding.
             }
-            String value = objectValue.toString();
+            String value = variables.getFormatted(variableName);
             int start = matcher.start();
             int end = matcher.end();
             replaceEntries.add(new ReplaceEntry(start, end, value));
