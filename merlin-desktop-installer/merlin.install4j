@@ -38,28 +38,28 @@
       <mountPoint id="749" root="747" location="" mode="755" />
     </mountPoints>
     <entries>
-      <dirEntry mountPoint="60" file="./build/lib" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="false" overrideOverwriteMode="false" overrideUninstallMode="false" entryMode="subdir" subDirectory="lib" excludeSuffixes="" dirMode="755" overrideDirMode="false">
+      <dirEntry mountPoint="60" file="./build/lib" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="false" overrideOverwriteMode="false" overrideUninstallMode="false" entryMode="subdir" subDirectory="lib" excludeSuffixes=".DS_Store" dirMode="755" overrideDirMode="false">
         <exclude>
           <entry location="javafx-graphics-11.0.1-ea+1.jar" fileType="regular" />
           <entry location="javafx-controls-11.0.1-ea+1.jar" fileType="regular" />
           <entry location="javafx-base-11.0.1-ea+1.jar" fileType="regular" />
         </exclude>
       </dirEntry>
-      <dirEntry mountPoint="60" file="../merlin-webapp/build" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="false" overrideOverwriteMode="false" overrideUninstallMode="false" entryMode="subdir" subDirectory="web" excludeSuffixes="" dirMode="755" overrideDirMode="false">
+      <dirEntry mountPoint="60" file="../merlin-webapp/build" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="false" overrideOverwriteMode="false" overrideUninstallMode="false" entryMode="subdir" subDirectory="web" excludeSuffixes=".DS_Store" dirMode="755" overrideDirMode="false">
         <exclude />
       </dirEntry>
-      <dirEntry mountPoint="60" file="../examples" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="false" overrideOverwriteMode="false" overrideUninstallMode="false" entryMode="subdir" subDirectory="examples" excludeSuffixes="" dirMode="755" overrideDirMode="false">
+      <dirEntry mountPoint="60" file="../examples" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="false" overrideOverwriteMode="false" overrideUninstallMode="false" entryMode="subdir" subDirectory="examples" excludeSuffixes=".DS_Store" dirMode="755" overrideDirMode="false">
         <exclude>
           <entry location="merlin-app-1.0.jar" fileType="regular" />
         </exclude>
       </dirEntry>
-      <dirEntry mountPoint="742" file="../../Install4j/Merlin/javafx-11/macos" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="false" overrideOverwriteMode="false" overrideUninstallMode="false" entryMode="subdir" subDirectory="javafx" excludeSuffixes="" dirMode="755" overrideDirMode="false">
+      <dirEntry mountPoint="742" file="../../Install4j/Merlin/javafx-11/macos" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="false" overrideOverwriteMode="false" overrideUninstallMode="false" entryMode="subdir" subDirectory="javafx" excludeSuffixes=".DS_Store" dirMode="755" overrideDirMode="false">
         <exclude />
       </dirEntry>
-      <dirEntry mountPoint="748" file="../../Install4j/Merlin/javafx-11/win" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="false" overrideOverwriteMode="false" overrideUninstallMode="false" entryMode="subdir" subDirectory="javafx" excludeSuffixes="" dirMode="755" overrideDirMode="false">
+      <dirEntry mountPoint="748" file="../../Install4j/Merlin/javafx-11/win" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="false" overrideOverwriteMode="false" overrideUninstallMode="false" entryMode="subdir" subDirectory="javafx" excludeSuffixes=".DS_Store" dirMode="755" overrideDirMode="false">
         <exclude />
       </dirEntry>
-      <dirEntry mountPoint="749" file="../../Install4j/Merlin/javafx-11/linux" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="false" overrideOverwriteMode="false" overrideUninstallMode="false" entryMode="subdir" subDirectory="javafx" excludeSuffixes="" dirMode="755" overrideDirMode="false">
+      <dirEntry mountPoint="749" file="../../Install4j/Merlin/javafx-11/linux" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="false" overrideOverwriteMode="false" overrideUninstallMode="false" entryMode="subdir" subDirectory="javafx" excludeSuffixes=".DS_Store" dirMode="755" overrideDirMode="false">
         <exclude />
       </dirEntry>
     </entries>
