@@ -129,6 +129,8 @@ public class TemplateDefinitionExcelReader {
         while (it.hasNext()) {
             Row row = it.next();
             String name = PoiHelper.getValueAsString(sheet.getCell(row, variableCol));
+            if (StringUtils.isBlank(name))
+                continue;
             String description = PoiHelper.getValueAsString(sheet.getCell(row, descriptionCol));
             String valuesString = PoiHelper.getValueAsString(sheet.getCell(row, valuesCol));
             String typeString = PoiHelper.getValueAsString(sheet.getCell(row, typeCol));
@@ -171,6 +173,8 @@ public class TemplateDefinitionExcelReader {
         while (it.hasNext()) {
             Row row = it.next();
             String name = PoiHelper.getValueAsString(sheet.getCell(row, variableCol));
+            if (StringUtils.isBlank(name))
+                continue;
             String valuesString = PoiHelper.getValueAsString(sheet.getCell(row, mappingCol));
             String[] values = CSVStringUtils.parseStringList(valuesString);
             String dependsOnString = PoiHelper.getValueAsString(sheet.getCell(row, dependsOnCol));

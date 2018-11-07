@@ -5,6 +5,7 @@ import de.micromata.merlin.excel.ExcelWorkbook;
 import de.micromata.merlin.persistency.FileDescriptor;
 import de.micromata.merlin.persistency.FileDescriptorInterface;
 import de.micromata.merlin.utils.ReplaceUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -191,10 +192,12 @@ public class TemplateDefinition implements Cloneable, FileDescriptorInterface {
     public List<String> getAllDefinedVariableNames() {
         Set<String> variables = new HashSet<>();
         for (VariableDefinition def : variableDefinitions) {
-            variables.add(def.getName());
+            if (StringUtils.isNotBlank(def.getName()))
+                variables.add(def.getName());
         }
         for (DependentVariableDefinition def : dependentVariableDefinitions) {
-            variables.add(def.getName());
+            if (StringUtils.isNotBlank(def.getName()))
+                variables.add(def.getName());
         }
         List<String> result = new ArrayList<>();
         result.addAll(variables);
