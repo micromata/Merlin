@@ -21,21 +21,44 @@ public class Variables {
     }
 
     public void putFormatted(String variable, String formattedValue) {
-        variables.put(variable, formattedValue);
+        formattedVariables.put(variable, formattedValue);
     }
 
+    public boolean contains(String variable) {
+        return variables.containsKey(variable) || formattedVariables.containsKey(variable);
+    }
+
+    /**
+     * The variable if found. If not and the formatted value is given, the formatted value will be returned. If none of the values is given, null is returned.
+     *
+     * @param variable
+     * @return value
+     */
     public Object get(String variable) {
-        return variables.get(variable);
+        Object value = variables.get(variable);
+        if (value != null)
+            return value;
+        return formattedVariables.get(variable);
     }
 
-    public String getFormattedValue(String variable) {
+    /**
+     * Return the formatted value if given. If not the unformatted value will be taken, if given. If not the defaultString will be returned.
+     * @param variable
+     * @param defaultString "" as default.
+     * @return value
+     */
+    public String getFormatted(String variable, String defaultString) {
         String result = formattedVariables.get(variable);
         if (result != null) return result;
         Object value = get(variable);
         if (value == null) {
-            return "";
+            return defaultString;
         }
         return String.valueOf(value);
+    }
+
+    public String getFormatted(String variable) {
+        return getFormatted(variable, "");
     }
 
     public Map<String, Object> getVariables() {
@@ -45,6 +68,7 @@ public class Variables {
     public void putAll(Map<? extends String, ?> map) {
         variables.putAll(map);
     }
+
     public void setVariables(Map<String, Object> variables) {
         this.variables = variables;
     }
