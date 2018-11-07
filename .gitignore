@@ -8,6 +8,7 @@ merlin-core/out/
 merlin-core/target/
 merlin-desktop/build
 merlin-desktop/out
+merlin-server/build
 merlin-smarthome/build
 merlin-smarthome/out/
 merlin-smarthome/target/
@@ -15,9 +16,13 @@ merlin-velocity/build
 merlin-velocity/target/
 merlin-webapp/public/docs
 
-.gradle
+test
+target
 docs/html5
 docs/build
+
+.gradle
+
 
 # Compiled class file
 *.class
@@ -48,9 +53,3 @@ hs_err_pid*
 *.ipr
 *.iml
 *.iws
-test/test1.docx
-test/test2.docx
-test/test3.docx
-test/test4.docx
-test/test5.docx
-target
