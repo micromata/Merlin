@@ -16,6 +16,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import org.apache.log4j.FileAppender;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,25 +34,46 @@ public class DesktopMain extends Application {
     private static DesktopMain main;
     private Stage stage;
     private java.util.Timer timer;
+    private static Thread updateThread;
 
     public static void main(String[] args) {
         Version version = Version.getInstance();
-        log.info("Starting " + version.getAppName() + " " + version.getVersion() + ", build time: "
-                + version.getBuildDate() + " (UTC: " + version.getBuildDateUTC() + "), mode: " + RunningMode.getMode());
+        String startLogMessage = "Starting " + version.getAppName() + " " + version.getVersion() + ", build time: "
+                + version.getBuildDate() + " (UTC: " + version.getBuildDateUTC() + "), mode: " + RunningMode.getMode();
+        log.info(startLogMessage);
+        try {
+            org.apache.log4j.Logger rootLogger = org.apache.log4j.Logger.getRootLogger();
+            FileAppender appender = (FileAppender) rootLogger.getAppender("file");
+            String logFilename = appender.getFile();
+            File logFile = new File(logFilename);
+            if (!logFile.canWrite()) {
+                logFile = new File(System.getProperty("java.io.tmpdir"), "merlin.log");
+                appender.setFile(logFile.getAbsolutePath());
+                appender.activateOptions();
+                log.info(startLogMessage);
+            }
+            log.info("Writing logs to " + logFile.getAbsolutePath());
+        } catch (Exception ex) {
+            log.error("Can't detect file logger: " + ex.getMessage(), ex);
+        }
         log.info("Current working directory: " + new File(".").getAbsolutePath());
         log.info("Using Java version: " + System.getProperty("java.version"));
-        new Thread(() -> {
-            try {
-                if (!RunningMode.isDevelopmentMode()) {
-                    AppUpdater.getInstance().checkUpdate();
-                } else {
-                    // No update mechanism in development mode.
-                    UpdateInfo.getInstance().setDevelopmentTestData(); // Only for testing.
+        updateThread = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    if (!RunningMode.isDevelopmentMode()) {
+                        AppUpdater.getInstance().checkUpdate();
+                    } else {
+                        // No update mechanism in development mode.
+                        UpdateInfo.getInstance().setDevelopmentTestData(); // Only for testing.
+                    }
+                } catch (Exception ex) {
+                    log.error("Exception while checking update: " + ex.getMessage(), ex);
                 }
-            } catch (Exception ex) {
-                log.error("Exception while checking update: " + ex.getMessage(), ex);
             }
-        }).start();
+        };
+        updateThread.start();
         launch(args);
     }
 
@@ -143,18 +165,10 @@ public class DesktopMain extends Application {
     @Override
     public void stop() throws Exception {
         super.stop();
-        timer.cancel();
         log.info("Stopping Java FX application.");
+        timer.cancel();
+        updateThread.interrupt(); // Thread hangs if now connection to update server. Force to stop.
         server.stop();
-        int stopCounter = 10;
-        while (server.isStopped() == false) {
-            Thread.sleep(1000);
-            log.info("Server not yet stopped.");
-            if (stopCounter-- <= 0) {
-                log.info("Forcing server stop.");
-                System.exit(0);
-            }
-        }
     }
 
     public Stage getStage() {
