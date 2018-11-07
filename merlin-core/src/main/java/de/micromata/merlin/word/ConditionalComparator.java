@@ -1,10 +1,10 @@
 package de.micromata.merlin.word;
 
+import de.micromata.merlin.word.templating.Variables;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Map;
 import java.util.regex.Matcher;
 
 public class ConditionalComparator extends AbstractConditional {
@@ -37,12 +37,12 @@ public class ConditionalComparator extends AbstractConditional {
      * @param variables
      * @return
      */
-    boolean matches(Map<String, ?> variables) {
+    boolean matches(Variables variables) {
         boolean result = _matches(variables);
         return not ? !result : result;
     }
 
-    boolean _matches(Map<String, ?> variables) {
+    boolean _matches(Variables variables) {
         if (parent != null && parent.matches(variables) == false) {
             return false;
         }

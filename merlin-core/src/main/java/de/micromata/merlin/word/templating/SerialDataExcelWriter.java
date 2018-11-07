@@ -58,7 +58,7 @@ public class SerialDataExcelWriter extends AbstractExcelWriter {
         currentSheet.getRow(0).addMergeRegion(0, numberOfColumns - 1);
         currentSheet.getRow(1).setHeight(50).addMergeRegion(0, numberOfColumns - 1);
         if (serialData.getEntries() != null) {
-            for (SerialDataEntry entry : serialData.getEntries()) {
+            for (Variables entry : serialData.getEntries()) {
                 row = currentSheet.createRow();
                 for (VariableDefinition variableDefinition : serialData.getTemplate().getStatistics().getInputVariables()) {
                     Object valueObject = entry.get(variableDefinition.getName());

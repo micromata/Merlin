@@ -36,7 +36,7 @@ public class WordTemplateRunnerTest {
 
     private void runDocument(WordTemplateRunner runner, String employee, String gender, String date,
                              String beginDate, String weeklyHours, String numberOfLeaveDays) throws Exception {
-        Map<String, Object> variables = new HashMap<>();
+        Variables variables = new Variables();
         variables.put("Employee", employee);
         variables.put("Gender", gender);
         variables.put("Vertragstyp", "befristet");
@@ -48,7 +48,7 @@ public class WordTemplateRunnerTest {
         runDocument(runner, variables);
     }
 
-    private void runDocument(WordTemplateRunner runner, Map<String, Object> variables) throws Exception {
+    private void runDocument(WordTemplateRunner runner, Variables variables) throws Exception {
         String filename = runner.createFilename("file", variables);
         assertNotEquals("file", filename, "Filename pattern of template definition doesn't work, why?");
         WordDocument document = runner.run(variables);

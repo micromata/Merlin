@@ -6,6 +6,8 @@ import de.micromata.merlin.data.PropertiesStorage;
 import de.micromata.merlin.excel.*;
 import de.micromata.merlin.utils.Converter;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.Row;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -92,20 +94,25 @@ public class SerialDataExcelReader {
             log.error(msg.getMessageWithAllDetails(i18n));
         }
         int counter = 0;
+        DataFormatter df = new DataFormatter();
         Iterator<Row> it = sheet.getDataRowIterator();
         while (it.hasNext()) {
             Row row = it.next();
-            SerialDataEntry serialDataEntry = new SerialDataEntry();
+            Variables variables = new Variables();
             for (VariableDefinition variableDefinition : templateStatistics.getInputVariables()) {
                 ExcelColumnDef columnDef = columnDefMap.get(variableDefinition);
-                Object value = PoiHelper.getValue(sheet.getCell(row, columnDef));
+
+                Cell cell = sheet.getCell(row, columnDef);
+                String formattedCellValue = df.formatCellValue(cell);
+                variables.putFormatted(variableDefinition.getName(), formattedCellValue);
+                Object value = PoiHelper.getValue(cell);
                 if (value == null) {
                     continue;
                 }
                 Object val = templateRunContext.convertValue(value, variableDefinition.getType());
-                serialDataEntry.put(variableDefinition.getName(), val);
+                variables.put(variableDefinition.getName(), val);
             }
-            serialData.add(serialDataEntry);
+            serialData.add(variables);
         }
     }
 

@@ -37,10 +37,10 @@ public class SerialTemplateRunner {
         ZipUtils zipUtil = new ZipUtils(zipFilename);
         int counter = 0;
         int maxEntries = serialData.getEntries().size();
-        for (SerialDataEntry entry : serialData.getEntries()) {
-            WordDocument result = runner.run(entry.getVariables());
-            entry.getVariables().put("counter", Converter.formatNumber(++counter, maxEntries));
-            String zipEntryFilename = runner.createFilename(serialData.getFilenamePattern(), entry.getVariables(), false);
+        for (Variables variables : serialData.getEntries()) {
+            WordDocument result = runner.run(variables);
+            variables.getVariables().put("counter", Converter.formatNumber(++counter, maxEntries));
+            String zipEntryFilename = runner.createFilename(serialData.getFilenamePattern(), variables, false);
             zipUtil.addZipEntry(zipEntryFilename, result.getAsByteArrayOutputStream().toByteArray());
             log.info("Generating serial template entry: " + zipEntryFilename);
         }

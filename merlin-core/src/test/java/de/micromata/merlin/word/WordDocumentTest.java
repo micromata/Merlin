@@ -1,6 +1,7 @@
 package de.micromata.merlin.word;
 
 import de.micromata.merlin.utils.ReplaceUtils;
+import de.micromata.merlin.word.templating.Variables;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.junit.jupiter.api.Test;
@@ -8,9 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -52,7 +51,7 @@ public class WordDocumentTest {
 
     @Test
     public void regExpTest() {
-        Map<String, Object> variables = new HashMap<>();
+        Variables variables = new Variables();
         variables.put("var", "world");
         variables.put("endlessLoop", "${endlessLoop}");
         variables.put("endlessLoop2", "... ${endlessLoop} ...");
@@ -106,7 +105,7 @@ public class WordDocumentTest {
 
     @Test
     public void conditionalsTest() {
-        Map<String, Object> variables = new HashMap<>();
+        Variables variables = new Variables();
         variables.put("var", "world");
         variables.put("counter", "42");
         variables.put("endlessLoop2", "... ${endlessLoop} ...");

@@ -8,8 +8,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Map;
-
 /**
  * Runs a template.
  */
@@ -29,7 +27,7 @@ public class WordTemplateRunner {
     }
 
     /**
-     * Don't forget to bind the Word template before running {@link #run(Map)}.
+     * Don't forget to bind the Word template before running {@link #run(Variables)}.
      *
      * @param document
      */
@@ -59,7 +57,7 @@ public class WordTemplateRunner {
         return srcDocument.scanForTemplateId();
     }
 
-    public WordDocument run(Map<String, Object> variables) {
+    public WordDocument run(Variables variables) {
         ByteArrayOutputStream bos = srcDocument.getAsByteArrayOutputStream();
         WordDocument newDocument = new WordDocument(bos.toInputStream(), srcDocument.getFilename());
         newDocument.setFilename(srcDocument.getFilename());
@@ -81,7 +79,7 @@ public class WordTemplateRunner {
      * @return File name, Characters not matching letters, digits and {_-.@} are replaced by underscore
      * (also white spaces are replaced).
      */
-    public String createFilename(String defaultFilenamePattern, Map<String, Object> variables) {
+    public String createFilename(String defaultFilenamePattern, Variables variables) {
         return createFilename(defaultFilenamePattern, variables, true);
     }
 
@@ -95,7 +93,7 @@ public class WordTemplateRunner {
      * @return File name, Characters not matching letters, digits and {_-.@} are replaced by underscore
      * (also white spaces are replaced).
      */
-    public String createFilename(String defaultFilenamePattern, Map<String, Object> variables, boolean useTemplateDefinitionPattern) {
+    public String createFilename(String defaultFilenamePattern, Variables variables, boolean useTemplateDefinitionPattern) {
         String pattern = defaultFilenamePattern;
         if (useTemplateDefinitionPattern && templateDefinition != null) {
             pattern = FilenameUtils.getBaseName(templateDefinition.getFilenamePattern());

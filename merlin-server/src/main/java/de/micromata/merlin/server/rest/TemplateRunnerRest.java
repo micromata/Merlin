@@ -1,17 +1,14 @@
 package de.micromata.merlin.server.rest;
 
-import de.micromata.merlin.server.json.JsonUtils;
-import de.micromata.merlin.server.storage.Storage;
-import de.micromata.merlin.server.user.UserUtils;
 import de.micromata.merlin.logging.MDCHandler;
 import de.micromata.merlin.logging.MDCKey;
 import de.micromata.merlin.persistency.PersistencyRegistry;
+import de.micromata.merlin.server.json.JsonUtils;
+import de.micromata.merlin.server.storage.Storage;
+import de.micromata.merlin.server.user.UserUtils;
 import de.micromata.merlin.utils.MerlinFileUtils;
 import de.micromata.merlin.word.WordDocument;
-import de.micromata.merlin.word.templating.Template;
-import de.micromata.merlin.word.templating.TemplateDefinition;
-import de.micromata.merlin.word.templating.TemplateRunContext;
-import de.micromata.merlin.word.templating.WordTemplateRunner;
+import de.micromata.merlin.word.templating.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,7 +17,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.Map;
 
 @Path("/templates")
 public class TemplateRunnerRest {
@@ -68,9 +64,9 @@ public class TemplateRunnerRest {
                 WordTemplateRunner runner = new WordTemplateRunner(templateDefinition, doc);
                 TemplateRunContext context = new TemplateRunContext();
                 context.setLocale(UserUtils.getUserLocale());
-                Map<String, Object> variables = context.convertVariables(data.getVariables(), templateDefinition);
+                Variables variables = context.convertVariables(data.getVariables(), templateDefinition);
                 WordDocument result = runner.run(variables);
-                String filename = runner.createFilename(path.getFileName().toString(), data.getVariables());
+                String filename = runner.createFilename(path.getFileName().toString(), variables);
                 byte[] byteArray = result.getAsByteArrayOutputStream().toByteArray();
                 Response.ResponseBuilder builder = Response.ok(byteArray);
                 builder.header("Content-Disposition", "attachment; filename=" + filename);

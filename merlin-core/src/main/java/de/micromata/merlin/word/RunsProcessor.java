@@ -3,6 +3,7 @@ package de.micromata.merlin.word;
 import de.micromata.merlin.csv.CSVStringUtils;
 import de.micromata.merlin.utils.ReplaceEntry;
 import de.micromata.merlin.utils.ReplaceUtils;
+import de.micromata.merlin.word.templating.Variables;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.slf4j.Logger;
@@ -10,7 +11,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -53,7 +53,7 @@ public class RunsProcessor {
      * <tt>{templateDefinition.refid = "..."}</tt> and <tt>{id = "..."}</tt>.
      * @param variables
      */
-    public void replace(Map<String, ?> variables) {
+    public void replace(Variables variables) {
         if (runs == null || runs.size() == 0) {
             return;
         }

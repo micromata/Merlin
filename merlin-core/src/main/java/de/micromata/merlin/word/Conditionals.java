@@ -1,5 +1,6 @@
 package de.micromata.merlin.word;
 
+import de.micromata.merlin.word.templating.Variables;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.poi.xwpf.usermodel.IBodyElement;
@@ -74,7 +75,7 @@ public class Conditionals {
         }
     }
 
-    void process(Map<String, ?> variables) {
+    void process(Variables variables) {
         for (AbstractConditional conditional : conditionals) {
             if (conditional.getParent() != null) {
                 // Process only top level conditionals. The childs will be processed by its parent.
@@ -85,7 +86,7 @@ public class Conditionals {
         remover.action();
     }
 
-    void process(AbstractConditional conditional, Map<String, ?> variables) {
+    void process(AbstractConditional conditional, Variables variables) {
         if (conditional.matches(variables) == false) {
             // Remove all content covered by this conditional.
             remover.add(conditional.getRange());

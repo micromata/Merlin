@@ -1,9 +1,7 @@
 package de.micromata.merlin.utils;
 
+import de.micromata.merlin.word.templating.Variables;
 import org.junit.jupiter.api.Test;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -11,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 public class ReplaceUtilsTest {
     @Test
     public void replaceTest() {
-        Map<String, Object> variables = new HashMap<>();
+        Variables variables = new Variables();
         variables.put("a", "A");
         variables.put("b", "Berta");
         variables.put("name", "hurz");

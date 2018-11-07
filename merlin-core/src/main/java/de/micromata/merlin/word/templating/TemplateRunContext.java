@@ -7,6 +7,7 @@ import de.micromata.merlin.excel.ExcelWorkbook;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.util.DateFormatConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +16,6 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
@@ -26,13 +26,14 @@ public class TemplateRunContext {
     private Logger log = LoggerFactory.getLogger(VariableDefinition.class);
     private static final String DEFAULT_DATE_PATTERN = "dd/MM/yyyy";
 
-    DateFormat dateFormatter;
-    DateFormat[] dateFormatters;
-    DateFormat dateFormatterGerman;
+    private DateFormat dateFormatter;
+    private DateFormat[] dateFormatters;
+    private DateFormat dateFormatterGerman;
 
-    Locale locale;
+    private Locale locale;
     private String excelDateFormatPattern;
     private I18n i18n;
+    private DataFormatter poiDataFormatter = new DataFormatter();
 
     public TemplateRunContext() {
         i18n = CoreI18n.getDefault();
@@ -58,11 +59,12 @@ public class TemplateRunContext {
      * @param templateDefinition For getting definitions of variables. If not given, the parameter variables is returen unchanged.
      * @return
      */
-    public Map<String, Object> convertVariables(Map<String, Object> variables, TemplateDefinition templateDefinition) {
+    public Variables convertVariables(Map<String, Object> variables, TemplateDefinition templateDefinition) {
+        Variables result = new Variables();
         if (templateDefinition == null) {
-            return variables;
+            result.putAll(variables);
+            return result;
         }
-        Map<String, Object> result = new HashMap<>();
         for (Map.Entry<String, Object> entry : variables.entrySet()) {
             String varname = entry.getKey();
             VariableDefinition variableDefinition = templateDefinition.getVariableDefinition(varname);
@@ -79,6 +81,7 @@ public class TemplateRunContext {
         }
         return result;
     }
+
 
     /**
      * Default is "dd/MM/yyyy".
@@ -109,6 +112,11 @@ public class TemplateRunContext {
             return "";
         }
         return val.toString();
+    }
+
+    public String getFormattedValue(Cell cell, VariableType type) {
+        if (cell == null) return "";
+        return poiDataFormatter.formatCellValue(cell);
     }
 
     public Object convertValue(Object value, VariableType type) {

@@ -11,7 +11,7 @@ import java.util.List;
 public class SerialData {
     private static Logger log = LoggerFactory.getLogger(SerialData.class);
 
-    private List<SerialDataEntry> entries = new ArrayList<>();
+    private List<Variables> entries = new ArrayList<>();
     private String filenamePattern;
     private Template template;
     private TemplateDefinition templateDefinition;
@@ -20,15 +20,15 @@ public class SerialData {
     public SerialData() {
     }
 
-    public void add(SerialDataEntry data) {
+    public void add(Variables data) {
         entries.add(data);
     }
 
-    public List<SerialDataEntry> getEntries() {
+    public List<Variables> getEntries() {
         return entries;
     }
 
-    public void setEntries(List<SerialDataEntry> entries) {
+    public void setEntries(List<Variables> entries) {
         this.entries = entries;
     }
 

@@ -1,6 +1,7 @@
 package de.micromata.merlin.word;
 
 import de.micromata.merlin.persistency.PersistencyRegistry;
+import de.micromata.merlin.word.templating.Variables;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.openxml4j.opc.OPCPackage;
@@ -15,7 +16,6 @@ import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 public class WordDocument implements AutoCloseable {
@@ -103,7 +103,7 @@ public class WordDocument implements AutoCloseable {
         return document;
     }
 
-    public void process(Map<String, Object> variables) {
+    public void process(Variables variables) {
         Conditionals conditionals = getConditionals();
         conditionals.process(variables);
         replaceVariables(variables);
@@ -158,11 +158,11 @@ public class WordDocument implements AutoCloseable {
         return bos;
     }
 
-    private void replaceVariables(Map<String, Object> variables) {
+    private void replaceVariables(Variables variables) {
         processAllParagraphs(new RunsProcessorExecutor() {
             @Override
             Object process(RunsProcessor processor, Object param) {
-                processor.replace((Map<String, ?>) param);
+                processor.replace((Variables) param);
                 return null;
             }
         }, variables);

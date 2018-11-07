@@ -1,15 +1,14 @@
 package de.micromata.merlin.word;
 
+import de.micromata.merlin.word.templating.Variables;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -68,7 +67,7 @@ public class ConditionalsTest {
     }
 
     private void checkSingle(String text) {
-        Map<String, Object> variables = new HashMap<>();
+        Variables variables = new Variables();
         variables.put("emptyVar", "");
         variables.put("blankVar", "  ");
         variables.put("var", "text...");
@@ -99,7 +98,7 @@ public class ConditionalsTest {
         TestHelper.createParagraph(poiDoc, "The{if fox=”lazy”} lazy{endif} fox jumps over the water."); // 1
         TestHelper.createParagraph(poiDoc, "The{if fox in `lazy´, 'very lazy'} lazy{endif} fox jumps over the water."); // 1
         WordDocument doc = new WordDocument(poiDoc);
-        Map<String, Object> variables = new HashMap<>();
+        Variables variables = new Variables();
         variables.put("fox", lazyValue);
         doc.process(variables);
         List<XWPFParagraph> paragraphs = poiDoc.getParagraphs();
@@ -160,7 +159,7 @@ public class ConditionalsTest {
         test(cond, "fox", ConditionalType.NOT_EQUAL, 3, 3, "lazy");
         assertEquals(parent, cond.getParent());
 
-        Map<String, String> variables = new HashMap<>();
+        Variables variables = new Variables();
         variables.put("var", "not test");
         variables.put("fox", "lazy");
         conditionals.process(variables);

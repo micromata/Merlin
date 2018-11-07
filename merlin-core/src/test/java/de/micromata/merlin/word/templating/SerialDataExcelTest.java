@@ -67,8 +67,8 @@ public class SerialDataExcelTest {
         return serialData;
     }
 
-    SerialDataEntry createEntry(String gender, String employee, String date, String beginDate, int weeklyHours, int numberOfLeaveDays) {
-        SerialDataEntry entry = new SerialDataEntry();
+    Variables createEntry(String gender, String employee, String date, String beginDate, int weeklyHours, int numberOfLeaveDays) {
+        Variables entry = new Variables();
         entry.put("Gender", gender);
         entry.put("Employee", employee);
         try {

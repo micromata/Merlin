@@ -1,5 +1,6 @@
 package de.micromata.merlin.utils;
 
+import de.micromata.merlin.word.templating.Variables;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
@@ -27,7 +28,7 @@ public class ReplaceUtils {
         umlautReplacementMap.put('ß', "ss");
     }
 
-    public static List<ReplaceEntry> createReplaceEntries(String text, Map<String, ?> variables) {
+    public static List<ReplaceEntry> createReplaceEntries(String text, Variables variables) {
         List<ReplaceEntry> replaceEntries = new ArrayList();
         createReplaceEntries(text, replaceEntries, variables);
         return replaceEntries;
@@ -40,7 +41,7 @@ public class ReplaceUtils {
      * @param replaceEntries
      * @param variables
      */
-    public static void createReplaceEntries(String text, List<ReplaceEntry> replaceEntries, Map<String, ?> variables) {
+    public static void createReplaceEntries(String text, List<ReplaceEntry> replaceEntries, Variables variables) {
         Matcher matcher = VARIABLE_PATTERN.matcher(text);
         while (matcher.find()) {
             String variableName = matcher.group(1);
@@ -82,7 +83,7 @@ public class ReplaceUtils {
         return text;
     }
 
-    public static String replace(String text, Map<String, ?> variables) {
+    public static String replace(String text, Variables variables) {
         List<ReplaceEntry> replaceEntries = createReplaceEntries(text, variables);
         return replace(text, replaceEntries);
     }

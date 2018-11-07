@@ -1,6 +1,7 @@
 package de.micromata.merlin.word;
 
 import de.micromata.merlin.utils.ReplaceUtils;
+import de.micromata.merlin.word.templating.Variables;
 import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -11,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import java.beans.Transient;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -92,7 +92,7 @@ public abstract class AbstractConditional implements Comparable<AbstractConditio
      * @param variables
      * @return
      */
-    abstract boolean matches(Map<String, ?> variables);
+    abstract boolean matches(Variables variables);
 
     void setEndConditionalExpressionRange(DocumentRange endConditionalExpressionRange) {
         this.endConditionalExpressionRange = endConditionalExpressionRange;

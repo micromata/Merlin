@@ -71,7 +71,7 @@ public class DependentVariableDefinition implements Cloneable {
         return list;
     }
 
-    public Object getMappedValue(Map<String, Object> variables) {
+    public Object getMappedValue(Variables variables) {
         if (mapping == null || variables == null || dependsOn == null) {
             return "";
         }
