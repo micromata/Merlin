@@ -1,9 +1,10 @@
 package de.micromata.merlin.app.rest;
 
 import de.micromata.merlin.app.javafx.FileSystemBrowser;
+import de.micromata.merlin.persistency.FileDescriptor;
+import de.micromata.merlin.server.json.JsonUtils;
 import de.micromata.merlin.server.rest.RestUtils;
 import de.micromata.merlin.server.storage.Storage;
-import de.micromata.merlin.persistency.FileDescriptor;
 import de.micromata.merlin.word.templating.Template;
 import de.micromata.merlin.word.templating.TemplateDefinition;
 import org.apache.commons.lang3.StringUtils;
@@ -26,6 +27,7 @@ import java.util.concurrent.ExecutionException;
 @Path("/files")
 public class FilesystemBrowserRest {
     private Logger log = LoggerFactory.getLogger(FilesystemBrowserRest.class);
+
     /**
      * Opens a directory browser or file browser on the desktop app and returns the chosen dir/file. Works only if Browser and Desktop app are running
      * on the same host.
@@ -56,7 +58,9 @@ public class FilesystemBrowserRest {
             log.error("While waiting for file browser: " + ex.getMessage(), ex);
         }
         FileSystemBrowser.getInstance().setLastDir(file);
-        String result = "{\"directory\":\"" + (file != null ? file.getAbsolutePath() : "") + "\"}";
+        String filename = file != null ? JsonUtils.toJson(file.getAbsolutePath()) : "";
+        String result = "{\"directory\":\"" + filename + "\"}";
+        log.info("result: " + result);
         return result;
     }
 
