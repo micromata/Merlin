@@ -128,10 +128,6 @@ public class JettyServer {
         }
     }
 
-    public boolean isStopped() {
-        return server.isStopped();
-    }
-
     private int findFreePort() {
         int port = ConfigurationHandler.getInstance().getConfiguration().getPort();
         return findFreePort(port);
