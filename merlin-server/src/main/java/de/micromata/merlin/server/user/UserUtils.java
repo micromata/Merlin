@@ -19,15 +19,18 @@ public class UserUtils {
 
     public static Locale getUserLocale() {
         UserInfo userInfo = threadUserInfo.get();
-        if (userInfo == null) {
-            return null;
-        }
+        if (userInfo == null) return null;
         UserData user = userInfo.userData;
         Locale locale = user.getLocale();
         if (locale == null) {
             locale = userInfo.requestLocale;
         }
         return locale;
+    }
+
+    public static String getUserDateFormat() {
+        UserData user = getUser();
+        return user != null ? user.getDateFormat() : null;
     }
 
     static void setUser(UserData user, Locale requestLocale) {
