@@ -9,6 +9,7 @@ merlin-core/target/
 merlin-desktop/build
 merlin-desktop/out
 merlin-server/build
+merlin-server/out
 merlin-smarthome/build
 merlin-smarthome/out/
 merlin-smarthome/target/
