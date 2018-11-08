@@ -28,6 +28,8 @@ public class SingleUserManager extends UserManager {
         String language = ConfigurationHandler.getInstance().get("userLocale", null);
         Locale locale = Languages.asLocale(language);
         singleUser.setLocale(locale);
+        String dateFormat = ConfigurationHandler.getInstance().get("userDateFormat", null);
+        singleUser.setDateFormat(dateFormat);
     }
 
     public UserData getUser(String id) {

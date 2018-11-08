@@ -5,6 +5,7 @@ import de.micromata.merlin.excel.ExcelWorkbook;
 import de.micromata.merlin.logging.MDCHandler;
 import de.micromata.merlin.logging.MDCKey;
 import de.micromata.merlin.persistency.PersistencyRegistry;
+import de.micromata.merlin.server.user.UserUtils;
 import de.micromata.merlin.utils.MerlinFileUtils;
 import de.micromata.merlin.word.WordDocument;
 import de.micromata.merlin.word.templating.*;
@@ -56,6 +57,7 @@ public class FileUploadRest {
     private Response runSerial(String filename, ExcelWorkbook workbook, MDCHandler mdc) {
         log.info("Processing Merlin Serial Definition file: " + filename);
         SerialDataExcelReader reader = new SerialDataExcelReader(workbook);
+        reader.getTemplateRunContext().setLocale(UserUtils.getUserDateFormat(), UserUtils.getUserLocale());
         SerialData serialData = reader.getSerialData();
         String templateDefinitionPrimaryKey = serialData.getReferencedTemplateDefinitionPrimaryKey();
         TemplateDefinition templateDefinition = null;
