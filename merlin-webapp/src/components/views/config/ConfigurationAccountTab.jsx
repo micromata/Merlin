@@ -2,7 +2,7 @@ import React from 'react';
 import {UncontrolledTooltip} from 'reactstrap';
 import {
     FormLabelField,
-    FormSelect, FormOption
+    FormSelect, FormOption, FormGroup, FormLabel, FormField
 } from "../../general/forms/FormComponents";
 import {getRestServiceUrl} from "../../../utilities/global";
 import {clearDictionary} from '../../../utilities/i18n';
@@ -28,10 +28,11 @@ class ConfigAccountTab extends React.Component {
                 return resp.json()
             })
             .then((data) => {
-                const {locale, ...user} = data;
+                const {locale, dateFormat, ...user} = data;
                 this.setState({
                     loading: false,
                     locale: locale ? locale : '',
+                    dateFormat: dateFormat ? dateFormat : '',
                     ...user
                 })
             })
@@ -50,7 +51,8 @@ class ConfigAccountTab extends React.Component {
         this.state = {
             loading: true,
             failed: false,
-            locale: null
+            locale: null,
+            dateFormat: null
         };
 
         this.handleTextChange = this.handleTextChange.bind(this);
@@ -68,7 +70,8 @@ class ConfigAccountTab extends React.Component {
 
     save() {
         var user = {
-            locale: this.state.locale
+            locale: this.state.locale,
+            dateFormat: this.state.dateFormat
         };
         return fetch(getRestServiceUrl("configuration/user"), {
             method: 'POST',
@@ -91,10 +94,10 @@ class ConfigAccountTab extends React.Component {
         return (
             <form>
                 <div id={'clearDictionary'}
-                    className={'btn btn-outline-primary refresh-button-right'}
-                    onClick={clearDictionary}
+                     className={'btn btn-outline-primary refresh-button-right'}
+                     onClick={clearDictionary}
                 >
-                    <IconRefresh />
+                    <IconRefresh/>
                     <UncontrolledTooltip placement={'left'} target={'clearDictionary'}>
                         <I18n name={'configuration.reloadDictionary.hint'}/>
                     </UncontrolledTooltip>
@@ -106,6 +109,23 @@ class ConfigAccountTab extends React.Component {
                         <FormOption value={'de'} i18nKey={'language.german'}/>
                     </FormSelect>
                 </FormLabelField>
+                <FormGroup>
+                    <FormLabel length={2} htmlFor={'dateFormat'}>
+                        <I18n name={'configuration.application.dateFormat'}/>
+                    </FormLabel>
+                    <FormField length={2}>
+                        <FormSelect value={this.state.dateFormat} name={'dateFormat'} onChange={this.handleTextChange}>
+                            <FormOption value={''} i18nKey={'configuration.application.dateFormat.option.auto'}/>
+                            <FormOption value={'dd.MM.yyyy'} label={'16.01.2018'}/>
+                            <FormOption value={'d.M.yy'} label={'16.1.18'}/>
+                            <FormOption value={'yyyy-MM-dd'} label={'2018-01-16'}/>
+                            <FormOption value={'dd/MM/yyyy'} label={'16/01/2018'}/>
+                            <FormOption value={'d/M/yy'} label={'16/1/18'}/>
+                            <FormOption value={'MM/dd/yyyy'} label={'01/16/2018'}/>
+                            <FormOption value={'M/d/yy'} label={'1/16/18'}/>
+                        </FormSelect>
+                    </FormField>
+                </FormGroup>
             </form>
         );
     }

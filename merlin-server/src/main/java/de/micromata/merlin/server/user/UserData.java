@@ -12,6 +12,7 @@ import java.util.Locale;
 public class UserData {
     private Locale locale;
     private String username;
+    private String dateFormat;
     private boolean admin;
 
     public Locale getLocale() {
@@ -20,6 +21,14 @@ public class UserData {
 
     public void setLocale(Locale locale) {
         this.locale = locale;
+    }
+
+    public String getDateFormat() {
+        return dateFormat;
+    }
+
+    public void setDateFormat(String dateFormat) {
+        this.dateFormat = dateFormat;
     }
 
     public String getUsername() {
@@ -42,6 +51,7 @@ public class UserData {
     public String toString() {
         ToStringBuilder tos = new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE);
         tos.append("username", username);
+        tos.append("dateFormat", dateFormat);
         tos.append("admin", admin);
         tos.append("locale", locale);
         return tos.toString();

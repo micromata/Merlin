@@ -65,6 +65,10 @@ public class ConfigurationRest {
             // Don't set locale with "" as language.
             user.setLocale(null);
         }
+        if (StringUtils.isBlank(user.getDateFormat())) {
+            // Don't set dateFormat as "".
+            user.setDateFormat(null);
+        }
         UserManager.instance().saveUser(user);
     }
 

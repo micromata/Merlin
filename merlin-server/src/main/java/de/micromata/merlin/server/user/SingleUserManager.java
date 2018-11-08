@@ -44,7 +44,10 @@ public class SingleUserManager extends UserManager {
     public void saveUser(UserData userData) {
         Locale locale = userData.getLocale();
         this.singleUser.setLocale(locale);
+        String dateFormat = userData.getDateFormat();
+        this.singleUser.setDateFormat(dateFormat);
         String lang = Languages.asString(locale);
         ConfigurationHandler.getInstance().save("userLocale", lang);
+        ConfigurationHandler.getInstance().save("userDateFormat", dateFormat);
     }
 }
