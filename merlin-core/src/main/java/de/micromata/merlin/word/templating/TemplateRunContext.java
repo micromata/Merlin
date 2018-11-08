@@ -75,6 +75,7 @@ public class TemplateRunContext {
                     Date date = parseDate(value);
                     if (date != null) {
                         value = dateToString(date);
+                        result.putFormatted(entry.getKey(), dateFormatter.format(date));
                     }
                 }
             }
