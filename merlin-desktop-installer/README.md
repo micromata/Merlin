@@ -1,9 +1,9 @@
 # Building a new release
-1. Increase version in `build.gradlel`.
+1. Increase version in `build.gradle`.
 2. `gradle clean test dist`
 3. Run Install4j
    1. General settings -> Application Info -> Version __current version__
-   2. Installer -> Auto-Update Options -> Base url for installers: https://sourceforge.net/projects/pforge/files/Merlin/0.3/
+   2. Installer -> Auto-Update Options -> Base url for installers: https://sourceforge.net/projects/pforge/files/Merlin/0.9/
    3. Build project
 4. `gradle postDist`
 5. Testing
