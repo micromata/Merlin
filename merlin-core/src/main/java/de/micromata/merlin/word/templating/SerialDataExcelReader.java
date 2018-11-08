@@ -101,9 +101,8 @@ public class SerialDataExcelReader {
             Variables variables = new Variables();
             for (VariableDefinition variableDefinition : templateStatistics.getInputVariables()) {
                 ExcelColumnDef columnDef = columnDefMap.get(variableDefinition);
-
                 Cell cell = sheet.getCell(row, columnDef);
-                String formattedCellValue = df.formatCellValue(cell);
+                String formattedCellValue = templateRunContext.getFormattedValue(cell);
                 variables.putFormatted(variableDefinition.getName(), formattedCellValue);
                 Object value = PoiHelper.getValue(cell);
                 if (value == null) {
