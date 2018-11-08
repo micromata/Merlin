@@ -8,6 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.DataFormatter;
+import org.apache.poi.ss.usermodel.DateUtil;
 import org.apache.poi.ss.util.DateFormatConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,12 +34,12 @@ public class TemplateRunContext {
     private Locale locale;
     private String excelDateFormatPattern;
     private I18n i18n;
-    private DataFormatter poiDataFormatter = new DataFormatter();
+    private DataFormatter poiDataFormatter;
 
     public TemplateRunContext() {
         i18n = CoreI18n.getDefault();
         this.locale = Locale.getDefault();
-        dateFormatter = new SimpleDateFormat(DEFAULT_DATE_PATTERN);
+        dateFormatter = new SimpleDateFormat(DEFAULT_DATE_PATTERN, locale);
         dateFormatterGerman = new SimpleDateFormat("dd.MM.yyyy");
         dateFormatters = new DateFormat[]{
                 new SimpleDateFormat("yyyy-MM-dd"),
@@ -114,8 +115,16 @@ public class TemplateRunContext {
         return val.toString();
     }
 
-    public String getFormattedValue(Cell cell, VariableType type) {
+    public String getFormattedValue(Cell cell) {
         if (cell == null) return "";
+        if (poiDataFormatter == null) {
+            poiDataFormatter = new DataFormatter(locale);
+        }
+        if (cell.getCellType() == CellType.NUMERIC && DateUtil.isCellDateFormatted(cell)) {
+            Date date = cell.getDateCellValue();
+            return dateFormatter.format(date);
+        }
+
         return poiDataFormatter.formatCellValue(cell);
     }
 
@@ -248,12 +257,23 @@ public class TemplateRunContext {
     }
 
     /**
-     * Sets i18n and locale. If you want to use your own i18n, please call {@link #setI18n(I18n)} after {@link #setLocale(Locale)}.
+     * Sets i18n and locale. If you want to use your own i18n, please call {@link #setI18n(I18n)} after {@link #setLocale(String, Locale)}.
      *
+     * @param dateFormatPattern
      * @param locale
      */
-    public void setLocale(Locale locale) {
+    public void setLocale(String dateFormatPattern, Locale locale) {
         i18n = CoreI18n.getDefault().get(locale);
         this.locale = locale;
+        poiDataFormatter = null;
+        if (StringUtils.isBlank(dateFormatPattern)) {
+            if (locale != null && locale.getLanguage().startsWith("de")) {
+                this.dateFormatter = dateFormatterGerman;
+            } else {
+                dateFormatter = new SimpleDateFormat(DEFAULT_DATE_PATTERN, locale);
+            }
+        } else {
+            this.dateFormatter = new SimpleDateFormat(dateFormatPattern, locale);
+        }
     }
 }

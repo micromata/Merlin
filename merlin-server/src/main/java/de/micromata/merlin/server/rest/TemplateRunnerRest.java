@@ -63,7 +63,7 @@ public class TemplateRunnerRest {
                 WordDocument doc = WordDocument.load(path);
                 WordTemplateRunner runner = new WordTemplateRunner(templateDefinition, doc);
                 TemplateRunContext context = new TemplateRunContext();
-                context.setLocale(UserUtils.getUserLocale());
+                context.setLocale(UserUtils.getUserDateFormat(), UserUtils.getUserLocale());
                 Variables variables = context.convertVariables(data.getVariables(), templateDefinition);
                 WordDocument result = runner.run(variables);
                 String filename = runner.createFilename(path.getFileName().toString(), variables);

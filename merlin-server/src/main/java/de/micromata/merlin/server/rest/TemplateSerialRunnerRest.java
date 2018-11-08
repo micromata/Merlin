@@ -4,6 +4,7 @@ import de.micromata.merlin.server.storage.Storage;
 import de.micromata.merlin.excel.ExcelWorkbook;
 import de.micromata.merlin.logging.MDCHandler;
 import de.micromata.merlin.logging.MDCKey;
+import de.micromata.merlin.server.user.UserUtils;
 import de.micromata.merlin.word.templating.SerialData;
 import de.micromata.merlin.word.templating.SerialDataExcelWriter;
 import de.micromata.merlin.word.templating.Template;
@@ -61,7 +62,7 @@ public class TemplateSerialRunnerRest {
             serialData.setTemplate(template);
             serialData.setTemplateDefinition(templateDefinition);
             SerialDataExcelWriter writer = new SerialDataExcelWriter(serialData);
-            writer.getTemplateRunContext().setLocale(RestUtils.getUserLocale(requestContext));
+            writer.getTemplateRunContext().setLocale(UserUtils.getUserDateFormat(), RestUtils.getUserLocale(requestContext));
             ExcelWorkbook workbook = writer.writeToWorkbook();
 
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
