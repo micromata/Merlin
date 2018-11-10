@@ -9,6 +9,7 @@
 5. Testing
    1. Testing update from previous installation (also with current installatino but with 'faked' old version).
    2. install, test web and java-code.
+   3. Check installation: Assure that no javafx*.jar is in the lib dir.
 6. Creating Github release
    1. Create new tag, e. g. `v0.9`.
 7. Upload to SourceForge
