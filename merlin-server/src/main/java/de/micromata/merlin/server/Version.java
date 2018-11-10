@@ -35,7 +35,6 @@ public class Version {
                     version = "99.0";
                     appName = "Merlin";
                     buildDate = new Date();
-                    return;
                 } else {
                     Properties props = new Properties();
                     props.load(inputStream);
@@ -57,6 +56,7 @@ public class Version {
                 appName = "Merlin";
                 version = "?.?";
                 buildDateUTC = "1970-01-01 00:00:00";
+                return;
             }
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd' 'HH:mm:ss");
             formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
