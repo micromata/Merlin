@@ -23,6 +23,8 @@ public class ConfigurationHandler {
     private static final String LANGUAGE_DEFAULT = null;
     private static final String SHOW_TEST_DATA_PREF = "show-test-data";
     private static final boolean SHOW_TEST_DATA_PREF_DEFAULT = true;
+    private static final String WEB_DEVELOPMENT_MODE_PREF = "web-development-mode";
+    private static final boolean WEB_DEVELOPMENT_MODE_PREF_DEFAULT = false;
     static final String TEMPLATES_DIRS = "template-directories";
 
     private Preferences preferences;
@@ -63,6 +65,7 @@ public class ConfigurationHandler {
     public void load() {
         configuration.setPort(preferences.getInt(WEBSERVER_PORT_PREF, WEBSERVER_PORT_DEFAULT));
         configuration.setShowTestData(preferences.getBoolean(SHOW_TEST_DATA_PREF, SHOW_TEST_DATA_PREF_DEFAULT));
+        configuration.setWebDevelopmentMode(preferences.getBoolean(WEB_DEVELOPMENT_MODE_PREF, WEB_DEVELOPMENT_MODE_PREF_DEFAULT));
         String json = preferences.get(TEMPLATES_DIRS, null);
         if (json != null) {
             try {
@@ -83,6 +86,7 @@ public class ConfigurationHandler {
         log.info("Saving configuration to user prefs.");
         preferences.putInt(WEBSERVER_PORT_PREF, configuration.getPort());
         preferences.putBoolean(SHOW_TEST_DATA_PREF, configuration.isShowTestData());
+        preferences.putBoolean(WEB_DEVELOPMENT_MODE_PREF, configuration.isWebDevelopmentMode());
         if (CollectionUtils.isNotEmpty(configuration.getTemplatesDirs())) {
             String json = JsonUtils.toJson(configuration.getTemplatesDirs());
             preferences.put(TEMPLATES_DIRS, json);
@@ -140,6 +144,7 @@ public class ConfigurationHandler {
         preferences.remove(LANGUAGE_PREF);
         preferences.remove(TEMPLATES_DIRS);
         preferences.remove(SHOW_TEST_DATA_PREF);
+        preferences.remove(WEB_DEVELOPMENT_MODE_PREF);
         for(String extraKey : extraPreferences) {
             preferences.remove(extraKey);
         }

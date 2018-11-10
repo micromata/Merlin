@@ -14,6 +14,7 @@ public class Configuration {
     private boolean showTestData = true;
     private List<ConfigurationTemplatesDir> templatesDirs;
     private boolean templatesDirModified = false;
+    private boolean webDevelopmentMode = false;
 
     public static String[] getSupportedLanguages() {
         return SUPPORTED_LANGUAGES;
@@ -45,6 +46,17 @@ public class Configuration {
 
     public void setShowTestData(boolean showTestData) {
         this.showTestData = showTestData;
+    }
+
+    /**
+     * If true, CrossOriginFilter will be set.
+     */
+    public boolean isWebDevelopmentMode() {
+        return webDevelopmentMode;
+    }
+
+    public void setWebDevelopmentMode(boolean webDevelopmentMode) {
+        this.webDevelopmentMode = webDevelopmentMode;
     }
 
     public List<ConfigurationTemplatesDir> getTemplatesDirs() {

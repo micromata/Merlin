@@ -89,7 +89,7 @@ public class JettyServer {
         errorHandler.addErrorPage(404, "/");
         ctx.setErrorHandler(errorHandler);
 
-        if (RunningMode.isDevelopmentMode()) {
+        if (RunningMode.isDevelopmentMode() || ConfigurationHandler.getDefaultConfiguration().isWebDevelopmentMode()) {
             log.warn("*********************************");
             log.warn("***********            **********");
             log.warn("*********** ATTENTION! **********");
@@ -98,7 +98,7 @@ public class JettyServer {
             log.warn("*********** dev mode!  **********");
             log.warn("***********            **********");
             log.warn("*********************************");
-            log.warn("Don't deliver this app in dev mode due to security reasons!");
+            log.warn("Don't deliver this app in dev mode due to security reasons (CrossOriginFilter is set)!");
 
             FilterHolder filterHolder = ctx.addFilter(CrossOriginFilter.class, "/*", EnumSet.of(DispatcherType.REQUEST));
             filterHolder.setInitParameter(CrossOriginFilter.ALLOWED_ORIGINS_PARAM, "*");
