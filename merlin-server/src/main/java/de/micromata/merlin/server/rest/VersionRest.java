@@ -38,7 +38,7 @@ public class VersionRest {
             Locale locale = requestContext.getLocale();
             language = locale.getLanguage();
         }
-        MyVersion version = new MyVersion(language);
+        MyVersion version = new MyVersion(language, RestUtils.checkLocalDesktopAvailable(requestContext) == null);
         String json = JsonUtils.toJson(version, prettyPrinter);
         return json;
     }
@@ -46,10 +46,12 @@ public class VersionRest {
     public class MyVersion {
         private Version version;
         private String language;
+        private boolean localDesktopAvailable;
 
-        private MyVersion(String language) {
+        private MyVersion(String language, boolean localDesktopAvailable) {
             this.version = Version.getInstance();
             this.language = language;
+            this.localDesktopAvailable = localDesktopAvailable;
         }
 
         public String getAppName() {
@@ -77,6 +79,10 @@ public class VersionRest {
 
         public String getLanguage() {
             return language;
+        }
+
+        public boolean isLocalDesktopAvailable() {
+            return localDesktopAvailable;
         }
     }
 }
