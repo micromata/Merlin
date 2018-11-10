@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <install4j version="7.0.8" transformSequenceNumber="7">
-  <directoryPresets config="../../Install4j/Merlin/javafx-11" />
-  <application name="Merlin" distributionSourceDir="" applicationId="5115-4774-2533-4349" mediaDir="../../Install4j/Merlin" mediaFilePattern="${compiler:sys.shortName}_${compiler:sys.platform}_${compiler:sys.version}" compression="6" lzmaCompression="false" pack200Compression="false" excludeSignedFromPacking="true" commonExternalFiles="false" createMd5Sums="true" shrinkRuntime="true" shortName="merlin" publisher="Micromata GmbH" publisherWeb="www.micromata.de" version="0.9" allPathsRelative="true" backupOnSave="false" autoSave="false" convertDotsToUnderscores="true" macSignature="????" macVolumeId="4356b34315fd64b9" javaMinVersion="11" javaMaxVersion="" allowBetaVM="false" jdkMode="jdk" jdkName="JDK 1.8">
+  <directoryPresets config="../../Install4j/MicromataKR.p12" />
+  <application name="Merlin" distributionSourceDir="" applicationId="5115-4774-2533-4349" mediaDir="../../Install4j/Merlin" mediaFilePattern="${compiler:sys.shortName}_${compiler:sys.platform}_${compiler:sys.version}" compression="6" lzmaCompression="false" pack200Compression="false" excludeSignedFromPacking="true" commonExternalFiles="false" createMd5Sums="true" shrinkRuntime="true" shortName="merlin" publisher="Micromata GmbH" publisherWeb="www.micromata.de" version="0.10dev" allPathsRelative="true" backupOnSave="false" autoSave="false" convertDotsToUnderscores="true" macSignature="????" macVolumeId="4356b34315fd64b9" javaMinVersion="11" javaMaxVersion="" allowBetaVM="false" jdkMode="jdk" jdkName="JDK 1.8">
     <languages skipLanguageSelection="false" languageSelectionInPrincipalLanguage="false">
       <principalLanguage id="en" customLocalizationFile="" />
       <additionalLanguages>
@@ -15,12 +15,12 @@
     </searchSequence>
     <variables />
     <mergedProjects />
-    <codeSigning macEnabled="false" macPkcs12File="" windowsEnabled="false" windowsKeySource="pkcs12" windowsPvkFile="" windowsSpcFile="" windowsPkcs12File="" windowsPkcs11Library="" windowsPkcs11Slot="">
+    <codeSigning macEnabled="false" macPkcs12File="../../Install4j/k.reinhard@me.com.p12" windowsEnabled="false" windowsKeySource="pkcs12" windowsPvkFile="" windowsSpcFile="" windowsPkcs12File="../../Install4j/MicromataKR.p12" windowsPkcs11Library="" windowsPkcs11Slot="">
       <windowsKeystoreIdentifier issuer="" serial="" subject="" />
       <windowsPkcs11Identifier issuer="" serial="" subject="" />
     </codeSigning>
   </application>
-  <files keepModificationTimes="false" missingFilesStrategy="warn" globalExcludeSuffixes="" defaultOverwriteMode="4" defaultUninstallMode="0" launcherOverwriteMode="3" defaultFileMode="644" defaultDirMode="755">
+  <files keepModificationTimes="true" missingFilesStrategy="warn" globalExcludeSuffixes=".DS_Store" defaultOverwriteMode="4" defaultUninstallMode="0" launcherOverwriteMode="3" defaultFileMode="644" defaultDirMode="755">
     <filesets>
       <fileset name="javafx-macos" id="740" customizedId="" />
       <fileset name="javafx-win" id="744" customizedId="" />
@@ -38,28 +38,32 @@
       <mountPoint id="749" root="747" location="" mode="755" />
     </mountPoints>
     <entries>
-      <dirEntry mountPoint="60" file="./build/lib" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="false" overrideOverwriteMode="false" overrideUninstallMode="false" entryMode="subdir" subDirectory="lib" excludeSuffixes=".DS_Store" dirMode="755" overrideDirMode="false">
+      <dirEntry mountPoint="60" file="./build/lib" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="false" overrideOverwriteMode="false" overrideUninstallMode="false" entryMode="subdir" subDirectory="lib" excludeSuffixes="" dirMode="755" overrideDirMode="false">
         <exclude>
+          <entry location="javafx-controls-11.0.1-ea+1-mac.jar" fileType="regular" />
+          <entry location="javafx-graphics-11.0.1-ea+1-mac.jar" fileType="regular" />
           <entry location="javafx-graphics-11.0.1-ea+1.jar" fileType="regular" />
+          <entry location="javafx-fxml-11.0.1-ea+1-mac.jar" fileType="regular" />
           <entry location="javafx-controls-11.0.1-ea+1.jar" fileType="regular" />
+          <entry location="javafx-base-11.0.1-ea+1-mac.jar" fileType="regular" />
           <entry location="javafx-base-11.0.1-ea+1.jar" fileType="regular" />
         </exclude>
       </dirEntry>
-      <dirEntry mountPoint="60" file="../merlin-webapp/build" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="false" overrideOverwriteMode="false" overrideUninstallMode="false" entryMode="subdir" subDirectory="web" excludeSuffixes=".DS_Store" dirMode="755" overrideDirMode="false">
+      <dirEntry mountPoint="60" file="../merlin-webapp/build" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="false" overrideOverwriteMode="false" overrideUninstallMode="false" entryMode="subdir" subDirectory="web" excludeSuffixes="" dirMode="755" overrideDirMode="false">
         <exclude />
       </dirEntry>
-      <dirEntry mountPoint="60" file="../examples" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="false" overrideOverwriteMode="false" overrideUninstallMode="false" entryMode="subdir" subDirectory="examples" excludeSuffixes=".DS_Store" dirMode="755" overrideDirMode="false">
+      <dirEntry mountPoint="60" file="../examples" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="false" overrideOverwriteMode="false" overrideUninstallMode="false" entryMode="subdir" subDirectory="examples" excludeSuffixes="" dirMode="755" overrideDirMode="false">
         <exclude>
           <entry location="merlin-app-1.0.jar" fileType="regular" />
         </exclude>
       </dirEntry>
-      <dirEntry mountPoint="742" file="../../Install4j/Merlin/javafx-11/macos" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="false" overrideOverwriteMode="false" overrideUninstallMode="false" entryMode="subdir" subDirectory="javafx" excludeSuffixes=".DS_Store" dirMode="755" overrideDirMode="false">
+      <dirEntry mountPoint="742" file="../../Install4j/Merlin/javafx-11/macos" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="false" overrideOverwriteMode="false" overrideUninstallMode="false" entryMode="subdir" subDirectory="javafx" excludeSuffixes="" dirMode="755" overrideDirMode="false">
         <exclude />
       </dirEntry>
-      <dirEntry mountPoint="748" file="../../Install4j/Merlin/javafx-11/win" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="false" overrideOverwriteMode="false" overrideUninstallMode="false" entryMode="subdir" subDirectory="javafx" excludeSuffixes=".DS_Store" dirMode="755" overrideDirMode="false">
+      <dirEntry mountPoint="748" file="../../Install4j/Merlin/javafx-11/win" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="false" overrideOverwriteMode="false" overrideUninstallMode="false" entryMode="subdir" subDirectory="javafx" excludeSuffixes="" dirMode="755" overrideDirMode="false">
         <exclude />
       </dirEntry>
-      <dirEntry mountPoint="749" file="../../Install4j/Merlin/javafx-11/linux" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="false" overrideOverwriteMode="false" overrideUninstallMode="false" entryMode="subdir" subDirectory="javafx" excludeSuffixes=".DS_Store" dirMode="755" overrideDirMode="false">
+      <dirEntry mountPoint="749" file="../../Install4j/Merlin/javafx-11/linux" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="false" overrideOverwriteMode="false" overrideUninstallMode="false" entryMode="subdir" subDirectory="javafx" excludeSuffixes="" dirMode="755" overrideDirMode="false">
         <exclude />
       </dirEntry>
     </entries>
@@ -2294,8 +2298,9 @@ return true;</string>
       </installerScript>
     </unixInstaller>
   </mediaSets>
-  <buildIds buildAll="true">
+  <buildIds buildAll="false">
     <mediaSet refId="61" />
+    <mediaSet refId="587" />
   </buildIds>
   <buildOptions verbose="false" faster="false" disableSigning="false" disableJreBundling="false" debug="false" />
 </install4j>
