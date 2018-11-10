@@ -42,6 +42,7 @@ public class FilesystemBrowserRest {
     public String browseLocalFilesystem(@Context HttpServletRequest requestContext, @QueryParam("type") String type, @QueryParam("current") String current) {
         String msg = RestUtils.checkLocalDesktopAvailable(requestContext);
         if (msg != null) {
+            log.info(msg);
             return msg;
         }
         FileSystemBrowser.SelectFilter filter = FileSystemBrowser.getFilter(type);
@@ -73,6 +74,7 @@ public class FilesystemBrowserRest {
     public String browseLocalFilesystem(@Context HttpServletRequest requestContext) {
         String msg = RestUtils.checkLocalDesktopAvailable(requestContext);
         if (msg != null) {
+            log.info(msg);
             return msg;
         }
         return "OK";
@@ -89,7 +91,9 @@ public class FilesystemBrowserRest {
     @Produces(MediaType.TEXT_PLAIN)
     public String openLocalFile(@Context HttpServletRequest requestContext, @QueryParam("primaryKey") String primaryKey) {
         if (StringUtils.isBlank(primaryKey)) {
-            return "Can't open file, primaryKey required by this service.";
+            String msg = "Can't open file, primaryKey required by this service.";
+            log.info(msg);
+            return msg;
         }
         String msg = RestUtils.checkLocalDesktopAvailable(requestContext);
         if (msg != null) {
@@ -97,7 +101,7 @@ public class FilesystemBrowserRest {
         }
         if (!Desktop.isDesktopSupported()) {
             msg = "Desktop service isn't supported.";
-            log.error(msg);
+            log.info(msg);
             return msg;
         }
         java.nio.file.Path path;

@@ -13,12 +13,15 @@ public class RunningMode {
 
     public enum ServerType {DESKTOP, SERVER};
 
+    public enum UserManagement {SINGLE}
+
     public enum OSType {MAC_OS, WINDOWS, LINUX, OTHER};
 
     private static boolean running;
     private static File baseDir;
     private static Boolean development;
     private static ServerType serverType;
+    private static UserManagement userManagement = UserManagement.SINGLE;
 
     public static Mode getMode() {
         return isDevelopmentMode() ? Mode.DEVELOPMENT : Mode.PRODUCTION;
@@ -59,6 +62,10 @@ public class RunningMode {
     public static void setServerType(ServerType serverType) {
         log.info("Starting server as type: " + serverType);
         RunningMode.serverType = serverType;
+    }
+
+    public static UserManagement getUserManagement() {
+        return userManagement;
     }
 
     public static File getBaseDir() {

@@ -1,6 +1,6 @@
 package de.micromata.merlin.app.javafx;
 
-import de.micromata.merlin.app.rest.FilesServiceRest;
+import de.micromata.merlin.server.rest.FilesServiceRest;
 import de.micromata.merlin.app.updater.AppUpdater;
 import de.micromata.merlin.app.updater.UpdateInfo;
 import de.micromata.merlin.server.RunningMode;

@@ -40,7 +40,7 @@ public class Main {
                     return;
                 }
             }
-            RunningMode.setServerType(RunningMode.ServerType.DESKTOP);
+            RunningMode.setServerType(RunningMode.ServerType.SERVER);
             startUp();
         } catch (ParseException ex) {
             // oops, something went wrong

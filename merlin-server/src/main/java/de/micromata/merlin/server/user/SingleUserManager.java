@@ -17,9 +17,9 @@ public class SingleUserManager extends UserManager {
     private UserData singleUser;
 
     public SingleUserManager() {
-        if (RunningMode.getServerType() != RunningMode.ServerType.DESKTOP) {
-            throw new IllegalStateException("Can't use SingleUserManager in mode '" + RunningMode.getServerType()
-                    + "'. Only allowed in '" + RunningMode.ServerType.DESKTOP + "'.");
+        if (RunningMode.getUserManagement() != RunningMode.UserManagement.SINGLE) {
+            throw new IllegalStateException("Can't use SingleUserManager in user management mode '" + RunningMode.getUserManagement()
+                    + "'. Only allowed in '" + RunningMode.UserManagement.SINGLE + "'.");
         }
         log.info("Using SingleUserManger as user manager.");
         singleUser = new UserData();
