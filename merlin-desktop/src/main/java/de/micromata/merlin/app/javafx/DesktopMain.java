@@ -39,8 +39,8 @@ public class DesktopMain extends Application {
 
     public static void main(String[] args) {
         Version version = Version.getInstance();
-        log.info("Starting " + version.getAppName() + " " + version.getVersion() + ", build time: "
-                + version.getBuildDate() + " (UTC: " + version.getBuildDateUTC() + "), mode: " + RunningMode.getMode());
+        RunningMode.setServerType(RunningMode.ServerType.DESKTOP);
+        RunningMode.logMode();
         try {
             org.apache.log4j.Logger rootLogger = org.apache.log4j.Logger.getRootLogger();
             FileAppender appender = (FileAppender) rootLogger.getAppender("file");
@@ -83,8 +83,6 @@ public class DesktopMain extends Application {
     @Override
     public void start(Stage stage) {
         this.stage = stage;
-        log.info("Starting Java FX application in mode: " + RunningMode.getMode());
-        RunningMode.setServerType(RunningMode.ServerType.DESKTOP);
         main = this;
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(DesktopMain.class.getResource("/Main.fxml"));

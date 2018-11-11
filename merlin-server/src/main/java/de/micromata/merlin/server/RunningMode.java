@@ -9,13 +9,19 @@ public class RunningMode {
     private static Logger log = LoggerFactory.getLogger(RunningMode.class);
     private static OSType osType;
 
-    public enum Mode {PRODUCTION, DEVELOPMENT};
+    public enum Mode {PRODUCTION, DEVELOPMENT}
 
-    public enum ServerType {DESKTOP, SERVER};
+    ;
+
+    public enum ServerType {DESKTOP, SERVER}
+
+    ;
 
     public enum UserManagement {SINGLE}
 
-    public enum OSType {MAC_OS, WINDOWS, LINUX, OTHER};
+    public enum OSType {MAC_OS, WINDOWS, LINUX, OTHER}
+
+    ;
 
     private static boolean running;
     private static File baseDir;
@@ -29,9 +35,9 @@ public class RunningMode {
 
     public static boolean isDevelopmentMode() {
         if (development == null) {
-            development = new File("merlin-core").exists() || new File("../merlin-core").exists();
+            development = new File(Configuration.getDefault().getApplicationHome(), "merlin-core").exists();
             if (development) {
-                log.info("Starting Merlin server in development mode.");
+                log.warn("*** Starting Merlin server in development mode. This mode shouldn't be used in production environments. ***");
             }
         }
         return development;
@@ -60,7 +66,10 @@ public class RunningMode {
     }
 
     public static void setServerType(ServerType serverType) {
-        log.info("Starting server as type: " + serverType);
+        if (RunningMode.serverType != null && serverType != RunningMode.serverType) {
+            throw new IllegalArgumentException("Can't set server-type twice with different values: new='"
+                    + serverType + "', old='" + RunningMode.serverType + "'.");
+        }
         RunningMode.serverType = serverType;
     }
 
@@ -68,10 +77,14 @@ public class RunningMode {
         return userManagement;
     }
 
-    public static File getBaseDir() {
-        if (baseDir == null) {
-            baseDir = new File(System.getProperty("user.dir")); // Merlin base dir.
-        }
-        return null;
+    /**
+     * After setting all values you should call this method for a logging output with all current settings.
+     */
+    public static void logMode() {
+        log.info("Starting " + Version.getInstance().getAppName() + " " + Version.getInstance().getVersion()
+                + " (" + Version.getInstance().getBuildDateUTC()
+                + ") with: mode='" + RunningMode.getMode() + "', serverType='" + RunningMode.serverType
+                + "', home dir='" + Configuration.getDefault().getApplicationHome() + "', javaVersion='"
+                + System.getProperty("java.version") + "'.");
     }
 }

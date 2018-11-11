@@ -41,6 +41,7 @@ public class Main {
                 }
             }
             RunningMode.setServerType(RunningMode.ServerType.SERVER);
+            RunningMode.logMode();
             startUp();
         } catch (ParseException ex) {
             // oops, something went wrong
