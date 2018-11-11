@@ -31,6 +31,8 @@ dependencies {
 apply plugin: 'application'
 mainClassName = "de.micromata.merlin.server.Main"
 
+apply plugin: 'distribution'
+
 task createVersionProperties(dependsOn: processResources) {
     doLast {
         new File("$buildDir/resources/main/version.properties").withWriter { w ->
@@ -46,3 +48,20 @@ task createVersionProperties(dependsOn: processResources) {
 classes {
     dependsOn createVersionProperties
 }
+
+distributions {
+    main {
+        contents {
+            from ("${project(':merlin-webapp').projectDir}/build") {
+                into 'web'
+            }
+            from ("${rootProject.projectDir}/examples") {
+                into 'examples'
+            }
+        }
+    }
+}
+
+distZip.dependsOn ':merlin-webapp:npmBuild'
+distZip.dependsOn ':merlin-docs:buildWebDoc'
+task('merlin-docs:buildWebDoc').mustRunAfter('merlin-webapp:npmBuild')
