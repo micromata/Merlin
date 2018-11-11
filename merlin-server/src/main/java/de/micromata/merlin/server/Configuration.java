@@ -1,6 +1,8 @@
 package de.micromata.merlin.server;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.beans.Transient;
 import java.util.ArrayList;
@@ -8,6 +10,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class Configuration {
+    private Logger log = LoggerFactory.getLogger(Configuration.class);
     private final static String[] SUPPORTED_LANGUAGES = {"en", "de"};
 
     private int port;
@@ -69,6 +72,7 @@ public class Configuration {
             applicationHome = System.getProperty("applicationHome");
             if (StringUtils.isBlank(applicationHome)) {
                 applicationHome = System.getProperty("user.dir");
+                log.info("applicationHome is not given as JVM parameter. Using current working dir (OK for start in IDE): " + applicationHome);
             }
         }
         return applicationHome;
