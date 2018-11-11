@@ -11,7 +11,28 @@ import org.slf4j.LoggerFactory;
 public class Main {
     private static Logger log = LoggerFactory.getLogger(Main.class);
 
+    private static final Main main = new Main();
+
+    private JettyServer server;
+    private boolean shutdownInProgress;
+
+    private Main() {
+    }
+
     public static void main(String[] args) {
+        main._start(args);
+    }
+
+    public static JettyServer startUp(String... restPackageNames) {
+        return main._startUp(restPackageNames);
+    }
+
+    public static void shutdown() {
+        main._shutdown();
+    }
+
+
+    private void _start(String[] args) {
         // create Options object
         Options options = new Options();
         options.addOption("p", "port", true, "The default port for the web server.");
@@ -43,6 +64,13 @@ public class Main {
             }
             RunningMode.setServerType(RunningMode.ServerType.SERVER);
             RunningMode.logMode();
+            Runtime.getRuntime().addShutdownHook(new Thread() {
+                @Override
+                public void run() {
+                    main._shutdown();
+                }
+            });
+
             JettyServer server = startUp();
             if (!line.hasOption('q')) {
 
@@ -59,8 +87,8 @@ public class Main {
         }
     }
 
-    public static JettyServer startUp(String... restPackageNames) {
-        JettyServer server = new JettyServer();
+    private JettyServer _startUp(String... restPackageNames) {
+        server = new JettyServer();
         server.start(restPackageNames);
 
         UserManager.setUserManager(new SingleUserManager());
@@ -74,6 +102,18 @@ public class Main {
             }
         }).start();
         return server;
+    }
+
+    private void _shutdown() {
+        synchronized (this) {
+            if (shutdownInProgress == true) {
+                // Another thread already called this method. There is nothing further to do.
+                return;
+            }
+            shutdownInProgress = true;
+        }
+        log.info("Shutting down Merlin web server...");
+        server.stop();
     }
 
     private static void printHelp(Options options) {

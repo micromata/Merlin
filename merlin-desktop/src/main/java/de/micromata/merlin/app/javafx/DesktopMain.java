@@ -164,7 +164,7 @@ public class DesktopMain extends Application {
         log.info("Stopping Java FX application.");
         timer.cancel();
         updateThread.interrupt(); // Thread hangs if now connection to update server. Force to stop.
-        server.stop();
+        de.micromata.merlin.server.Main.shutdown();
     }
 
     public boolean isShutdownInProgress() {

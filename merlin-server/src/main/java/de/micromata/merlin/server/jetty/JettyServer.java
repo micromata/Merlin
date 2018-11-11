@@ -25,6 +25,8 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.EnumSet;
 
@@ -73,12 +75,16 @@ public class JettyServer {
         // jerseyServlet.setInitParameter("cacheControl","max-age=0,public");
 
         try {
-            URL url;
+            Path path;
             if (RunningMode.isDevelopmentMode()) {
-                url = Paths.get(Configuration.getDefault().getApplicationHome(), "merlin-webapp", "build").toUri().toURL();
+                path = Paths.get(Configuration.getDefault().getApplicationHome(), "merlin-webapp", "build");
             } else {
-                url = Paths.get(Configuration.getDefault().getApplicationHome(), "web").toUri().toURL();
+                path = Paths.get(Configuration.getDefault().getApplicationHome(), "web");
             }
+            if (!Files.exists(path)) {
+                log.error("Fatal: Can't find web archive: " + path.toAbsolutePath());
+            }
+            URL url = path.toUri().toURL();
             log.debug("Using web directory: " + url);
             ctx.setBaseResource(Resource.newResource(url));
         } catch (IOException ex) {
