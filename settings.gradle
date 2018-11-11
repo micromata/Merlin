@@ -16,3 +16,7 @@ project(':merlin-server').projectDir = "$rootDir/merlin-server" as File
 project(':merlin-smarthome').projectDir = "$rootDir/merlin-smarthome" as File
 project(':merlin-velocity').projectDir = "$rootDir/merlin-velocity" as File
 project(':merlin-webapp').projectDir = "$rootDir/merlin-webapp" as File
+
+// Suppress the distribution of merlin-desktop. It's done by merlin-desktop-installer.
+startParameter.excludedTaskNames << ':merlin-desktop:distTar'
+startParameter.excludedTaskNames << ':merlin-desktop:distZip'
