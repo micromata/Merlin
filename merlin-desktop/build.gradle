@@ -37,12 +37,16 @@ mainClassName = "de.micromata.merlin.app.javafx.DesktopMain"
 run() {
     doFirst {
         jvmArgs = [
+                "-DapplicationHome=${rootDir}",
                 '--module-path', classpath.asPath,
-                '--add-modules', 'javafx.controls',
-                '--add-modules', 'javafx.fxml'
+                '--add-modules', 'javafx.controls,javafx.fxml'
         ]
     }
 }
+
+run.dependsOn ':merlin-webapp:npmBuild'
+run.dependsOn ':merlin-docs:buildWebDoc'
+task('merlin-docs:buildWebDoc').mustRunAfter('merlin-webapp:npmBuild')
 
 // ******* Distribution
 task getDependencies(type: Copy) {
@@ -80,5 +84,4 @@ dist.dependsOn ':merlin-webapp:npmBuild'
 dist.dependsOn ':merlin-docs:buildWebDoc'
 dist.dependsOn getDependencies
 dist.dependsOn ':merlin-server:distZip'
-task('merlin-docs:buildWebDoc').mustRunAfter('merlin-webapp:npmBuild')
 task('merlin-server:distZip').mustRunAfter('merlin-docs:buildWebDoc')
