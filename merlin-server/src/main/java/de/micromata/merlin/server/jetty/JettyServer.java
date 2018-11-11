@@ -82,7 +82,7 @@ public class JettyServer {
                 path = Paths.get(Configuration.getDefault().getApplicationHome(), "web");
             }
             if (!Files.exists(path)) {
-                log.error("Fatal: Can't find web archive: " + path.toAbsolutePath());
+                log.error("********** Fatal: Can't find web archive: " + path.toAbsolutePath());
             }
             URL url = path.toUri().toURL();
             log.debug("Using web directory: " + url);

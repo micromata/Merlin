@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.util.TimeZone;
 
 public class RunningMode {
     private static Logger log = LoggerFactory.getLogger(RunningMode.class);
@@ -82,7 +83,7 @@ public class RunningMode {
      */
     public static void logMode() {
         log.info("Starting " + Version.getInstance().getAppName() + " " + Version.getInstance().getVersion()
-                + " (" + Version.getInstance().getBuildDateUTC()
+                + " (" + Version.getInstance().formatBuildDateISO(TimeZone.getDefault())
                 + ") with: mode='" + RunningMode.getMode() + "', serverType='" + RunningMode.serverType
                 + "', home dir='" + Configuration.getDefault().getApplicationHome() + "', javaVersion='"
                 + System.getProperty("java.version") + "'.");

@@ -58,11 +58,15 @@ public class Version {
                 buildDateUTC = "1970-01-01 00:00:00";
                 return;
             }
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd' 'HH:mm:ss");
-            formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
-            buildDateUTC = formatter.format(buildDate);
+            buildDateUTC = formatBuildDateISO(TimeZone.getTimeZone("UTC"));
             log.debug("appName=" + appName + ", version=" + version + ", buildDateUTC=" + buildDateUTC);
         }
+    }
+
+    public String formatBuildDateISO(TimeZone timeZone) {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd' 'HH:mm:ss");
+        formatter.setTimeZone(timeZone);
+        return formatter.format(buildDate);
     }
 
     public String getAppName() {
