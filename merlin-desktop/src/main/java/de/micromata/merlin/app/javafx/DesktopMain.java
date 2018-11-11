@@ -55,8 +55,6 @@ public class DesktopMain extends Application {
         } catch (Exception ex) {
             log.error("Can't detect file logger: " + ex.getMessage(), ex);
         }
-        log.info("Current working directory: " + new File(".").getAbsolutePath());
-        log.info("Using Java version: " + System.getProperty("java.version"));
         updateThread = new Thread() {
             @Override
             public void run() {
