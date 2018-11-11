@@ -1,15 +1,16 @@
 package de.micromata.merlin;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.text.MessageFormat;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.util.*;
 
 /**
  * For internationalization.
  */
 public class I18n {
+    private Logger log = LoggerFactory.getLogger(I18n.class);
     private ResourceBundle resourceBundle;
     private Map<Locale, I18n> i18nMap;
 
@@ -67,7 +68,15 @@ public class I18n {
      * @see MessageFormat#format(String, Object...)
      */
     public String formatMessage(String messageId, Object... params) {
-        return MessageFormat.format(resourceBundle.getString(messageId), params);
+        if (params == null || params.length == 0) {
+            return getMessage(messageId);
+        }
+        try {
+            return MessageFormat.format(resourceBundle.getString(messageId), params);
+        } catch (MissingResourceException ex) {
+            log.error("Missing resource '" + messageId + "': " + ex.getMessage(), ex);
+            return messageId;
+        }
     }
 
     public ResourceBundle getResourceBundle() {
