@@ -15,6 +15,7 @@ public class Main {
         // create Options object
         Options options = new Options();
         options.addOption("p", "port", true, "The default port for the web server.");
+        options.addOption("q", "quiet", false, "Don't open browser automatically.");
         options.addOption("h", "help", false, "Print this help screen.");
         CommandLineParser parser = new DefaultParser();
         try {
@@ -42,7 +43,15 @@ public class Main {
             }
             RunningMode.setServerType(RunningMode.ServerType.SERVER);
             RunningMode.logMode();
-            startUp();
+            JettyServer server = startUp();
+            if (!line.hasOption('q')) {
+
+                try {
+                    java.awt.Desktop.getDesktop().browse(java.net.URI.create(server.getUrl()));
+                } catch (Exception ex) {
+                    log.info("Can't open web browser: " + ex.getMessage());
+                }
+            }
         } catch (ParseException ex) {
             // oops, something went wrong
             System.err.println("Parsing failed.  Reason: " + ex.getMessage());
