@@ -49,12 +49,25 @@ classes {
     dependsOn createVersionProperties
 }
 
+// Ugly work arround for getting the applications home dir:
+applicationDefaultJvmArgs = ["-DapplicationHome=MY_APPLICATION_HOME"]
+
+startScripts {
+    doLast {
+        unixScript.text = unixScript.text.replace('MY_APPLICATION_HOME', '\$APP_HOME')
+        windowsScript.text = windowsScript.text.replace('MY_APPLICATION_HOME', '%~dp0..')
+    }
+}
+
+// Builds the distribution
 distributions {
     main {
         contents {
+            // Prepared by nbmBuild:
             from ("${project(':merlin-webapp').projectDir}/build") {
                 into 'web'
             }
+            // Containing test templates and other stuff:
             from ("${rootProject.projectDir}/examples") {
                 into 'examples'
             }
