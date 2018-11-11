@@ -79,6 +79,7 @@ public class JettyServer {
             } else {
                 url = Paths.get(Configuration.getDefault().getApplicationHome(), "web").toUri().toURL();
             }
+            log.debug("Using web directory: " + url);
             ctx.setBaseResource(Resource.newResource(url));
         } catch (IOException ex) {
             log.error(ex.getMessage(), ex);
