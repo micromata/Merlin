@@ -55,3 +55,4 @@ hs_err_pid*
 *.iml
 *.iws
 merlin-server/tmp
+tmp
