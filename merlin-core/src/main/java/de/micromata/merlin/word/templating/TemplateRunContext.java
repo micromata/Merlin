@@ -159,11 +159,11 @@ public class TemplateRunContext {
                     try {
                         return Double.parseDouble((String) value);
                     } catch (NumberFormatException ex) {
-                        log.error("Can't parse float '" + value + "': " + ex.getMessage(), ex);
+                        log.warn("Can't parse float '" + value + "': " + ex.getMessage());
                         return null;
                     }
                 }
-                log.error("Can't get float from type " + value.getClass().getCanonicalName() + ": " + value);
+                log.warn("Can't get float from type " + value.getClass().getCanonicalName() + ": " + value);
                 return null;
             case STRING:
                 return value.toString();
@@ -176,7 +176,7 @@ public class TemplateRunContext {
                     }
                     return parseDate(value);
                 }
-                log.error("Can't get date from type " + value.getClass().getCanonicalName() + ": " + value);
+                log.warn("Can't get date from type " + value.getClass().getCanonicalName() + ": " + value);
         }
         return value;
     }
@@ -200,7 +200,7 @@ public class TemplateRunContext {
                 }
             }
         }
-        log.error("Can't parse date: " + val + " from type " + val.getClass());
+        log.warn("Can't parse date: " + val + " from type " + val.getClass());
         return null;
     }
 
