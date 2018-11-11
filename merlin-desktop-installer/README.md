@@ -7,16 +7,21 @@
    3. Build project
 4. `gradle postDist`
 5. Testing
-   1. Testing update from previous installation (also with current installatino but with 'faked' old version).
+   1. Testing update from previous installation (also with current installation but with 'faked' old version).
    2. install, test web and java-code.
    3. Check installation: Assure that no javafx*.jar is in the lib dir.
 6. Creating Github release
    1. Create new tag, e. g. `v0.9`.
 7. Upload to SourceForge
-   1. Publish `v0.9/merlin_macos_v0.9.dmg`.
+   1. Publish to new Folder 0.9
+      1. `Install4j/Merlin/merlin_macos_v_9.dmg` (mark as default for MacOS)
+      2. `Install4j/Merlin/merlin_unix_0_9.sh` (mark as default for Linux)
+      3. `Install4j/Merlin/merlin_windows_x64_0_9.exe` (mark as default for Windows)
+      4. `merlin-server/build/distributions/merlin-server-0.9.zip` (mark as default for all others)
    2. Testing
 8. Enable update mechanism
    1. Commit and push.
+9. Tag new Release.
 
 
 # For preparing Install4j
