@@ -1,9 +1,6 @@
 package de.micromata.merlin.server.storage;
 
-import de.micromata.merlin.server.ConfigurationHandler;
-import de.micromata.merlin.server.ConfigurationListener;
-import de.micromata.merlin.server.ConfigurationTemplatesDir;
-import de.micromata.merlin.server.RunningMode;
+import de.micromata.merlin.server.*;
 import de.micromata.merlin.persistency.templates.DirectoryScanner;
 import de.micromata.merlin.word.templating.Template;
 import de.micromata.merlin.word.templating.TemplateDefinition;
@@ -11,6 +8,7 @@ import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -127,7 +125,7 @@ public class Storage implements ConfigurationListener {
         }
         if (ConfigurationHandler.getDefaultConfiguration().isShowTestData()) {
             // Creating data for testing.
-            add(TestData.getTestDirectory(RunningMode.getBaseDir()));
+            add(TestData.getTestDirectory(new File(Configuration.getDefault().getApplicationHome())));
         }
     }
 

@@ -1,5 +1,6 @@
 package de.micromata.merlin.server.jetty;
 
+import de.micromata.merlin.server.Configuration;
 import de.micromata.merlin.server.ConfigurationHandler;
 import de.micromata.merlin.server.RunningMode;
 import de.micromata.merlin.server.rest.ConfigurationRest;
@@ -23,6 +24,8 @@ import javax.servlet.DispatcherType;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
+import java.net.URL;
+import java.nio.file.Paths;
 import java.util.EnumSet;
 
 public class JettyServer {
@@ -70,12 +73,13 @@ public class JettyServer {
         // jerseyServlet.setInitParameter("cacheControl","max-age=0,public");
 
         try {
-            // Resolve file to directory
+            URL url;
             if (RunningMode.isDevelopmentMode()) {
-                ctx.setBaseResource(Resource.newResource("./merlin-webapp/build"));
+                url = Paths.get(Configuration.getDefault().getApplicationHome(), "merlin-webapp", "build").toUri().toURL();
             } else {
-                ctx.setBaseResource(Resource.newResource("./web"));
+                url = Paths.get(Configuration.getDefault().getApplicationHome(), "web").toUri().toURL();
             }
+            ctx.setBaseResource(Resource.newResource(url));
         } catch (IOException ex) {
             log.error(ex.getMessage(), ex);
             return;

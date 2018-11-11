@@ -15,6 +15,11 @@ public class Configuration {
     private List<ConfigurationTemplatesDir> templatesDirs;
     private boolean templatesDirModified = false;
     private boolean webDevelopmentMode = false;
+    private String applicationHome;
+
+    public static Configuration getDefault() {
+        return ConfigurationHandler.getDefaultConfiguration();
+    }
 
     public static String[] getSupportedLanguages() {
         return SUPPORTED_LANGUAGES;
@@ -57,6 +62,16 @@ public class Configuration {
 
     public void setWebDevelopmentMode(boolean webDevelopmentMode) {
         this.webDevelopmentMode = webDevelopmentMode;
+    }
+
+    public String getApplicationHome() {
+        if (applicationHome == null) {
+            applicationHome = System.getProperty("applicationHome");
+            if (StringUtils.isBlank(applicationHome)) {
+                applicationHome = System.getProperty("user.dir");
+            }
+        }
+        return applicationHome;
     }
 
     public List<ConfigurationTemplatesDir> getTemplatesDirs() {
