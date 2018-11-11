@@ -80,8 +80,24 @@ task dist {
     }
 }
 
+// Builds the distribution
+distributions {
+    main {
+        contents {
+            // Prepared by nbmBuild:
+            from ("${project(':merlin-webapp').projectDir}/build") {
+                into 'web'
+            }
+            // Containing test templates and other stuff:
+            from ("${rootProject.projectDir}/examples") {
+                into 'examples'
+            }
+        }
+    }
+}
+
 dist.dependsOn ':merlin-webapp:npmBuild'
 dist.dependsOn ':merlin-docs:buildWebDoc'
 dist.dependsOn getDependencies
-dist.dependsOn ':merlin-server:distZip'
+distZip.dependsOn ':merlin-server:distZip'
 task('merlin-server:distZip').mustRunAfter('merlin-docs:buildWebDoc')
