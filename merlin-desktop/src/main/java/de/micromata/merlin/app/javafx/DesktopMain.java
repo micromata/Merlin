@@ -1,6 +1,6 @@
 package de.micromata.merlin.app.javafx;
 
-import de.micromata.merlin.server.rest.FilesServiceRest;
+import de.micromata.merlin.app.rest.FilesystemBrowserRest;
 import de.micromata.merlin.app.updater.AppUpdater;
 import de.micromata.merlin.app.updater.UpdateInfo;
 import de.micromata.merlin.server.RunningMode;
@@ -156,7 +156,7 @@ public class DesktopMain extends Application {
         text.setText(context.getString("merlin.server.app.versionText") + " " + Version.getInstance().getShortVersion());
         stage.setResizable(false);
         stage.show();
-        server = de.micromata.merlin.server.Main.startUp(FilesServiceRest.class.getPackage().getName());
+        server = de.micromata.merlin.server.Main.startUp(FilesystemBrowserRest.class.getPackage().getName());
     }
 
     @Override
