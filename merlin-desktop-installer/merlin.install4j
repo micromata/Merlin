@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <install4j version="7.0.8" transformSequenceNumber="7">
-  <directoryPresets config="../../Install4j/MicromataKR.p12" />
+  <directoryPresets config=".." />
   <application name="Merlin" distributionSourceDir="" applicationId="5115-4774-2533-4349" mediaDir="../../Install4j/Merlin" mediaFilePattern="${compiler:sys.shortName}_${compiler:sys.platform}_${compiler:sys.version}" compression="6" lzmaCompression="false" pack200Compression="false" excludeSignedFromPacking="true" commonExternalFiles="false" createMd5Sums="true" shrinkRuntime="true" shortName="merlin" publisher="Micromata GmbH" publisherWeb="www.micromata.de" version="0.10dev" allPathsRelative="true" backupOnSave="false" autoSave="false" convertDotsToUnderscores="true" macSignature="????" macVolumeId="4356b34315fd64b9" javaMinVersion="11" javaMaxVersion="" allowBetaVM="false" jdkMode="jdk" jdkName="JDK 1.8">
     <languages skipLanguageSelection="false" languageSelectionInPrincipalLanguage="false">
       <principalLanguage id="en" customLocalizationFile="" />
@@ -38,16 +38,8 @@
       <mountPoint id="749" root="747" location="" mode="755" />
     </mountPoints>
     <entries>
-      <dirEntry mountPoint="60" file="./build/lib" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="false" overrideOverwriteMode="false" overrideUninstallMode="false" entryMode="subdir" subDirectory="lib" excludeSuffixes="" dirMode="755" overrideDirMode="false">
-        <exclude>
-          <entry location="javafx-controls-11.0.1-ea+1-mac.jar" fileType="regular" />
-          <entry location="javafx-graphics-11.0.1-ea+1-mac.jar" fileType="regular" />
-          <entry location="javafx-graphics-11.0.1-ea+1.jar" fileType="regular" />
-          <entry location="javafx-fxml-11.0.1-ea+1-mac.jar" fileType="regular" />
-          <entry location="javafx-controls-11.0.1-ea+1.jar" fileType="regular" />
-          <entry location="javafx-base-11.0.1-ea+1-mac.jar" fileType="regular" />
-          <entry location="javafx-base-11.0.1-ea+1.jar" fileType="regular" />
-        </exclude>
+      <dirEntry mountPoint="60" file="../merlin-desktop/build/lib" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="false" overrideOverwriteMode="false" overrideUninstallMode="false" entryMode="subdir" subDirectory="lib" excludeSuffixes="" dirMode="755" overrideDirMode="false">
+        <exclude />
       </dirEntry>
       <dirEntry mountPoint="60" file="../merlin-webapp/build" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="false" overrideOverwriteMode="false" overrideUninstallMode="false" entryMode="subdir" subDirectory="web" excludeSuffixes="" dirMode="755" overrideDirMode="false">
         <exclude />
@@ -2298,7 +2290,7 @@ return true;</string>
       </installerScript>
     </unixInstaller>
   </mediaSets>
-  <buildIds buildAll="false">
+  <buildIds buildAll="true">
     <mediaSet refId="61" />
     <mediaSet refId="587" />
   </buildIds>
