@@ -2,6 +2,7 @@ package de.micromata.merlin.server.storage;
 
 import de.micromata.merlin.server.*;
 import de.micromata.merlin.persistency.templates.DirectoryScanner;
+import de.micromata.merlin.utils.I18nLogger;
 import de.micromata.merlin.word.templating.Template;
 import de.micromata.merlin.word.templating.TemplateDefinition;
 import org.apache.commons.lang3.Validate;
@@ -113,7 +114,7 @@ public class Storage implements ConfigurationListener {
     }
 
     public synchronized void refresh() {
-        log.info("(Re-)loading storage.");
+        log.info(I18nLogger.get("merlin.log.word.templating.reload_storage"));
         dirty = false;
         List<ConfigurationTemplatesDir> templatesDirs = ConfigurationHandler.getDefaultConfiguration().getTemplatesDirs();
         this.directoryScannerMap.clear();
