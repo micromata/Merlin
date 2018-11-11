@@ -8,10 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.nio.file.FileVisitResult;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.SimpleFileVisitor;
+import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 
 /**
@@ -49,6 +46,17 @@ public class FileSystemDirectoryWatcher extends AbstractDirectoryWatcher {
                     long lastModified = attrs.lastModifiedTime().toMillis();
                     visit(file, ItemType.FILE, lastModified, context);
                     return FileVisitResult.CONTINUE;
+                }
+
+                @Override
+                public FileVisitResult visitFileFailed(Path file, IOException io) {
+                    if (Files.isDirectory(file)) {
+                        log.warn("Can't access directory: '" + file.toAbsolutePath() + "'. Skipping.");
+                        return FileVisitResult.SKIP_SUBTREE;
+                    } else {
+                        log.warn("Can't access file: '" + file.toAbsolutePath() + "'. Skipping.");
+                        return FileVisitResult.CONTINUE;
+                    }
                 }
             });
         } catch (IOException ex) {
