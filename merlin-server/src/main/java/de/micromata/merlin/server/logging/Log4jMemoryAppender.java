@@ -1,5 +1,8 @@
 package de.micromata.merlin.server.logging;
 
+import de.micromata.merlin.CoreI18n;
+import de.micromata.merlin.I18n;
+import de.micromata.merlin.utils.I18nLogEntry;
 import org.apache.commons.collections4.queue.CircularFifoQueue;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.AppenderSkeleton;
@@ -7,6 +10,7 @@ import org.apache.log4j.spi.LoggingEvent;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class Log4jMemoryAppender extends AppenderSkeleton {
     private static final int MAX_RESULT_SIZE = 1000;
@@ -51,7 +55,7 @@ public class Log4jMemoryAppender extends AppenderSkeleton {
         queue.add(event);
     }
 
-    public List<LoggingEventData> query(LogFilter filter) {
+    public List<LoggingEventData> query(LogFilter filter, Locale locale) {
         List<LoggingEventData> result = new ArrayList<>();
         if (filter == null) {
             return result;
@@ -62,6 +66,7 @@ public class Log4jMemoryAppender extends AppenderSkeleton {
         }
         int counter = 0;
         boolean hasMdcFilters = filter.hasMdcFilters();
+        I18n i18n = CoreI18n.getDefault().get(locale);
         for (LoggingEventData event : queue) {
             if (!event.getLevel().matches(filter.getThreshold())) {
                 continue;
@@ -77,20 +82,34 @@ public class Log4jMemoryAppender extends AppenderSkeleton {
                     continue;
             }
             String logString = null;
+            String message = event.getMessage();
+            boolean localizedMessage = false;
+            if (message != null && message.startsWith("i18n=")) {
+                I18nLogEntry i18nLogEntry = I18nLogEntry.parse(message);
+                message = i18n.formatMessage(i18nLogEntry.getI18nKey(), i18nLogEntry.getArgs());
+                localizedMessage = true;
+            }
+
             if (StringUtils.isNotBlank(filter.getSearch())) {
                 StringBuilder sb = new StringBuilder();
                 sb.append(event.getLogDate());
                 append(sb, event.getLevel(), true);
-                append(sb, event.getMessage(), true);
+                append(sb, message, true);
                 append(sb, event.getJavaClass(), true);
                 append(sb, event.getStackTrace(), filter.isShowStackTraces());
                 logString = sb.toString();
             }
             if (logString == null || matches(logString, filter.getSearch())) {
+                LoggingEventData resultEvent = event;
+                if (localizedMessage) {
+                    // Need a clone
+                    resultEvent = (LoggingEventData)event.clone();
+                    resultEvent.setMessage(message);
+                }
                 if (filter.isAscendingOrder()) {
-                    result.add(event);
+                    result.add(resultEvent);
                 } else {
-                    result.add(0, event);
+                    result.add(0, resultEvent);
                 }
                 if (counter++ > maxSize) {
                     break;

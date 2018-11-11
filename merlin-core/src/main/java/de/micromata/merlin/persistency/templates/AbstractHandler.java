@@ -3,6 +3,7 @@ package de.micromata.merlin.persistency.templates;
 import de.micromata.merlin.logging.MDCHandler;
 import de.micromata.merlin.logging.MDCKey;
 import de.micromata.merlin.persistency.*;
+import de.micromata.merlin.utils.I18nLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -66,12 +67,12 @@ abstract class AbstractHandler<T extends FileDescriptorInterface> {
                 return;
             }
         }
-        log.info("Scanning file '" + path + "'.");
+        log.info(I18nLogger.get("merlin.log.word.templating.scanning", path));
         //long currentMillis = System.currentTimeMillis();
         item = read(watchEntry, path, fileDescriptor);
         //log.info("Time of scanning: " + (System.currentTimeMillis() - currentMillis)  + "ms.");
         if (item == null) {
-            log.info("Skipping file '" + path.toAbsolutePath() + "', no " + itemName + " (OK).");
+            log.info(I18nLogger.get("merlin.log.word.templating.skipping." + itemName, path.toAbsolutePath()));
             watchEntry.setSupportedItem(false);
             unsupportedFilesMap.put(watchEntry.getPath(), now.getTime());
             return;
@@ -84,7 +85,7 @@ abstract class AbstractHandler<T extends FileDescriptorInterface> {
             }
             watchEntry.setSupportedItem(true);
             itemsMap.put(path, item);
-            log.info("Valid Merlin " + itemName + ": " + path.toAbsolutePath());
+            log.info(I18nLogger.get("merlin.log.word.templating.valid_merlin_item_found." + itemName, path.toAbsolutePath()));
         } finally {
             mdc.restore();
         }

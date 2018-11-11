@@ -3,6 +3,7 @@ package de.micromata.merlin.server.logging;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -35,7 +36,7 @@ public class Log4jMemoryAppenderTest {
         filter.setThreshold(treshold);
         filter.setSearch(search);
         filter.setAscendingOrder(true);
-        List<LoggingEventData> result = appender.query(filter);
+        List<LoggingEventData> result = appender.query(filter, Locale.ENGLISH);
         if (expectedMessageStarts == null) {
             assertEquals(0, result.size());
             return;

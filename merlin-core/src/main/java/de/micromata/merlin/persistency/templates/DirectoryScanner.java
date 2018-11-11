@@ -4,6 +4,7 @@ import de.micromata.merlin.persistency.AbstractDirectoryWatcher;
 import de.micromata.merlin.persistency.FileDescriptor;
 import de.micromata.merlin.persistency.PersistencyInterface;
 import de.micromata.merlin.persistency.PersistencyRegistry;
+import de.micromata.merlin.utils.I18nLogger;
 import de.micromata.merlin.word.templating.Template;
 import de.micromata.merlin.word.templating.TemplateDefinition;
 import org.apache.commons.lang3.StringUtils;
@@ -129,7 +130,8 @@ public class DirectoryScanner {
         for (TemplateDefinition templateDefinition : getTemplateDefinitionsHandler().getItems()) {
             if (fileDescriptor.matches(templateDefinition.getFileDescriptor())) {
                 template.assignTemplateDefinition(templateDefinition);
-                log.info("Found matching template definition: " + templateDefinition.getFileDescriptor().getFilename());
+                log.info(I18nLogger.get("merlin.log.word.templating.found_matching_template_definition",
+                        templateDefinition.getFileDescriptor().getFilename()));
                 break;
             }
         }

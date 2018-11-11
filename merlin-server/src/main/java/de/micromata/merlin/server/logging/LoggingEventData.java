@@ -14,7 +14,7 @@ import java.util.Date;
 /**
  * For easier serialization: JSON
  */
-public class LoggingEventData {
+public class LoggingEventData implements Cloneable {
     private SimpleDateFormat ISO_DATEFORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     int orderNumber;
@@ -119,6 +119,10 @@ public class LoggingEventData {
         return mdcTemplateDefinitionPk;
     }
 
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
     public boolean matchesAtLeastOneMdcValue(LogFilter filter) {
         if (mdcTemplatePK == null && mdcTemplateDefinitionPk == null) {
             return false;
@@ -139,4 +143,16 @@ public class LoggingEventData {
             return ISO_DATEFORMAT.format(new Date(millis));
         }
     }
+
+    @Override
+    public Object clone() {
+        LoggingEventData clone = null;
+        try {
+            clone = (LoggingEventData) super.clone();
+        } catch (CloneNotSupportedException ex) {
+            throw new UnsupportedOperationException(this.getClass().getCanonicalName() + " isn't cloneable: " + ex.getMessage(), ex);
+        }
+        return clone;
+    }
+
 }
