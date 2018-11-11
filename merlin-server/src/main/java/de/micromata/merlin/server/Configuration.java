@@ -10,15 +10,15 @@ import java.util.List;
 import java.util.Objects;
 
 public class Configuration {
-    private Logger log = LoggerFactory.getLogger(Configuration.class);
+    private static Logger log = LoggerFactory.getLogger(Configuration.class);
     private final static String[] SUPPORTED_LANGUAGES = {"en", "de"};
+    private static String applicationHome;
 
     private int port;
     private boolean showTestData = true;
     private boolean webDevelopmentMode = false;
     private List<ConfigurationTemplatesDir> templatesDirs;
     private boolean templatesDirModified = false;
-    private String applicationHome;
 
     public static Configuration getDefault() {
         return ConfigurationHandler.getDefaultConfiguration();
@@ -26,6 +26,17 @@ public class Configuration {
 
     public static String[] getSupportedLanguages() {
         return SUPPORTED_LANGUAGES;
+    }
+
+    public static String getApplicationHome() {
+        if (applicationHome == null) {
+            applicationHome = System.getProperty("applicationHome");
+            if (StringUtils.isBlank(applicationHome)) {
+                applicationHome = System.getProperty("user.dir");
+                log.info("applicationHome is not given as JVM   parameter. Using current working dir (OK for start in IDE): " + applicationHome);
+            }
+        }
+        return applicationHome;
     }
 
     public void resetModifiedFlag() {
@@ -65,17 +76,6 @@ public class Configuration {
 
     public void setWebDevelopmentMode(boolean webDevelopmentMode) {
         this.webDevelopmentMode = webDevelopmentMode;
-    }
-
-    public String getApplicationHome() {
-        if (applicationHome == null) {
-            applicationHome = System.getProperty("applicationHome");
-            if (StringUtils.isBlank(applicationHome)) {
-                applicationHome = System.getProperty("user.dir");
-                log.info("applicationHome is not given as JVM parameter. Using current working dir (OK for start in IDE): " + applicationHome);
-            }
-        }
-        return applicationHome;
     }
 
     public List<ConfigurationTemplatesDir> getTemplatesDirs() {

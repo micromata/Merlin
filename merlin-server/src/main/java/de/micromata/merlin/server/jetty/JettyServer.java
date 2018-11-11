@@ -77,9 +77,9 @@ public class JettyServer {
         try {
             Path path;
             if (RunningMode.isDevelopmentMode()) {
-                path = Paths.get(Configuration.getDefault().getApplicationHome(), "merlin-webapp", "build");
+                path = Paths.get(Configuration.getApplicationHome(), "merlin-webapp", "build");
             } else {
-                path = Paths.get(Configuration.getDefault().getApplicationHome(), "web");
+                path = Paths.get(Configuration.getApplicationHome(), "web");
             }
             if (!Files.exists(path)) {
                 log.error("********** Fatal: Can't find web archive: " + path.toAbsolutePath());

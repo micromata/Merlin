@@ -125,7 +125,7 @@ public class Storage implements ConfigurationListener {
         }
         if (ConfigurationHandler.getDefaultConfiguration().isShowTestData()) {
             // Creating data for testing.
-            add(TestData.getTestDirectory(new File(Configuration.getDefault().getApplicationHome())));
+            add(TestData.getTestDirectory(new File(Configuration.getApplicationHome())));
         }
     }
 

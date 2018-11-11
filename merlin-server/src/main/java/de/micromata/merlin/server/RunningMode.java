@@ -36,7 +36,7 @@ public class RunningMode {
 
     public static boolean isDevelopmentMode() {
         if (development == null) {
-            development = new File(Configuration.getDefault().getApplicationHome(), "merlin-core").exists();
+            development = new File(Configuration.getApplicationHome(), "merlin-core").exists();
             if (development) {
                 log.warn("*** Starting Merlin server in development mode. This mode shouldn't be used in production environments. ***");
             }
@@ -85,7 +85,7 @@ public class RunningMode {
         log.info("Starting " + Version.getInstance().getAppName() + " " + Version.getInstance().getVersion()
                 + " (" + Version.getInstance().formatBuildDateISO(TimeZone.getDefault())
                 + ") with: mode='" + RunningMode.getMode() + "', serverType='" + RunningMode.serverType
-                + "', home dir='" + Configuration.getDefault().getApplicationHome() + "', javaVersion='"
+                + "', home dir='" + Configuration.getApplicationHome() + "', javaVersion='"
                 + System.getProperty("java.version") + "'.");
     }
 }
