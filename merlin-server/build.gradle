@@ -33,6 +33,18 @@ dependencies {
 apply plugin: 'application'
 mainClassName = "de.micromata.merlin.server.Main"
 
+run() {
+    doFirst {
+        jvmArgs = [
+                "-DapplicationHome=${rootDir}"
+        ]
+    }
+}
+
+run.dependsOn ':merlin-webapp:npmBuild'
+run.dependsOn ':merlin-docs:buildWebDoc'
+task('merlin-docs:buildWebDoc').mustRunAfter('merlin-webapp:npmBuild')
+
 apply plugin: 'distribution'
 
 task createVersionProperties(dependsOn: processResources) {
@@ -79,4 +91,3 @@ distributions {
 
 distZip.dependsOn ':merlin-webapp:npmBuild'
 distZip.dependsOn ':merlin-docs:buildWebDoc'
-task('merlin-docs:buildWebDoc').mustRunAfter('merlin-webapp:npmBuild')
