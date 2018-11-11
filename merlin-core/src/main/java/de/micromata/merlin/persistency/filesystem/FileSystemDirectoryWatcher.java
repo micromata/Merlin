@@ -26,6 +26,10 @@ public class FileSystemDirectoryWatcher extends AbstractDirectoryWatcher {
 
     @Override
     protected synchronized void walkTree(DirectoryWatcherContext context) {
+        if (!Files.exists(rootDir)) {
+            log.warn("Directory '" + rootDir.toAbsolutePath() + "' doesn't exist. Ignoring it.");
+            return;
+        }
         try {
             log.debug("Walking through the file system: " + rootDir);
             Files.walkFileTree(rootDir, new SimpleFileVisitor<Path>() {
