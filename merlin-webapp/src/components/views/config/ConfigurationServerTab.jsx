@@ -67,7 +67,7 @@ class ConfigServerTab extends React.Component {
             failed: false,
             port: 8042,
             showTestData: true,
-            webDevelopment: false,
+            webDevelopmentMode: false,
             directoryItems: [],
             redirect: false,
             expertSettingsOpen: false
@@ -116,7 +116,7 @@ class ConfigServerTab extends React.Component {
         var config = {
             port: this.state.port,
             showTestData: this.state.showTestData,
-            webDevelopment: this.state.webDevelopment,
+            webDevelopmentMode: this.state.webDevelopmentMode,
             templatesDirs: []
         };
         if (this.state.directoryItems) {
@@ -192,10 +192,10 @@ class ConfigServerTab extends React.Component {
                                              name={'port'} value={this.state.port}
                                              onChange={this.handleTextChange}
                                              placeholder="Enter port"/>
-                        <FormLabelField label={<I18n name={'configuration.webDevelopment'}/>} fieldLength={2}>
-                            <FormCheckbox checked={this.state.webDevelopment}
-                                          hintKey={'configuration.webDevelopment.hint'}
-                                          name="webDevelopment"
+                        <FormLabelField label={<I18n name={'configuration.webDevelopmentMode'}/>} fieldLength={2}>
+                            <FormCheckbox checked={this.state.webDevelopmentMode}
+                                          hintKey={'configuration.webDevelopmentMode.hint'}
+                                          name="webDevelopmentMode"
                                           onChange={this.handleCheckboxChange}/>
                         </FormLabelField>
                         <FormLabelField>

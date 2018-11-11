@@ -12,9 +12,9 @@ public class Configuration {
 
     private int port;
     private boolean showTestData = true;
+    private boolean webDevelopmentMode = false;
     private List<ConfigurationTemplatesDir> templatesDirs;
     private boolean templatesDirModified = false;
-    private boolean webDevelopmentMode = false;
     private String applicationHome;
 
     public static Configuration getDefault() {
@@ -104,6 +104,7 @@ public class Configuration {
     public void copyFrom(Configuration other) {
         this.port = other.port;
         this.showTestData = other.showTestData;
+        this.webDevelopmentMode = other.webDevelopmentMode;
         if (!Objects.equals(this.templatesDirs, other.templatesDirs)) {
             templatesDirModified = true;
         }
