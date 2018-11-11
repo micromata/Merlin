@@ -8,6 +8,8 @@ buildscript {
 
 dependencies {
     compile project(':merlin-core')
+    // https://mvnrepository.com/artifact/org.apache.commons/commons-text
+    compile group: 'org.apache.commons', name: 'commons-text', version: '1.6'
     compile group: 'org.eclipse.jetty', name: 'jetty-server', version: '9.4.12.v20180830'
     compile group: 'org.eclipse.jetty', name: 'jetty-servlet', version: '9.4.12.v20180830'
     compile group: 'org.eclipse.jetty', name: 'jetty-servlets', version: '9.4.12.v20180830'
