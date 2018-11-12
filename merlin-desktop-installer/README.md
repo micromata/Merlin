@@ -1,4 +1,8 @@
-# Building a new release
+# Merlin Desktop Installer
+
+Contains resources and scripts for building new releases of Merlin's desktop application.
+
+## Building a new release
 1. Increase version in `build.gradle`.
 2. In top directory of merlin: `gradle clean test dist`
 3. Run Install4j
@@ -24,7 +28,7 @@
 9. Tag new Release.
 
 
-# For preparing Install4j
+## For preparing Install4j
 1. File structure:
    - merlin
      - merlin-app...

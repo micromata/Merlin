@@ -1,4 +1,6 @@
-# Merlin Core
+# Merlin Core library
+
+This is Merlin's core library used by all other modules of Merlin.
 
 ## Functionality
 Merlin core contains the base library supporting:

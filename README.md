@@ -9,7 +9,11 @@ Magic and customer-friendly Excel, Word and configuration acrobatics.
 Merlin is organized as a multi module project.
 * __merlin-core__ is a lightweight library to embed
 awesome Excel- and Word-features in your own application.
-* __merlin-app__ is a desktop application (with embedded web server and web app) for convenient Excel and Word acrobatics.
+* __merlin-desktop__ is a desktop application (with embedded web server and web app) for convenient Excel and Word acrobatics.
+You may download this application from [Sourceforge](https://sourceforge.net/projects/merlinrunner/) for MacOS, Windows or Linux.
+* __merlin-server__ is the Merlin server for convenient Excel and Word acrobatics, ready to run from a start script. You may also use the convenient
+installer for a desktop frontend for the server.
+
 Some more modules for different use-cases.
 
 ## Excel validation (xls and xlsx)
@@ -54,8 +58,8 @@ Examples for if-expressions:
 * variable < value, variable <= value, variable > value, variable >= value. Integers and doubles as values are supported.
 
 ### Example
-See the [examples](https://github.com/kreinhard/merlin/tree/master/examples/templates) with the template file [EmploymentContractTemplate.docx](https://github.com/kreinhard/merlin/raw/master/examples/templates/EmploymentContractTemplate.docx)
-and the result file after processed by Merlin [EmploymentContract-Berta.docx](https://github.com/kreinhard/merlin/raw/master/examples/templates/EmploymentContract-Berta.docx).
+See the [examples](https://github.com/micromata/Merlin/tree/master/examples/templates) with the template file [EmploymentContractTemplate.docx](https://github.com/micromata/Merlin/raw/master/examples/templates/EmploymentContractTemplate.docx)
+and the result file after processed by Merlin [EmploymentContract-Berta.docx](https://github.com/micromata/Merlin/raw/master/examples/templates/EmploymentContract-Berta.docx).
 
 ## Word templates and serial letters
 * Supports serial document function: Define your variables for a given Word template in Excel columns and
@@ -83,5 +87,5 @@ Via templates the different configuration files for OpenHab are automatically ge
 
 Forget Copy&Paste and vi (in this context). Make your changes convenient in Excel and let do Merlin all the rest.
 
-Please refer [OpenHab-KNX-Definitions.xlsx](https://github.com/kreinhard/merlin/raw/master/merlin-smarthome/examples/openhab-knx/OpenHab-KNX-Definitions.xlsx) for a first impression including the
-result files: [open-knx](https://github.com/kreinhard/merlin/tree/master/merlin-smarthome/examples/openhab-knx)
+Please refer [OpenHab-KNX-Definitions.xlsx](https://github.com/micromata/Merlin/raw/master/merlin-smarthome/examples/openhab-knx/OpenHab-KNX-Definitions.xlsx) for a first impression including the
+result files: [open-knx](https://github.com/micromata/Merlin/tree/master/merlin-smarthome/examples/openhab-knx)
