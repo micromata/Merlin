@@ -61,7 +61,6 @@ public class FilesystemBrowserRest {
         FileSystemBrowser.getInstance().setLastDir(file);
         String filename = file != null ? JsonUtils.toJson(file.getAbsolutePath()) : "";
         String result = "{\"directory\":\"" + filename + "\"}";
-        log.info("result: " + result);
         return result;
     }
 
