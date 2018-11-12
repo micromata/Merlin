@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <install4j version="7.0.8" transformSequenceNumber="7">
-  <directoryPresets config=".." />
-  <application name="Merlin" distributionSourceDir="" applicationId="5115-4774-2533-4349" mediaDir="../../Install4j/Merlin" mediaFilePattern="${compiler:sys.shortName}_${compiler:sys.platform}_${compiler:sys.version}" compression="6" lzmaCompression="false" pack200Compression="false" excludeSignedFromPacking="true" commonExternalFiles="false" createMd5Sums="true" shrinkRuntime="true" shortName="merlin" publisher="Micromata GmbH" publisherWeb="www.micromata.de" version="0.10dev" allPathsRelative="true" backupOnSave="false" autoSave="false" convertDotsToUnderscores="true" macSignature="????" macVolumeId="4356b34315fd64b9" javaMinVersion="11" javaMaxVersion="" allowBetaVM="false" jdkMode="jdk" jdkName="JDK 1.8">
+  <directoryPresets config="./resources" />
+  <application name="Merlin" distributionSourceDir="" applicationId="5115-4774-2533-4349" mediaDir="../../Install4j/Merlin" mediaFilePattern="${compiler:sys.shortName}_${compiler:sys.platform}_${compiler:sys.version}" compression="6" lzmaCompression="false" pack200Compression="false" excludeSignedFromPacking="true" commonExternalFiles="false" createMd5Sums="true" shrinkRuntime="true" shortName="merlin" publisher="Micromata GmbH" publisherWeb="www.micromata.de" version="0.10dev" allPathsRelative="true" backupOnSave="false" autoSave="false" convertDotsToUnderscores="true" macSignature="????" macVolumeId="4356b34315fd64b9" javaMinVersion="9" javaMaxVersion="" allowBetaVM="false" jdkMode="jdk" jdkName="JDK 1.8">
     <languages skipLanguageSelection="false" languageSelectionInPrincipalLanguage="false">
       <principalLanguage id="en" customLocalizationFile="" />
       <additionalLanguages>
@@ -15,7 +15,7 @@
     </searchSequence>
     <variables />
     <mergedProjects />
-    <codeSigning macEnabled="false" macPkcs12File="../../Install4j/k.reinhard@me.com.p12" windowsEnabled="false" windowsKeySource="pkcs12" windowsPvkFile="" windowsSpcFile="" windowsPkcs12File="../../Install4j/MicromataKR.p12" windowsPkcs11Library="" windowsPkcs11Slot="">
+    <codeSigning macEnabled="false" macPkcs12File="../../Install4j/k.reinhard@me.com.p12" windowsEnabled="true" windowsKeySource="pkcs12" windowsPvkFile="" windowsSpcFile="" windowsPkcs12File="../../Install4j/Micromata-CodeSigning.pfx" windowsPkcs11Library="" windowsPkcs11Slot="">
       <windowsKeystoreIdentifier issuer="" serial="" subject="" />
       <windowsPkcs11Identifier issuer="" serial="" subject="" />
     </codeSigning>
@@ -62,8 +62,8 @@
     <components />
   </files>
   <launchers>
-    <launcher name="Merlin" id="58" customizedId="" external="false" excludeFromMenu="false" unixMode="755" unixAutoStart="true" menuName="" icnsFile="" customMacBundleIdentifier="false" macBundleIdentifier="" swtApp="false" fileset="" macBundleBinary="JavaApplicationStub" addMacEntitlements="false" macEntitlementsFile="" useCustomMacosExecutableName="false" customMacosExecutableName="" useJavaMinVersionOverride="false" javaMinVersionOverride="" useJavaMaxVersionOverride="false" javaMaxVersionOverride="" checkUpdater="false" updateExecutionMode="unattendedProgress" unattendedUpdateTitle="${i18n:updater.WindowTitle(&quot;${compiler:sys.fullName}&quot;)}">
-      <executable name="Merlin" type="1" iconSet="true" iconFile="" executableDir="." redirectStderr="true" stderrFile="error.log" stderrMode="overwrite" redirectStdout="false" stdoutFile="output.log" stdoutMode="overwrite" failOnStderrOutput="true" executableMode="1" changeWorkingDirectory="true" workingDirectory="." singleInstance="true" serviceStartType="2" serviceDependencies="" serviceDescription="" jreLocation="" executionLevel="asInvoker" checkConsoleParameter="false" globalSingleInstance="false" singleInstanceActivate="true" dpiAware="java9+">
+    <launcher name="Merlin" id="58" customizedId="" external="false" excludeFromMenu="false" unixMode="755" unixAutoStart="true" menuName="" icnsFile="./resources/merlin-icon.icns" customMacBundleIdentifier="false" macBundleIdentifier="" swtApp="false" fileset="" macBundleBinary="JavaApplicationStub" addMacEntitlements="false" macEntitlementsFile="" useCustomMacosExecutableName="false" customMacosExecutableName="" useJavaMinVersionOverride="false" javaMinVersionOverride="" useJavaMaxVersionOverride="false" javaMaxVersionOverride="" checkUpdater="false" updateExecutionMode="unattendedProgress" unattendedUpdateTitle="${i18n:updater.WindowTitle(&quot;${compiler:sys.fullName}&quot;)}">
+      <executable name="Merlin" type="1" iconSet="true" iconFile="./resources/merlin_icon.ico" executableDir="." redirectStderr="true" stderrFile="error.log" stderrMode="overwrite" redirectStdout="false" stdoutFile="output.log" stdoutMode="overwrite" failOnStderrOutput="true" executableMode="1" changeWorkingDirectory="true" workingDirectory="." singleInstance="true" serviceStartType="2" serviceDependencies="" serviceDescription="" jreLocation="" executionLevel="asInvoker" checkConsoleParameter="false" globalSingleInstance="false" singleInstanceActivate="true" dpiAware="java9+">
         <versionInfo include="false" fileVersion="" fileDescription="" legalCopyright="" internalName="" productName="" />
       </executable>
       <splashScreen show="false" width="0" height="0" bitmapFile="" textOverlay="false">
@@ -484,12 +484,15 @@ return javafxDir;</string>
                         <string>58</string>
                       </void>
                       <void property="vmOptions">
-                        <array class="java.lang.String" length="2">
+                        <array class="java.lang.String" length="3">
                           <void index="0">
                             <string>--module-path=${installer:javafxDir}</string>
                           </void>
                           <void index="1">
                             <string>--add-modules=javafx.controls,javafx.fxml</string>
+                          </void>
+                          <void index="2">
+                            <string>-DapplicationHome=${installer:sys.contentDir}</string>
                           </void>
                         </array>
                       </void>
@@ -2290,9 +2293,6 @@ return true;</string>
       </installerScript>
     </unixInstaller>
   </mediaSets>
-  <buildIds buildAll="true">
-    <mediaSet refId="61" />
-    <mediaSet refId="587" />
-  </buildIds>
+  <buildIds buildAll="true" />
   <buildOptions verbose="false" faster="false" disableSigning="false" disableJreBundling="false" debug="false" />
 </install4j>
