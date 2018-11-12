@@ -1,0 +1,40 @@
+Merlin Installation
+===================
+Kai Reinhard, Version {version}
+:toc:
+:toclevels: 4
+
+link:index.html[Top]
+
+== Welcome to Merlin Runner application
+
+Congratulations. With Merlin Runner you have started a smart assistant for your daily work with Word documents.
+
+*_Enjoy your work!_*
+
+:sectnums:
+
+== Installation
+=== Download installer
+You may download the latest installer version ready to run: +
+[.text-center]
+https://sourceforge.net/projects/merlinrunner/[Merlin on SourceForge^] +
+[.text-left]
+The installer is available for MacOS X, Windows and Linux.
+
+=== Bundled Java
+The Java Runtime Environment is bundled for the MacOS X and Windows version. The *bundled Java will not affect* any
+previous installed Java version, it's only installed locally inside the applications installation dir.
+
+=== Start the Desktop application
+After installation you may start Merlin:
+
+.The Merlin server (as Desktop application).
+[caption="Figure 1: "]
+image::images/Merlin-StartScreen.jpg[Merlin_Startscreen]
+
+
+The desktop application contains the whole server including all the magic templating stuff and a web server.
+
+By clicking on the button of the desktop application a web browser will be opened. You can do everything through this
+web server (working with templates as well as administration stuff such as looking in log files or configuration of the server).

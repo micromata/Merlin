@@ -1,38 +1,12 @@
-Merlin Runner documentation
-===========================
+Merlin Templates
+================
 Kai Reinhard, Version {version}
 :toc:
 :toclevels: 4
 
-== Welcome to Merlin Runner application
-
-Congratulations. With Merlin Runner you have started a smart assistant for your daily work with Word documents.
-
-*_Enjoy your work!_*
+link:index.html[Top]
 
 :sectnums:
-
-== Installation
-=== Download installer
-You may download the latest installer version ready to run: +
-[.text-center]
-https://sourceforge.net/projects/merlinrunner/[Merlin on SourceForge^] +
-[.text-left]
-Currently only MacOS X is supported, Windows and Linux is coming soon.
-
-=== Start the Desktop application
-After installation you may start Merlin:
-
-.The Merlin server (as Desktop application).
-[caption="Figure 1: "]
-image::images/Merlin-StartScreen.jpg[Merlin_Startscreen]
-
-
-The desktop application contains the whole server including all the magic templating stuff and a web server.
-
-By clicking on the button of the desktop application a web browser will be opened. You can do everything through this
-web server (working with templates as well as administration stuff such as looking in log files or configuration of the server.
-
 
 == Templates
 
@@ -120,12 +94,3 @@ reading of the Word templates.
 |Depends on| The name of the master variable this variable depends on.
 |mapping|A mapping as a comma seperated value list. The length of this list should match the length of the values of the master variable. There will be a 1:1 mapping.
 |=======
-
-== For developers
-=== Developers are welcome!
-The full source code of Merlin is hosted by Github:
-[.text-center]
-https://github.com/micromata/MerlinRunner/[Merlin on GitHub^] +
-[.text-left]
-
-ToDo: Technologies, Java embedded, platforms, ..., First steps

@@ -1,0 +1,7 @@
+Merlin License
+==============
+Kai Reinhard, Version {version}
+
+link:index.html[Top]
+
+include::../../LICENSE[]

@@ -1,0 +1,59 @@
+Merlin technical documentation
+==============================
+Kai Reinhard, Version {version}
+:toc:
+:toclevels: 4
+
+link:index.html[Top]
+
+:sectnums:
+
+== Used technologies
+[%autowidth, frame="topbot",options="header"]
+|=======
+|Technology | Usage
+|*Java*|The backend is built with Java. If you use the installer, Java is bundled for the MacOS and Windows version.
+|Apache POI|This library is used for dealing with Word and Excel files.
+|Asciidoctor|For building documentation (this document is created by Asciidoctor).
+|Excel|Microsoft® Excel (xls and xlsx).
+|Github|Source code management.
+|Install4j|Used for building installer for MacOS X, Windows and Linux.
+|JavaFX|Used for the desktop application.
+|Jetty|The Jetty web-server is the embedded web-server for serving all the html and rest stuff.
+|SourceForge|The download area for Merlin releases.
+|Word|Microsoft® Word (docx)
+|...|And much more...
+|=======
+
+== Development stuff
+=== Backend
+[%autowidth, frame="topbot",options="header"]
+|=======
+|Technology | Usage
+|Apache commons|Useful helper classes.
+|Gradle|The building tool for handling all Java dependencies and building documentations and releases.
+|Intellij|The IDE for Java and web development.
+|Jackson|Serializing and deserializing JSON.
+|Jersey|Rest services.
+|JUnit|The Java test framework.
+|Mockito|For mocking test objects.
+|org.slf4j|The logging framework for the backend.
+|=======
+
+=== Frontend
+[%autowidth, frame="topbot",options="header"]
+|=======
+|Technology | Usage
+|Bootstrap|The popular Html/Css-framework.
+|Intellij|The IDE for Java and web development.
+|npm/yarn|Used for web development and dependency management of the web stuff.
+|React|The used web framework.
+|Reactstrap|Convenient framework for dealing with Bootstrap components in React.
+|=======
+
+== For developers
+=== Developers are welcome!
+The full source code of Merlin is hosted by Github:
+[.text-center]
+https://github.com/micromata/Merlin/[Merlin on GitHub^] +
+[.text-left]

@@ -13,7 +13,7 @@ buildscript {
 apply plugin: 'org.asciidoctor.convert'
 
 asciidoctor {
-    sourceDir = file('.')
+    sourceDir = file('asciidoctor')
     sources {
         include '*.adoc'
     }

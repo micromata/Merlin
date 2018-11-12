@@ -1,0 +1,22 @@
+Merlin Runner documentation
+===========================
+Kai Reinhard, Version {version}
+:toc:
+:toclevels: 4
+
+== Welcome to Merlin's world
+
+Congratulations. With Merlin Runner you have started a smart assistant for your daily work with Word documents.
+
+*_Enjoy your work!_*
+
+== Documents
+
+[%autowidth, frame="topbot",options="header"]
+|=======
+|Document | Description
+|link:templates.html[Templates]|This document describes the syntax of templates and how do they work.
+|link:installation.html[Installation]|The thousand ways to install and configure Merlin.
+|link:technical.html[Technical]|The technical stuff behind Merlin.
+|link:license.html[License]|Apache License, Version 2.0, January 2004.
+|=======
