@@ -1,6 +1,8 @@
 Merlin License
 ==============
-Kai Reinhard, Version {version}
+Micromata GmbH, Kai Reinhard, Version {version}
+
+:last-update-label: Copyright (C) 2018, Last updated
 
 link:index.html[Top]
 

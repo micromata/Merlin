@@ -1,12 +1,15 @@
 Merlin technical documentation
 ==============================
-Kai Reinhard, Version {version}
+Micromata GmbH, Kai Reinhard, Version {version}
 :toc:
 :toclevels: 4
+
+:last-update-label: Copyright (C) 2018, Last updated
 
 link:index.html[Top]
 
 :sectnums:
+
 
 == Used technologies
 [%autowidth, frame="topbot",options="header"]
@@ -15,13 +18,13 @@ link:index.html[Top]
 |*Java*|The backend is built with Java. If you use the installer, Java is bundled for the MacOS and Windows version.
 |Apache POI|This library is used for dealing with Word and Excel files.
 |Asciidoctor|For building documentation (this document is created by Asciidoctor).
-|Excel|Microsoft® Excel (xls and xlsx).
+|Excel|Microsoft(R) Excel (xls and xlsx).
 |Github|Source code management.
 |Install4j|Used for building installer for MacOS X, Windows and Linux.
 |JavaFX|Used for the desktop application.
 |Jetty|The Jetty web-server is the embedded web-server for serving all the html and rest stuff.
 |SourceForge|The download area for Merlin releases.
-|Word|Microsoft® Word (docx)
+|Word|Microsoft(R) Word (docx)
 |...|And much more...
 |=======
 
@@ -57,3 +60,4 @@ The full source code of Merlin is hosted by Github:
 [.text-center]
 https://github.com/micromata/Merlin/[Merlin on GitHub^] +
 [.text-left]
+

@@ -1,8 +1,10 @@
 Merlin Installation
 ===================
-Kai Reinhard, Version {version}
+Micromata GmbH, Kai Reinhard, Version {version}
 :toc:
 :toclevels: 4
+
+:last-update-label: Copyright (C) 2018, Last updated
 
 link:index.html[Top]
 
@@ -15,6 +17,8 @@ Congratulations. With Merlin Runner you have started a smart assistant for your 
 :sectnums:
 
 == Installation
+
+
 === Download installer
 You may download the latest installer version ready to run: +
 [.text-center]

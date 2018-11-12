@@ -1,8 +1,10 @@
 Merlin Runner documentation
 ===========================
-Kai Reinhard, Version {version}
+Micromata GmbH, Kai Reinhard, Version {version}
 :toc:
 :toclevels: 4
+
+:last-update-label: Copyright (C) 2018, Last updated
 
 == Welcome to Merlin's world
 
