@@ -20,6 +20,7 @@ link:index.html[Top]
 |Asciidoctor|For building documentation (this document is created by Asciidoctor).
 |Excel|Microsoft(R) Excel (xls and xlsx).
 |Github|Source code management.
+|I18n|Merlin is fully localized (English and German). The language of the server is customizable during the installing process and the user language is configurable.
 |Install4j|Used for building installer for MacOS X, Windows and Linux.
 |JavaFX|Used for the desktop application.
 |Jetty|The Jetty web-server is the embedded web-server for serving all the html and rest stuff.
