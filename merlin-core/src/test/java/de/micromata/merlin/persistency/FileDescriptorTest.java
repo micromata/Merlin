@@ -2,6 +2,8 @@ package de.micromata.merlin.persistency;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledOnOs;
+import org.junit.jupiter.api.condition.OS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -73,25 +75,29 @@ public class FileDescriptorTest {
         assertEquals("..", fileDescriptor.getRelativePath());
         file = new File("/Users/kai/templates/template.xls");
         fileDescriptor.setRelativePath(file.toPath());
-        assertEquals("../templates", fileDescriptor.getRelativePath());
+        assertEquals(".." + File.separator + "templates", fileDescriptor.getRelativePath());
         file = new File("/Users/kai/Documents/template.xls");
         fileDescriptor.setRelativePath(file.toPath());
         assertEquals("", fileDescriptor.getRelativePath());
     }
 
     @Test
+    @DisabledOnOs(OS.WINDOWS)
     public void canonicalPathTest() {
         File dir = new File("/Users/kai/Documents");
         FileDescriptor fileDescriptor = new FileDescriptor();
         fileDescriptor.setDirectory(dir.toPath());
         File file = new File("/Users/kai/Documents/templates/template.xls");
         fileDescriptor.setRelativePath(file.toPath());
+        // on Windows: "R:\Users\kai\Documents\templates\template.xls"
         assertEquals("/Users/kai/Documents/templates/template.xls", fileDescriptor.getCanonicalPathString());
         file = new File("/Users/kai/Documents/template.xls");
         fileDescriptor.setRelativePath(file.toPath());
+        // on Windows: "R:\Users\kai\Documents\template.xls"
         assertEquals("/Users/kai/Documents/template.xls", fileDescriptor.getCanonicalPathString());
         file = new File("/Users/kai/tmp/template.xls");
         fileDescriptor.setRelativePath(file.toPath());
+        // on Windows: "R:\Users\kai\tmp\template.xls"
         assertEquals("/Users/kai/tmp/template.xls", fileDescriptor.getCanonicalPathString());
     }
 }
