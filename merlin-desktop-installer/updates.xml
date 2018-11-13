@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<updateDescriptor baseUrl="https://sourceforge.net/projects/merlinrunner/files/0.9/">
-  <entry targetMediaFileId="61" updatableVersionMin="" updatableVersionMax="" fileName="merlin-macos-0_10dev.dmg" newVersion="0.10dev" newMediaFileId="61" fileSize="62451847" md5Sum="30d310807da4000e4f3951cfdf1dd983" bundledJre="" archive="false" singleBundle="true">
+<updateDescriptor baseUrl="https://sourceforge.net/projects/merlinrunner/files/0.10/">
+  <entry targetMediaFileId="61" updatableVersionMin="" updatableVersionMax="" fileName="merlin-macos-0_10.dmg" newVersion="0.10" newMediaFileId="61" fileSize="63316103" md5Sum="d1f176d63435497b4ed1aa5c522c92a0" bundledJre="" archive="false" singleBundle="true">
     <comment language="en" />
     <comment language="de" />
   </entry>
-  <entry targetMediaFileId="587" updatableVersionMin="" updatableVersionMax="" fileName="merlin-windows-0_10dev.exe" newVersion="0.10dev" newMediaFileId="587" fileSize="69043728" md5Sum="c8b4476c29dcb7d2440f857edec1ce0a" bundledJre="" archive="false" singleBundle="false">
+  <entry targetMediaFileId="587" updatableVersionMin="" updatableVersionMax="" fileName="merlin-windows-0_10.exe" newVersion="0.10" newMediaFileId="587" fileSize="69906960" md5Sum="999f522a177aa58b952c08be2dfc80dd" bundledJre="" archive="false" singleBundle="false">
     <comment language="en" />
     <comment language="de" />
   </entry>
-  <entry targetMediaFileId="715" updatableVersionMin="" updatableVersionMax="" fileName="merlin-linux-0_10dev.sh" newVersion="0.10dev" newMediaFileId="715" fileSize="71683722" md5Sum="a2c71402c0b03bf51847b2d1f0e12935" bundledJre="" archive="false" singleBundle="false">
+  <entry targetMediaFileId="715" updatableVersionMin="" updatableVersionMax="" fileName="merlin-linux-0_10.sh" newVersion="0.10" newMediaFileId="715" fileSize="72544976" md5Sum="6bc31fa0073ac1cfe7cf63bd4bac0a81" bundledJre="" archive="false" singleBundle="false">
     <comment language="en" />
     <comment language="de" />
   </entry>
