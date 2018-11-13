@@ -49,7 +49,7 @@ public class FileDescriptorTest {
     }
 
     @Test
-    public void lastModifiedTest() throws IOException, InterruptedException {
+    public void lastModifiedTest() throws IOException {
         File file = new File(TEST_DIR, "tmp.txt");
         FileUtils.write(file, "Test", Charset.defaultCharset());
         Date now = new Date();
