@@ -17,7 +17,6 @@ merlin-velocity/build
 merlin-velocity/target/
 merlin-webapp/public/docs
 
-test
 target
 docs/html5
 docs/build
