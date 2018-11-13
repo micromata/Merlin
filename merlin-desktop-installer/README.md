@@ -18,9 +18,9 @@ Contains resources and scripts for building new releases of Merlin's desktop app
    1. Create new tag, e. g. `v0.9`.
 7. Upload to SourceForge
    1. Publish to new Folder 0.9
-      1. `Install4j/Merlin/merlin_macos_v_9.dmg` (mark as default for MacOS)
-      2. `Install4j/Merlin/merlin_unix_0_9.sh` (mark as default for Linux)
-      3. `Install4j/Merlin/merlin_windows_x64_0_9.exe` (mark as default for Windows)
+      1. `Install4j/Merlin/merlin-macos-v_9.dmg` (mark as default for MacOS)
+      2. `Install4j/Merlin/merlin-unix-0_9.sh` (mark as default for Linux)
+      3. `Install4j/Merlin/merlin-windows-0_9.exe` (mark as default for Windows)
       4. `merlin-server/build/distributions/merlin-server-0.9.zip` (mark as default for all others)
    2. Testing
 8. Enable update mechanism
