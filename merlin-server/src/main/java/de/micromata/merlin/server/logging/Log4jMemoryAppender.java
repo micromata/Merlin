@@ -86,7 +86,7 @@ public class Log4jMemoryAppender extends AppenderSkeleton {
             boolean localizedMessage = false;
             if (message != null && message.startsWith("i18n=")) {
                 I18nLogEntry i18nLogEntry = I18nLogEntry.parse(message);
-                message = i18n.formatMessage(i18nLogEntry.getI18nKey(), i18nLogEntry.getArgs());
+                message = i18n.formatMessage(i18nLogEntry.getI18nKey(), (Object[])i18nLogEntry.getArgs());
                 localizedMessage = true;
             }
 

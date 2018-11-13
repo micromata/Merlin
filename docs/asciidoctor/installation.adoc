@@ -30,7 +30,7 @@ Description
 [%autowidth, frame="topbot"]
 |=======
 |Platform|Target platform, all contains a Windows start script (.bat) and a generic Unix start script (.sh).
-|Desktop application|The desktop application is a platform specific application with a start button.
+|Desktop application|The desktop application is a platform specific application with a start button. The JavaFX modules are included.
 |Auto-updates|On every start-up Merlin will look for any available updates. If updates are available a updating process can be started with a single click.
 |Bundled JRE|For versions with a bundled JRE no Java version is required. The *bundled Java Runtime Environment doesn't affect* any installed Java version.
 |Server|Contains all the Merlin functionality. Any configuration of the Merlin server can be done via a web browser. There is also a convenient log file viewer available in the web browser.
