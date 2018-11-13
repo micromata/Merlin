@@ -29,7 +29,7 @@ public class ReplaceUtils {
     }
 
     public static List<ReplaceEntry> createReplaceEntries(String text, Variables variables) {
-        List<ReplaceEntry> replaceEntries = new ArrayList();
+        List<ReplaceEntry> replaceEntries = new ArrayList<>();
         createReplaceEntries(text, replaceEntries, variables);
         return replaceEntries;
     }
