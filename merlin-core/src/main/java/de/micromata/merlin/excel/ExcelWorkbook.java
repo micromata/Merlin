@@ -215,13 +215,4 @@ public class ExcelWorkbook implements AutoCloseable {
             // ignore
         }
     }
-
-    @Override
-    public void finalize() throws Throwable {
-        try {
-            close();
-        } finally {
-            super.finalize();
-        }
-    }
 }

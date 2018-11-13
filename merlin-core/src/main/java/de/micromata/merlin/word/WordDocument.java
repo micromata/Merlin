@@ -20,7 +20,7 @@ import java.util.Set;
 
 public class WordDocument implements AutoCloseable {
     private static Logger log = LoggerFactory.getLogger(WordDocument.class);
-    XWPFDocument document;
+    private XWPFDocument document;
     private String filename;
     private File file;
     private InputStream inputStream;
@@ -90,15 +90,6 @@ public class WordDocument implements AutoCloseable {
         }
     }
 
-    @Override
-    public void finalize() throws Throwable {
-        try {
-            close();
-        } finally {
-            super.finalize();
-        }
-    }
-
     public XWPFDocument getDocument() {
         return document;
     }
@@ -110,23 +101,21 @@ public class WordDocument implements AutoCloseable {
     }
 
     public String scanForTemplateDefinitionReference() {
-        String ref = (String) processAllParagraphs(new RunsProcessorExecutor() {
+        return (String) processAllParagraphs(new RunsProcessorExecutor() {
             @Override
             Object process(RunsProcessor processor, Object param) {
                 return processor.scanForTemplateDefinitionReference();
             }
         }, null);
-        return ref;
     }
 
     public String scanForTemplateId() {
-        String id = (String) processAllParagraphs(new RunsProcessorExecutor() {
+        return (String) processAllParagraphs(new RunsProcessorExecutor() {
             @Override
             Object process(RunsProcessor processor, Object param) {
                 return processor.scanForTemplateId();
             }
         }, null);
-        return id;
     }
 
     public Conditionals getConditionals() {
@@ -138,6 +127,7 @@ public class WordDocument implements AutoCloseable {
     public Set<String> getVariables() {
         Set<String> variables = new HashSet<>();
         processAllParagraphs(new RunsProcessorExecutor() {
+            @SuppressWarnings("unchecked")
             @Override
             Object process(RunsProcessor processor, Object param) {
                 processor.scanVariables((Set<String>) param);
