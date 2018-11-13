@@ -56,7 +56,7 @@ After installation you may start Merlin:
 
 .The Merlin server (as Desktop application).
 [caption="Figure 1: "]
-image::../images/Merlin-StartScreen.png[Merlin_StartScreen,width=30%]
+image::images/Merlin-StartScreen.png[Merlin_StartScreen,width=30%]
 
 
 By clicking on the button of the desktop application a web browser will be opened. You can do everything through this
@@ -66,14 +66,14 @@ web server (working with templates as well as administration stuff such as looki
 
 .The Merlin configuration screens.
 [caption="Figure 2: "]
-image::../images/Merlin-ConfigurationScreen1.png[Merlin_ConfigurationScreen1]
+image::images/Merlin-ConfigurationScreen1.png[Merlin_ConfigurationScreen1]
 
 .The Merlin configuration screens.
 [caption="Figure 3: "]
-image::../images/Merlin-ConfigurationScreen2.png[Merlin_ConfigurationScreen2]
+image::images/Merlin-ConfigurationScreen2.png[Merlin_ConfigurationScreen2]
 
 == Log viewer
 
 .The Merlin log viewer.
 [caption="Figure 4: "]
-image::../images/Merlin-LogViewer.png[Merlin_LogViewer]
+image::images/Merlin-LogViewer.png[Merlin_LogViewer]
