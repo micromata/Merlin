@@ -1,7 +1,6 @@
 package de.micromata.merlin.server;
 
 import de.micromata.merlin.CoreI18n;
-import de.micromata.merlin.UTF8ResourceBundleControl;
 
 import java.text.MessageFormat;
 import java.util.*;
@@ -31,8 +30,7 @@ public class I18nClientMessages {
         Map<String, String> map = new HashMap<>();
         //addAllMessages(map, new AppI18n(locale).getResourceBundle(), keysOnly);
         addAllMessages(map, new CoreI18n(locale).getResourceBundle(), keysOnly);
-        ResourceBundle.Control utf8Control = new UTF8ResourceBundleControl();
-        ResourceBundle bundle = ResourceBundle.getBundle(BUNDLE_NAME, locale, utf8Control);
+        ResourceBundle bundle = ResourceBundle.getBundle(BUNDLE_NAME, locale);
         addAllMessages(map, bundle, keysOnly);
         return new TreeMap<>(map); // Sorted by keys.
     }

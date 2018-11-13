@@ -2,7 +2,6 @@ package de.micromata.merlin.app.javafx;
 
 import de.micromata.merlin.server.ConfigurationHandler;
 import de.micromata.merlin.server.Languages;
-import de.micromata.merlin.UTF8ResourceBundleControl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -77,7 +76,6 @@ public class Context {
             locale = Locale.getDefault();
             log.info("Using the default language of the server host: " + locale);
         }
-        ResourceBundle.Control utf8Control = new UTF8ResourceBundleControl();
-        resourceBundle = ResourceBundle.getBundle(BUNDLE_NAME, locale, utf8Control);
+        resourceBundle = ResourceBundle.getBundle(BUNDLE_NAME, locale);
     }
 }

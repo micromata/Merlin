@@ -34,13 +34,11 @@ public class I18n {
      * Uses the default message bundle "MessagesBundle" of class path with systems default locale.
      */
     public I18n(String bundleName) {
-        ResourceBundle.Control utf8Control = new UTF8ResourceBundleControl();
-        this.resourceBundle = ResourceBundle.getBundle(bundleName, utf8Control);
+        this.resourceBundle = ResourceBundle.getBundle(bundleName);
     }
 
     public I18n(String bundleName, Locale locale) {
-        ResourceBundle.Control utf8Control = new UTF8ResourceBundleControl();
-        this.resourceBundle = ResourceBundle.getBundle(bundleName, locale, utf8Control);
+        this.resourceBundle = ResourceBundle.getBundle(bundleName, locale);
     }
 
     /**
