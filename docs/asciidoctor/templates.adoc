@@ -57,7 +57,7 @@ Template files (.docx) may contain following expressions supported by Merlin:
 
 .Word template and its result.
 [caption="Figure 2: "]
-image::images/WordTemplate-and-Result.png[Template_before_after]
+image::../images/WordTemplate-and-Result.png[Template_before_after]
 
 
 === Template definitions
