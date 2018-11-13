@@ -11,6 +11,11 @@ subprojects {
     targetCompatibility = 1.9
 
 
+    tasks.withType(JavaCompile) {
+        options.compilerArgs << '-Xlint:unchecked'
+        options.deprecation = true
+    }
+
     repositories {
         maven { url "http://repo.maven.apache.org/maven2" }
         maven { url "http://maven.ej-technologies.com/repository" }
