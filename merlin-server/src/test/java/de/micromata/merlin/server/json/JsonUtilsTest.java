@@ -1,15 +1,13 @@
 package de.micromata.merlin.server.json;
 
+import de.micromata.merlin.persistency.FileDescriptor;
+import de.micromata.merlin.persistency.PersistencyRegistry;
 import de.micromata.merlin.server.storage.Storage;
 import de.micromata.merlin.server.storage.TestData;
-import de.micromata.merlin.persistency.PersistencyRegistry;
 import de.micromata.merlin.word.templating.DependentVariableDefinition;
-import de.micromata.merlin.persistency.FileDescriptor;
 import de.micromata.merlin.word.templating.TemplateDefinition;
 import de.micromata.merlin.word.templating.VariableDefinition;
-import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.OS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -92,8 +90,23 @@ class JsonUtilsTest {
         fileDescriptor.setRelativePath(path);
         String json = JsonUtils.toJson(fileDescriptor, true);
         log.info(json);
-        Assumptions.assumeFalse(OS.WINDOWS.isCurrentOs());
-        assertEquals("/Users/kai/Documents/templates/test.xlsx", PersistencyRegistry.getDefault().getCanonicalPathString(path));
-
+        assertEquals("/Users/kai/Documents/templates/test.xlsx",
+                normalize(PersistencyRegistry.getDefault().getCanonicalPathString(path)));
     }
+
+    /**
+     * Normalizes path for successful tests also under Windows.
+     *
+     * @param path The path to normalize.
+     * @return Path without trailing "x:" and '\' will be replaced by '/'.
+     */
+    private String normalize(String path) {
+        String result = path.replace('\\', '/');
+        if (result.indexOf(':') > 0) {
+            // on Windows: "R:\Users\kai\tmp\template.xls"
+            result = result.substring(result.indexOf(':') + 1);
+        }
+        return result;
+    }
+
 }
