@@ -2,8 +2,6 @@ package de.micromata.merlin.persistency;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.DisabledOnOs;
-import org.junit.jupiter.api.condition.OS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,9 +10,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Date;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class FileDescriptorTest {
     private Logger log = LoggerFactory.getLogger(FileDescriptorTest.class);
@@ -82,22 +78,27 @@ public class FileDescriptorTest {
     }
 
     @Test
-    @DisabledOnOs(OS.WINDOWS)
     public void canonicalPathTest() {
         File dir = new File("/Users/kai/Documents");
         FileDescriptor fileDescriptor = new FileDescriptor();
         fileDescriptor.setDirectory(dir.toPath());
         File file = new File("/Users/kai/Documents/templates/template.xls");
         fileDescriptor.setRelativePath(file.toPath());
-        // on Windows: "R:\Users\kai\Documents\templates\template.xls"
-        assertEquals("/Users/kai/Documents/templates/template.xls", fileDescriptor.getCanonicalPathString());
+        assertEquals("/Users/kai/Documents/templates/template.xls", normalize(fileDescriptor.getCanonicalPathString()));
         file = new File("/Users/kai/Documents/template.xls");
         fileDescriptor.setRelativePath(file.toPath());
-        // on Windows: "R:\Users\kai\Documents\template.xls"
-        assertEquals("/Users/kai/Documents/template.xls", fileDescriptor.getCanonicalPathString());
+        assertEquals("/Users/kai/Documents/template.xls", normalize(fileDescriptor.getCanonicalPathString()));
         file = new File("/Users/kai/tmp/template.xls");
         fileDescriptor.setRelativePath(file.toPath());
-        // on Windows: "R:\Users\kai\tmp\template.xls"
-        assertEquals("/Users/kai/tmp/template.xls", fileDescriptor.getCanonicalPathString());
+        assertEquals("/Users/kai/tmp/template.xls", normalize(fileDescriptor.getCanonicalPathString()));
+    }
+
+    private String normalize(String path) {
+        String result = path.replace('\\', '/');
+        if (result.indexOf(':') > 0) {
+            // on Windows: "R:\Users\kai\tmp\template.xls"
+            result = result.substring(result.indexOf(':' + 1));
+        }
+        return result;
     }
 }
