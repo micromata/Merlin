@@ -94,7 +94,7 @@ public class FileDescriptorTest {
     }
 
     @Test
-    public void testNormalize() {
+    public void normalizeTest() {
         assertEquals("/Users/kai/template.xls", normalize("/Users/kai/template.xls"));
         assertEquals("/Users/kai/template.xls", normalize("\\Users\\kai\\template.xls"));
         assertEquals("/Users/kai/template.xls", normalize("C:\\Users\\kai\\template.xls"));
