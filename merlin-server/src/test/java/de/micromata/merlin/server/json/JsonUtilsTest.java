@@ -7,7 +7,9 @@ import de.micromata.merlin.word.templating.DependentVariableDefinition;
 import de.micromata.merlin.persistency.FileDescriptor;
 import de.micromata.merlin.word.templating.TemplateDefinition;
 import de.micromata.merlin.word.templating.VariableDefinition;
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.OS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -90,6 +92,7 @@ public class JsonUtilsTest {
         fileDescriptor.setRelativePath(path);
         String json = JsonUtils.toJson(fileDescriptor, true);
         log.info(json);
+        Assumptions.assumeFalse(OS.WINDOWS.isCurrentOs());
         assertEquals("/Users/kai/Documents/templates/test.xlsx", PersistencyRegistry.getDefault().getCanonicalPathString(path));
 
     }
