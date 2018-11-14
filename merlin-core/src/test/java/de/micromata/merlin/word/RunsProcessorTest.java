@@ -16,11 +16,11 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class RunsProcessorTest {
+class RunsProcessorTest {
     private Logger log = LoggerFactory.getLogger(RunsProcessorTest.class);
 
     @Test
-    public void templateReferenceRegexTest() {
+    void templateReferenceRegexTest() {
         assertMatcher("{template.name='letter'}", "name", "'letter'");
         assertMatcher("lfd lk { template.id= \"hruzer' }kdlfkaj", "id", "\"hruzer' ");
     }
@@ -34,7 +34,7 @@ public class RunsProcessorTest {
     }
 
     @Test
-    public void readWordTest() throws Exception {
+    void readWordTest() throws Exception {
         Map<String, String> variables = new HashMap<>();
         assertRunIdx(1, 0, 5, "12345", "${Hallo}");
         assertRunIdx(0, 2, 2, "12345", "${Hallo}");

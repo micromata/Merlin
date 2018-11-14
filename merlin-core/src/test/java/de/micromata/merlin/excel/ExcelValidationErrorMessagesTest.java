@@ -9,10 +9,10 @@ import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class ExcelValidationErrorMessagesTest {
+class ExcelValidationErrorMessagesTest {
 
     @Test
-    public void validationErrorsTest() {
+    void validationErrorsTest() {
         CoreI18n coreI18N = CoreI18n.setDefault(Locale.ROOT);
         ExcelWorkbook excelWorkbook = new ExcelWorkbook(new File(Definitions.EXAMPLES_EXCEL_TEST_DIR, "Test.xlsx"));
         ExcelSheet sheet = excelWorkbook.getSheet("Config");

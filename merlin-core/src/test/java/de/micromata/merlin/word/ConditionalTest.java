@@ -9,11 +9,11 @@ import java.util.regex.Matcher;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class ConditionalTest {
+class ConditionalTest {
     private Logger log = LoggerFactory.getLogger(ConditionalTest.class);
 
     @Test
-    public void regexpTest() {
+    void regexpTest() {
         assertMatcher("{if Arbeitszeit = „Teilzeit“}...", "Arbeitszeit", "=", "Teilzeit");
         assertMatcher("{if Arbeitszeit = ‚Teilzeit‘}...", "Arbeitszeit", "=", "Teilzeit");
         assertMatcher("{if Arbeitszeit != ‚Vollzeit‘}...", "Arbeitszeit", "!=", "Vollzeit");

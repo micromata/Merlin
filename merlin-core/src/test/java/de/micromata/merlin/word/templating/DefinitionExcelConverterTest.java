@@ -14,11 +14,11 @@ import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class DefinitionExcelConverterTest {
+class DefinitionExcelConverterTest {
     private Logger log = LoggerFactory.getLogger(DefinitionExcelConverterTest.class);
 
     @Test
-    public void createExcelTest() throws IOException {
+    void createExcelTest() throws IOException {
         CoreI18n.setDefault(Locale.ROOT);
         TemplateDefinitionExcelWriter writer = new TemplateDefinitionExcelWriter();
         TemplateDefinition originalTemplate = create();
@@ -47,14 +47,14 @@ public class DefinitionExcelConverterTest {
     }
 
     @Test
-    public void getBooleanAsStringTest() {
+    void getBooleanAsStringTest() {
         TemplateRunContext templateRunContext = new TemplateRunContext();
         assertEquals("X", templateRunContext.getBooleanAsString(true));
         assertEquals("", templateRunContext.getBooleanAsString(false));
     }
 
     @Test
-    public void getStringAsBooleanTest() {
+    void getStringAsBooleanTest() {
         assertFalse(TemplateDefinitionExcelReader.getStringAsBoolean(null));
         assertFalse(TemplateDefinitionExcelReader.getStringAsBoolean(""));
         assertFalse(TemplateDefinitionExcelReader.getStringAsBoolean("no"));
