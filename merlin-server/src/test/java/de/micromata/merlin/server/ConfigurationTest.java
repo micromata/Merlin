@@ -11,14 +11,14 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class ConfigurationTest {
+class ConfigurationTest {
     private final static String DIR1 = "/Users/kai/Documents/templates";
     private final static String DIR2 = "/Users/kai/Templates";
     private final static String DIR3 = "/Users/kai/Templates of \"Kai\"";
     private final static String DIR3b = "/Users/kai/Templates of \\\"Kai\\\"";
 
     @Test
-    public void configurationSaveTest() throws Exception {
+    void configurationSaveTest() throws Exception {
         Preferences preferences = mock(Preferences.class);
         ConfigurationHandler configurationHandler = new ConfigurationHandler(preferences);
         Configuration configuration = configurationHandler.getConfiguration();
@@ -52,7 +52,7 @@ public class ConfigurationTest {
     }
 
     @Test
-    public void configurationLoadTest() throws Exception {
+    void configurationLoadTest() throws Exception {
         Preferences preferences = mock(Preferences.class);
         ConfigurationHandler configurationHandler = new ConfigurationHandler(preferences);
         Configuration configuration = configurationHandler.getConfiguration();

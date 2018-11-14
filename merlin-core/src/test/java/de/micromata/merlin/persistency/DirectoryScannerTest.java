@@ -10,9 +10,9 @@ import java.io.File;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class DirectoryScannerTest {
+class DirectoryScannerTest {
     @Test
-    public void scanTest() {
+    void scanTest() {
         DirectoryScanner directoryScanner = new DirectoryScanner(Definitions.EXAMPLES_TEMPLATES_TEST_DIR.toPath(), false);
         assertEquals(2, directoryScanner.getTemplateDefinitions().size());
         assertEquals("LetterTemplate.xlsx",

@@ -16,11 +16,11 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class ExcelWorkbookTest {
+class ExcelWorkbookTest {
     private Logger log = LoggerFactory.getLogger(ExcelWorkbookTest.class);
 
     @Test
-    public void configReaderValidationTest() {
+    void configReaderValidationTest() {
         CoreI18n coreI18N = CoreI18n.setDefault(Locale.ROOT);
         ExcelWorkbook excelWorkbook = new ExcelWorkbook(new File(Definitions.EXAMPLES_EXCEL_TEST_DIR, "Test.xlsx"));
         ExcelConfigReader configReader = new ExcelConfigReader(excelWorkbook.getSheet("Config"),
@@ -36,7 +36,7 @@ public class ExcelWorkbookTest {
     }
 
     @Test
-    public void validationExcelResponseTest() throws IOException {
+    void validationExcelResponseTest() throws IOException {
         CoreI18n coreI18N = CoreI18n.setDefault(Locale.ROOT);
         validationexcelResponseTest(CoreI18n.getDefault(), "");
         validationexcelResponseTest(CoreI18n.setDefault(Locale.GERMAN), "_de");

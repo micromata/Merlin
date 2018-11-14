@@ -14,11 +14,11 @@ import java.util.regex.Matcher;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class WordDocumentTest {
+class WordDocumentTest {
     private Logger log = LoggerFactory.getLogger(WordDocumentTest.class);
 
     @Test
-    public void patternTest() {
+    void patternTest() {
         assertVariablePatternMatch(true, "${var}");
         assertVariablePatternMatch(true, "${ var  }");
         assertVariablePatternMatch(true, "..   ${ var}..");
@@ -50,7 +50,7 @@ public class WordDocumentTest {
     }
 
     @Test
-    public void regExpTest() {
+    void regExpTest() {
         Variables variables = new Variables();
         variables.put("var", "world");
         variables.put("endlessLoop", "${endlessLoop}");
@@ -104,7 +104,7 @@ public class WordDocumentTest {
     }
 
     @Test
-    public void conditionalsTest() {
+    void conditionalsTest() {
         Variables variables = new Variables();
         variables.put("var", "world");
         variables.put("counter", "42");

@@ -12,9 +12,9 @@ import java.nio.charset.Charset;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class FilesystemDirectoryWatcherTest {
+class FilesystemDirectoryWatcherTest {
     @Test
-    public void watcherTest() throws Exception {
+    void watcherTest() throws Exception {
         File rootDir = new File(Definitions.OUTPUT_DIR, "directoryWatcherTest").getAbsoluteFile();
         if (rootDir.exists()) {
             FileUtils.deleteDirectory(rootDir);

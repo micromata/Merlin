@@ -6,9 +6,9 @@ import org.slf4j.MDC;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class MDCHandlerTest {
+class MDCHandlerTest {
     @Test
-    public void putRestoreTest() {
+    void putRestoreTest() {
         MDCHandler mdc1 = new MDCHandler();
         mdc1.put(MDCKey.TEMPLATE_PK, "t1");
         mdc1.put(MDCKey.TEMPLATE_DEFINITION_PK, "td1");

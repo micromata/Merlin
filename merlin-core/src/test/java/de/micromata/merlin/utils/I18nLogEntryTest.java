@@ -4,9 +4,9 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class I18nLogEntryTest {
+class I18nLogEntryTest {
     @Test
-    public void logTest() {
+    void logTest() {
         check("i18n='merlin.log.hello'", "merlin.log.hello");
         check("i18n='merlin.log.hello', args=['hurzel']", "merlin.log.hello", "hurzel");
         check("i18n='merlin.log.hello', args=['null', '', '']", "merlin.log.hello", "null", null, "");

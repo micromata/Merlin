@@ -8,15 +8,15 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class LanguagesTest {
+class LanguagesTest {
     @Test
-    public void asStringTest() throws Exception {
+    void asStringTest() throws Exception {
         assertEquals("de", Languages.asString(Locale.GERMAN));
         assertEquals("en", Languages.asString(Locale.ENGLISH));
     }
 
     @Test
-    public void asLocaleTest() throws Exception {
+    void asLocaleTest() throws Exception {
         assertEquals("de", Languages.asLocale("de").getLanguage());
         assertEquals("en", Languages.asLocale("en").getLanguage());
         assertNull(Languages.asLocale(null));

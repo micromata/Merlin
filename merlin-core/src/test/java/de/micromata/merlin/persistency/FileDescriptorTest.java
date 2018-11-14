@@ -16,13 +16,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class FileDescriptorTest {
+class FileDescriptorTest {
     private Logger log = LoggerFactory.getLogger(FileDescriptorTest.class);
 
     private static final String TEST_DIR = "./target/";
 
     @Test
-    public void matchesTest() {
+    void matchesTest() {
         FileDescriptor descriptor1 = new FileDescriptor();
         FileDescriptor descriptor2 = new FileDescriptor();
         assertFalse(descriptor1.matches(descriptor2));
@@ -49,7 +49,7 @@ public class FileDescriptorTest {
     }
 
     @Test
-    public void lastModifiedTest() throws IOException {
+    void lastModifiedTest() throws IOException {
         File file = new File(TEST_DIR, "tmp.txt");
         FileUtils.write(file, "Test", Charset.defaultCharset());
         Date now = new Date();
@@ -63,7 +63,7 @@ public class FileDescriptorTest {
     }
 
     @Test
-    public void relativizePathTest() {
+    void relativizePathTest() {
         File dir = new File("/Users/kai/Documents");
         FileDescriptor fileDescriptor = new FileDescriptor();
         fileDescriptor.setDirectory(dir.toPath());
@@ -83,7 +83,7 @@ public class FileDescriptorTest {
 
     @Test
     @DisabledOnOs(OS.WINDOWS)
-    public void canonicalPathTest() {
+    void canonicalPathTest() {
         File dir = new File("/Users/kai/Documents");
         FileDescriptor fileDescriptor = new FileDescriptor();
         fileDescriptor.setDirectory(dir.toPath());

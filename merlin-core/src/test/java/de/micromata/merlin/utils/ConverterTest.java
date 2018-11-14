@@ -4,9 +4,9 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class ConverterTest {
+class ConverterTest {
     @Test
-    public void formatNumberTest() {
+    void formatNumberTest() {
         assertEquals("0", Converter.formatNumber(0, 5));
         assertEquals("-5", Converter.formatNumber(-5, 5));
         assertEquals("9", Converter.formatNumber(9, 9));
