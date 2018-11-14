@@ -8,9 +8,9 @@ import java.util.Locale;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class Log4jMemoryAppenderTest {
+class Log4jMemoryAppenderTest {
     @Test
-    public void queryTest() throws Exception {
+    void queryTest() throws Exception {
         Log4jMemoryAppender appender = new Log4jMemoryAppender(false);
         create(appender, LogLevel.INFO, "de.merlin.Simply", "The lazy fox jumps over the river.");
         create(appender, LogLevel.DEBUG, "de.merlin.Fox","Everything fine.");

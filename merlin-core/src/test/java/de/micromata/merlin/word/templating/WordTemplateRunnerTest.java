@@ -12,11 +12,11 @@ import java.io.FileOutputStream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class WordTemplateRunnerTest {
+class WordTemplateRunnerTest {
     private Logger log = LoggerFactory.getLogger(WordTemplateRunnerTest.class);
     
     @Test
-    public void readWordTest() throws Exception {
+    void readWordTest() throws Exception {
         TemplateDefinition templateDefinition = DefinitionExcelConverterTest.create();
         WordDocument templateDocument = new WordDocument(new File(Definitions.EXAMPLES_TEMPLATES_TEST_DIR, "EmploymentContractTemplate.docx"));
         WordTemplateRunner runner = new WordTemplateRunner(templateDefinition, templateDocument);

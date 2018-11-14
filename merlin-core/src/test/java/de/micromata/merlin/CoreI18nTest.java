@@ -7,9 +7,9 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class CoreI18nTest {
+class CoreI18nTest {
     @Test
-    public void testResourceBundles() {
+    void testResourceBundles() {
         Set<String> translations = CoreI18n.getAllTranslations("merlin.word.templating.sheet.configuration.name");
         assertEquals(2, translations.size());
         assertTrue(translations.contains("Konfiguration"));

@@ -8,11 +8,11 @@ import org.slf4j.LoggerFactory;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class FormTest {
+class FormTest {
     private Logger log = LoggerFactory.getLogger(FormTest.class);
 
     @Test
-    public void toJsonTest() {
+    void toJsonTest() {
         Form form1 = new Form();
         form1.add(new FormLabelField("name", "Name").setRequired(true));
         form1.add(new FormLabelField("age", "Age").setRequired(true).setValueType(FormLabelFieldValueType.INTEGER).setMinumumValue(0).setMaximumValue(120));

@@ -12,11 +12,11 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class ConditionalsTest {
+class ConditionalsTest {
     private Logger log = LoggerFactory.getLogger(ConditionalsTest.class);
 
     @Test
-    public void conditionalsTest() {
+    void conditionalsTest() {
         // Equals
         checkSingle("{if var = 'text...'}true{endif}");
         checkSingle("{if var = 'abc'}false{endif}");
@@ -86,7 +86,7 @@ public class ConditionalsTest {
     }
 
     @Test
-    public void conditionalStringMatchTest() {
+    void conditionalStringMatchTest() {
         checkResult("lazy", "First paragraph",
                 "The lazy fox jumps over the water.",
                 "The lazy fox jumps over the water.");
@@ -108,7 +108,7 @@ public class ConditionalsTest {
     }
 
     @Test
-    public void conditionalSimpleReadTest() {
+    void conditionalSimpleReadTest() {
         XWPFDocument doc = new XWPFDocument();
         TestHelper.createParagraph(doc, "First paragraph"); // 0
         TestHelper.createParagraph(doc, "{if var = 'test'}Hallo{endif}"); // 1
@@ -133,7 +133,7 @@ public class ConditionalsTest {
     }
 
     @Test
-    public void conditionalReadTest() {
+    void conditionalReadTest() {
         XWPFDocument doc = new XWPFDocument();
         TestHelper.createParagraph(doc, "First paragraph"); // 0
         TestHelper.createParagraph(doc, "{if var != 'test'}Headline"); // 1

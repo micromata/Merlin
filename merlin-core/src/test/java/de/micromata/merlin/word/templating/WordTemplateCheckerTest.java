@@ -8,11 +8,11 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 
-public class WordTemplateCheckerTest {
+class WordTemplateCheckerTest {
     private Logger log = LoggerFactory.getLogger(WordTemplateCheckerTest.class);
 
     @Test
-    public void readWordTest() throws Exception {
+    void readWordTest() throws Exception {
         TemplateDefinition templateDefinition = DefinitionExcelConverterTest.create();
         WordDocument templateDocument = new WordDocument(new File(Definitions.EXAMPLES_TEMPLATES_TEST_DIR, "EmploymentContractTemplate.docx"));
         VariableDefinition variableDefinition = templateDefinition.getVariableDefinitions().get(0);

@@ -6,9 +6,9 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class ReplaceUtilsTest {
+class ReplaceUtilsTest {
     @Test
-    public void replaceTest() {
+    void replaceTest() {
         Variables variables = new Variables();
         variables.put("a", "A");
         variables.put("b", "Berta");
@@ -20,7 +20,7 @@ public class ReplaceUtilsTest {
     }
 
     @Test
-    public void encodeFilenameTest() {
+    void encodeFilenameTest() {
         assertEquals("file", ReplaceUtils.encodeFilename(null, true));
         assertEquals("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789._-",
                 ReplaceUtils.encodeFilename("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789._-", true));
@@ -47,7 +47,7 @@ public class ReplaceUtilsTest {
     }
 
     @Test
-    public void replaceGermanUmlauteAndAccents() {
+    void replaceGermanUmlauteAndAccents() {
         assertNull(ReplaceUtils.replaceGermanUmlauteAndAccents(null));
         assertEquals("", ReplaceUtils.replaceGermanUmlauteAndAccents(""));
         assertEquals("AGOOacAeaeOeoeUeuessnormal_ .", ReplaceUtils.replaceGermanUmlauteAndAccents("ĂĠÒǬåçÄäÖöÜüßnormal_ ."));

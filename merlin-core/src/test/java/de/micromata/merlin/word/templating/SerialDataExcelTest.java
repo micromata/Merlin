@@ -17,12 +17,12 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.*;
 
 
-public class SerialDataExcelTest {
+class SerialDataExcelTest {
     private Logger log = LoggerFactory.getLogger(SerialDataExcelTest.class);
     private TemplateRunContext templateRunContext = new TemplateRunContext();
 
     @Test
-    public void writeReadExcelTest() throws Exception {
+    void writeReadExcelTest() throws Exception {
         TemplateDefinition templateDefinition = DefinitionExcelConverterTest.create();
         Template template = new Template();
         template.setFileDescriptor(new FileDescriptor());
