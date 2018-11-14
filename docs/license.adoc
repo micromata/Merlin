@@ -4,6 +4,7 @@ Micromata GmbH, Kai Reinhard, Version {version}
 
 :last-update-label: Copyright (C) 2018, Last updated
 
-link:index.html[Top]
+ifdef::env-github,env-browser[:outfilesuffix: .adoc]
+link:index{outfilesuffix}[Top]
 
-include::../../LICENSE[]
+include::../LICENSE[]

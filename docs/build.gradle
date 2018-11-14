@@ -13,7 +13,15 @@ buildscript {
 apply plugin: 'org.asciidoctor.convert'
 
 asciidoctor {
-    sourceDir = file('asciidoctor')
+    doFirst {
+        copy {
+            from 'index.adoc'
+            into '.'
+            rename { String fileName ->
+                fileName.replace("index.adoc", "README.adoc")
+            }        }
+    }
+    sourceDir = file('.')
     sources {
         include '*.adoc'
     }

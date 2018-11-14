@@ -6,6 +6,8 @@ Micromata GmbH, Kai Reinhard, Version {version}
 
 :last-update-label: Copyright (C) 2018, Last updated
 
+ifdef::env-github,env-browser[:outfilesuffix: .adoc]
+
 == Welcome to Merlin's world
 
 Congratulations. With Merlin Runner you have started a smart assistant for your daily work with Word documents.
@@ -17,8 +19,8 @@ Congratulations. With Merlin Runner you have started a smart assistant for your 
 [%autowidth, frame="topbot",options="header"]
 |=======
 |Document | Description
-|link:templates.html[Templates]|This document describes the syntax of templates and how they work.
-|link:installation.html[Installation]|The thousand ways to install and configure Merlin.
-|link:technical.html[Technical]|The technical stuff behind Merlin.
-|link:license.html[License]|Apache License, Version 2.0, January 2004.
+|link:templates{outfilesuffix}[Templates]|This document describes the syntax of templates and how they work.
+|link:installation{outfilesuffix}[Installation]|The thousand ways to install and configure Merlin.
+|link:technical{outfilesuffix}[Technical]|The technical stuff behind Merlin.
+|link:license{outfilesuffix}[License]|Apache License, Version 2.0, January 2004.
 |=======
