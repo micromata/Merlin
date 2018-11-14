@@ -93,6 +93,11 @@ public class FileDescriptorTest {
         assertEquals("/Users/kai/tmp/template.xls", normalize(fileDescriptor.getCanonicalPathString()));
     }
 
+    /**
+     * Normalize path for successful tests also under Windows.
+     * @param path The path to normalize.
+     * @return Path without trailing "x:" and '\' will be replaced by '/'.
+     */
     private String normalize(String path) {
         String result = path.replace('\\', '/');
         if (result.indexOf(':') > 0) {
