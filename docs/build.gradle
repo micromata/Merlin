@@ -32,7 +32,7 @@ asciidoctor {
             version: project.version
 }
 
-task buildWebDoc(dependsOn: asciidoctor) {
+task buildWebDoc {
     def merlinWebDocs = file("${project(':merlin-webapp').projectDir}/public/docs")
     doLast {
         merlinWebDocs.mkdirs()
@@ -42,4 +42,6 @@ task buildWebDoc(dependsOn: asciidoctor) {
         }
     }
 }
-buildWebDoc.mustRunAfter(asciidoctor)
+buildWebDoc.dependsOn(asciidoctor)
+buildWebDoc.dependsOn(':merlin-webapp:npmBuild')
+

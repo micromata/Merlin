@@ -43,7 +43,6 @@ run() {
 
 run.dependsOn ':merlin-webapp:npmBuild'
 run.dependsOn ':merlin-docs:buildWebDoc'
-task('merlin-docs:buildWebDoc').mustRunAfter('merlin-webapp:npmBuild')
 
 apply plugin: 'distribution'
 
@@ -91,3 +90,4 @@ distributions {
 
 distZip.dependsOn ':merlin-webapp:npmBuild'
 distZip.dependsOn ':merlin-docs:buildWebDoc'
+task(dist).dependsOn distZip

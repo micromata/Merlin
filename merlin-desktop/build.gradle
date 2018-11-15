@@ -46,7 +46,6 @@ run() {
 
 run.dependsOn ':merlin-webapp:npmBuild'
 run.dependsOn ':merlin-docs:buildWebDoc'
-task('merlin-docs:buildWebDoc').mustRunAfter('merlin-webapp:npmBuild')
 
 // ******* Distribution
 task getDependencies(type: Copy) {
@@ -65,11 +64,11 @@ task copyMerlinApp(type: Copy) {
     from project(':merlin-desktop').jar.archivePath
 }
 
-copyMerlinApp.dependsOn ':merlin-desktop:build'
+copyMerlinApp.mustRunAfter(jar)
 
 getDependencies.dependsOn deleteDependencies
 getDependencies.dependsOn copyMerlinApp
-getDependencies.mustRunAfter(deleteDependencies)
+
 
 task dist {
     doLast {
@@ -96,8 +95,7 @@ distributions {
     }
 }
 
-dist.dependsOn ':merlin-webapp:npmBuild'
-dist.dependsOn ':merlin-docs:buildWebDoc'
-dist.dependsOn getDependencies
-distZip.dependsOn ':merlin-server:distZip'
-task('merlin-server:distZip').mustRunAfter('merlin-docs:buildWebDoc')
+dist.dependsOn distZip
+distZip.dependsOn ':merlin-webapp:npmBuild'
+distZip.dependsOn ':merlin-docs:buildWebDoc'
+distZip.dependsOn getDependencies
