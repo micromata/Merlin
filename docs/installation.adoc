@@ -23,8 +23,8 @@ Congratulations. With Merlin Runner you have started a smart assistant for your 
 |Installation file | Platform | Desktop application | Auto-updates | Bundled JRE|Server | Documentation | Examples
 |`merlin-macos-<version>.dmg`|MacOS X|yes|yes|yes|yes|yes|yes
 |`merlin-windows-<version>.exe`|Windows 64|yes|yes|yes|yes|yes|yes
-|`merlin-linux-<version>.sh`|Linux|yes|yes|no|yes|yes|yes
-|`merlin-server-<version>.zip`|All|no|no|no|yes|yes|yes
+|`merlin-linux-<version>.sh`|Linux|yes|yes|[red]#no#|yes|yes|yes
+|`merlin-server-<version>.zip`|All|[red]#no#|[red]#no#|[red]#no#|yes|yes|yes
 |=======
 
 Description

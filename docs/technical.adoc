@@ -17,8 +17,9 @@ link:index{outfilesuffix}[Top]
 |=======
 |Technology | Usage
 |*Java*|The backend is built with Java. If you use the installer, Java is bundled for the MacOS and Windows version.
+OpenJDK 11 is supported as well. The minimum required version of Java is 9.
 |Apache POI|This library is used for dealing with Word and Excel files.
-|Asciidoctor|For building documentation (this document is created by Asciidoctor).
+|Asciidoctor|For building documentation (this document is created by Asciidoctor). Asciidoctor documents are supported as README files directly by Github.
 |Excel|Microsoft(R) Excel (xls and xlsx).
 |Github|Source code management.
 |I18n|Merlin is fully localized (English and German). The language of the server is customizable during the installing process and the user language is configurable.
