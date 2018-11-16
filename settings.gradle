@@ -3,6 +3,7 @@ include ':merlin-core'
 include ':merlin-desktop'
 include ':merlin-desktop-installer'
 include ':merlin-docs'
+include ':merlin-paypal'
 include ':merlin-smarthome'
 include ':merlin-server'
 include ':merlin-velocity'
@@ -12,6 +13,7 @@ project(':merlin-core').projectDir = "$rootDir/merlin-core" as File
 project(':merlin-desktop').projectDir = "$rootDir/merlin-desktop" as File
 project(':merlin-desktop-installer').projectDir = "$rootDir/merlin-desktop-installer" as File
 project(':merlin-docs').projectDir = "$rootDir/docs" as File
+project(':merlin-paypal').projectDir = "$rootDir/merlin-paypal" as File
 project(':merlin-server').projectDir = "$rootDir/merlin-server" as File
 project(':merlin-smarthome').projectDir = "$rootDir/merlin-smarthome" as File
 project(':merlin-velocity').projectDir = "$rootDir/merlin-velocity" as File
