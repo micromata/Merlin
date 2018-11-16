@@ -14,19 +14,23 @@ public class PaypalCredentials {
     public PaypalCredentials() {
     }
 
-    public  void read(File propertiesFile) throws IOException {
+    public void read(File propertiesFile) throws IOException {
         Properties props = new Properties();
         props.load(new FileReader(propertiesFile));
         read(props);
     }
 
-    public  void read(Properties props) {
+    public void read(Properties props) {
         accessToken = props.getProperty(KEY_ACCESS_TOKEN);
         appId = props.getProperty(KEY_APP_ID);
     }
 
     public String getAccessToken() {
         return accessToken;
+    }
+
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
     }
 
     public String getAppId() {

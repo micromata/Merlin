@@ -10,16 +10,17 @@ ifdef::env-github,env-browser[:outfilesuffix: .adoc]
 
 == Paypal integration
 
+Playground for dealing with PayPal integration. This is just for fun and isn't planned to be a part of Merlin.
+
 === Create a PayPal app
 1. On the https://developer.paypal.com/developer/applications[My Apps & Credentials] page, click Log into Dashboard.
 2. In the REST API apps section, click Create App. +
    PayPal generates a set of OAuth 2.0 client_id and secret credentials for your app for both the sandbox and live environments.
 
 === Get an access token
-....
-curl -v https://api.sandbox.paypal.com/v1/oauth2/token -H "Accept: application/json" -H "Accept-Language: en_US" -u "<client_id>:<secret>" -d "grant_type=client_credentials"
-....
+1. Call merlin-paypal-main:PaypalMain with arguments `-g "<client id>:<secrect>"`
+2. Get the access token form the response json: `"access_token":"<access token>"`
+3. Create properties file with property `paypal.access_token=<access token>`
+4. Do sandbox test call merlin-paypal-main:PaypalMain with arguments `-f "property-file"` or `-a "<access token>"`
 
-
-
-
+If you get a valid payment response, everything is fine for now.
