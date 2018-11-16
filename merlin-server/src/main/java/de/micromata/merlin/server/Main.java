@@ -43,8 +43,7 @@ public class Main {
             // parse the command line arguments
             CommandLine line = parser.parse(options, args);
             if (line.hasOption('h')) {
-                HelpFormatter formatter = new HelpFormatter();
-                formatter.printHelp("merlin-server", options);
+                printHelp(options);
                 return;
             }
             if (line.hasOption('p')) {
