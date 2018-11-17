@@ -4,6 +4,7 @@ import com.paypal.api.payments.Payment;
 import com.paypal.api.payments.PaymentExecution;
 import com.paypal.base.rest.APIContext;
 import com.paypal.base.rest.PayPalRESTException;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,6 +37,14 @@ public class PaymentReceiveServlet extends HttpServlet {
      */
     protected void executePayment(HttpServletRequest req, HttpServletResponse resp, Payment payment, PaymentExecution paymentExecution) {
         log.info("Payment received: paymentId=" + payment.getId() + ", PayerID=" + paymentExecution.getPayerId());
+        if (StringUtils.isBlank(payment.getId())) {
+            log.error("Can't execute payment, paymentId not given. Aborting payment...");
+            return;
+        }
+        if (StringUtils.isBlank(paymentExecution.getPayerId())) {
+            log.error("Can't execute payment, payerId not given. Aborting payment...");
+            return;
+        }
         try {
             Payment createdPayment = payment.execute(apiContext, paymentExecution);
             log.info("Payment executed: " + createdPayment);

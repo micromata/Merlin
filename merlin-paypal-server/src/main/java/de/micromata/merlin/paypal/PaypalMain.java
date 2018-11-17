@@ -1,9 +1,6 @@
 package de.micromata.merlin.paypal;
 
-import com.paypal.api.payments.Transaction;
 import de.micromata.merlin.paypal.purejava.AccessToken;
-import de.micromata.merlin.paypal.sdk.PaymentAmount;
-import de.micromata.merlin.paypal.sdk.PaymentCreator;
 import org.apache.commons.cli.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -60,11 +57,14 @@ public class PaypalMain {
 
             String accessToken = AccessToken.getAccessToken(paypalConfig);
             log.info("Access token successfully received: " + accessToken);
+            /*
             PaymentAmount amount = new PaymentAmount(PaymentAmount.Currency.EUR).setSubtotal(29.99).setTax(5.70);
             Transaction transaction = PaymentCreator.createTransaction(amount, "Micromata T-Shirt Contest 2019");
             PaymentCreator.publish(paypalConfig, transaction);
-        } catch (
-                ParseException ex) {
+            */
+            JettyServer server = new JettyServer();
+            server.start(8142);
+        } catch (ParseException ex) {
             // oops, something went wrong
             System.err.println("Parsing failed.  Reason: " + ex.getMessage());
             printHelp(options);
