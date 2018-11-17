@@ -1,6 +1,8 @@
 package de.micromata.merlin.paypal;
 
 import com.paypal.base.rest.APIContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileReader;
@@ -8,6 +10,8 @@ import java.io.IOException;
 import java.util.Properties;
 
 public class PaypalConfig {
+    private static Logger log = LoggerFactory.getLogger(PaypalConfig.class);
+
     public enum MODE {LIVE, SANDBOX}
 
     static final String KEY_MODE = "paypal.mode";
@@ -31,6 +35,7 @@ public class PaypalConfig {
     }
 
     public void read(File propertiesFile) throws IOException {
+        log.info("Loading properties from file '" + propertiesFile.getAbsolutePath() + "'.");
         Properties props = new Properties();
         props.load(new FileReader(propertiesFile));
         read(props);

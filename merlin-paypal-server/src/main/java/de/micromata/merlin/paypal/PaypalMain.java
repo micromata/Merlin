@@ -12,11 +12,21 @@ import java.io.IOException;
 public class PaypalMain {
     private static Logger log = LoggerFactory.getLogger(PaypalMain.class);
 
-    public static void main(String[] args) throws IOException {
-        new PaypalMain()._start(args);
+    PaypalConfig paypalConfig;
+    private static PaypalMain main;
+
+    private JettyServer server;
+    private boolean shutdownInProgress;
+
+    public static void shutdown() {
+        main._shutdown();
     }
 
-    PaypalConfig paypalConfig;
+    public static void main(String[] args) throws IOException {
+        main = new PaypalMain();
+        main._start(args);
+    }
+
 
     private PaypalMain() {
     }
@@ -40,7 +50,7 @@ public class PaypalMain {
             if (line.hasOption('f')) {
                 file = new File(line.getOptionValue('f'));
             } else {
-                file = new File(System.getProperty("user.home", ".merlin-paypal"));
+                file = new File(System.getProperty("user.home"), ".merlin-paypal");
             }
             if (!file.exists()) {
                 System.err.println("Please specify properties file with paypal paypalConfig or create this: " + file.getAbsolutePath());
@@ -62,7 +72,13 @@ public class PaypalMain {
             Transaction transaction = PaymentCreator.createTransaction(amount, "Micromata T-Shirt Contest 2019");
             PaymentCreator.publish(paypalConfig, transaction);
             */
-            JettyServer server = new JettyServer();
+            Runtime.getRuntime().addShutdownHook(new Thread() {
+                @Override
+                public void run() {
+                    main._shutdown();
+                }
+            });
+            server = new JettyServer();
             server.start(paypalConfig, 8142);
         } catch (ParseException ex) {
             // oops, something went wrong
@@ -70,6 +86,18 @@ public class PaypalMain {
             printHelp(options);
         }
 
+    }
+
+    private void _shutdown() {
+        synchronized (this) {
+            if (shutdownInProgress == true) {
+                // Another thread already called this method. There is nothing further to do.
+                return;
+            }
+            shutdownInProgress = true;
+        }
+        log.info("Shutting down Merlin paypal server...");
+        server.stop();
     }
 
     private void printHelp(Options options) {

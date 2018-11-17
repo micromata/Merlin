@@ -16,3 +16,16 @@ dependencies {
 
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
+
+apply plugin: 'application'
+mainClassName = "de.micromata.merlin.paypal.PaypalMain"
+
+apply plugin: 'distribution'
+
+// Builds the distribution
+distributions {
+    main {
+        contents {
+        }
+    }
+}
