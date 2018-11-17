@@ -1,6 +1,5 @@
 package de.micromata.merlin.paypal;
 
-import com.paypal.api.payments.Payment;
 import com.paypal.api.payments.Transaction;
 import de.micromata.merlin.paypal.purejava.CreatePaymentData;
 import de.micromata.merlin.paypal.purejava.HttpsCall;
@@ -55,6 +54,7 @@ public class PaypalMain {
             }
             if (!file.exists()) {
                 System.err.println("Please specify properties file with paypal paypalConfig or create this: " + file.getAbsolutePath());
+                printPropertiesExampleFile();
                 return;
             }
             paypalConfig = new PaypalConfig();
@@ -62,23 +62,14 @@ public class PaypalMain {
             if (StringUtils.isBlank(paypalConfig.getClientId()) ||
                     StringUtils.isBlank(paypalConfig.getClientSecret())) {
                 System.err.println("Please define properties in file '" + file.getAbsolutePath() + "':");
-                System.err.println(PaypalConfig.KEY_CLIENT_ID + "=<YOUR APPLICATION CLIENT ID>");
-                System.err.println(PaypalConfig.KEY_SECRET + "=<YOUR APPLICATION CLIENT SECRET>");
-                System.err.println(PaypalConfig.KEY_RETURN_URL
-                        + "=<return url called by Paypal after successful payment, e. g. "
-                        + PaypalConfig.DEMO_RETURN_URL + ".>");
-                System.err.println(PaypalConfig.KEY_CANCEL_URL
-                        + "=<cancel url called by Paypal after cancelled payment, e. g. "
-                        + PaypalConfig.DEMO_CANCEL_URL + ".>");
+                printPropertiesExampleFile();
             }
 
-            String accessToken = getAccessToken(paypalConfig);
-            pureTestCall(accessToken);
-            PaymentAmount amount = new PaymentAmount(PaymentAmount.Currency.EUR);
-            amount.setSubtotal(29.99);
+            //String accessToken = getAccessToken(paypalConfig);
+            //pureTestCall(accessToken);
+            PaymentAmount amount = new PaymentAmount(PaymentAmount.Currency.EUR).setSubtotal(29.99).setTax(5.70);
             Transaction transaction = PaymentCreator.createTransaction(amount, "Micromata T-Shirt Contest 2019");
-            Payment payment = PaymentCreator.prepare(paypalConfig, transaction);
-            PaymentCreator.publish(paypalConfig, payment);
+            PaymentCreator.publish(paypalConfig, transaction);
         } catch (
                 ParseException ex) {
             // oops, something went wrong
@@ -116,28 +107,20 @@ public class PaypalMain {
         log.info(result);
     }
 
-    private boolean validateGiven(CommandLine commandLine, String... options) {
-        for (String option : options) {
-            if (!commandLine.hasOption(option)) {
-                System.err.println("Please specify -" + option + ".");
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private boolean validateNotGiven(CommandLine commandLine, String... options) {
-        for (String option : options) {
-            if (commandLine.hasOption(option)) {
-                System.err.println("Please remove option -" + option + ".");
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private static void printHelp(Options options) {
+    private void printHelp(Options options) {
         HelpFormatter formatter = new HelpFormatter();
         formatter.printHelp("merlin-paypal-main", options);
+    }
+
+    private void printPropertiesExampleFile() {
+        System.err.println("Example file:");
+        System.err.println("# Supported modes are sandbox (default) and live:");
+        System.err.println(PaypalConfig.KEY_MODE + "=sandbox");
+        System.err.println(PaypalConfig.KEY_CLIENT_ID + "=<YOUR APPLICATION CLIENT ID>");
+        System.err.println(PaypalConfig.KEY_SECRET + "=<YOUR APPLICATION CLIENT SECRET>");
+        System.err.println("# return url called by Paypal after successful payment:");
+        System.err.println(PaypalConfig.KEY_RETURN_URL + "=" + PaypalConfig.DEMO_RETURN_URL);
+        System.err.println("# cancel url called by Paypal after cancelled payment:");
+        System.err.println(PaypalConfig.KEY_CANCEL_URL + "=" + PaypalConfig.DEMO_CANCEL_URL + ".>");
     }
 }

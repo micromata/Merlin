@@ -73,6 +73,10 @@ public class PaymentAmount {
         return this;
     }
 
+    public PaymentAmount setTax(double tax) {
+        return setTax(new BigDecimal(tax));
+    }
+
     public BigDecimal getSubtotal() {
         return subtotal;
     }

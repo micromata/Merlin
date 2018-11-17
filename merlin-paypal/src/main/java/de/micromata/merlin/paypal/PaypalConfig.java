@@ -8,8 +8,9 @@ import java.io.IOException;
 import java.util.Properties;
 
 public class PaypalConfig {
-    public enum MODE {PRODUCTION, SANDBOX}
+    public enum MODE {LIVE, SANDBOX}
 
+    static final String KEY_MODE = "paypal.mode";
     static final String KEY_CLIENT_ID = "paypal.client_id";
     static final String KEY_SECRET = "paypal.secret";
     static final String KEY_RETURN_URL = "paypal.return_url";
@@ -36,6 +37,12 @@ public class PaypalConfig {
     }
 
     public void read(Properties props) {
+        String mode = props.getProperty(KEY_MODE);
+        if ("live".equals(mode)) {
+            this.mode = MODE.LIVE;
+        } else {
+            this.mode = MODE.SANDBOX;
+        }
         clientId = props.getProperty(KEY_CLIENT_ID);
         clientSecret = props.getProperty(KEY_SECRET);
         returnUrl = props.getProperty(KEY_RETURN_URL);
@@ -106,7 +113,7 @@ public class PaypalConfig {
 
     public APIContext getApiContext() {
         if (apiContext == null) {
-            apiContext = new APIContext(clientId, clientSecret, mode.toString().toLowerCase());
+            apiContext = new APIContext(clientId, clientSecret, mode.name().toLowerCase());
         }
         return apiContext;
     }

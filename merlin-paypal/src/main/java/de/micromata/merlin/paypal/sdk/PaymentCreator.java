@@ -3,12 +3,16 @@ package de.micromata.merlin.paypal.sdk;
 import com.paypal.api.payments.*;
 import com.paypal.base.rest.PayPalRESTException;
 import de.micromata.merlin.paypal.PaypalConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 public class PaymentCreator {
+    private static Logger log = LoggerFactory.getLogger(PaymentCreator.class);
+
     public static Transaction createTransaction(PaymentAmount amount, String description) {
         Transaction transaction = new Transaction();
         transaction.setAmount(amount.asAmount());
@@ -43,9 +47,11 @@ public class PaymentCreator {
 
     /**
      * Creates the remote payment (publish to Paypal).
+     *
      * @param payment
+     * @return Return Paypal's redirect url for the user to do the payment.
      */
-    public static void publish(PaypalConfig config, Payment payment) {
+    public static String publish(PaypalConfig config, Payment payment) {
         // Create payment
         try {
             Payment createdPayment = payment.create(config.getApiContext());
@@ -55,10 +61,21 @@ public class PaymentCreator {
                 Links link = links.next();
                 if (link.getRel().equalsIgnoreCase("approval_url")) {
                     // Redirect the customer to link.getHref()
+                    String redirectUserHref = link.getHref();
+                    log.info("Redirect user to: " + redirectUserHref);
+                    return redirectUserHref;
                 }
             }
         } catch (PayPalRESTException e) {
-            System.err.println(e.getDetails());
+            log.error("PayPalRESTException occured while trying to publish payment: " + e.getDetails());
+            return null;
         }
+        log.error("Oups, no redirect link found for redirecting the user.");
+        return null;
+    }
+
+    public static String publish(PaypalConfig config, Transaction... transactions) {
+        Payment payment = prepare(config, transactions);
+        return publish(config, payment);
     }
 }

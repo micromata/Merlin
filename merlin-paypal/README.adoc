@@ -17,10 +17,29 @@ Playground for dealing with PayPal integration. This is just for fun and isn't p
 2. In the REST API apps section, click Create App. +
    PayPal generates a set of OAuth 2.0 client_id and secret credentials for your app for both the sandbox and live environments.
 
-=== Get an access token
-1. Call merlin-paypal-main:PaypalMain with arguments `-g "<client id>:<secrect>"`
-2. Get the access token form the response json: `"access_token":"<access token>"`
-3. Create properties file with property `paypal.access_token=<access token>`
-4. Do sandbox test call merlin-paypal-main:PaypalMain with arguments `-f "property-file"` or `-a "<access token>"`
+=== Test credentials
+Create Property file:
 
-If you get a valid payment response, everything is fine for now.
+.~/.merlin-paypal
+----
+paypal.
+paypal.client_id=<YOUR APPLICATION CLIENT ID>
+paypal.secret=<YOUR APPLICATION CLIENT SECRET>
+# return url called by Paypal after successful payment:
+paypal.return_url=https://example.com/your_redirect_url.html
+# cancel url called by Paypal after cancelled payment:
+paypal.cancel_url=https://example.com/your_cancel_url.html
+----
+Your may name this file `.merlin-paypal` and place it in your user directory or you may define any other filename and specify this filename with option -f:
+
+Arguments to `de.micromata.merlin.paypal.PaypalMain`: `-f /etc/paypal.properties`.
+
+=== Test of a payment
+
+[source,java]
+----
+PaymentAmount amount = new PaymentAmount(PaymentAmount.Currency.EUR).setSubtotal(29.99).setTax(5.70);
+Transaction transaction = PaymentCreator.createTransaction(amount, "Micromata T-Shirt Contest 2019");
+String href = PaymentCreator.publish(paypalConfig, transaction);
+----
+`href` contains the link where to redirect the user for proceeding with the payment.
