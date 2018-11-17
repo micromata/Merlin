@@ -54,7 +54,6 @@ public class HttpsCall {
                 if (log.isDebugEnabled()) log.debug("Accept: application/json");
                 conn.setRequestProperty("Accept", "application/json");
             }
-            CreatePaymentData paypalPost = new CreatePaymentData();
             OutputStream os = conn.getOutputStream();
             os.write(input.getBytes());
             os.flush();
