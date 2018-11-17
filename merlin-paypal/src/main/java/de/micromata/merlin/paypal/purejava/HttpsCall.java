@@ -1,4 +1,4 @@
-package de.micromata.merlin.paypal;
+package de.micromata.merlin.paypal.purejava;
 
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -15,7 +15,8 @@ import java.net.URL;
 import java.util.Base64;
 
 /**
- * Helper class for handling https callss.
+ * Helper class for handling https calls.
+ * This class has no external dependencies.
  */
 public class HttpsCall {
     private static Logger log = LoggerFactory.getLogger(HttpsCall.class);

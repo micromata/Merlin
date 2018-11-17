@@ -1,14 +1,18 @@
-package de.micromata.merlin.paypal;
+package de.micromata.merlin.paypal.purejava;
 
+import de.micromata.merlin.paypal.PaypalConfig;
 import org.apache.commons.text.StringEscapeUtils;
 
 import java.math.BigDecimal;
 
 public class CreatePaymentData {
-    private String returnUrl, cancelUrl;
+    PaypalConfig config;
+
+    public CreatePaymentData(PaypalConfig config) {
+        this.config = config;
+    }
 
     /**
-     *
      * @param amount The amount to pay by the customer.
      * @return The json request parameter for creating a payment.
      */
@@ -20,9 +24,9 @@ public class CreatePaymentData {
 
         writeName(sb, "  ", "redirect_urls");
         sb.append("{\n");
-        writeValue(sb, "    ", "return_url", returnUrl);
+        writeValue(sb, "    ", "return_url", config.getReturnUrl());
         sb.append(",\n");
-        writeValue(sb, "    ", "cancel_url", cancelUrl);
+        writeValue(sb, "    ", "cancel_url", config.getCancelUrl());
         sb.append("\n  },");
 
         writeName(sb, "\n  ", "payer");
@@ -49,13 +53,5 @@ public class CreatePaymentData {
 
     private void writeName(StringBuilder sb, String indent, String name) {
         sb.append(indent).append('\"').append(name).append("\": ");
-    }
-
-    public void setReturnUrl(String returnUrl) {
-        this.returnUrl = returnUrl;
-    }
-
-    public void setCancelUrl(String cancelUrl) {
-        this.cancelUrl = cancelUrl;
     }
 }

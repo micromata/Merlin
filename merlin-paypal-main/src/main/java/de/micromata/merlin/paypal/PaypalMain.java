@@ -1,5 +1,7 @@
 package de.micromata.merlin.paypal;
 
+import de.micromata.merlin.paypal.purejava.CreatePaymentData;
+import de.micromata.merlin.paypal.purejava.HttpsCall;
 import org.apache.commons.cli.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -21,7 +23,7 @@ public class PaypalMain {
         new PaypalMain()._start(args);
     }
 
-    PaypalCredentials credentials;
+    PaypalConfig paypalConfig;
 
     private PaypalMain() {
     }
@@ -48,19 +50,21 @@ public class PaypalMain {
                 file = new File(System.getProperty("user.home", ".merlin-paypal"));
             }
             if (!file.exists()) {
-                System.err.println("Please specify properties file with paypal credentials or create this: " + file.getAbsolutePath());
+                System.err.println("Please specify properties file with paypal paypalConfig or create this: " + file.getAbsolutePath());
                 return;
             }
-            credentials = new PaypalCredentials();
-            credentials.read(file);
-            if (StringUtils.isBlank(credentials.getClientId()) ||
-                    StringUtils.isBlank(credentials.getSecret())) {
+            paypalConfig = new PaypalConfig();
+            paypalConfig.read(file);
+            if (StringUtils.isBlank(paypalConfig.getClientId()) ||
+                    StringUtils.isBlank(paypalConfig.getSecret())) {
                 System.err.println("Please define properties in file '" + file.getAbsolutePath() + "':");
-                System.err.println(PaypalCredentials.KEY_CLIENT_ID + "=<client id>");
-                System.err.println(PaypalCredentials.KEY_SECRET + "=<secret>");
+                System.err.println(PaypalConfig.KEY_CLIENT_ID + "=<client id>");
+                System.err.println(PaypalConfig.KEY_SECRET + "=<secret>");
+                System.err.println(PaypalConfig.KEY_RETURN_URL + "=<return url called by Paypal after successful payment, e. g. https://example.com/your_redirect_url.html>");
+                System.err.println(PaypalConfig.KEY_CANCEL_URL + "=<cancel url called by Paypal after cancelled payment, e. g. https://example.com/your_cancel_url.html.>");
             }
 
-            String accessToken = getAccessToken(credentials);
+            String accessToken = getAccessToken(paypalConfig);
             testCall(accessToken);
         } catch (
                 ParseException ex) {
@@ -75,7 +79,7 @@ public class PaypalMain {
      * curl - v https:api.sandbox.paypal.com/v1/oauth2/token -H "Accept: application/json" -H "Accept-Language: en_US"
      * -u "<client_id>:<secret>" -d "grant_type=client_credentials"
      */
-    private String getAccessToken(PaypalCredentials credentials) {
+    private String getAccessToken(PaypalConfig credentials) {
         HttpsCall call = new HttpsCall().setAcceptLanguage("en_US").setAccept(HttpsCall.MimeType.JSON);
         call.setUserPasswordAuthorization(credentials.getClientId() + ":" + credentials.getSecret());
         String response = call.post("https://api.sandbox.paypal.com/v1/oauth2/token", "grant_type=client_credentials");
@@ -93,9 +97,7 @@ public class PaypalMain {
     private void testCall(String accessToken) {
         HttpsCall call = new HttpsCall().setBearerAuthorization(accessToken)
                 .setContentType(HttpsCall.MimeType.JSON);
-        CreatePaymentData paypalPost = new CreatePaymentData();
-        paypalPost.setReturnUrl("https://example.com/your_redirect_url.html");
-        paypalPost.setCancelUrl("https://example.com/your_cancel_url.html");
+        CreatePaymentData paypalPost = new CreatePaymentData(paypalConfig);
         String input = paypalPost.createRequestParameter(new BigDecimal("7.42"));
         String result = call.post("https://api.sandbox.paypal.com/v1/payments/payment ", input);
         log.info(result);
