@@ -56,4 +56,8 @@ public class ExcelRow {
         CellRangeAddress range = new CellRangeAddress(row.getRowNum(), row.getRowNum(), fromCol, toCol);
         row.getSheet().addMergedRegion(range);
     }
+
+    public Row getRow() {
+        return row;
+    }
 }
