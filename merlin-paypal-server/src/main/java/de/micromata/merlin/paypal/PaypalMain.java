@@ -1,8 +1,7 @@
 package de.micromata.merlin.paypal;
 
 import com.paypal.api.payments.Transaction;
-import de.micromata.merlin.paypal.purejava.CreatePaymentData;
-import de.micromata.merlin.paypal.purejava.HttpsCall;
+import de.micromata.merlin.paypal.purejava.AccessToken;
 import de.micromata.merlin.paypal.sdk.PaymentAmount;
 import de.micromata.merlin.paypal.sdk.PaymentCreator;
 import org.apache.commons.cli.*;
@@ -12,15 +11,9 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class PaypalMain {
     private static Logger log = LoggerFactory.getLogger(PaypalMain.class);
-
-    // "access_token":"<access token>"
-    Pattern PATTERN_ACCESS_TOKEN = Pattern.compile("\"access_token\":\"([^\"]*)\"");
 
     public static void main(String[] args) throws IOException {
         new PaypalMain()._start(args);
@@ -65,8 +58,8 @@ public class PaypalMain {
                 printPropertiesExampleFile();
             }
 
-            //String accessToken = getAccessToken(paypalConfig);
-            //pureTestCall(accessToken);
+            String accessToken = AccessToken.getAccessToken(paypalConfig);
+            log.info("Access token successfully received: " + accessToken);
             PaymentAmount amount = new PaymentAmount(PaymentAmount.Currency.EUR).setSubtotal(29.99).setTax(5.70);
             Transaction transaction = PaymentCreator.createTransaction(amount, "Micromata T-Shirt Contest 2019");
             PaymentCreator.publish(paypalConfig, transaction);
@@ -77,34 +70,6 @@ public class PaypalMain {
             printHelp(options);
         }
 
-    }
-
-    /**
-     * curl - v https:api.sandbox.paypal.com/v1/oauth2/token -H "Accept: application/json" -H "Accept-Language: en_US"
-     * -u "<client_id>:<secret>" -d "grant_type=client_credentials"
-     */
-    private String getAccessToken(PaypalConfig credentials) {
-        HttpsCall call = new HttpsCall().setAcceptLanguage("en_US").setAccept(HttpsCall.MimeType.JSON);
-        call.setUserPasswordAuthorization(credentials.getClientId() + ":" + credentials.getClientSecret());
-        String response = call.post("https://api.sandbox.paypal.com/v1/oauth2/token", "grant_type=client_credentials");
-        // "access_token":"<access token>"
-        Matcher matcher = PATTERN_ACCESS_TOKEN.matcher(response);
-        if (!matcher.find()) {
-            System.err.println("Didn't get access token from server: " + response);
-            return null;
-        }
-        String accessToken = matcher.group(1);
-        if (log.isDebugEnabled()) log.debug("Access token: " + accessToken);
-        return accessToken;
-    }
-
-    private void pureTestCall(String accessToken) {
-        HttpsCall call = new HttpsCall().setBearerAuthorization(accessToken)
-                .setContentType(HttpsCall.MimeType.JSON);
-        CreatePaymentData paypalPost = new CreatePaymentData(paypalConfig);
-        String input = paypalPost.createRequestParameter(new BigDecimal("7.42"));
-        String result = call.post("https://api.sandbox.paypal.com/v1/payments/payment ", input);
-        log.info(result);
     }
 
     private void printHelp(Options options) {
