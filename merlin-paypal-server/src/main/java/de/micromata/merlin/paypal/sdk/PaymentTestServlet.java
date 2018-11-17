@@ -37,13 +37,17 @@ public class PaymentTestServlet extends HttpServlet {
         String description = req.getParameter("description");
         PaymentAmount amount = new PaymentAmount(PaymentAmount.Currency.EUR).setSubtotal(asBigdecimal("subtotal", subtotal))
                 .setTax(asBigdecimal("tax", tax));
+        if (amount.getTotal().compareTo(BigDecimal.ZERO) <= 0) {
+            log.error("No positive amount given (subtotal + tax). Aborting payment.");
+            resp.sendRedirect("/index.html");
+            return;
+        }
         Transaction transaction = PaymentCreator.createTransaction(amount, description);
         String redirectUrl = PaymentCreator.publish(paypalConfig, transaction);
         if (StringUtils.isNotBlank(redirectUrl)) {
-            resp.setStatus(HttpServletResponse.SC_OK);
-            resp.getWriter().write(redirectUrl);
-            resp.getWriter().flush();
-            resp.getWriter().close();
+            resp.sendRedirect(redirectUrl);
+        } else {
+            resp.sendRedirect("/index.html");
         }
     }
 

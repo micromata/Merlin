@@ -5,14 +5,24 @@
 <h2>Merlin Paypal tester</h2>
 
 Here you can fill out the amounts. In the real world the user usually can't modify the amounts.
-
+<br/>
+<br/>
 <form action="/testPayment">
-    Subtotal<br>
-    <input type="text" name="subtotal" value="29.90">
-    <br>
-    Tax<br>
-    <input type="text" name="tax" value="5.70">
-    <br><br>
+    <table>
+        <tr>
+            <td>Subtotal</td>
+            <td><input type="text" name="subtotal" value="29.99"></td>
+        </tr>
+        <tr>
+            <td>Tax</td>
+            <td><input type="text" name="tax" value="5.70"></td>
+        </tr>
+        <tr>
+            <td>Description</td>
+            <td><input type="text" name="description" value="Merlin Runner Donation"></td>
+        </tr>
+    </table>
+    <br/>
     <input type="submit" value="Submit">
 </form>
 </body>

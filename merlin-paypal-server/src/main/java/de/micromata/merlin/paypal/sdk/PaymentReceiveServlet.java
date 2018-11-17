@@ -46,26 +46,40 @@ public class PaymentReceiveServlet extends HttpServlet {
 
     /**
      * Override this method for own processing of payments.
+     *
      * @param req
      * @param resp
      * @param payment
      * @param paymentExecution
      */
-    protected void executePayment(HttpServletRequest req, HttpServletResponse resp, Payment payment, PaymentExecution paymentExecution) {
+    protected void executePayment(HttpServletRequest req, HttpServletResponse resp, Payment payment, PaymentExecution paymentExecution) throws IOException {
         log.info("Payment received: paymentId=" + payment.getId() + ", PayerID=" + paymentExecution.getPayerId());
         if (StringUtils.isBlank(payment.getId())) {
             log.error("Can't execute payment, paymentId not given. Aborting payment...");
+            redirectToErrorPage(resp);
             return;
         }
         if (StringUtils.isBlank(paymentExecution.getPayerId())) {
             log.error("Can't execute payment, payerId not given. Aborting payment...");
+            redirectToErrorPage(resp);
             return;
         }
         try {
             Payment createdPayment = payment.execute(apiContext, paymentExecution);
+            if (createdPayment != null) {
+                resp.setStatus(302);
+                resp.setHeader("Location", "/paymentExecuted.html");
+                return;
+            }
             log.info("Payment executed: " + createdPayment);
         } catch (PayPalRESTException e) {
             log.error("Error while receiving/executing payment: " + e.getDetails());
         }
+        redirectToErrorPage(resp);
+    }
+
+    private void redirectToErrorPage(HttpServletResponse resp) {
+        resp.setStatus(302);
+        resp.setHeader("Location", "/paymentError.html");
     }
 }
