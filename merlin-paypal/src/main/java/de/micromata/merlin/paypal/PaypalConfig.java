@@ -10,10 +10,15 @@ public class PaypalConfig {
     static final String KEY_SECRET = "paypal.secret";
     static final String KEY_RETURN_URL = "paypal.return_url";
     static final String KEY_CANCEL_URL = "paypal.cancel_url";
+    public static final String DEMO_RETURN_URL = "https://example.com/your_redirect_url.html";
+    public static final String DEMO_CANCEL_URL = "https://example.com/your_cancel_url.html";
+
     private String clientId;
     private String secret;
     private String returnUrl;
     private String cancelUrl;
+    private String defaultPayment = "paypal";
+    private String defaultIntent = "sale";
 
     public PaypalConfig() {
     }
@@ -61,5 +66,31 @@ public class PaypalConfig {
 
     public void setCancelUrl(String cancelUrl) {
         this.cancelUrl = cancelUrl;
+    }
+
+    /**
+     * The payment used as default if no other is set.
+     * @return "paypal" as default.
+     */
+
+    public String getDefaultPayment() {
+        return defaultPayment;
+    }
+
+    public void setDefaultPayment(String defaultPayment) {
+        this.defaultPayment = defaultPayment;
+    }
+
+    /**
+     * The default intent for creating payments.
+     * @return "sale" as default.
+     * @see com.paypal.api.payments.Payment#setIntent(String)
+     */
+    public String getDefaultIntent() {
+        return defaultIntent;
+    }
+
+    public void setDefaultIntent(String defaultIntent) {
+        this.defaultIntent = defaultIntent;
     }
 }

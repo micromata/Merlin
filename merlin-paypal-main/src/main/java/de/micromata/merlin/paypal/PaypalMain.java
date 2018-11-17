@@ -60,8 +60,12 @@ public class PaypalMain {
                 System.err.println("Please define properties in file '" + file.getAbsolutePath() + "':");
                 System.err.println(PaypalConfig.KEY_CLIENT_ID + "=<client id>");
                 System.err.println(PaypalConfig.KEY_SECRET + "=<secret>");
-                System.err.println(PaypalConfig.KEY_RETURN_URL + "=<return url called by Paypal after successful payment, e. g. https://example.com/your_redirect_url.html>");
-                System.err.println(PaypalConfig.KEY_CANCEL_URL + "=<cancel url called by Paypal after cancelled payment, e. g. https://example.com/your_cancel_url.html.>");
+                System.err.println(PaypalConfig.KEY_RETURN_URL
+                        + "=<return url called by Paypal after successful payment, e. g. "
+                        + PaypalConfig.DEMO_RETURN_URL + ".>");
+                System.err.println(PaypalConfig.KEY_CANCEL_URL
+                        + "=<cancel url called by Paypal after cancelled payment, e. g. "
+                        + PaypalConfig.DEMO_CANCEL_URL + ".>");
             }
 
             String accessToken = getAccessToken(paypalConfig);
