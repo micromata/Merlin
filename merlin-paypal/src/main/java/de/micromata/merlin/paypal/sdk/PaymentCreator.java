@@ -9,6 +9,13 @@ import java.util.Iterator;
 import java.util.List;
 
 public class PaymentCreator {
+    public static Transaction createTransaction(PaymentAmount amount, String description) {
+        Transaction transaction = new Transaction();
+        transaction.setAmount(amount.asAmount());
+        transaction.setDescription(description);
+        return transaction;
+    }
+
     public static Payment prepare(PaypalConfig config, Transaction... transactions) {
         // Set payer details
         Payer payer = new Payer();
@@ -34,18 +41,11 @@ public class PaymentCreator {
         return payment;
     }
 
-    public static Transaction createTransaction(PaymentAmount amount, String description) {
-        Transaction transaction = new Transaction();
-        transaction.setAmount(amount.asAmount());
-        transaction.setDescription(description);
-        return transaction;
-    }
-
     /**
      * Creates the remote payment (publish to Paypal).
      * @param payment
      */
-    public static void create(PaypalConfig config, Payment payment) {
+    public static void publish(PaypalConfig config, Payment payment) {
         // Create payment
         try {
             Payment createdPayment = payment.create(config.getApiContext());

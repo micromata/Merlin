@@ -1,7 +1,5 @@
 package de.micromata.merlin.paypal;
 
-import com.paypal.api.payments.Amount;
-import com.paypal.api.payments.Details;
 import com.paypal.api.payments.Payment;
 import com.paypal.api.payments.Transaction;
 import de.micromata.merlin.paypal.purejava.CreatePaymentData;
@@ -35,7 +33,7 @@ public class PaypalMain {
     }
 
     public void _start(String[] args) throws IOException {
-        // create Options object
+        //create Options object
         Options options = new Options();
         options.addOption("f", "file", true, "The properties file with the properties 'paypal.client_id' and 'paypal.secret'.");
 
@@ -80,7 +78,7 @@ public class PaypalMain {
             amount.setSubtotal(29.99);
             Transaction transaction = PaymentCreator.createTransaction(amount, "Micromata T-Shirt Contest 2019");
             Payment payment = PaymentCreator.prepare(paypalConfig, transaction);
-            PaymentCreator.create(paypalConfig, payment);
+            PaymentCreator.publish(paypalConfig, payment);
         } catch (
                 ParseException ex) {
             // oops, something went wrong
@@ -107,29 +105,6 @@ public class PaypalMain {
         String accessToken = matcher.group(1);
         if (log.isDebugEnabled()) log.debug("Access token: " + accessToken);
         return accessToken;
-    }
-
-    private void createPayment() {
-        // Set payment details
-        Details details = new Details();
-        details.setShipping("3.99");
-        details.setSubtotal("29.99");
-        details.setTax("5.70");
-
-        // Payment amount
-        Amount amount = new Amount();
-        amount.setCurrency("EUR");
-        // Total must be equal to sum of shipping, tax and subtotal.
-        amount.setTotal("39.68");
-        amount.setDetails(details);
-
-        // Transaction information
-        Transaction transaction = new Transaction();
-        transaction.setAmount(amount);
-        transaction.setDescription("This is the payment transaction description.");
-
-        Payment payment = PaymentCreator.prepare(paypalConfig, transaction);
-
     }
 
     private void pureTestCall(String accessToken) {
