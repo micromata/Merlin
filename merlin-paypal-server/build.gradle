@@ -20,12 +20,33 @@ dependencies {
 apply plugin: 'application'
 mainClassName = "de.micromata.merlin.paypal.PaypalMain"
 
+run() {
+    doFirst {
+        jvmArgs = [
+                "-DapplicationHome=${rootDir}"
+        ]
+    }
+}
+
 apply plugin: 'distribution'
+
+// Ugly work arround for getting the applications home dir:
+applicationDefaultJvmArgs = ["-DapplicationHome=MY_APPLICATION_HOME"]
+
+startScripts {
+    doLast {
+        unixScript.text = unixScript.text.replace('MY_APPLICATION_HOME', '\$APP_HOME')
+        windowsScript.text = windowsScript.text.replace('MY_APPLICATION_HOME', '%~dp0..')
+    }
+}
 
 // Builds the distribution
 distributions {
     main {
         contents {
+            from ("web/") {
+                into 'web'
+            }
         }
     }
 }

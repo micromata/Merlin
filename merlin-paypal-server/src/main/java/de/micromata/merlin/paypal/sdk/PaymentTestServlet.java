@@ -2,6 +2,7 @@ package de.micromata.merlin.paypal.sdk;
 
 import com.paypal.api.payments.Transaction;
 import de.micromata.merlin.paypal.PaypalConfig;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,10 +39,12 @@ public class PaymentTestServlet extends HttpServlet {
                 .setTax(asBigdecimal("tax", tax));
         Transaction transaction = PaymentCreator.createTransaction(amount, description);
         String redirectUrl = PaymentCreator.publish(paypalConfig, transaction);
-        resp.setStatus(HttpServletResponse.SC_OK);
-        resp.getWriter().write(redirectUrl);
-        resp.getWriter().flush();
-        resp.getWriter().close();
+        if (StringUtils.isNotBlank(redirectUrl)) {
+            resp.setStatus(HttpServletResponse.SC_OK);
+            resp.getWriter().write(redirectUrl);
+            resp.getWriter().flush();
+            resp.getWriter().close();
+        }
     }
 
     private BigDecimal asBigdecimal(String variable, String value) {
