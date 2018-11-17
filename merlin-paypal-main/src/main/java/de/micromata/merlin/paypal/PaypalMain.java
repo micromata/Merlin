@@ -8,9 +8,14 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class PaypalMain {
     private static Logger log = LoggerFactory.getLogger(PaypalMain.class);
+
+    // "access_token":"<access token>"
+    Pattern PATTERN_ACCESS_TOKEN = Pattern.compile("\"access_token\":\"([^\"]*)\"");
 
     public static void main(String[] args) throws IOException {
         new PaypalMain()._start(args);
@@ -24,9 +29,7 @@ public class PaypalMain {
     public void _start(String[] args) throws IOException {
         // create Options object
         Options options = new Options();
-        options.addOption("f", "file", true, "The properties file with the property 'paypal.access_token'.");
-        options.addOption("a", "access_token", true, "The access token for PayPal calls.");
-        options.addOption("g", "get_access_token", true, "Initial get of the access token. Argument is <client ID>:<secret>");
+        options.addOption("f", "file", true, "The properties file with the properties 'paypal.client_id' and 'paypal.secret'.");
 
         //options.addOption("q", "quiet", false, "Don't open browser automatically.");
         options.addOption("h", "help", false, "Print this help screen.");
@@ -38,38 +41,27 @@ public class PaypalMain {
                 printHelp(options);
                 return;
             }
-            if (line.hasOption("g")) {
-                if (!validateNotGiven(line, "a", "f")) {
-                    return;
-                }
-                getAccessToken(line.getOptionValue("g"));
-                return;
+            File file;
+            if (line.hasOption('f')) {
+                file = new File(line.getOptionValue('f'));
+            } else {
+                file = new File(System.getProperty("user.home", ".merlin-paypal"));
             }
-            if (!line.hasOption('f') && !line.hasOption('a')) {
-                System.err.println("Please specify properties file with 'paypal.access_token' with option -f or specify access_token direct with option -a.");
+            if (!file.exists()) {
+                System.err.println("Please specify properties file with paypal credentials or create this: " + file.getAbsolutePath());
                 return;
             }
             credentials = new PaypalCredentials();
-            if (line.hasOption("f")) {
-                String filename = line.getOptionValue("f");
-                File file = new File(filename);
-                if (!file.exists()) {
-                    System.err.println("Can't read credentials from file '" + filename + "'. It doesn't exist.");
-                    return;
-                }
-                credentials.read(file);
-                if (StringUtils.isBlank(credentials.getAccessToken())) {
-                    System.err.println("No paypal.access_token=... given in properties file '" + filename + "'.");
-                    return;
-                }
-            } else {
-                credentials.setAccessToken(line.getOptionValue("a"));
-                if (StringUtils.isBlank(credentials.getAccessToken())) {
-                    System.err.println("No access token given via option -a.");
-                    return;
-                }
+            credentials.read(file);
+            if (StringUtils.isBlank(credentials.getClientId()) ||
+                    StringUtils.isBlank(credentials.getSecret())) {
+                System.err.println("Please define properties in file '" + file.getAbsolutePath() + "':");
+                System.err.println(PaypalCredentials.KEY_CLIENT_ID + "=<client id>");
+                System.err.println(PaypalCredentials.KEY_SECRET + "=<secret>");
             }
-            testCall(credentials);
+
+            String accessToken = getAccessToken(credentials);
+            testCall(accessToken);
         } catch (
                 ParseException ex) {
             // oops, something went wrong
@@ -83,19 +75,28 @@ public class PaypalMain {
      * curl - v https:api.sandbox.paypal.com/v1/oauth2/token -H "Accept: application/json" -H "Accept-Language: en_US"
      * -u "<client_id>:<secret>" -d "grant_type=client_credentials"
      */
-    private void getAccessToken(String clientIdSecret) {
+    private String getAccessToken(PaypalCredentials credentials) {
         HttpsCall call = new HttpsCall().setAcceptLanguage("en_US").setAccept(HttpsCall.MimeType.JSON);
-        call.setUserPasswordAuthorization(clientIdSecret);
-        call.post("https://api.sandbox.paypal.com/v1/oauth2/token", "grant_type=client_credentials");
+        call.setUserPasswordAuthorization(credentials.getClientId() + ":" + credentials.getSecret());
+        String response = call.post("https://api.sandbox.paypal.com/v1/oauth2/token", "grant_type=client_credentials");
+        // "access_token":"<access token>"
+        Matcher matcher = PATTERN_ACCESS_TOKEN.matcher(response);
+        if (!matcher.find()) {
+            System.err.println("Didn't get access token from server: " + response);
+            return null;
+        }
+        String accessToken = matcher.group(1);
+        if (log.isDebugEnabled()) log.debug("Access token: " + accessToken);
+        return accessToken;
     }
 
-    private void testCall(PaypalCredentials credentials) {
-        HttpsCall call = new HttpsCall().setBearerAuthorization(credentials.getAccessToken())
+    private void testCall(String accessToken) {
+        HttpsCall call = new HttpsCall().setBearerAuthorization(accessToken)
                 .setContentType(HttpsCall.MimeType.JSON);
-        PaypalPost paypalPost = new PaypalPost();
+        CreatePaymentData paypalPost = new CreatePaymentData();
         paypalPost.setReturnUrl("https://example.com/your_redirect_url.html");
         paypalPost.setCancelUrl("https://example.com/your_cancel_url.html");
-        String input = paypalPost.toJson(new BigDecimal("7.42"));
+        String input = paypalPost.createRequestParameter(new BigDecimal("7.42"));
         String result = call.post("https://api.sandbox.paypal.com/v1/payments/payment ", input);
         log.info(result);
     }

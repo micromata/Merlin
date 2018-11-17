@@ -40,7 +40,6 @@ public class HttpsCall {
             conn.setDoOutput(true);
             conn.setRequestMethod("POST");
             if (authorization != null) {
-                if (log.isDebugEnabled()) log.debug("Authorization: " + authorization);
                 conn.setRequestProperty("Authorization", authorization);
             }
             if (acceptLanguage != null) {
@@ -55,7 +54,7 @@ public class HttpsCall {
                 if (log.isDebugEnabled()) log.debug("Accept: application/json");
                 conn.setRequestProperty("Accept", "application/json");
             }
-            PaypalPost paypalPost = new PaypalPost();
+            CreatePaymentData paypalPost = new CreatePaymentData();
             OutputStream os = conn.getOutputStream();
             os.write(input.getBytes());
             os.flush();
@@ -82,6 +81,9 @@ public class HttpsCall {
      * @return this for chaining.
      */
     public HttpsCall setBearerAuthorization(String accessToken) {
+        if (log.isDebugEnabled()) {
+            log.debug("Authorization: Bearer " + accessToken);
+        }
         this.authorization = "Bearer " + accessToken;
         return this;
     }
@@ -91,6 +93,12 @@ public class HttpsCall {
      * @return this for chaining.
      */
     public HttpsCall setUserPasswordAuthorization(String usernamePassword) {
+        if (log.isDebugEnabled()) {
+            if (usernamePassword.length() < 10) {
+                log.debug("Authorization: TO-SHORT?: " + usernamePassword.length());
+            }
+            log.debug("Authorization: Basic " + usernamePassword.substring(0, 3) + "...:..." + usernamePassword.substring(usernamePassword.length() - 3));
+        }
         this.authorization = "Basic " + new String(Base64.getEncoder().encode(usernamePassword.getBytes()));
         return this;
     }

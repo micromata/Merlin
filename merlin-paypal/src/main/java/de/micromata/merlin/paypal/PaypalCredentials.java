@@ -6,10 +6,10 @@ import java.io.IOException;
 import java.util.Properties;
 
 public class PaypalCredentials {
-    private static final String KEY_ACCESS_TOKEN = "paypal.access_token";
-    private static final String KEY_APP_ID = "paypal.app_id";
-    private String accessToken;
-    private String appId;
+    static final String KEY_CLIENT_ID = "paypal.client_id";
+    static final String KEY_SECRET = "paypal.secret";
+    private String clientId;
+    private String secret;
 
     public PaypalCredentials() {
     }
@@ -21,19 +21,23 @@ public class PaypalCredentials {
     }
 
     public void read(Properties props) {
-        accessToken = props.getProperty(KEY_ACCESS_TOKEN);
-        appId = props.getProperty(KEY_APP_ID);
+        clientId = props.getProperty(KEY_CLIENT_ID);
+        secret = props.getProperty(KEY_SECRET);
     }
 
-    public String getAccessToken() {
-        return accessToken;
+    public String getClientId() {
+        return clientId;
     }
 
-    public void setAccessToken(String accessToken) {
-        this.accessToken = accessToken;
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
     }
 
-    public String getAppId() {
-        return appId;
+    public String getSecret() {
+        return secret;
+    }
+
+    public void setSecret(String secret) {
+        this.secret = secret;
     }
 }

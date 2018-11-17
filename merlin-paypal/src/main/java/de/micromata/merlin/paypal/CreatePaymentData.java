@@ -4,10 +4,15 @@ import org.apache.commons.text.StringEscapeUtils;
 
 import java.math.BigDecimal;
 
-public class PaypalPost {
+public class CreatePaymentData {
     private String returnUrl, cancelUrl;
 
-    public String toJson(BigDecimal amount) {
+    /**
+     *
+     * @param amount The amount to pay by the customer.
+     * @return The json request parameter for creating a payment.
+     */
+    public String createRequestParameter(BigDecimal amount) {
         StringBuilder sb = new StringBuilder();
         sb.append("{\n");
         writeValue(sb, "  ", "intent", "sale");
