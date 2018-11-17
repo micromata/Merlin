@@ -34,7 +34,7 @@ public class PaymentCreatorTest {
         transaction.setAmount(amount);
         transaction.setDescription("This is the payment transaction description.");
 
-        Payment payment = PaymentCreator.create(config, transaction);
+        Payment payment = PaymentCreator.prepare(config, transaction);
     }
 
 }

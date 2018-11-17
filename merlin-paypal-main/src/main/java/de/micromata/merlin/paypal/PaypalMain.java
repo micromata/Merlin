@@ -58,8 +58,8 @@ public class PaypalMain {
             if (StringUtils.isBlank(paypalConfig.getClientId()) ||
                     StringUtils.isBlank(paypalConfig.getClientSecret())) {
                 System.err.println("Please define properties in file '" + file.getAbsolutePath() + "':");
-                System.err.println(PaypalConfig.KEY_CLIENT_ID + "=<client id>");
-                System.err.println(PaypalConfig.KEY_SECRET + "=<secret>");
+                System.err.println(PaypalConfig.KEY_CLIENT_ID + "=<YOUR APPLICATION CLIENT ID>");
+                System.err.println(PaypalConfig.KEY_SECRET + "=<YOUR APPLICATION CLIENT SECRET>");
                 System.err.println(PaypalConfig.KEY_RETURN_URL
                         + "=<return url called by Paypal after successful payment, e. g. "
                         + PaypalConfig.DEMO_RETURN_URL + ".>");
