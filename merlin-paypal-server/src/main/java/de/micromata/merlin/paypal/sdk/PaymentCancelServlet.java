@@ -47,6 +47,6 @@ public class PaymentCancelServlet extends HttpServlet {
      * @param payerId
      */
     protected void cancelPayment(HttpServletRequest req, HttpServletResponse resp, String paymentId, String payerId) {
-        log.info("Payment cancelled: paymentId=" + paymentId + ", PayerID=" + paymentId);
+        log.info("Payment cancelled: paymentId=" + paymentId + ", PayerID=" + payerId);
     }
 }
