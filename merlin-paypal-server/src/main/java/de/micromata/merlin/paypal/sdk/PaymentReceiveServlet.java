@@ -4,6 +4,7 @@ import com.paypal.api.payments.Payment;
 import com.paypal.api.payments.PaymentExecution;
 import com.paypal.base.rest.APIContext;
 import com.paypal.base.rest.PayPalRESTException;
+import de.micromata.merlin.paypal.PaypalConfig;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +15,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * The url of this servlet should be configured in {@link PaypalConfig#getReturnUrl()}.
+ */
 public class PaymentReceiveServlet extends HttpServlet {
     private static Logger log = LoggerFactory.getLogger(PaymentReceiveServlet.class);
 

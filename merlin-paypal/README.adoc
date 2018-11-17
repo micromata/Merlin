@@ -45,4 +45,13 @@ String href = PaymentCreator.publish(paypalConfig, transaction);
 `href` contains the link where to redirect the user for proceeding with the payment.
 
 === Add paypal return servlets to your app
-See `PaymentReceiveServlet` and `PaymentCancelServlet` of module merlin-paypal-server as example.
+See `PaymentReceiveServlet` and `PaymentCancelServlet` of module merlin-paypal-server as example and configure these both
+urls in PaypalConfig (e. g. in properties file `~/.merlin-paypal`).
+
+=== Do some tests with the test servlet
+You may start PaypalMain (Jetty-Server) and create some test payments on calling the test servlet with request parameters (in
+your browser or with curl):
+----
+curl http://localhost:8142/testPayment?subtotal=29.99&tax=5.70&description=MerlinApplication
+----
+You will receive the url you can call in your browser for a Paypal test payment.

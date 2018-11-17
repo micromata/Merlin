@@ -37,7 +37,11 @@ public class PaymentTestServlet extends HttpServlet {
         PaymentAmount amount = new PaymentAmount(PaymentAmount.Currency.EUR).setSubtotal(asBigdecimal("subtotal", subtotal))
                 .setTax(asBigdecimal("tax", tax));
         Transaction transaction = PaymentCreator.createTransaction(amount, description);
-        PaymentCreator.publish(paypalConfig, transaction);
+        String redirectUrl = PaymentCreator.publish(paypalConfig, transaction);
+        resp.setStatus(HttpServletResponse.SC_OK);
+        resp.getWriter().write(redirectUrl);
+        resp.getWriter().flush();
+        resp.getWriter().close();
     }
 
     private BigDecimal asBigdecimal(String variable, String value) {
