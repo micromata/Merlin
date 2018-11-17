@@ -63,7 +63,7 @@ public class PaypalMain {
             PaymentCreator.publish(paypalConfig, transaction);
             */
             JettyServer server = new JettyServer();
-            server.start(8142);
+            server.start(paypalConfig, 8142);
         } catch (ParseException ex) {
             // oops, something went wrong
             System.err.println("Parsing failed.  Reason: " + ex.getMessage());

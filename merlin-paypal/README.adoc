@@ -43,3 +43,6 @@ Transaction transaction = PaymentCreator.createTransaction(amount, "Micromata T-
 String href = PaymentCreator.publish(paypalConfig, transaction);
 ----
 `href` contains the link where to redirect the user for proceeding with the payment.
+
+=== Add paypal return servlets to your app
+See `PaymentReceiveServlet` and `PaymentCancelServlet` of module merlin-paypal-server as example.

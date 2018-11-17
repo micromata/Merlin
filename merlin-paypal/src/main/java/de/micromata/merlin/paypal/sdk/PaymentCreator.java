@@ -55,7 +55,6 @@ public class PaymentCreator {
         // Create payment
         try {
             Payment createdPayment = payment.create(config.getApiContext());
-
             Iterator<Links> links = createdPayment.getLinks().iterator();
             while (links.hasNext()) {
                 Links link = links.next();

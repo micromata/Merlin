@@ -2,6 +2,7 @@ package de.micromata.merlin.paypal;
 
 import de.micromata.merlin.paypal.sdk.PaymentCancelServlet;
 import de.micromata.merlin.paypal.sdk.PaymentReceiveServlet;
+import de.micromata.merlin.paypal.sdk.PaymentTestServlet;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletHandler;
 import org.slf4j.Logger;
@@ -12,8 +13,11 @@ public class JettyServer {
     private Server server;
     private int port;
 
-    public void start(int port) {
+    public void start(PaypalConfig paypalConfig, int port) {
         log.info("Starting web server on port " + port);
+        PaymentReceiveServlet.setAPIContext(paypalConfig.getApiContext());
+        PaymentCancelServlet.setAPIContext(paypalConfig.getApiContext());
+        PaymentTestServlet.setPaypalConfig(paypalConfig);
         server = new Server(port);
 
         ServletHandler handler = new ServletHandler();
@@ -21,6 +25,7 @@ public class JettyServer {
 
         handler.addServletWithMapping(PaymentReceiveServlet.class, "/receivePayment");
         handler.addServletWithMapping(PaymentCancelServlet.class, "/cancelPayment");
+        handler.addServletWithMapping(PaymentTestServlet.class, "/testPayment");
 
         try {
             server.start();

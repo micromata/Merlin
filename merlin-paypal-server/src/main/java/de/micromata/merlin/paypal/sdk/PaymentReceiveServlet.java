@@ -17,7 +17,19 @@ import java.io.IOException;
 public class PaymentReceiveServlet extends HttpServlet {
     private static Logger log = LoggerFactory.getLogger(PaymentReceiveServlet.class);
 
-    private APIContext apiContext;
+    private static APIContext apiContext;
+
+    public static void setAPIContext(APIContext apiContext) {
+        PaymentReceiveServlet.apiContext = apiContext;
+    }
+
+    @Override
+    public void init() throws ServletException {
+        super.init();
+        if (apiContext == null) {
+            log.error("Don't forget to set api context.");
+        }
+    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
