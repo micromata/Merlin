@@ -1,7 +1,13 @@
 package de.micromata.merlin.paypal;
 
+import com.paypal.api.payments.Amount;
+import com.paypal.api.payments.Details;
+import com.paypal.api.payments.Payment;
+import com.paypal.api.payments.Transaction;
 import de.micromata.merlin.paypal.purejava.CreatePaymentData;
 import de.micromata.merlin.paypal.purejava.HttpsCall;
+import de.micromata.merlin.paypal.sdk.PaymentAmount;
+import de.micromata.merlin.paypal.sdk.PaymentCreator;
 import org.apache.commons.cli.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -69,7 +75,12 @@ public class PaypalMain {
             }
 
             String accessToken = getAccessToken(paypalConfig);
-            testCall(accessToken);
+            pureTestCall(accessToken);
+            PaymentAmount amount = new PaymentAmount(PaymentAmount.Currency.EUR);
+            amount.setSubtotal(29.99);
+            Transaction transaction = PaymentCreator.createTransaction(amount, "Micromata T-Shirt Contest 2019");
+            Payment payment = PaymentCreator.prepare(paypalConfig, transaction);
+            PaymentCreator.create(paypalConfig, payment);
         } catch (
                 ParseException ex) {
             // oops, something went wrong
@@ -98,7 +109,30 @@ public class PaypalMain {
         return accessToken;
     }
 
-    private void testCall(String accessToken) {
+    private void createPayment() {
+        // Set payment details
+        Details details = new Details();
+        details.setShipping("3.99");
+        details.setSubtotal("29.99");
+        details.setTax("5.70");
+
+        // Payment amount
+        Amount amount = new Amount();
+        amount.setCurrency("EUR");
+        // Total must be equal to sum of shipping, tax and subtotal.
+        amount.setTotal("39.68");
+        amount.setDetails(details);
+
+        // Transaction information
+        Transaction transaction = new Transaction();
+        transaction.setAmount(amount);
+        transaction.setDescription("This is the payment transaction description.");
+
+        Payment payment = PaymentCreator.prepare(paypalConfig, transaction);
+
+    }
+
+    private void pureTestCall(String accessToken) {
         HttpsCall call = new HttpsCall().setBearerAuthorization(accessToken)
                 .setContentType(HttpsCall.MimeType.JSON);
         CreatePaymentData paypalPost = new CreatePaymentData(paypalConfig);

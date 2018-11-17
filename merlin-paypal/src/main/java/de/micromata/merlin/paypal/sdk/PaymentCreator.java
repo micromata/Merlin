@@ -34,6 +34,13 @@ public class PaymentCreator {
         return payment;
     }
 
+    public static Transaction createTransaction(PaymentAmount amount, String description) {
+        Transaction transaction = new Transaction();
+        transaction.setAmount(amount.asAmount());
+        transaction.setDescription(description);
+        return transaction;
+    }
+
     /**
      * Creates the remote payment (publish to Paypal).
      * @param payment
