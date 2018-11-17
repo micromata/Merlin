@@ -13,7 +13,7 @@ public class PaymentCreatorTest {
     void paymentCreationTest() {
         PaypalConfig config = new PaypalConfig();
         config.setClientId("testClientId");
-        config.setSecret("mySecret");
+        config.setClientSecret("mySecret");
         config.setReturnUrl(PaypalConfig.DEMO_RETURN_URL);
         config.setCancelUrl(PaypalConfig.DEMO_CANCEL_URL);
         // Set payment details

@@ -56,7 +56,7 @@ public class PaypalMain {
             paypalConfig = new PaypalConfig();
             paypalConfig.read(file);
             if (StringUtils.isBlank(paypalConfig.getClientId()) ||
-                    StringUtils.isBlank(paypalConfig.getSecret())) {
+                    StringUtils.isBlank(paypalConfig.getClientSecret())) {
                 System.err.println("Please define properties in file '" + file.getAbsolutePath() + "':");
                 System.err.println(PaypalConfig.KEY_CLIENT_ID + "=<client id>");
                 System.err.println(PaypalConfig.KEY_SECRET + "=<secret>");
@@ -85,7 +85,7 @@ public class PaypalMain {
      */
     private String getAccessToken(PaypalConfig credentials) {
         HttpsCall call = new HttpsCall().setAcceptLanguage("en_US").setAccept(HttpsCall.MimeType.JSON);
-        call.setUserPasswordAuthorization(credentials.getClientId() + ":" + credentials.getSecret());
+        call.setUserPasswordAuthorization(credentials.getClientId() + ":" + credentials.getClientSecret());
         String response = call.post("https://api.sandbox.paypal.com/v1/oauth2/token", "grant_type=client_credentials");
         // "access_token":"<access token>"
         Matcher matcher = PATTERN_ACCESS_TOKEN.matcher(response);

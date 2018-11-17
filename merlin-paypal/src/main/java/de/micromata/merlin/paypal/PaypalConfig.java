@@ -1,11 +1,15 @@
 package de.micromata.merlin.paypal;
 
+import com.paypal.base.rest.APIContext;
+
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Properties;
 
 public class PaypalConfig {
+    public enum MODE {PRODUCTION, SANDBOX}
+
     static final String KEY_CLIENT_ID = "paypal.client_id";
     static final String KEY_SECRET = "paypal.secret";
     static final String KEY_RETURN_URL = "paypal.return_url";
@@ -14,11 +18,13 @@ public class PaypalConfig {
     public static final String DEMO_CANCEL_URL = "https://example.com/your_cancel_url.html";
 
     private String clientId;
-    private String secret;
+    private String clientSecret;
     private String returnUrl;
     private String cancelUrl;
     private String defaultPayment = "paypal";
     private String defaultIntent = "sale";
+    private APIContext apiContext;
+    private MODE mode = MODE.SANDBOX;
 
     public PaypalConfig() {
     }
@@ -31,7 +37,7 @@ public class PaypalConfig {
 
     public void read(Properties props) {
         clientId = props.getProperty(KEY_CLIENT_ID);
-        secret = props.getProperty(KEY_SECRET);
+        clientSecret = props.getProperty(KEY_SECRET);
         returnUrl = props.getProperty(KEY_RETURN_URL);
         cancelUrl = props.getProperty(KEY_CANCEL_URL);
     }
@@ -42,14 +48,16 @@ public class PaypalConfig {
 
     public void setClientId(String clientId) {
         this.clientId = clientId;
+        this.apiContext = null;
     }
 
-    public String getSecret() {
-        return secret;
+    public String getClientSecret() {
+        return clientSecret;
     }
 
-    public void setSecret(String secret) {
-        this.secret = secret;
+    public void setClientSecret(String clientSecret) {
+        this.clientSecret = clientSecret;
+        this.apiContext = null;
     }
 
     public String getReturnUrl() {
@@ -70,6 +78,7 @@ public class PaypalConfig {
 
     /**
      * The payment used as default if no other is set.
+     *
      * @return "paypal" as default.
      */
 
@@ -83,6 +92,7 @@ public class PaypalConfig {
 
     /**
      * The default intent for creating payments.
+     *
      * @return "sale" as default.
      * @see com.paypal.api.payments.Payment#setIntent(String)
      */
@@ -92,5 +102,21 @@ public class PaypalConfig {
 
     public void setDefaultIntent(String defaultIntent) {
         this.defaultIntent = defaultIntent;
+    }
+
+    public APIContext getApiContext() {
+        if (apiContext == null) {
+            apiContext = new APIContext(clientId, clientSecret, mode.toString().toLowerCase());
+        }
+        return apiContext;
+    }
+
+    public MODE getMode() {
+        return mode;
+    }
+
+    public void setMode(MODE mode) {
+        this.mode = mode;
+        this.apiContext = null;
     }
 }
