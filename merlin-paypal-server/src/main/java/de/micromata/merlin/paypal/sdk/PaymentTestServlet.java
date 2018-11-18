@@ -52,7 +52,7 @@ public class PaymentTestServlet extends HttpServlet {
     }
 
     private BigDecimal asBigdecimal(String variable, String value) {
-        if (value == null) {
+        if (StringUtils.isBlank(value)) {
             return null;
         }
         try {

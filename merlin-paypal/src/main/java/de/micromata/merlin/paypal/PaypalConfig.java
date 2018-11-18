@@ -12,7 +12,7 @@ import java.util.Properties;
 public class PaypalConfig {
     private static Logger log = LoggerFactory.getLogger(PaypalConfig.class);
 
-    public enum MODE {LIVE, SANDBOX}
+    public enum Mode {LIVE, SANDBOX}
 
     static final String KEY_MODE = "paypal.mode";
     static final String KEY_CLIENT_ID = "paypal.client_id";
@@ -29,7 +29,7 @@ public class PaypalConfig {
     private String defaultPayment = "paypal";
     private String defaultIntent = "sale";
     private APIContext apiContext;
-    private MODE mode = MODE.SANDBOX;
+    private Mode mode = Mode.SANDBOX;
 
     public PaypalConfig() {
     }
@@ -44,9 +44,9 @@ public class PaypalConfig {
     public void read(Properties props) {
         String mode = props.getProperty(KEY_MODE);
         if ("live".equals(mode)) {
-            this.mode = MODE.LIVE;
+            this.mode = Mode.LIVE;
         } else {
-            this.mode = MODE.SANDBOX;
+            this.mode = Mode.SANDBOX;
         }
         clientId = props.getProperty(KEY_CLIENT_ID);
         clientSecret = props.getProperty(KEY_SECRET);
@@ -123,11 +123,11 @@ public class PaypalConfig {
         return apiContext;
     }
 
-    public MODE getMode() {
+    public Mode getMode() {
         return mode;
     }
 
-    public void setMode(MODE mode) {
+    public void setMode(Mode mode) {
         this.mode = mode;
         this.apiContext = null;
     }

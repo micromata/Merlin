@@ -64,9 +64,10 @@ public class PaypalMain {
                 System.err.println("Please define properties in file '" + file.getAbsolutePath() + "':");
                 printPropertiesExampleFile();
             }
-
-            String accessToken = AccessToken.getAccessToken(paypalConfig);
-            log.info("Access token successfully received: " + accessToken);
+            if (paypalConfig.getMode() == PaypalConfig.Mode.SANDBOX) {
+                String accessToken = AccessToken.getAccessToken(paypalConfig);
+                log.info("Access token successfully received: " + accessToken);
+            }
             /*
             PaymentAmount amount = new PaymentAmount(PaymentAmount.Currency.EUR).setSubtotal(29.99).setTax(5.70);
             Transaction transaction = PaymentCreator.createTransaction(amount, "Micromata T-Shirt Contest 2019");
