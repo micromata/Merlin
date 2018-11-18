@@ -36,22 +36,6 @@ Here you can fill out the amounts. In the real world the user usually can't modi
     </table>
     <br/>
     <input type="submit" value="Submit">
-    <div id="dropin-container"></div>
-    <button id="submit-button">Request payment method</button>
-    <script>
-        var button = document.querySelector('#submit-button');
-
-        braintree.dropin.create({
-            authorization: 'CLIENT_TOKEN_FROM_SERVER',
-            container: '#dropin-container'
-        }, function (createErr, instance) {
-            button.addEventListener('click', function () {
-                instance.requestPaymentMethod(function (err, payload) {
-                    // Submit payload.nonce to your server
-                });
-            });
-        });
-    </script>
 </form>
 </body>
 </html>
