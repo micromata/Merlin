@@ -1,6 +1,6 @@
 package de.micromata.merlin.paypal.purejava;
 
-import de.micromata.merlin.paypal.PaypalConfig;
+import de.micromata.merlin.paypal.PayPalConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,7 +17,7 @@ public class AccessToken {
      * curl - v https:api.sandbox.paypal.com/v1/oauth2/token -H "Accept: application/json" -H "Accept-Language: en_US"
      * -u "<client_id>:<secret>" -d "grant_type=client_credentials"
      */
-    public static String getAccessToken(PaypalConfig credentials) {
+    public static String getAccessToken(PayPalConfig credentials) {
         HttpsCall call = new HttpsCall().setAcceptLanguage("en_US").setAccept(HttpsCall.MimeType.JSON);
         call.setUserPasswordAuthorization(credentials.getClientId() + ":" + credentials.getClientSecret());
         String response = call.post("https://api.sandbox.paypal.com/v1/oauth2/token", "grant_type=client_credentials");

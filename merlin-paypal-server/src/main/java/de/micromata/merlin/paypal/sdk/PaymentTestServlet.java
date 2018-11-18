@@ -1,7 +1,7 @@
 package de.micromata.merlin.paypal.sdk;
 
 import com.paypal.api.payments.Transaction;
-import de.micromata.merlin.paypal.PaypalConfig;
+import de.micromata.merlin.paypal.PayPalConfig;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,17 +16,17 @@ import java.math.BigDecimal;
 public class PaymentTestServlet extends HttpServlet {
     private static Logger log = LoggerFactory.getLogger(PaymentTestServlet.class);
 
-    private static PaypalConfig paypalConfig;
+    private static PayPalConfig paypalConfig;
 
     @Override
     public void init() throws ServletException {
         super.init();
         if (paypalConfig == null) {
-            log.error("Don't forget to set PaypalConfig.");
+            log.error("Don't forget to set PayPalConfig.");
         }
     }
 
-    public static void setPaypalConfig(PaypalConfig paypalConfig) {
+    public static void setPaypalConfig(PayPalConfig paypalConfig) {
         PaymentTestServlet.paypalConfig = paypalConfig;
     }
 

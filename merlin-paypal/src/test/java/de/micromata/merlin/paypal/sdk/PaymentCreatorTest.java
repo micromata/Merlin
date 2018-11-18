@@ -5,17 +5,17 @@ import com.paypal.api.payments.Amount;
 import com.paypal.api.payments.Details;
 import com.paypal.api.payments.Payment;
 import com.paypal.api.payments.Transaction;
-import de.micromata.merlin.paypal.PaypalConfig;
+import de.micromata.merlin.paypal.PayPalConfig;
 import org.junit.jupiter.api.Test;
 
 public class PaymentCreatorTest {
     @Test
     void paymentCreationTest() {
-        PaypalConfig config = new PaypalConfig();
+        PayPalConfig config = new PayPalConfig();
         config.setClientId("testClientId");
         config.setClientSecret("mySecret");
-        config.setReturnUrl(PaypalConfig.DEMO_RETURN_URL);
-        config.setCancelUrl(PaypalConfig.DEMO_CANCEL_URL);
+        config.setReturnUrl(PayPalConfig.DEMO_RETURN_URL);
+        config.setCancelUrl(PayPalConfig.DEMO_CANCEL_URL);
         // Set payment details
         Details details = new Details();
         details.setShipping("1");

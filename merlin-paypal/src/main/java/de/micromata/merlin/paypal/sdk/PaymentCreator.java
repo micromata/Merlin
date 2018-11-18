@@ -2,7 +2,7 @@ package de.micromata.merlin.paypal.sdk;
 
 import com.paypal.api.payments.*;
 import com.paypal.base.rest.PayPalRESTException;
-import de.micromata.merlin.paypal.PaypalConfig;
+import de.micromata.merlin.paypal.PayPalConfig;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,7 +42,7 @@ public class PaymentCreator {
         return transaction;
     }
 
-    public static Payment prepare(PaypalConfig config, Transaction... transactions) {
+    public static Payment prepare(PayPalConfig config, Transaction... transactions) {
         // Set payer details
         Payer payer = new Payer();
         payer.setPaymentMethod(config.getDefaultPayment());
@@ -73,7 +73,7 @@ public class PaymentCreator {
      * @param payment
      * @return Return Paypal's redirect url for the user to do the payment.
      */
-    public static String publish(PaypalConfig config, Payment payment) {
+    public static String publish(PayPalConfig config, Payment payment) {
         /*
         WebProfile webProfile = new WebProfile();
         InputFields inputFields = new InputFields();
@@ -113,7 +113,7 @@ public class PaymentCreator {
         return null;
     }
 
-    public static String publish(PaypalConfig config, Transaction... transactions) {
+    public static String publish(PayPalConfig config, Transaction... transactions) {
         Payment payment = prepare(config, transactions);
         return publish(config, payment);
     }

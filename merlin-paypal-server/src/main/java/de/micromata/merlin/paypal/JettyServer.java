@@ -22,7 +22,7 @@ public class JettyServer {
     private Server server;
     private int port;
 
-    public void start(PaypalConfig paypalConfig, int port) {
+    public void start(PayPalConfig paypalConfig, int port) {
         log.info("Starting web server on port " + port);
         PaymentReceiveServlet.setAPIContext(paypalConfig.getApiContext());
         PaymentCancelServlet.setAPIContext(paypalConfig.getApiContext());

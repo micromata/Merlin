@@ -1,7 +1,7 @@
 package de.micromata.merlin.paypal.sdk;
 
 import com.paypal.base.rest.APIContext;
-import de.micromata.merlin.paypal.PaypalConfig;
+import de.micromata.merlin.paypal.PayPalConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * The url of this servlet should be configured in {@link PaypalConfig#getCancelUrl()}.
+ * The url of this servlet should be configured in {@link PayPalConfig#getCancelUrl()}.
  */
 public class PaymentCancelServlet extends HttpServlet {
     private static Logger log = LoggerFactory.getLogger(PaymentCancelServlet.class);
