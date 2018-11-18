@@ -16,6 +16,7 @@ public class PaymentCreator {
 
     /**
      * Only with one item, quantity 1 and price equals to amount's subtotal.
+     *
      * @param amount
      * @param invoiceNumber
      * @param description
@@ -31,9 +32,10 @@ public class PaymentCreator {
         transaction.setDescription(description);
         Item item = new Item();
         item.setName(itemDescription).setQuantity("1").setCurrency(amount.getCurrency()).setPrice(amount.getSubtotalString());
-        ItemList itemList = new ItemList();
         List<Item> items = new ArrayList<>();
         items.add(item);
+
+        ItemList itemList = new ItemList();
         itemList.setItems(items);
 
         transaction.setItemList(itemList);
@@ -72,11 +74,27 @@ public class PaymentCreator {
      * @return Return Paypal's redirect url for the user to do the payment.
      */
     public static String publish(PaypalConfig config, Payment payment) {
+        /*
+        WebProfile webProfile = new WebProfile();
+        InputFields inputFields = new InputFields();
+        inputFields.setNoShipping(0);
+        inputFields.setAddressOverride(1);
+        webProfile.setInputFields(inputFields);
+        try {
+            webProfile.create(config.getApiContext());
+        } catch (PayPalRESTException e) {
+            log.error("PayPalRESTException occurred while trying to publish web profile: " + e.getDetails() + ". webProfile=" + webProfile);
+            return null;
+        }*/
         // Create payment
         try {
-            log.info("Publish payment: " + payment);
             Payment createdPayment = payment.create(config.getApiContext());
-            log.info("Created payment by PayPal: " + createdPayment);
+            if (createdPayment != null) {
+                log.info("Created payment by PayPal: " + createdPayment);
+            } else {
+                log.error("Error while trying to publish payment: " + payment);
+                return null;
+            }
             Iterator<Links> links = createdPayment.getLinks().iterator();
             while (links.hasNext()) {
                 Links link = links.next();
@@ -88,7 +106,7 @@ public class PaymentCreator {
                 }
             }
         } catch (PayPalRESTException e) {
-            log.error("PayPalRESTException occured while trying to publish payment: " + e.getDetails());
+            log.error("PayPalRESTException occurred while trying to publish payment: " + e.getDetails() + ". payment=" + payment);
             return null;
         }
         log.error("Oups, no redirect link found for redirecting the user.");
