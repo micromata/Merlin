@@ -65,13 +65,13 @@ public class PaymentReceiveServlet extends HttpServlet {
             return;
         }
         try {
-            Payment createdPayment = payment.execute(apiContext, paymentExecution);
-            if (createdPayment != null) {
+            Payment executedPayment = payment.execute(apiContext, paymentExecution);
+            if (executedPayment != null) {
                 resp.setStatus(302);
                 resp.setHeader("Location", "/paymentExecuted.html");
                 return;
             }
-            log.info("Payment executed: " + createdPayment);
+            log.info("Payment executed: " + executedPayment);
         } catch (PayPalRESTException e) {
             log.error("Error while receiving/executing payment: " + e.getDetails());
         }

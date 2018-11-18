@@ -34,14 +34,14 @@ public class PayPalConfig {
     public PayPalConfig() {
     }
 
-    public void read(File propertiesFile) throws IOException {
+    public PayPalConfig read(File propertiesFile) throws IOException {
         log.info("Loading properties from file '" + propertiesFile.getAbsolutePath() + "'.");
         Properties props = new Properties();
         props.load(new FileReader(propertiesFile));
-        read(props);
+        return read(props);
     }
 
-    public void read(Properties props) {
+    public PayPalConfig read(Properties props) {
         String mode = props.getProperty(KEY_MODE);
         if ("live".equals(mode)) {
             this.mode = Mode.LIVE;
@@ -52,40 +52,49 @@ public class PayPalConfig {
         clientSecret = props.getProperty(KEY_SECRET);
         returnUrl = props.getProperty(KEY_RETURN_URL);
         cancelUrl = props.getProperty(KEY_CANCEL_URL);
+        return this;
     }
 
     public String getClientId() {
         return clientId;
     }
 
-    public void setClientId(String clientId) {
+    /**
+     * @param clientId
+     * @return this for chaining.
+     */
+    public PayPalConfig setClientId(String clientId) {
         this.clientId = clientId;
         this.apiContext = null;
+        return this;
     }
 
     public String getClientSecret() {
         return clientSecret;
     }
 
-    public void setClientSecret(String clientSecret) {
+    public PayPalConfig setClientSecret(String clientSecret) {
         this.clientSecret = clientSecret;
         this.apiContext = null;
+        return this;
     }
 
     public String getReturnUrl() {
         return returnUrl;
     }
 
-    public void setReturnUrl(String returnUrl) {
+    public PayPalConfig setReturnUrl(String returnUrl) {
         this.returnUrl = returnUrl;
+        return this;
     }
 
     public String getCancelUrl() {
         return cancelUrl;
     }
 
-    public void setCancelUrl(String cancelUrl) {
+    public PayPalConfig setCancelUrl(String cancelUrl) {
         this.cancelUrl = cancelUrl;
+        return this;
     }
 
     /**
@@ -98,8 +107,9 @@ public class PayPalConfig {
         return defaultPayment;
     }
 
-    public void setDefaultPayment(String defaultPayment) {
+    public PayPalConfig setDefaultPayment(String defaultPayment) {
         this.defaultPayment = defaultPayment;
+        return this;
     }
 
     /**
@@ -112,8 +122,9 @@ public class PayPalConfig {
         return defaultIntent;
     }
 
-    public void setDefaultIntent(String defaultIntent) {
+    public PayPalConfig setDefaultIntent(String defaultIntent) {
         this.defaultIntent = defaultIntent;
+        return this;
     }
 
     public APIContext getApiContext() {
@@ -127,8 +138,9 @@ public class PayPalConfig {
         return mode;
     }
 
-    public void setMode(Mode mode) {
+    public PayPalConfig setMode(Mode mode) {
         this.mode = mode;
         this.apiContext = null;
+        return this;
     }
 }
