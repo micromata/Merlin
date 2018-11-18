@@ -8,30 +8,30 @@
 
 <h2>Merlin Paypal tester</h2>
 
-Here you can fill out the amounts. In the real world the user usually can't modify the amounts.
+Here you can enter a test payment. In the real world the user usually shouldn't modify the amounts ;-)
 <br/>
 <br/>
 <form action="/testPayment">
     <table>
         <tr>
-            <td>Subtotal</td>
-            <td><input type="text" name="subtotal" value="29.99"></td>
-        </tr>
-        <tr>
-            <td>Tax</td>
-            <td><input type="text" name="tax" value="5.70"></td>
+            <td>Description</td>
+            <td><input type="text" name="description" value="Merlin Online Solutions"></td><td>E. g. your shop name</td>
         </tr>
         <tr>
             <td>Item description</td>
-            <td><input type="text" name="itemdescription" value="Elections 2019"></td>
+            <td><input type="text" name="itemdescription" value="Elections 2019"></td><td>Only one item is simulated, name it here.</td>
         </tr>
         <tr>
-            <td>Description</td>
-            <td><input type="text" name="description" value="Merlin Online Solutions"></td>
+            <td>Subtotal</td>
+            <td><input type="text" name="subtotal" value="29.99"></td><td>The total cost of all your items</td>
+        </tr>
+        <tr>
+            <td>Tax</td>
+            <td><input type="text" name="tax" value="5.70"></td><td>The taxes (the total will be calculated by Merlin.</td>
         </tr>
     </table>
     <br/>
-    <input type="submit" value="Submit">
+    <button type="submit" style="color: blue; font-size: 120%">Checkout</button> (You should use a better designed PayPal button ;-)
 </form>
 </body>
 </html>
