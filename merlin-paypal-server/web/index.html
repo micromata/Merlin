@@ -2,6 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
+    <script src="https://js.braintreegateway.com/web/dropin/1.14.1/js/dropin.min.js"></script>
 </head>
 <body>
 
@@ -13,6 +14,10 @@ Here you can fill out the amounts. In the real world the user usually can't modi
 <form action="/testPayment">
     <table>
         <tr>
+            <td>Invoice number</td>
+            <td><input type="text" name="invoicenumber" value="1234"></td><td>Should be a unique server generated id.</td>
+        </tr>
+        <tr>
             <td>Subtotal</td>
             <td><input type="text" name="subtotal" value="29.99"></td>
         </tr>
@@ -21,12 +26,32 @@ Here you can fill out the amounts. In the real world the user usually can't modi
             <td><input type="text" name="tax" value="5.70"></td>
         </tr>
         <tr>
+            <td>Item description</td>
+            <td><input type="text" name="itemdescription" value="Elections 2019"></td>
+        </tr>
+        <tr>
             <td>Description</td>
-            <td><input type="text" name="description" value="Merlin Runner Donation"></td>
+            <td><input type="text" name="description" value="Merlin Online Solutions"></td>
         </tr>
     </table>
     <br/>
     <input type="submit" value="Submit">
+    <div id="dropin-container"></div>
+    <button id="submit-button">Request payment method</button>
+    <script>
+        var button = document.querySelector('#submit-button');
+
+        braintree.dropin.create({
+            authorization: 'CLIENT_TOKEN_FROM_SERVER',
+            container: '#dropin-container'
+        }, function (createErr, instance) {
+            button.addEventListener('click', function () {
+                instance.requestPaymentMethod(function (err, payload) {
+                    // Submit payload.nonce to your server
+                });
+            });
+        });
+    </script>
 </form>
 </body>
 </html>

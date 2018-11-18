@@ -49,9 +49,9 @@ See `PaymentReceiveServlet` and `PaymentCancelServlet` of module merlin-paypal-s
 urls in PaypalConfig (e. g. in properties file `~/.merlin-paypal`).
 
 === Do some tests with the test servlet
-You may start PaypalMain (Jetty-Server) and create some test payments on calling the test servlet with request parameters (in
-your browser or with curl):
-----
-curl http://localhost:8142/testPayment?subtotal=29.99&tax=5.70&description=MerlinApplication
-----
-You will receive the url you can call in your browser for a Paypal test payment.
+You may start PaypalMain (Jetty-Server) and create some test payments on calling `index.html`.
+
+If you run the Merlin-Paypal-Server on a private host, you will be redirect to Paypal but you can't receive a call back. For a complete testing you should
+run Merlin-Paypal-Server on a public available host.
+
+PLEASE NOTE: The Merlin-Paypal-Server should only be used for test purposes! For security reasons you should use SSL as well as a authentication.

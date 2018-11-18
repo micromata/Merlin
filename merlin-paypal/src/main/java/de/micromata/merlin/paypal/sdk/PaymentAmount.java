@@ -81,6 +81,10 @@ public class PaymentAmount {
         return subtotal;
     }
 
+    public String getSubtotalString() {
+        return asString(getSubtotal());
+    }
+
     /**
      * Ensures scale 2.
      *

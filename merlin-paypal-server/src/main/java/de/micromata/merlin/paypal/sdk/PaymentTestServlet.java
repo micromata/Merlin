@@ -32,9 +32,11 @@ public class PaymentTestServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String invoicenumber = req.getParameter("invoicenumber");
         String subtotal = req.getParameter("subtotal");
         String tax = req.getParameter("tax");
         String description = req.getParameter("description");
+        String itemDescription = req.getParameter("itemdescription");
         PaymentAmount amount = new PaymentAmount(PaymentAmount.Currency.EUR).setSubtotal(asBigdecimal("subtotal", subtotal))
                 .setTax(asBigdecimal("tax", tax));
         if (amount.getTotal().compareTo(BigDecimal.ZERO) <= 0) {
@@ -42,7 +44,7 @@ public class PaymentTestServlet extends HttpServlet {
             resp.sendRedirect("/index.html");
             return;
         }
-        Transaction transaction = PaymentCreator.createTransaction(amount, description);
+        Transaction transaction = PaymentCreator.createTransaction(amount, invoicenumber, description, itemDescription);
         String redirectUrl = PaymentCreator.publish(paypalConfig, transaction);
         if (StringUtils.isNotBlank(redirectUrl)) {
             resp.sendRedirect(redirectUrl);

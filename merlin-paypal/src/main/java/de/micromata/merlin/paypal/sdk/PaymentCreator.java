@@ -3,6 +3,7 @@ package de.micromata.merlin.paypal.sdk;
 import com.paypal.api.payments.*;
 import com.paypal.base.rest.PayPalRESTException;
 import de.micromata.merlin.paypal.PaypalConfig;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,10 +14,29 @@ import java.util.List;
 public class PaymentCreator {
     private static Logger log = LoggerFactory.getLogger(PaymentCreator.class);
 
-    public static Transaction createTransaction(PaymentAmount amount, String description) {
+    /**
+     * Only with one item, quantity 1 and price equals to amount's subtotal.
+     * @param amount
+     * @param invoiceNumber
+     * @param description
+     * @param itemDescription
+     * @return
+     */
+    public static Transaction createTransaction(PaymentAmount amount, String invoiceNumber, String description, String itemDescription) {
         Transaction transaction = new Transaction();
         transaction.setAmount(amount.asAmount());
+        if (StringUtils.isNotBlank(invoiceNumber)) {
+            transaction.setInvoiceNumber(invoiceNumber);
+        }
         transaction.setDescription(description);
+        Item item = new Item();
+        item.setName(itemDescription).setQuantity("1").setCurrency(amount.getCurrency()).setPrice(amount.getSubtotalString());
+        ItemList itemList = new ItemList();
+        List<Item> items = new ArrayList<>();
+        items.add(item);
+        itemList.setItems(items);
+
+        transaction.setItemList(itemList);
         return transaction;
     }
 
@@ -54,7 +74,9 @@ public class PaymentCreator {
     public static String publish(PaypalConfig config, Payment payment) {
         // Create payment
         try {
+            log.info("Publish payment: " + payment);
             Payment createdPayment = payment.create(config.getApiContext());
+            log.info("Created payment by PayPal: " + createdPayment);
             Iterator<Links> links = createdPayment.getLinks().iterator();
             while (links.hasNext()) {
                 Links link = links.next();
