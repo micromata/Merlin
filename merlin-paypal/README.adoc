@@ -1,4 +1,4 @@
-Merlin Paypal documentation
+Merlin PayPal documentation
 ===========================
 Micromata GmbH, Kai Reinhard, Version {version}
 :toc:
@@ -8,51 +8,65 @@ Micromata GmbH, Kai Reinhard, Version {version}
 
 ifdef::env-github,env-browser[:outfilesuffix: .adoc]
 
-== Paypal integration
+== PayPal integration
 
 Playground for dealing with PayPal integration. This is just for fun and isn't planned to be a part of Merlin.
 
-=== Create a PayPal app
+=== Create credentials for your app
 1. On the https://developer.paypal.com/developer/applications[My Apps & Credentials] page, click Log into Dashboard.
 2. In the REST API apps section, click Create App. +
    PayPal generates a set of OAuth 2.0 client_id and secret credentials for your app for both the sandbox and live environments.
 
-=== Test credentials
-Create Property file:
+[CAUTION]
+====
+Keep your credentials (client_id and secret) save! Never ever include any credential value in your web page! +
+If you need to do a PayPal call direct inside your web page, get an access token from the server first and then use this access token for
+authentification.
+====
+
+
+=== Configuration of your app
+Create property file:
 
 .~/.merlin-paypal
 ----
-paypal.
+# Supported modes are sandbox (default) and live:
+paypal.mode=sandbox
 paypal.client_id=<YOUR APPLICATION CLIENT ID>
 paypal.secret=<YOUR APPLICATION CLIENT SECRET>
-# return url called by Paypal after successful payment:
+# return url called by PayPal after successful payment:
 paypal.return_url=https://example.com/your_redirect_url.html
-# cancel url called by Paypal after cancelled payment:
+# cancel url called by PayPal after cancelled payment:
 paypal.cancel_url=https://example.com/your_cancel_url.html
 ----
-Your may name this file `.merlin-paypal` and place it in your user directory or you may define any other filename and specify this filename with option -f:
+Your may name this file `.merlin-paypal` and place it in your user home directory or you may define any other filename and specify this filename with option -f:
 
-Arguments to `de.micromata.merlin.paypal.PaypalMain`: `-f /etc/paypal.properties`.
+Arguments to `de.micromata.merlin.paypal.PayPalMain`: `-f /etc/paypal.properties`.
 
-=== Test of a payment
+=== Create PayPal sandbox account
+You need a sandbox account to test sandbox installations:
+https://developer.paypal.com/docs/classic/lifecycle/sb_create-accounts/[create PayPal sandbox account]
+
+=== Test of a payment (Java code)
 
 [source,java]
 ----
 PaymentAmount amount = new PaymentAmount(PaymentAmount.Currency.EUR).setSubtotal(29.99).setTax(5.70);
-Transaction transaction = PaymentCreator.createTransaction(amount, "Micromata T-Shirt Contest 2019");
+// Invoice number must be unique or null.
+Transaction transaction = PaymentCreator.createTransaction(amount, invoicenumber, description, itemDescription);
 String href = PaymentCreator.publish(paypalConfig, transaction);
 ----
 `href` contains the link where to redirect the user for proceeding with the payment.
 
 === Add paypal return servlets to your app
 See `PaymentReceiveServlet` and `PaymentCancelServlet` of module merlin-paypal-server as example and configure these both
-urls in PaypalConfig (e. g. in properties file `~/.merlin-paypal`).
+urls in PayPalConfig (e. g. in properties file `~/.merlin-paypal`).
 
 === Do some tests with the test servlet
-You may start PaypalMain (Jetty-Server) and create some test payments on calling `index.html`.
+You may start PayPalMain (Jetty-Server) and create some test payments on calling `index.html`.
 
-If you run the Merlin-Paypal-Server on a private host, you will be redirect to Paypal but you can't receive a call back. For a complete testing you should
-run Merlin-Paypal-Server on a public available host.
+If you run the Merlin-PayPal-Server on a private host, you will be redirect to PayPal but you can't receive a call back. For a complete testing you should
+run Merlin-PayPal-Server on a public available host.
 
 === See a live demo
 The https://demo.paypal.com/us/demo/go_platform/pcbt[demo store] show how a modern integration should finally look like.
