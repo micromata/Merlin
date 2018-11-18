@@ -10,9 +10,15 @@ ifdef::env-github,env-browser[:outfilesuffix: .adoc]
 
 == PayPal integration
 
-Playground for dealing with PayPal integration. This is just for fun and isn't planned to be a part of Merlin.
+Playground for an easy PayPal integration. This approach is not planned to be part of this Merlin project.
 
-=== Create credentials for your app
+1. `merlin-paypal` contains some useful helper classes and demonstrates how to integrate PayPal. It's not there much magic.
+2. `merlin-paypal-server` contains a ready to run command line server for testing PayPal transactions (sandbox and live).
+
+
+=== Create PayPal credentials for your app
+First you need credentials for testing and preparing your going-live.
+
 1. On the https://developer.paypal.com/developer/applications[My Apps & Credentials] page, click Log into Dashboard.
 2. In the REST API apps section, click Create App. +
    PayPal generates a set of OAuth 2.0 client_id and secret credentials for your app for both the sandbox and live environments.
@@ -20,13 +26,16 @@ Playground for dealing with PayPal integration. This is just for fun and isn't p
 [CAUTION]
 ====
 Keep your credentials (client_id and secret) save! Never ever include any credential value in your web page! +
-If you need to do a PayPal call direct inside your web page, get an access token from the server first and then use this access token for
-authentification.
+If you need to do a PayPal call direct inside your web page, get an access token from the server first and then use this
+temporarily valid access token for authentification.
 ====
 
 
 === Configuration of your app
-Create property file:
+Create property file. You may leave the url settings untouched for your first tests. They are only needed for PayPal later to
+get back after the customer's payment.
+
+For now, it's enough to enter the `client_id` and the `secret` you get from the previous step.
 
 .~/.merlin-paypal
 ----
@@ -47,26 +56,46 @@ Arguments to `de.micromata.merlin.paypal.PayPalMain`: `-f /etc/paypal.properties
 You need a sandbox account to test sandbox installations:
 https://developer.paypal.com/docs/classic/lifecycle/sb_create-accounts/[create PayPal sandbox account]
 
-=== Test of a payment (Java code)
+[NOTE]
+====
+The normal PayPal accounts aren't valid for PayPal's sandbox.
+====
+
+=== Run Merlin-PayPal server for ´some tests
+1. Run `gradle distZip` for a ready to run server (including Unix, MacOS and Windows start scripts).
+2. Unpack the zip file (located in `merlin-paypal-server/build/distributions/`)
+3. Start the server in your terminal: `bin/merlin-paypal-server` or `bin/merlin-paypal-server -f <configfile>`
+4. Open your web browser: `http://localhost:8142`.
+
+If you run the Merlin-PayPal-Server on a private host, you will be redirect to PayPal but you can't receive a call back. For a complete testing you should
+run Merlin-PayPal-Server on a public available host. Don't forget to configure the urls in the configuration file, e. g.:
+
+.~/.merlin-paypal
+----
+...
+# The urls for the Merlin-PayPal test server running on ip 159.69.120.42
+paypal.return_url=http:/159.69.120.42:8142/receivePayment
+paypal.cancel_url=http://159.69.120.42:8142/cancelPayment
+----
+
+
+== Write your own app
+=== Java code for payments
 
 [source,java]
 ----
 PaymentAmount amount = new PaymentAmount(PaymentAmount.Currency.EUR).setSubtotal(29.99).setTax(5.70);
-// Invoice number must be unique or null.
+// Invoice number must be unique or null, add your shop description and the description of the item to sale.
 Transaction transaction = PaymentCreator.createTransaction(amount, invoicenumber, description, itemDescription);
 String href = PaymentCreator.publish(paypalConfig, transaction);
 ----
-`href` contains the link where to redirect the user for proceeding with the payment.
+`href` contains the link where to redirect the user for proceeding with the payment. Through the API you may configure
+more complex shopping charts including shipping costs etc.
 
 === Add paypal return servlets to your app
 See `PaymentReceiveServlet` and `PaymentCancelServlet` of module merlin-paypal-server as example and configure these both
 urls in PayPalConfig (e. g. in properties file `~/.merlin-paypal`).
 
-=== Do some tests with the test servlet
-You may start PayPalMain (Jetty-Server) and create some test payments on calling `index.html`.
-
-If you run the Merlin-PayPal-Server on a private host, you will be redirect to PayPal but you can't receive a call back. For a complete testing you should
-run Merlin-PayPal-Server on a public available host.
 
 === See a live demo
 The https://demo.paypal.com/us/demo/go_platform/pcbt[demo store] show how a modern integration should finally look like.
