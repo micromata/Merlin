@@ -18,7 +18,7 @@ dependencies {
 }
 
 apply plugin: 'application'
-mainClassName = "de.micromata.merlin.paypal.PaypalMain"
+mainClassName = "de.micromata.merlin.paypal.PayPalMain"
 
 run() {
     doFirst {
