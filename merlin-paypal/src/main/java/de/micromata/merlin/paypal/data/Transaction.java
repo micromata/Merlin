@@ -1,6 +1,7 @@
 package de.micromata.merlin.paypal.data;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import de.micromata.merlin.paypal.utils.PayPalUtils;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -15,6 +16,7 @@ public class Transaction {
 
     /**
      * Amount class is created and assigned to this transaction.
+     *
      * @param currency
      * @param details
      * @return
@@ -50,16 +52,26 @@ public class Transaction {
         return inoviceNumber;
     }
 
+    /**
+     * Ensures maximum length of 127: https://developer.paypal.com/docs/api/payments/v1/#definition-transaction
+     *
+     * @param inoviceNumber
+     */
     public void setInoviceNumber(String inoviceNumber) {
-        this.inoviceNumber = inoviceNumber;
+        this.inoviceNumber = PayPalUtils.ensureMaxLength(inoviceNumber, 127);
     }
 
     public String getDescription() {
         return description;
     }
 
+    /**
+     * Ensures maximum length of 127: https://developer.paypal.com/docs/api/payments/v1/#definition-transaction
+     *
+     * @param description
+     */
     public void setDescription(String description) {
-        this.description = description;
+        this.description = PayPalUtils.ensureMaxLength(description, 127);
     }
 
     @JsonProperty("item_list")

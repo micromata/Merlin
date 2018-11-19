@@ -14,8 +14,13 @@ public class Item {
         return name;
     }
 
+    /**
+     * Ensures maximum length of 127: https://developer.paypal.com/docs/api/payments/v1/#definition-item
+     * @param name
+     * @return
+     */
     public Item setName(String name) {
-        this.name = name;
+        this.name = PayPalUtils.ensureMaxLength(name, 127);
         return this;
     }
 

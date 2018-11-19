@@ -17,16 +17,8 @@ public class RedirectUrls {
         return returnUrl;
     }
 
-    public void setReturnUrl(String returnUrl) {
-        this.returnUrl = returnUrl;
-    }
-
     @JsonProperty(value = "cancel_url")
     public String getCancelUrl() {
         return cancelUrl;
-    }
-
-    public void setCancelUrl(String cancelUrl) {
-        this.cancelUrl = cancelUrl;
     }
 }

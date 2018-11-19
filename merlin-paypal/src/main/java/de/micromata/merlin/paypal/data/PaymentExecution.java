@@ -30,25 +30,9 @@ public class PaymentExecution {
         return state;
     }
 
-    public void setState(String state) {
-        this.state = state;
-    }
-
+    @JsonProperty(value = "create_time")
     public String getCreateTime() {
         return createTime;
-    }
-
-    @JsonProperty(value = "create_time")
-    public void setCreateTime(String createTime) {
-        this.createTime = createTime;
-    }
-
-    public void setPayer(Payer payer) {
-        this.payer = payer;
-    }
-
-    public void setTransactions(List<Transaction> transactions) {
-        this.transactions = transactions;
     }
 
     /**
@@ -58,17 +42,8 @@ public class PaymentExecution {
         return intent;
     }
 
-    public void setIntent(String intent) {
-        this.intent = intent;
-    }
-
     public Payer getPayer() {
         return payer;
-    }
-
-    public PaymentExecution addTransaction(Transaction transaction) {
-        transactions.add(transaction);
-        return this;
     }
 
     public List<Transaction> getTransactions() {
@@ -80,17 +55,8 @@ public class PaymentExecution {
         return noteToPayer;
     }
 
-    public PaymentExecution setNoteToPayer(String noteToPayer) {
-        this.noteToPayer = noteToPayer;
-        return this;
-    }
-
     public List<Link> getLinks() {
         return links;
-    }
-
-    public void setLinks(List<Link> links) {
-        this.links = links;
     }
 
     public String getRedirectUserHref() {

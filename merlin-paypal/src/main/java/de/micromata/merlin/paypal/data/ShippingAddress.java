@@ -1,17 +1,10 @@
 package de.micromata.merlin.paypal.data;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import de.micromata.merlin.paypal.utils.PayPalUtils;
 
 public class ShippingAddress {
-    // "shipping_address": {
-    //          "recipient_name": "test buyer",
-    //          "line1": "ESpachstr. 1",
-    //          "city": "Freiburg",
-    //          "state": "Empty",
-    //          "postal_code": "79111",
-    //          "country_code": "DE"
-    //        }
-    private String recipientName, line1, city, state, postalCode, countryCode;
+    private String recipientName, line1, line2, city, state, postalCode, countryCode;
 
     @JsonProperty(value = "recipient_name")
     public String getRecipientName() {
@@ -26,24 +19,52 @@ public class ShippingAddress {
         return line1;
     }
 
+    /**
+     * Ensures maximum length of 100: https://developer.paypal.com/docs/api/payments/v1/#definition-shipping_address
+     *
+     * @param line1
+     */
     public void setLine1(String line1) {
-        this.line1 = line1;
+        this.line1 = PayPalUtils.ensureMaxLength(line1, 100);
+    }
+
+    public String getLine2() {
+        return line2;
+    }
+
+    /**
+     * Ensures maximum length of 100: https://developer.paypal.com/docs/api/payments/v1/#definition-shipping_address
+     *
+     * @param line2
+     */
+    public void setLine2(String line2) {
+        this.line2 = PayPalUtils.ensureMaxLength(line2, 100);
     }
 
     public String getCity() {
         return city;
     }
 
+    /**
+     * Ensures maximum length of 64: https://developer.paypal.com/docs/api/payments/v1/#definition-shipping_address
+     *
+     * @param city
+     */
     public void setCity(String city) {
-        this.city = city;
+        this.city = PayPalUtils.ensureMaxLength(city, 64);
     }
 
     public String getState() {
         return state;
     }
 
+    /**
+     * Ensures maximum length of 40: https://developer.paypal.com/docs/api/payments/v1/#definition-shipping_address
+     *
+     * @param state
+     */
     public void setState(String state) {
-        this.state = state;
+        this.state = PayPalUtils.ensureMaxLength(state, 40);
     }
 
     @JsonProperty(value = "postal_code")
@@ -60,7 +81,15 @@ public class ShippingAddress {
         return countryCode;
     }
 
+    /**
+     * two-character ISO 3166-1 code: https://developer.paypal.com/docs/api/payments/v1/#definition-shipping_address.
+     *
+     * @param countryCode
+     */
     public void setCountryCode(String countryCode) {
+        if (countryCode.length() != 2) {
+            throw new IllegalArgumentException("Country code must be a two-character ISO 3166-1 code: " + countryCode);
+        }
         this.countryCode = countryCode;
     }
 }

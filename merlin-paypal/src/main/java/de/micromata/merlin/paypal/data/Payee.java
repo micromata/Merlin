@@ -6,10 +6,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * Will be set by PayPal.
  */
 public class Payee {
-    // "payee": {
-    //        "merchant_id": "HZTZJYXGGGR7E",
-    //        "email": "verwaltung-facilitator@polyas.de"
-    //      }
     private String merchantId, email;
 
     @JsonProperty(value = "merchant_id")

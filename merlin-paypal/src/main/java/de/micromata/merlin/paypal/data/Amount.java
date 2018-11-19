@@ -40,7 +40,14 @@ public class Amount {
         return currency;
     }
 
+    /**
+     * Ensures 3 character value: https://developer.paypal.com/docs/api/payments/v1/#definition-amount
+     * @param currency
+     */
     public void setCurrency(String currency) {
+        if (currency.length() != 3) {
+            throw new IllegalArgumentException("Currency must be a three-character ISO-4217 currency code.");
+        }
         this.currency = currency;
     }
 

@@ -1,22 +1,9 @@
 package de.micromata.merlin.paypal.data;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import de.micromata.merlin.paypal.utils.PayPalUtils;
 
 public class PayerInfo {
-    //       "email": "...",
-    //      "first_name": "test",
-    //      "last_name": "buyer",
-    //      "payer_id": "xxxx",
-    //      "shipping_address": {
-    //        "recipient_name": "test buyer",
-    //        "line1": "ESpachstr. 1",
-    //        "city": "Freiburg",
-    //        "state": "Empty",
-    //        "postal_code": "79111",
-    //        "country_code": "DE"
-    //      },
-    //      "country_code": "DE"
-
     private String email, firstName, lastName, payerId, countryCode;
     private ShippingAddress shippingAddress;
 
@@ -24,8 +11,12 @@ public class PayerInfo {
         return email;
     }
 
+    /**
+     * Ensures maximum length of 127: https://developer.paypal.com/docs/api/payments/v1/#definition-payer_info
+     * @param email
+     */
     public void setEmail(String email) {
-        this.email = email;
+        this.email = PayPalUtils.ensureMaxLength(email, 127);
     }
 
     @JsonProperty(value = "first_name")
