@@ -24,12 +24,12 @@ This document describes all the steps you need to integrate PayPal in your own J
 4. After the payment PayPal will callback your server (on success as well as after cancellation by the user).
 5. You confirm/execute the payment by calling PayPal.
 
-You may also refer: https://developer.paypal.com/docs/checkout/how-to/server-integration/#how-a-server-integration-works[PayPal flow diagram of a payment]
+You may also refer: https://developer.paypal.com/docs/checkout/how-to/server-integration/#how-a-server-integration-works[PayPal flow diagram of a payment^]
 
 === Create PayPal credentials for your app
 First you need credentials for testing and preparing your going-live.
 
-1. On the https://developer.paypal.com/developer/applications[My Apps & Credentials] page, click *Log into Dashboard*.
+1. On the https://developer.paypal.com/developer/applications[My Apps & Credentials^] page, click *Log into Dashboard*.
 2. In the *REST API apps* section, click *Create App*. +
    PayPal generates a set of OAuth 2.0 client_id and secret credentials for your app for both the sandbox and the live environment.
 
@@ -56,7 +56,7 @@ automatically. You may alternatively define any other filename and specify this 
 
 === Create PayPal sandbox account
 You need a sandbox account to test sandbox installations:
-https://developer.paypal.com/docs/classic/lifecycle/sb_create-accounts/[create PayPal sandbox account]
+https://developer.paypal.com/docs/classic/lifecycle/sb_create-accounts/[create PayPal sandbox account^]
 
 [NOTE]
 ====
@@ -134,4 +134,4 @@ Payment executedPayment = payment.execute(apiContext, paymentExecution);
 ----
 
 === See a live demo
-The https://demo.paypal.com/us/demo/go_platform/pcbt[demo store] show how a modern integration should finally look like.
+The https://demo.paypal.com/us/demo/go_platform/pcbt[demo store^] show how a modern integration should finally look like.
