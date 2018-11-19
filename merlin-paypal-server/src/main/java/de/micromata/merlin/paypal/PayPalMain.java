@@ -69,7 +69,7 @@ public class PayPalMain {
                 log.info("Access token successfully received: " + accessToken);
             }
             /*
-            PaymentAmount amount = new PaymentAmount(PaymentAmount.Currency.EUR).setSubtotal(29.99).setTax(5.70);
+            Amount amount = new Amount(Amount.Currency.EUR).setSubtotal(29.99).setTax(5.70);
             Transaction transaction = PaymentCreator.createTransaction(amount, "Micromata T-Shirt Contest 2019");
             PaymentCreator.publish(paypalConfig, transaction);
             */

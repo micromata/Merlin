@@ -1,11 +1,10 @@
 package de.micromata.merlin.paypal.sdk;
 
 
-import com.paypal.api.payments.Amount;
-import com.paypal.api.payments.Details;
-import com.paypal.api.payments.Payment;
-import com.paypal.api.payments.Transaction;
+import de.micromata.merlin.paypal.data.Amount;
+import de.micromata.merlin.paypal.data.Details;
 import de.micromata.merlin.paypal.PayPalConfig;
+import de.micromata.merlin.paypal.data.Transaction;
 import org.junit.jupiter.api.Test;
 
 public class PaymentCreatorTest {
@@ -16,25 +15,14 @@ public class PaymentCreatorTest {
         config.setClientSecret("mySecret");
         config.setReturnUrl(PayPalConfig.DEMO_RETURN_URL);
         config.setCancelUrl(PayPalConfig.DEMO_CANCEL_URL);
-        // Set payment details
-        Details details = new Details();
-        details.setShipping("1");
-        details.setSubtotal("5");
-        details.setTax("1");
-
-        // Payment amount
-        Amount amount = new Amount();
-        amount.setCurrency("USD");
-        // Total must be equal to sum of shipping, tax and subtotal.
-        amount.setTotal("7");
-        amount.setDetails(details);
-
         // Transaction information
         Transaction transaction = new Transaction();
-        transaction.setAmount(amount);
+        transaction.addItem("My test item", 29.99);
+        Details details = new Details().setShipping(1.99).setTax(1.10);
+        transaction.createAmount(Amount.Currency.EUR, details);
         transaction.setDescription("This is the payment transaction description.");
 
-        Payment payment = PaymentCreator.prepare(config, transaction);
+        //Payment payment = PaymentCreator.prepare(config, transaction);
     }
 
 }

@@ -1,6 +1,5 @@
 package de.micromata.merlin.paypal.sdk;
 
-import com.paypal.base.rest.APIContext;
 import de.micromata.merlin.paypal.PayPalConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,17 +16,17 @@ import java.io.IOException;
 public class PaymentCancelServlet extends HttpServlet {
     private static Logger log = LoggerFactory.getLogger(PaymentCancelServlet.class);
 
-    private static APIContext apiContext;
+    private static PayPalConfig config;
 
-    public static void setAPIContext(APIContext apiContext) {
-        PaymentCancelServlet.apiContext = apiContext;
+    public static void setConfig(PayPalConfig config) {
+        PaymentCancelServlet.config = config;
     }
 
     @Override
     public void init() throws ServletException {
         super.init();
-        if (apiContext == null) {
-            log.error("Don't forget to set api context.");
+        if (config == null) {
+            log.error("Don't forget to set config.");
         }
     }
 

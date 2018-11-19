@@ -1,6 +1,5 @@
 package de.micromata.merlin.paypal.sdk;
 
-import com.paypal.api.payments.Transaction;
 import de.micromata.merlin.paypal.PayPalConfig;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -37,7 +36,7 @@ public class PaymentTestServlet extends HttpServlet {
         String tax = req.getParameter("tax");
         String description = req.getParameter("description");
         String itemDescription = req.getParameter("itemdescription");
-        PaymentAmount amount = new PaymentAmount(PaymentAmount.Currency.EUR).setSubtotal(asBigdecimal("subtotal", subtotal))
+/*        Amount amount = new Amount(Amount.Currency.EUR).setSubtotal(asBigdecimal("subtotal", subtotal))
                 .setTax(asBigdecimal("tax", tax));
         if (amount.getTotal().compareTo(BigDecimal.ZERO) <= 0) {
             log.error("No positive amount given (subtotal + tax). Aborting payment.");
@@ -50,7 +49,7 @@ public class PaymentTestServlet extends HttpServlet {
             resp.sendRedirect(redirectUrl);
         } else {
             resp.sendRedirect("/index.html");
-        }
+        }*/
     }
 
     private BigDecimal asBigdecimal(String variable, String value) {

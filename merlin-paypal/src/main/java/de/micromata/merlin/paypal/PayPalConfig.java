@@ -1,6 +1,6 @@
 package de.micromata.merlin.paypal;
 
-import com.paypal.base.rest.APIContext;
+import de.micromata.merlin.paypal.data.APIContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,7 +27,6 @@ public class PayPalConfig {
     private String returnUrl;
     private String cancelUrl;
     private String defaultPayment = "paypal";
-    private String defaultIntent = "sale";
     private APIContext apiContext;
     private Mode mode = Mode.SANDBOX;
 
@@ -112,28 +111,6 @@ public class PayPalConfig {
         return this;
     }
 
-    /**
-     * The default intent for creating payments.
-     *
-     * @return "sale" as default.
-     * @see com.paypal.api.payments.Payment#setIntent(String)
-     */
-    public String getDefaultIntent() {
-        return defaultIntent;
-    }
-
-    public PayPalConfig setDefaultIntent(String defaultIntent) {
-        this.defaultIntent = defaultIntent;
-        return this;
-    }
-
-    public APIContext getApiContext() {
-        if (apiContext == null) {
-            apiContext = new APIContext(clientId, clientSecret, mode.name().toLowerCase());
-        }
-        return apiContext;
-    }
-
     public Mode getMode() {
         return mode;
     }
@@ -142,5 +119,12 @@ public class PayPalConfig {
         this.mode = mode;
         this.apiContext = null;
         return this;
+    }
+
+    public static PayPalConfig createDemoConfig() {
+        PayPalConfig config = new PayPalConfig();
+        config.setReturnUrl(DEMO_RETURN_URL);
+        config.setCancelUrl(DEMO_CANCEL_URL);
+        return config;
     }
 }

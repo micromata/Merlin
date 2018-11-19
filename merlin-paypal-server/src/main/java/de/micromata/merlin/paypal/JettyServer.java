@@ -24,8 +24,8 @@ public class JettyServer {
 
     public void start(PayPalConfig paypalConfig, int port) {
         log.info("Starting web server on port " + port);
-        PaymentReceiveServlet.setAPIContext(paypalConfig.getApiContext());
-        PaymentCancelServlet.setAPIContext(paypalConfig.getApiContext());
+        PaymentReceiveServlet.setConfig(paypalConfig);
+        PaymentCancelServlet.setConfig(paypalConfig);
         PaymentTestServlet.setPaypalConfig(paypalConfig);
         server = new Server(port);
 

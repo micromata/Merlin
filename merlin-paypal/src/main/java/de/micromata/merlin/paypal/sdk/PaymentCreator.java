@@ -1,15 +1,7 @@
 package de.micromata.merlin.paypal.sdk;
 
-import com.paypal.api.payments.*;
-import com.paypal.base.rest.PayPalRESTException;
-import de.micromata.merlin.paypal.PayPalConfig;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 public class PaymentCreator {
     private static Logger log = LoggerFactory.getLogger(PaymentCreator.class);
@@ -23,7 +15,7 @@ public class PaymentCreator {
      * @param itemDescription
      * @return
      */
-    public static Transaction createTransaction(PaymentAmount amount, String invoiceNumber, String description, String itemDescription) {
+   /* public static Transaction createTransaction(Amount amount, String invoiceNumber, String description, String itemDescription) {
         Transaction transaction = new Transaction();
         transaction.setAmount(amount.asAmount());
         if (StringUtils.isNotBlank(invoiceNumber)) {
@@ -65,7 +57,7 @@ public class PaymentCreator {
         payment.setRedirectUrls(redirectUrls);
         payment.setTransactions(transactionList);
         return payment;
-    }
+    }*/
 
     /**
      * Creates the remote payment (publish to Paypal).
@@ -73,7 +65,7 @@ public class PaymentCreator {
      * @param payment
      * @return Return Paypal's redirect url for the user to do the payment.
      */
-    public static String publish(PayPalConfig config, Payment payment) {
+ /*   public static String publish(PayPalConfig config, Payment payment) {*/
         /*
         WebProfile webProfile = new WebProfile();
         InputFields inputFields = new InputFields();
@@ -87,7 +79,7 @@ public class PaymentCreator {
             return null;
         }*/
         // Create payment
-        try {
+      /*  try {
             Payment createdPayment = payment.create(config.getApiContext());
             if (createdPayment != null) {
                 log.info("Created payment by PayPal: " + createdPayment);
@@ -116,5 +108,5 @@ public class PaymentCreator {
     public static String publish(PayPalConfig config, Transaction... transactions) {
         Payment payment = prepare(config, transactions);
         return publish(config, payment);
-    }
+    }*/
 }

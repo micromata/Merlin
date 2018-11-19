@@ -9,8 +9,13 @@ buildscript {
 dependencies {
     // https://mvnrepository.com/artifact/org.apache.commons/commons-text
     compile group: 'org.apache.commons', name: 'commons-text', version: '1.6'
-    // https://mvnrepository.com/artifact/com.paypal.sdk/rest-api-sdk
-    compile group: 'com.paypal.sdk', name: 'rest-api-sdk', version: '1.14.0'
+
+    // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.9.7'
+    // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-annotations
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.9.7'
+    // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.7'
 
     compile group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.25'
 }
