@@ -14,14 +14,14 @@ class PaymentTest {
     @Test
     void paymentTest() {
         PayPalConfig config = PayPalConfig.createDemoConfig();
-        Payment payment = new Payment().setConfig(config);
+        Payment payment = new Payment();
         Transaction transaction = new Transaction();
         transaction.addItem("Online Elections 2019", 29.99);
-        Details details = new Details();
-        details.setTax(5.70);
+        Details details = new Details().setTax(5.70);
         transaction.createAmount(Amount.Currency.EUR, details);
         transaction.setInoviceNumber("1234");
         payment.addTransaction(transaction).setNoteToPayer("Enjoy your Elections with POLYAS.");
+        payment.setConfig(config);
         payment.recalculate();
         assertEquals("35.69", transaction.getAmount().getTotal().toString());
         System.out.println(JsonUtils.toJson(payment, true));

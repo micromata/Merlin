@@ -1,7 +1,6 @@
 package de.micromata.merlin.paypal;
 
 import de.micromata.merlin.paypal.data.PaymentApproval;
-import de.micromata.merlin.paypal.data.PaymentApproveRequestInfo;
 import de.micromata.merlin.paypal.data.PaymentExecution;
 import de.micromata.merlin.paypal.data.Payment;
 import de.micromata.merlin.paypal.json.JsonUtils;
@@ -19,9 +18,18 @@ public class PayPalConnector {
     // "access_token":"<access token>"
     private static Pattern PATTERN_ACCESS_TOKEN = Pattern.compile("\"access_token\":\"([^\"]*)\"");
 
+    /**
+     * Create a payment in PayPal and get the information from PayPal including the redirect url for th user.
+     *
+     * @param config
+     * @param payment
+     * @return
+     * @throws PayPalRestException
+     */
     public static PaymentExecution createPayment(PayPalConfig config, Payment payment) throws PayPalRestException {
         try {
             String url = getUrl(config, "/v1/payments/payment");
+            payment.setConfig(config);
             payment.recalculate();
             log.info("Create payment: " + JsonUtils.toJson(payment));
             String response = executeCall(config, url, JsonUtils.toJson(payment));
@@ -36,11 +44,21 @@ public class PayPalConnector {
         }
     }
 
-    public static PaymentApproval executeApprovedPayment(PayPalConfig config, String payementId, PaymentApproveRequestInfo paymentApproval) throws PayPalRestException {
+    /**
+     * After the approved payment we have to execute the payment as a last step.
+     *
+     * @param config
+     * @param payementId
+     * @param payerId
+     * @return The returned PaymentApproval contain everything related to this payment, such as id, payer, refund urls etc.
+     * @throws PayPalRestException
+     */
+    public static PaymentApproval executeApprovedPayment(PayPalConfig config, String payementId, String payerId) throws PayPalRestException {
         try {
             String url = getUrl(config, "/v1/payments/payment/" + payementId + "/execute");
-            log.info("Approve payment: paymentId=" + payementId + ", payerId=" + paymentApproval.getPayerId());
-            String response = executeCall(config, url, JsonUtils.toJson(paymentApproval));
+            log.info("Approve payment: paymentId=" + payementId + ", payerId=" + payerId);
+            String payload = "{\"payer_id\" : \"" + payerId + "\"}";
+            String response = executeCall(config, url, payload);
             if (log.isDebugEnabled()) log.info("Response: " + response);
             PaymentApproval approval = JsonUtils.fromJson(PaymentApproval.class, response);
             if (approval == null) {

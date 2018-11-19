@@ -2,6 +2,9 @@ package de.micromata.merlin.paypal.data;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+/**
+ * Will be set by PayPal.
+ */
 public class Payee {
     // "payee": {
     //        "merchant_id": "HZTZJYXGGGR7E",

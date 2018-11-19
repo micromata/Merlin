@@ -1,5 +1,7 @@
 package de.micromata.merlin.paypal.utils;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
@@ -40,5 +42,9 @@ public class PayPalUtils {
             return "0.00";
         }
         return amount.toString();
+    }
+
+    public static String ensureMaxLength(String value, int length) {
+        return StringUtils.abbreviate(value, length);
     }
 }

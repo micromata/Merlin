@@ -6,6 +6,18 @@ import de.micromata.merlin.paypal.PayPalConfig;
 import java.util.ArrayList;
 import java.util.List;
 
+/*
+        WebProfile webProfile = new WebProfile();
+        InputFields inputFields = new InputFields();
+        inputFields.setNoShipping(0);
+        inputFields.setAddressOverride(1);
+        webProfile.setInputFields(inputFields);
+        try {
+            webProfile.create(config.getApiContext());
+        } catch (PayPalRESTException e) {
+            log.error("PayPalRESTException occurred while trying to publish web profile: " + e.getDetails() + ". webProfile=" + webProfile);
+            return null;
+        }*/
 public class Payment {
     private String intent = "sale";
     private Payer payer = new Payer();
@@ -52,6 +64,12 @@ public class Payment {
         return redirectUrls;
     }
 
+    /**
+     * This method is automatically called by {@link de.micromata.merlin.paypal.PayPalConnector#createPayment(PayPalConfig, Payment)} and
+     * adds the return urls for PayPal.
+     * @param config
+     * @return
+     */
     public Payment setConfig(PayPalConfig config) {
         redirectUrls.setConfig(config);
         return this;

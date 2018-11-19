@@ -3,6 +3,7 @@ package de.micromata.merlin.paypal.data;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 public class Transaction {
     private Amount amount;
@@ -10,6 +11,7 @@ public class Transaction {
     private String description;
     private Payee payee;
     private ItemList itemList = new ItemList();
+    private List<RelatedResource> relatedResources;
 
     /**
      * Amount class is created and assigned to this transaction.
@@ -71,5 +73,10 @@ public class Transaction {
 
     public Payee getPayee() {
         return payee;
+    }
+
+    @JsonProperty(value = "related_resources")
+    public List<RelatedResource> getRelatedResources() {
+        return relatedResources;
     }
 }

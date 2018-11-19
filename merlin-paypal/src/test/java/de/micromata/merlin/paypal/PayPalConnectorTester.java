@@ -1,9 +1,6 @@
 package de.micromata.merlin.paypal;
 
-import de.micromata.merlin.paypal.data.Amount;
-import de.micromata.merlin.paypal.data.Details;
-import de.micromata.merlin.paypal.data.Payment;
-import de.micromata.merlin.paypal.data.Transaction;
+import de.micromata.merlin.paypal.data.*;
 
 import java.io.File;
 
@@ -30,6 +27,6 @@ public class PayPalConnectorTester {
         transaction.setInoviceNumber("1234");
         payment.addTransaction(transaction).setNoteToPayer("Enjoy your Elections with POLYAS.");
         //System.out.println(JsonUtils.toJson(payment, true));
-        PayPalConnector.createPayment(config, payment);
+        PaymentExecution paymentExecution = PayPalConnector.createPayment(config, payment);
     }
 }

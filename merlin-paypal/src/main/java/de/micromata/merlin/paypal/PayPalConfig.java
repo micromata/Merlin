@@ -1,6 +1,5 @@
 package de.micromata.merlin.paypal;
 
-import de.micromata.merlin.paypal.data.APIContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,7 +26,6 @@ public class PayPalConfig {
     private String returnUrl;
     private String cancelUrl;
     private String defaultPayment = "paypal";
-    private APIContext apiContext;
     private Mode mode = Mode.SANDBOX;
 
     public PayPalConfig() {
@@ -64,7 +62,6 @@ public class PayPalConfig {
      */
     public PayPalConfig setClientId(String clientId) {
         this.clientId = clientId;
-        this.apiContext = null;
         return this;
     }
 
@@ -74,7 +71,6 @@ public class PayPalConfig {
 
     public PayPalConfig setClientSecret(String clientSecret) {
         this.clientSecret = clientSecret;
-        this.apiContext = null;
         return this;
     }
 
@@ -117,7 +113,6 @@ public class PayPalConfig {
 
     public PayPalConfig setMode(Mode mode) {
         this.mode = mode;
-        this.apiContext = null;
         return this;
     }
 

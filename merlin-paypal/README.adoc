@@ -127,10 +127,14 @@ urls in your PayPalConfig.
 [source,java]
 ----
 Payment payment = new Payment();
-payment.setId(request.getParameter("paymentId")); // Request parameter set by PayPal
-PaymentExecution paymentExecution = new PaymentExecution();
-paymentExecution.setPayerId(request.getParameter("PayerID"));
-Payment executedPayment = payment.execute(apiContext, paymentExecution);
+Transaction transaction = new Transaction();
+transaction.addItem("Online Elections 2019", 29.99);
+Details details = new Details().setTax(5.70);
+transaction.createAmount(Amount.Currency.EUR, details);
+transaction.setInoviceNumber("1234");
+payment.addTransaction(transaction).setNoteToPayer("Enjoy your Elections with POLYAS.");
+// Do the PayPal call and see the returned PaymentExecution object:
+PaymentExecution paymentExecution = PayPalConnector.createPayment(config, payment);
 ----
 
 === See a live demo
