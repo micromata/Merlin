@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Payer {
     private String paymentMethod = "paypal";
+    private String status;
+    private PayerInfo payerInfo;
 
     /**
      * Default is "paypal".
@@ -16,5 +18,14 @@ public class Payer {
 
     public void setPaymentMethod(String paymentMethod) {
         this.paymentMethod = paymentMethod;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    @JsonProperty(value = "payer_info")
+    public PayerInfo getPayerInfo() {
+        return payerInfo;
     }
 }

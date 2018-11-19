@@ -1,6 +1,6 @@
 package de.micromata.merlin.paypal;
 
-import de.micromata.merlin.paypal.data.PaymentApproval;
+import de.micromata.merlin.paypal.data.PaymentApproveRequestInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +34,7 @@ public class PaymentReceiveServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String paymentId = req.getParameter("paymentId");
-        PaymentApproval approval = new PaymentApproval();
+        PaymentApproveRequestInfo approval = new PaymentApproveRequestInfo();
         approval.setPayerId(req.getParameter("PayerID"));
         try {
             executeApprovedPayment(req, resp, paymentId, approval);
@@ -51,7 +51,7 @@ public class PaymentReceiveServlet extends HttpServlet {
      * @param paymentId
      * @param approval
      */
-    protected void executeApprovedPayment(HttpServletRequest req, HttpServletResponse resp, String paymentId, PaymentApproval approval) throws IOException, PayPalRestException {
+    protected void executeApprovedPayment(HttpServletRequest req, HttpServletResponse resp, String paymentId, PaymentApproveRequestInfo approval) throws IOException, PayPalRestException {
         log.info("Payment received: paymentId=" + paymentId + ", PayerID=" + approval.getPayerId());
         if (StringUtils.isBlank(paymentId)) {
             log.error("Can't execute payment, paymentId not given. Aborting payment...");

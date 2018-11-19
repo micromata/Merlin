@@ -47,5 +47,4 @@ public class Amount {
     public void setCurrency(Currency currency) {
         this.currency = currency.name();
     }
-
 }

@@ -1,9 +1,13 @@
 package de.micromata.merlin.paypal.data;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import de.micromata.merlin.paypal.PayPalConfig;
 
 import java.util.List;
 
+/**
+ * Object returned by PayPal on calling {@link de.micromata.merlin.paypal.PayPalConnector#createPayment(PayPalConfig, Payment)}.
+ */
 public class PaymentExecution {
     private String id;
     private String state;

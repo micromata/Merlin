@@ -8,6 +8,7 @@ public class Transaction {
     private Amount amount;
     private String inoviceNumber;
     private String description;
+    private Payee payee;
     private ItemList itemList = new ItemList();
 
     /**
@@ -66,5 +67,9 @@ public class Transaction {
 
     public void setItemList(ItemList itemList) {
         this.itemList = itemList;
+    }
+
+    public Payee getPayee() {
+        return payee;
     }
 }

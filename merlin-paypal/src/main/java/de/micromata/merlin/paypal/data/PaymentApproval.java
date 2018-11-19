@@ -2,15 +2,44 @@ package de.micromata.merlin.paypal.data;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class PaymentApproval {
-    private String payerId;
+import java.util.List;
 
-    @JsonProperty(value = "payer_id")
-    public String getPayerId() {
-        return payerId;
+public class PaymentApproval {
+    private String id, intent, state, cart, createTime;
+    private Payer payer;
+    private List<Transaction> transactions;
+    private List<Link> links;
+
+    public String getId() {
+        return id;
     }
 
-    public void setPayerId(String payerId) {
-        this.payerId = payerId;
+    public String getIntent() {
+        return intent;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public String getCart() {
+        return cart;
+    }
+
+    @JsonProperty(value = "create_time")
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public Payer getPayer() {
+        return payer;
+    }
+
+    public List<Transaction> getTransactions() {
+        return transactions;
+    }
+
+    public List<Link> getLinks() {
+        return links;
     }
 }

@@ -1,6 +1,6 @@
 package de.micromata.merlin.paypal;
 
-import de.micromata.merlin.paypal.data.PaymentApproval;
+import de.micromata.merlin.paypal.data.PaymentApproveRequestInfo;
 import de.micromata.merlin.paypal.data.PaymentExecution;
 import de.micromata.merlin.paypal.data.Payment;
 import de.micromata.merlin.paypal.json.JsonUtils;
@@ -35,7 +35,7 @@ public class PayPalConnector {
         }
     }
 
-    public static void executeApprovedPayment(PayPalConfig config, String payementId, PaymentApproval paymentApproval) throws PayPalRestException {
+    public static void executeApprovedPayment(PayPalConfig config, String payementId, PaymentApproveRequestInfo paymentApproval) throws PayPalRestException {
         try {
             String url = getUrl(config, "/v1/payments/payment/" + payementId + "/execute");
             log.info("Aprove payment: paymentId=" + payementId + ", payerId=" + paymentApproval.getPayerId());
