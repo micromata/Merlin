@@ -2,6 +2,7 @@ package de.micromata.merlin.paypal.data;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import de.micromata.merlin.paypal.PayPalConfig;
+import de.micromata.merlin.paypal.utils.PayPalUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +24,7 @@ public class Payment {
     private Payer payer = new Payer();
     private List<Transaction> transactions = new ArrayList<>();
     private String noteToPayer;
+    private ApplicationContext applicationContext;
     private RedirectUrls redirectUrls = new RedirectUrls();
 
     /**
@@ -54,8 +56,13 @@ public class Payment {
         return noteToPayer;
     }
 
+    /**
+     * Ensures max length 165: https://developer.paypal.com/docs/api/payments/v1/#definition-transaction
+     * @param noteToPayer
+     * @return
+     */
     public Payment setNoteToPayer(String noteToPayer) {
-        this.noteToPayer = noteToPayer;
+        this.noteToPayer = PayPalUtils.ensureMaxLength(noteToPayer, 165);
         return this;
     }
 
@@ -86,5 +93,18 @@ public class Payment {
                 item.setCurrency(currency);
             }
         }
+    }
+
+    @JsonProperty(value = "application_context")
+    public ApplicationContext getApplicationContext() {
+        return applicationContext;
+    }
+
+    public Payment setShipping(ShippingPreference shippingPreference) {
+        if (applicationContext == null) {
+            applicationContext = new ApplicationContext();
+        }
+        applicationContext.setShippingPreference(shippingPreference);
+        return this;
     }
 }

@@ -126,7 +126,7 @@ urls in your PayPalConfig.
 .PaymentReceiveServlet.java
 [source,java]
 ----
-Payment payment = new Payment();
+Payment payment = new Payment().setShipping(ShippingPreference.NO_SHIPPING);
 Transaction transaction = new Transaction();
 transaction.addItem("Online Elections 2019", 29.99);
 Details details = new Details().setTax(5.70);
