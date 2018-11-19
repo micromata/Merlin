@@ -135,3 +135,10 @@ Payment executedPayment = payment.execute(apiContext, paymentExecution);
 
 === See a live demo
 The https://demo.paypal.com/us/demo/go_platform/pcbt[demo store^] show how a modern integration should finally look like.
+
+
+== ToDo
+
+=== Get rid of BrainSDK
+It seems to be that the BrainSDK is behind the current API of PayPal. Dropping the shipment address etc. isn't possible, is it?
+The BrainSDK contains lousy POJOs. I just need GSON or any JSON-library to drop it and implement only the functionality we need.
