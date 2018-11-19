@@ -1,6 +1,5 @@
 package de.micromata.merlin.paypal;
 
-import de.micromata.merlin.paypal.purejava.AccessToken;
 import org.apache.commons.cli.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;

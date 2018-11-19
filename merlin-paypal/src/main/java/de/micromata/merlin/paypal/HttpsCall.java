@@ -1,4 +1,4 @@
-package de.micromata.merlin.paypal.purejava;
+package de.micromata.merlin.paypal;
 
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -33,47 +33,40 @@ public class HttpsCall {
      * @param input     The post input.
      * @return The result from the remote server.
      */
-    public String post(String urlString, String input) {
-        try {
-            if (log.isDebugEnabled()) log.debug("Call '" + urlString + "' with input: " + input);
-            URL url = new URL(urlString);
-            HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
-            conn.setDoOutput(true);
-            conn.setRequestMethod("POST");
-            if (authorization != null) {
-                conn.setRequestProperty("Authorization", authorization);
-            }
-            if (acceptLanguage != null) {
-                if (log.isDebugEnabled()) log.debug("Accept-Language: " + acceptLanguage);
-                conn.setRequestProperty("Accept-Language", acceptLanguage);
-            }
-            if (contentType != null) {
-                if (log.isDebugEnabled()) log.debug("Content-Type: application/json");
-                conn.setRequestProperty("Content-Type", "application/json");
-            }
-            if (accept != null) {
-                if (log.isDebugEnabled()) log.debug("Accept: application/json");
-                conn.setRequestProperty("Accept", "application/json");
-            }
-            OutputStream os = conn.getOutputStream();
-            os.write(input.getBytes());
-            os.flush();
-            if (conn.getResponseCode() != HttpURLConnection.HTTP_CREATED &&
-                    conn.getResponseCode() != HttpsURLConnection.HTTP_OK) {
-                throw new RuntimeException("Failed : HTTP error code : "
-                        + conn.getResponseCode());
-            }
-            StringWriter out = new StringWriter();
-            IOUtils.copy(new InputStreamReader(conn.getInputStream()), out);
-            conn.disconnect();
-            if (log.isDebugEnabled()) log.debug(out.toString());
-            return out.toString();
-        } catch (MalformedURLException e) {
-            log.error(e.getMessage(), e);
-        } catch (IOException e) {
-            log.error(e.getMessage(), e);
+    public String post(String urlString, String input) throws MalformedURLException, IOException {
+        if (log.isDebugEnabled()) log.debug("Call '" + urlString + "' with input: " + input);
+        URL url = new URL(urlString);
+        HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
+        conn.setDoOutput(true);
+        conn.setRequestMethod("POST");
+        if (authorization != null) {
+            conn.setRequestProperty("Authorization", authorization);
         }
-        return null;
+        if (acceptLanguage != null) {
+            if (log.isDebugEnabled()) log.debug("Accept-Language: " + acceptLanguage);
+            conn.setRequestProperty("Accept-Language", acceptLanguage);
+        }
+        if (contentType != null) {
+            if (log.isDebugEnabled()) log.debug("Content-Type: application/json");
+            conn.setRequestProperty("Content-Type", "application/json");
+        }
+        if (accept != null) {
+            if (log.isDebugEnabled()) log.debug("Accept: application/json");
+            conn.setRequestProperty("Accept", "application/json");
+        }
+        OutputStream os = conn.getOutputStream();
+        os.write(input.getBytes());
+        os.flush();
+        if (conn.getResponseCode() != HttpURLConnection.HTTP_CREATED &&
+                conn.getResponseCode() != HttpsURLConnection.HTTP_OK) {
+            throw new RuntimeException("Failed : HTTP error code : "
+                    + conn.getResponseCode());
+        }
+        StringWriter out = new StringWriter();
+        IOUtils.copy(new InputStreamReader(conn.getInputStream()), out);
+        conn.disconnect();
+        if (log.isDebugEnabled()) log.debug(out.toString());
+        return out.toString();
     }
 
     /**

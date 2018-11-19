@@ -3,10 +3,14 @@ package de.micromata.merlin.paypal.data;
 import java.math.BigDecimal;
 
 public class Amount {
-    public enum Currency {EUR}
+    public enum Currency {EUR, USD}
 
     private String currency;
     private Details details;
+
+    public Amount() {
+        currency = "USD";
+    }
 
     public Amount(String currency) {
         this.currency = currency;
