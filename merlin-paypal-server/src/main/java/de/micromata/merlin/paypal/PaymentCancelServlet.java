@@ -1,6 +1,5 @@
-package de.micromata.merlin.paypal.sdk;
+package de.micromata.merlin.paypal;
 
-import de.micromata.merlin.paypal.PayPalConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

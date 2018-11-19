@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
-public class ExecutionPayment {
+public class PaymentExecution {
     private String id;
     private String state;
     private String createTime;
@@ -62,7 +62,7 @@ public class ExecutionPayment {
         return payer;
     }
 
-    public ExecutionPayment addTransaction(Transaction transaction) {
+    public PaymentExecution addTransaction(Transaction transaction) {
         transactions.add(transaction);
         return this;
     }
@@ -76,7 +76,7 @@ public class ExecutionPayment {
         return noteToPayer;
     }
 
-    public ExecutionPayment setNoteToPayer(String noteToPayer) {
+    public PaymentExecution setNoteToPayer(String noteToPayer) {
         this.noteToPayer = noteToPayer;
         return this;
     }
@@ -87,5 +87,18 @@ public class ExecutionPayment {
 
     public void setLinks(List<Link> links) {
         this.links = links;
+    }
+
+    public String getRedirectUserHref() {
+        if (links == null) {
+            return null;
+        }
+        for (Link link : links) {
+            if (link.getRel().equalsIgnoreCase("approval_url")) {
+                // Redirect the customer to link.getHref()
+                return link.getHref();
+            }
+        }
+        return null;
     }
 }

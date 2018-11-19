@@ -21,7 +21,7 @@ public class PayPalMain {
         main._shutdown();
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws Exception {
         main = new PayPalMain();
         main._start(args);
     }
@@ -30,7 +30,7 @@ public class PayPalMain {
     private PayPalMain() {
     }
 
-    public void _start(String[] args) throws IOException {
+    public void _start(String[] args) throws IOException, PayPalRestException {
         //create Options object
         Options options = new Options();
         options.addOption("f", "file", true, "The properties file with the properties 'paypal.client_id' and 'paypal.secret'.");
@@ -64,14 +64,9 @@ public class PayPalMain {
                 printPropertiesExampleFile();
             }
             if (paypalConfig.getMode() == PayPalConfig.Mode.SANDBOX) {
-                String accessToken = AccessToken.getAccessToken(paypalConfig);
+                String accessToken = PayPalConnector.getAccessToken(paypalConfig);
                 log.info("Access token successfully received: " + accessToken);
             }
-            /*
-            Amount amount = new Amount(Amount.Currency.EUR).setSubtotal(29.99).setTax(5.70);
-            Transaction transaction = PaymentCreator.createTransaction(amount, "Micromata T-Shirt Contest 2019");
-            PaymentCreator.publish(paypalConfig, transaction);
-            */
             Runtime.getRuntime().addShutdownHook(new Thread() {
                 @Override
                 public void run() {

@@ -6,58 +6,6 @@ import org.slf4j.LoggerFactory;
 public class PaymentCreator {
     private static Logger log = LoggerFactory.getLogger(PaymentCreator.class);
 
-    /**
-     * Only with one item, quantity 1 and price equals to amount's subtotal.
-     *
-     * @param amount
-     * @param invoiceNumber
-     * @param description
-     * @param itemDescription
-     * @return
-     */
-   /* public static Transaction createTransaction(Amount amount, String invoiceNumber, String description, String itemDescription) {
-        Transaction transaction = new Transaction();
-        transaction.setAmount(amount.asAmount());
-        if (StringUtils.isNotBlank(invoiceNumber)) {
-            transaction.setInvoiceNumber(invoiceNumber);
-        }
-        transaction.setDescription(description);
-        Item item = new Item();
-        item.setName(itemDescription).setQuantity("1").setCurrency(amount.getCurrency()).setPrice(amount.getSubtotalString());
-        List<Item> items = new ArrayList<>();
-        items.add(item);
-
-        ItemList itemList = new ItemList();
-        itemList.setItems(items);
-
-        transaction.setItemList(itemList);
-        return transaction;
-    }
-
-    public static Payment prepare(PayPalConfig config, Transaction... transactions) {
-        // Set payer details
-        Payer payer = new Payer();
-        payer.setPaymentMethod(config.getDefaultPayment());
-
-        // Set redirect URLs
-        RedirectUrls redirectUrls = new RedirectUrls();
-        redirectUrls.setCancelUrl(config.getCancelUrl());
-        redirectUrls.setReturnUrl(config.getReturnUrl());
-
-        // Add transaction to a list
-        List<Transaction> transactionList = new ArrayList<>();
-        for (Transaction transaction : transactions) {
-            transactionList.add(transaction);
-        }
-
-        // Add payment details
-        Payment payment = new Payment();
-        payment.setIntent(config.getDefaultIntent());
-        payment.setPayer(payer);
-        payment.setRedirectUrls(redirectUrls);
-        payment.setTransactions(transactionList);
-        return payment;
-    }*/
 
     /**
      * Creates the remote payment (publish to Paypal).

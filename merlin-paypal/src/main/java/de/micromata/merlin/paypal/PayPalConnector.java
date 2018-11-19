@@ -1,6 +1,7 @@
 package de.micromata.merlin.paypal;
 
-import de.micromata.merlin.paypal.data.ExecutionPayment;
+import de.micromata.merlin.paypal.data.PaymentApproval;
+import de.micromata.merlin.paypal.data.PaymentExecution;
 import de.micromata.merlin.paypal.data.Payment;
 import de.micromata.merlin.paypal.json.JsonUtils;
 import org.slf4j.Logger;
@@ -17,18 +18,35 @@ public class PayPalConnector {
     // "access_token":"<access token>"
     private static Pattern PATTERN_ACCESS_TOKEN = Pattern.compile("\"access_token\":\"([^\"]*)\"");
 
-    public static ExecutionPayment createPayment(PayPalConfig config, Payment payment) throws PayPalRestException {
+    public static PaymentExecution createPayment(PayPalConfig config, Payment payment) throws PayPalRestException {
         try {
-            String url = getUrl(config, "/v1/payments/payment/");
+            String url = getUrl(config, "/v1/payments/payment");
             payment.recalculate();
             log.info("Create payment: " + JsonUtils.toJson(payment));
             String response = executeCall(config, url, JsonUtils.toJson(payment));
-            ExecutionPayment executionPayment = JsonUtils.fromJson(ExecutionPayment.class, response);
+            PaymentExecution executionPayment = JsonUtils.fromJson(PaymentExecution.class, response);
             if (executionPayment == null) {
                 throw new PayPalRestException("Error while creating payment: " + response);
             }
             log.info("Created execution payment: " + JsonUtils.toJson(executionPayment));
             return executionPayment;
+        } catch (Exception ex) {
+            throw new PayPalRestException("Error while creating payment.", ex);
+        }
+    }
+
+    public static void executeApprovedPayment(PayPalConfig config, String payementId, PaymentApproval paymentApproval) throws PayPalRestException {
+        try {
+            String url = getUrl(config, "/v1/payments/payment/" + payementId + "/execute");
+            log.info("Aprove payment: paymentId=" + payementId + ", payerId=" + paymentApproval.getPayerId());
+            String response = executeCall(config, url, JsonUtils.toJson(paymentApproval));
+            log.info(response);
+/*            PaymentExecution executionPayment = JsonUtils.fromJson(PaymentExecution.class, response);
+            if (executionPayment == null) {
+                throw new PayPalRestException("Error while creating payment: " + response);
+            }
+            log.info("Created execution payment: " + JsonUtils.toJson(executionPayment));
+            return executionPayment;*/
         } catch (Exception ex) {
             throw new PayPalRestException("Error while creating payment.", ex);
         }
@@ -59,7 +77,7 @@ public class PayPalConnector {
     }
 
 
-    private static String executeCall(PayPalConfig config, String url, String payload)throws IOException, MalformedURLException  {
+    private static String executeCall(PayPalConfig config, String url, String payload) throws IOException, MalformedURLException {
         return executeCall(config, url, payload, null);
     }
 

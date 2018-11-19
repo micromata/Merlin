@@ -1,7 +1,6 @@
-package de.micromata.merlin.paypal.sdk;
+package de.micromata.merlin.paypal;
 
-import de.micromata.merlin.paypal.PayPalConfig;
-import de.micromata.merlin.paypal.data.Payment;
+import de.micromata.merlin.paypal.data.PaymentApproval;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,11 +33,14 @@ public class PaymentReceiveServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Payment payment = new Payment();
-        payment.setId(req.getParameter("paymentId"));
-        PaymentExecution paymentExecution = new PaymentExecution();
-        paymentExecution.setPayerId(req.getParameter("PayerID"));
-        executePayment(req, resp, payment, paymentExecution);
+        String paymentId = req.getParameter("paymentId");
+        PaymentApproval approval = new PaymentApproval();
+        approval.setPayerId(req.getParameter("PayerID"));
+        try {
+            executeApprovedPayment(req, resp, paymentId, approval);
+        } catch (PayPalRestException ex) {
+            log.error("Error while executing payment: " + ex.getMessage(), ex);
+        }
     }
 
     /**
@@ -46,21 +48,23 @@ public class PaymentReceiveServlet extends HttpServlet {
      *
      * @param req
      * @param resp
-     * @param payment
-     * @param paymentExecution
+     * @param paymentId
+     * @param approval
      */
-    protected void executePayment(HttpServletRequest req, HttpServletResponse resp, Payment payment, PaymentExecution paymentExecution) throws IOException {
-        log.info("Payment received: paymentId=" + payment.getId() + ", PayerID=" + paymentExecution.getPayerId());
-        if (StringUtils.isBlank(payment.getId())) {
+    protected void executeApprovedPayment(HttpServletRequest req, HttpServletResponse resp, String paymentId, PaymentApproval approval) throws IOException, PayPalRestException {
+        log.info("Payment received: paymentId=" + paymentId + ", PayerID=" + approval.getPayerId());
+        if (StringUtils.isBlank(paymentId)) {
             log.error("Can't execute payment, paymentId not given. Aborting payment...");
             redirectToErrorPage(resp);
             return;
         }
-        if (StringUtils.isBlank(paymentExecution.getPayerId())) {
+        if (StringUtils.isBlank(approval.getPayerId())) {
             log.error("Can't execute payment, payerId not given. Aborting payment...");
             redirectToErrorPage(resp);
             return;
         }
+        PayPalConnector.executeApprovedPayment(config, paymentId, approval);
+        /*
         try {
             Payment executedPayment = payment.execute(apiContext, paymentExecution);
             if (executedPayment != null) {
@@ -71,8 +75,8 @@ public class PaymentReceiveServlet extends HttpServlet {
             log.info("Payment executed: " + executedPayment);
         } catch (PayPalRESTException e) {
             log.error("Error while receiving/executing payment: " + e.getDetails());
-        }
-        redirectToErrorPage(resp);
+        }*/
+        //redirectToErrorPage(resp);
     }
 
     private void redirectToErrorPage(HttpServletResponse resp) {

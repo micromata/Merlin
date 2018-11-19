@@ -1,8 +1,5 @@
 package de.micromata.merlin.paypal;
 
-import de.micromata.merlin.paypal.sdk.PaymentCancelServlet;
-import de.micromata.merlin.paypal.sdk.PaymentReceiveServlet;
-import de.micromata.merlin.paypal.sdk.PaymentTestServlet;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.DefaultServlet;

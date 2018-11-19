@@ -30,6 +30,6 @@ public class PayPalConnectorTester {
         transaction.setInoviceNumber("1234");
         payment.addTransaction(transaction).setNoteToPayer("Enjoy your Elections with POLYAS.");
         //System.out.println(JsonUtils.toJson(payment, true));
-        System.out.println(PayPalConnector.createPayment(config, payment));
+        PayPalConnector.createPayment(config, payment);
     }
 }
