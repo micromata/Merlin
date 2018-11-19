@@ -54,7 +54,7 @@ public class PaymentTestServlet extends HttpServlet {
         transaction.addItem(itemDescription, price);
         Details details = new Details();
         details.setTax(tax);
-        transaction.createAmount(Amount.Currency.EUR, details);
+        transaction.createAmount(Currency.EUR, details);
         payment.addTransaction(transaction).setNoteToPayer(noteToPayer);
         payment.setShipping(ShippingPreference.NO_SHIPPING);
 

@@ -21,7 +21,7 @@ public class Transaction {
      * @param details
      * @return
      */
-    public Transaction createAmount(Amount.Currency currency, Details details) {
+    public Transaction createAmount(Currency currency, Details details) {
         amount = new Amount(currency);
         amount.setDetails(details);
         return this;

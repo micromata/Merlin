@@ -23,7 +23,7 @@ public class PayPalConnectorTester {
         transaction.addItem("Online Elections 2019", 29.99);
         Details details = new Details();
         details.setTax(5.70);
-        transaction.createAmount(Amount.Currency.EUR, details);
+        transaction.createAmount(Currency.EUR, details);
         transaction.setInoviceNumber("1234");
         payment.addTransaction(transaction).setNoteToPayer("Enjoy your Elections with POLYAS.");
         //System.out.println(JsonUtils.toJson(payment, true));

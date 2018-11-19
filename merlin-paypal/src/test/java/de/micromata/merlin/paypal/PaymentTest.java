@@ -1,9 +1,6 @@
 package de.micromata.merlin.paypal;
 
-import de.micromata.merlin.paypal.data.Amount;
-import de.micromata.merlin.paypal.data.Details;
-import de.micromata.merlin.paypal.data.Payment;
-import de.micromata.merlin.paypal.data.Transaction;
+import de.micromata.merlin.paypal.data.*;
 import de.micromata.merlin.paypal.json.JsonUtils;
 import org.junit.jupiter.api.Test;
 
@@ -21,7 +18,7 @@ class PaymentTest {
         assertEquals(generateString(124) + "...", transaction.getInoviceNumber());
         transaction.addItem("Online Elections 2019", 29.99);
         Details details = new Details().setTax(5.70);
-        transaction.createAmount(Amount.Currency.EUR, details);
+        transaction.createAmount(Currency.EUR, details);
         payment.addTransaction(transaction).setNoteToPayer("Enjoy your Elections with POLYAS.");
         payment.setConfig(config);
         payment.recalculate();

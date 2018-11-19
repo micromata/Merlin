@@ -3,8 +3,6 @@ package de.micromata.merlin.paypal.data;
 import java.math.BigDecimal;
 
 public class Amount {
-    public enum Currency {EUR, USD}
-
     private String currency;
     private Details details;
 
