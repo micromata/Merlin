@@ -1,5 +1,6 @@
 package de.micromata.merlin.paypal;
 
+import de.micromata.merlin.paypal.data.PaymentApproval;
 import de.micromata.merlin.paypal.data.PaymentApproveRequestInfo;
 import de.micromata.merlin.paypal.data.PaymentExecution;
 import de.micromata.merlin.paypal.data.Payment;
@@ -35,18 +36,18 @@ public class PayPalConnector {
         }
     }
 
-    public static void executeApprovedPayment(PayPalConfig config, String payementId, PaymentApproveRequestInfo paymentApproval) throws PayPalRestException {
+    public static PaymentApproval executeApprovedPayment(PayPalConfig config, String payementId, PaymentApproveRequestInfo paymentApproval) throws PayPalRestException {
         try {
             String url = getUrl(config, "/v1/payments/payment/" + payementId + "/execute");
-            log.info("Aprove payment: paymentId=" + payementId + ", payerId=" + paymentApproval.getPayerId());
+            log.info("Approve payment: paymentId=" + payementId + ", payerId=" + paymentApproval.getPayerId());
             String response = executeCall(config, url, JsonUtils.toJson(paymentApproval));
-            log.info(response);
-/*            PaymentExecution executionPayment = JsonUtils.fromJson(PaymentExecution.class, response);
-            if (executionPayment == null) {
+            if (log.isDebugEnabled()) log.info("Response: " + response);
+            PaymentApproval approval = JsonUtils.fromJson(PaymentApproval.class, response);
+            if (approval == null) {
                 throw new PayPalRestException("Error while creating payment: " + response);
             }
-            log.info("Created execution payment: " + JsonUtils.toJson(executionPayment));
-            return executionPayment;*/
+            log.info("Payment approved: " + JsonUtils.toJson(approval));
+            return approval;
         } catch (Exception ex) {
             throw new PayPalRestException("Error while creating payment.", ex);
         }
