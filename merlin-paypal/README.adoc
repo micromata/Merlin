@@ -134,4 +134,4 @@ Payment executedPayment = payment.execute(apiContext, paymentExecution);
 ----
 
 === See a live demo
-The https://demo.paypal.com/us/demo/go_platform/pcbt[demo store^] show how a modern integration should finally look like.
+The https://demo.paypal.com/us/demo/go_platform/pcbt[demo store, window="_blank"] show how a modern integration should finally look like.
