@@ -16,10 +16,11 @@ public class PayPalConnector {
     private static Pattern PATTERN_ACCESS_TOKEN = Pattern.compile("\"access_token\":\"([^\"]*)\"");
 
     public static String createPayment(PayPalConfig config, Payment payment) {
+        String url = getUrl(config, "/v1/payments/payment/");
+        payment.recalculate();
         if (log.isDebugEnabled()) {
             log.debug("Create payment: " + JsonUtils.toJson(payment, true));
         }
-        String url = getUrl(config, "/v1/payments/payment");
         return executeCall(config, url, JsonUtils.toJson(payment));
     }
 
@@ -29,7 +30,9 @@ public class PayPalConnector {
      */
     public static String getAccessToken(PayPalConfig config) {
         String url = getUrl(config, "/v1/oauth2/token");
-        String response = executeCall(config, url, "grant_type=client_credentials");
+        HttpsCall call = new HttpsCall().setAcceptLanguage("en_US").setAccept(HttpsCall.MimeType.JSON);
+        call.setUserPasswordAuthorization(config.getClientId() + ":" + config.getClientSecret());
+        String response = call.post(url, "grant_type=client_credentials");
         // "access_token":"<access token>"
         Matcher matcher = PATTERN_ACCESS_TOKEN.matcher(response);
         if (!matcher.find()) {
@@ -44,7 +47,9 @@ public class PayPalConnector {
 
     private static String executeCall(PayPalConfig config, String url, String payload) {
         HttpsCall call = new HttpsCall().setAcceptLanguage("en_US").setAccept(HttpsCall.MimeType.JSON);
-        call.setUserPasswordAuthorization(config.getClientId() + ":" + config.getClientSecret());
+        String accessToken = getAccessToken(config);
+        call.setBearerAuthorization(accessToken);
+        call.setContentType(HttpsCall.MimeType.JSON);
         return call.post(url, payload);
     }
 

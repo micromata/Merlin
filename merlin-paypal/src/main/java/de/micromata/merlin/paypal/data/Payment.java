@@ -37,6 +37,7 @@ public class Payment {
         return transactions;
     }
 
+    @JsonProperty(value = "note_to_payer")
     public String getNoteToPayer() {
         return noteToPayer;
     }
@@ -54,5 +55,18 @@ public class Payment {
     public Payment setConfig(PayPalConfig config) {
         redirectUrls.setConfig(config);
         return this;
+    }
+
+    /**
+     * Is called internally before processing a payment for updating item currencies and calculating sums etc.
+     */
+    public void recalculate() {
+        for (Transaction transaction : transactions) {
+            transaction.getAmount().getDetails().calculateSubtotal(transaction);
+            String currency = transaction.getAmount().getCurrency();
+            for (Item item : transaction.getItemList().getItems()) {
+                item.setCurrency(currency);
+            }
+        }
     }
 }

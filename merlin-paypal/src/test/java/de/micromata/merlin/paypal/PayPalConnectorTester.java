@@ -13,7 +13,7 @@ public class PayPalConnectorTester {
     public static void main(String[] args) throws IOException {
         File file = new File(System.getProperty("user.home"), ".merlin-paypal");
         PayPalConfig config = new PayPalConfig().read(file);
-        getAccessToken(config);
+        //getAccessToken(config);
         createPayment(config);
     }
 
@@ -30,6 +30,7 @@ public class PayPalConnectorTester {
         transaction.createAmount(Amount.Currency.EUR, details);
         transaction.setInoviceNumber("1234");
         payment.addTransaction(transaction).setNoteToPayer("Enjoy your Elections with POLYAS.");
+        //System.out.println(JsonUtils.toJson(payment, true));
         System.out.println(PayPalConnector.createPayment(config, payment));
     }
 }

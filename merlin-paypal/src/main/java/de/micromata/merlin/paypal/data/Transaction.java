@@ -11,8 +11,7 @@ public class Transaction {
     private ItemList itemList = new ItemList();
 
     /**
-     * Amount class is created and assigned to this transaction. Calls also {@link Details#calculateSubtotal(Transaction)}, so please
-     * add items first and then call this method.
+     * Amount class is created and assigned to this transaction.
      * @param currency
      * @param details
      * @return
@@ -20,7 +19,6 @@ public class Transaction {
     public Transaction createAmount(Amount.Currency currency, Details details) {
         amount = new Amount(currency);
         amount.setDetails(details);
-        details.calculateSubtotal(this);
         return this;
     }
 
@@ -44,6 +42,7 @@ public class Transaction {
         this.amount = amount;
     }
 
+    @JsonProperty(value = "invoice_number")
     public String getInoviceNumber() {
         return inoviceNumber;
     }

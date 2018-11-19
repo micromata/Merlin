@@ -8,6 +8,7 @@ public class Item {
     private String name;
     private int quantity = 1;
     private BigDecimal price;
+    private String currency;
 
     public String getName() {
         return name;
@@ -43,5 +44,13 @@ public class Item {
 
     public Item setPrice(double price) {
         return setPrice(new BigDecimal(price));
+    }
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    void setCurrency(String currency) {
+        this.currency = currency;
     }
 }
