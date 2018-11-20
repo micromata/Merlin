@@ -102,13 +102,13 @@ A final live complete configuration looks like:
 .~/.merlin-paypal
 ----
 # Supported modes are sandbox (default) and live:
- paypal.mode=live
- paypal.client_id=<your client id>
- paypal.secret=<your client secret>
- # return url called by Paypal after successful payment:
- paypal.return_url=http://159.69.120.42:8142/receivePayment
- # cancel url called by Paypal after cancelled payment:
- paypal.cancel_url=http://159.69.120.42:8142/cancelPayment
+paypal.mode=live
+paypal.client_id=<your client id>
+paypal.secret=<your client secret>
+# return url called by Paypal after successful payments:
+paypal.return_url=http://159.69.120.42:8142/receivePayment
+# cancel url called by Paypal after cancelled payments:
+paypal.cancel_url=http://159.69.120.42:8142/cancelPayment
 ----
 
 [NOTE]
@@ -151,7 +151,7 @@ if (paymentCreated != null) {
 ----
 `redirectUrl` contains the link where to redirect the user for proceeding with the payment. +
 Through the API you may configure
-more complex shopping charts including shipping costs etc.
+more complex shopping carts including shipping costs etc.
 
 [NOTE]
 ====
@@ -205,5 +205,6 @@ This merlin-paypal library is designed with a minimal set of dependencies for an
 |=======
 
 Jackson is used because Gson is not enough flexible for serializing and deserializing synthetic fields (such
-as calculated amounts in trans
+as calculated amounts in transactions). Jackson supports also annotations to name serialized fields different from the Java
+convention: e. g. field `returnUrl` -> `return_url`.
 

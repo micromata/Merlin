@@ -105,9 +105,9 @@ public class PayPalMain {
         System.err.println(PayPalConfig.KEY_MODE + "=sandbox");
         System.err.println(PayPalConfig.KEY_CLIENT_ID + "=<YOUR APPLICATION CLIENT ID>");
         System.err.println(PayPalConfig.KEY_SECRET + "=<YOUR APPLICATION CLIENT SECRET>");
-        System.err.println("# return url called by Paypal after successful payment:");
+        System.err.println("# return url called by Paypal after successful payments:");
         System.err.println(PayPalConfig.KEY_RETURN_URL + "=" + PayPalConfig.DEMO_RETURN_URL);
-        System.err.println("# cancel url called by Paypal after cancelled payment:");
+        System.err.println("# cancel url called by Paypal after cancelled payments:");
         System.err.println(PayPalConfig.KEY_CANCEL_URL + "=" + PayPalConfig.DEMO_CANCEL_URL + ".>");
     }
 }
