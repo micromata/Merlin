@@ -10,18 +10,19 @@ ifdef::env-github,env-browser[:outfilesuffix: .adoc]
 
 == PayPal integration
 
-Please refer module `merlin-paypal` for a more detailed documentation including a guide step-by-step.
+Please refer module `merlin-paypal` for a more detailed documentation including a step-by-step guide.
 
 === Configuration
 Create the merlin paypal default configuration file in your home directory. +
 You may save this file with another name in another directory, then you have to specify this
-file by starting the server with the command line option `f <file>`.
+file by starting the server with the command line option `f <config-file>`.
 
+The example provides a configuration file for the server ip `159.69.120.42`.
 
 .~/.merlin-paypal
 ----
 # Supported modes are sandbox (default) and live:
-paypal.mode=live
+paypal.mode=sandbox
 paypal.client_id=<your client id>
 paypal.secret=<your client secret>
 # return url called by Paypal after successful payments:
@@ -30,8 +31,8 @@ paypal.return_url=http://159.69.120.42:8142/receivePayment
 paypal.cancel_url=http://159.69.120.42:8142/cancelPayment
 ----
 
-=== Run Merlin-PayPal server for some tests
-==== Starting the server in your IDE
+=== Run Merlin-PayPal server
+==== Starting the server from your IDE
 Simply execute `de.micromata.merlin.paypal.PayPalMain` in your IDE (e. g. IntelliJ with installed Gradle plugin).
 You may give the optional program arguments `-f <config-file>` (see above).
 
