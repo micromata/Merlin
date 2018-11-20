@@ -1,5 +1,5 @@
-Merlin PayPal server
-====================
+Micromata PayPal server
+=======================
 Micromata GmbH, Kai Reinhard, Version {version}
 :toc:
 :toclevels: 4
@@ -13,7 +13,7 @@ ifdef::env-github,env-browser[:outfilesuffix: .adoc]
 Please refer module `merlin-paypal` for a more detailed documentation including a step-by-step guide.
 
 === Configuration
-Create the merlin paypal default configuration file in your home directory. +
+Create the PayPal default configuration file in your home directory. +
 You may save this file with another name in another directory, then you have to specify this
 file by starting the server with the command line option `f <config-file>`.
 
@@ -31,9 +31,9 @@ paypal.return_url=http://159.69.120.42:8142/receivePayment
 paypal.cancel_url=http://159.69.120.42:8142/cancelPayment
 ----
 
-=== Run Merlin-PayPal server
+=== Run the PayPal server
 ==== Starting the server from your IDE
-Simply execute `de.micromata.merlin.paypal.PayPalMain` in your IDE (e. g. IntelliJ with installed Gradle plugin).
+Simply execute `de.micromata.paypal.PayPalMain` in your IDE (e. g. IntelliJ with installed Gradle plugin).
 You may give the optional program arguments `-f <config-file>` (see above).
 
 ==== Starting the server from your command line

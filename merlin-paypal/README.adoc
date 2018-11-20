@@ -1,5 +1,5 @@
-Merlin PayPal documentation
-===========================
+Micromata PayPal documentation
+==============================
 Micromata GmbH, Kai Reinhard, Version {version}
 :toc:
 :toclevels: 4
@@ -9,8 +9,6 @@ Micromata GmbH, Kai Reinhard, Version {version}
 ifdef::env-github,env-browser[:outfilesuffix: .adoc]
 
 == PayPal integration
-
-Playground for an easy PayPal integration. This approach is not planned to be part of this Merlin project.
 
 This document describes all the steps you need to integrate PayPal in your own Java application.
 
@@ -66,22 +64,27 @@ https://developer.paypal.com/docs/classic/lifecycle/sb_create-accounts/[create P
 The normal PayPal accounts aren't valid for PayPal's sandbox.
 ====
 
-=== Step 4: Run Merlin-PayPal server for some tests
-Simply execute `de.micromata.merlin.paypal.PayPalMain` in your IDE (e. g. IntelliJ with installed Gradle plugin) or:
+=== Step 4: Run PayPal server for some tests
+You may start the Paypal server in your IDE or from your command line.
 
+==== Starting the server from your IDE
+Simply execute `de.micromata.paypal.PayPalMain` in your IDE (e. g. IntelliJ with installed Gradle plugin).
+You may give the optional program arguments `-f <config-file>` (see above).
+
+==== Starting the server from your command line
 1. Run `gradle distZip` for a ready to run server (including Unix, MacOS and Windows start scripts).
 2. Unpack the zip file (located in `merlin-paypal-server/build/distributions/`)
 3. Start the server in your terminal: `bin/merlin-paypal-server` or `bin/merlin-paypal-server -f <configfile>`
 4. Open your web browser: `http://localhost:8142`.
 
 === Step 5: Run the server on a public available host
-If you run the Merlin-PayPal-Server on a private host, you will be redirected to PayPal but you can't receive any call back by PayPal. For a complete testing you should
-run Merlin-PayPal-Server on a public available host. Please configure the urls in the configuration file by adding the following lines:
+If you run the PayPal-Server on a private host, you will be redirected to PayPal but you can't receive any call back by PayPal. For a complete testing you should
+run PayPal-Server on a public available host. Please configure the urls in the configuration file by adding the following lines:
 
 .~/.merlin-paypal
 ----
 ...
-# The urls for the Merlin-PayPal test server running on ip 159.69.120.42
+# The urls for the PayPal test server running on ip 159.69.120.42
 paypal.return_url=http:/159.69.120.42:8142/receivePayment
 paypal.cancel_url=http://159.69.120.42:8142/cancelPayment
 ----
@@ -155,7 +158,7 @@ more complex shopping carts including shipping costs etc.
 
 [NOTE]
 ====
-Merlin paypal supports chaining for creating objects and setting properties, such as: +
+This PayPal library supports chaining for creating objects and setting properties, such as: +
 `new Payment().setShipping(...).addTransaction(...)`
 ====
 
@@ -193,7 +196,7 @@ If you miss some functionality feel free to extend this module. It's very easy t
 It takes only less than one day to replace BrainSDK by an own implementation for the whole payment process.
 
 === Project dependencies
-This merlin-paypal library is designed with a minimal set of dependencies for an light weight integration in your own app:
+This PayPal library is designed with a minimal set of dependencies for an light weight integration in your own app:
 
 [%autowidth, frame="topbot",options="header"]
 |=======
