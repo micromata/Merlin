@@ -197,14 +197,15 @@ This merlin-paypal library is designed with a minimal set of dependencies for an
 
 [%autowidth, frame="topbot",options="header"]
 |=======
-| jar | version | Usage
+| Library | Version | Usage
 | org.slf4j:slf4j-api|1.7.25|Common logging wrapper for compatibility with your logging framework (java logger, log4j etc.)
 | com.fasterxml.jackson.core:jackson-core|2.9.7|Needed for json serialization and deserialization.
 | com.fasterxml.jackson.core:jackson-annotations|2.9.7|ibid.
 | com.fasterxml.jackson.core:jackson-databind|2.9.7|ibid.
 |=======
 
-Jackson is used because Gson is not enough flexible for serializing and deserializing synthetic fields (such
-as calculated amounts in transactions). Jackson supports also annotations to name serialized fields different from the Java
+Jackson is used because Gson seems not to be enough flexible for serializing and deserializing synthetic fields (such
+as calculated amounts in transactions). Gson works only on field level, Jackson as well on getter methods level. +
+Jackson also supports annotations to name serialized fields different from the Java
 convention: e. g. field `returnUrl` -> `return_url`.
 
