@@ -10,6 +10,7 @@ merlin-desktop/build
 merlin-desktop/out
 merlin-server/build
 merlin-server/out
+merlin-server/tmp
 merlin-smarthome/build
 merlin-smarthome/out/
 merlin-smarthome/target/
@@ -54,7 +55,4 @@ hs_err_pid*
 *.ipr
 *.iml
 *.iws
-merlin-server/tmp
 tmp
-merlin-paypal/out
-merlin-paypal-server/build
