@@ -65,7 +65,7 @@ public class HttpsCall {
         StringWriter out = new StringWriter();
         IOUtils.copy(new InputStreamReader(conn.getInputStream()), out);
         conn.disconnect();
-        if (log.isDebugEnabled()) log.debug(out.toString());
+        if (log.isDebugEnabled()) log.debug("Response: " + out.toString());
         return out.toString();
     }
 

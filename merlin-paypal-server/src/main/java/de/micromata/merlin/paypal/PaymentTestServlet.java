@@ -11,6 +11,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * This is only a demo servlet showing how to create a payment. This is the first step of a payment process.
+ */
 public class PaymentTestServlet extends HttpServlet {
     private static Logger log = LoggerFactory.getLogger(PaymentTestServlet.class);
 
@@ -36,9 +39,6 @@ public class PaymentTestServlet extends HttpServlet {
         String description = req.getParameter("description");
         String itemDescription = req.getParameter("itemdescription");
         String noteToPayer = req.getParameter("notetopayer");
-
-        Payment payment = new Payment().setConfig(paypalConfig);
-        Transaction transaction = new Transaction();
         double price = 9.99;
         double tax = 0;
         try {
@@ -51,21 +51,28 @@ public class PaymentTestServlet extends HttpServlet {
         } catch (NumberFormatException ex) {
             log.error("Can't parse price tax: " + taxString);
         }
+
+
+        Payment payment = new Payment().setConfig(paypalConfig);
+        Transaction transaction = new Transaction().setDescription(description);
         transaction.addItem(itemDescription, price);
         Details details = new Details();
         details.setTax(tax);
         transaction.createAmount(Currency.EUR, details);
-        payment.addTransaction(transaction).setNoteToPayer(noteToPayer);
+        payment.addTransaction(transaction);
+        if (StringUtils.isNotBlank(noteToPayer)) {
+            payment.setNoteToPayer(noteToPayer);
+        }
         payment.setShipping(ShippingPreference.NO_SHIPPING);
 
-        PaymentExecution executionPayment = null;
+        PaymentCreated executionPayment = null;
         try {
             executionPayment = PayPalConnector.createPayment(paypalConfig, payment);
         } catch (PayPalRestException ex) {
             log.error("Error while executing payment: " + ex.getMessage(), ex);
             return;
         }
-        String redirectUrl = executionPayment.getRedirectUserHref();
+        String redirectUrl = executionPayment.getPayPalUrlForUserPayment();
         if (StringUtils.isNotBlank(redirectUrl)) {
             resp.sendRedirect(redirectUrl);
         } else {

@@ -7,8 +7,9 @@ import java.util.List;
 
 /**
  * Object returned by PayPal on calling {@link de.micromata.merlin.paypal.PayPalConnector#createPayment(PayPalConfig, Payment)}.
+ * This payment is created and as a next step the user should process this payment via {@link #getPayPalUrlForUserPayment()}.
  */
-public class PaymentExecution {
+public class PaymentCreated {
     private String id;
     private String state;
     private String createTime;
@@ -17,6 +18,7 @@ public class PaymentExecution {
     private List<Transaction> transactions;
     private List<Link> links;
     private String noteToPayer;
+    private String origninalPayPalResponse;
 
     public String getId() {
         return id;
@@ -59,7 +61,12 @@ public class PaymentExecution {
         return links;
     }
 
-    public String getRedirectUserHref() {
+    /**
+     * After creating a payment on the PayPal servers, PayPal provides a url to redirect the user to for doing the
+     * payment.
+     * @return Redirect href provided by PayPal for the user to proceed with the payment.
+     */
+    public String getPayPalUrlForUserPayment() {
         if (links == null) {
             return null;
         }
@@ -70,5 +77,17 @@ public class PaymentExecution {
             }
         }
         return null;
+    }
+
+
+    /**
+     * @return the original response from PayPal. This object is generated from this json string.
+     */
+    public String getOrigninalPayPalResponse() {
+        return origninalPayPalResponse;
+    }
+
+    public void setOrigninalPayPalResponse(String origninalPayPalResponse) {
+        this.origninalPayPalResponse = origninalPayPalResponse;
     }
 }

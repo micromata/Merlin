@@ -43,8 +43,14 @@ public class Transaction {
         return amount;
     }
 
-    public void setAmount(Amount amount) {
+    /**
+     *
+     * @param amount
+     * @return this for chaining.
+     */
+    public Transaction setAmount(Amount amount) {
         this.amount = amount;
+        return this;
     }
 
     @JsonProperty(value = "invoice_number")
@@ -56,9 +62,11 @@ public class Transaction {
      * Ensures maximum length of 127: https://developer.paypal.com/docs/api/payments/v1/#definition-transaction
      *
      * @param inoviceNumber
+     * @return this for chaining.
      */
-    public void setInoviceNumber(String inoviceNumber) {
+    public Transaction setInoviceNumber(String inoviceNumber) {
         this.inoviceNumber = PayPalUtils.ensureMaxLength(inoviceNumber, 127);
+        return this;
     }
 
     public String getDescription() {
@@ -69,9 +77,11 @@ public class Transaction {
      * Ensures maximum length of 127: https://developer.paypal.com/docs/api/payments/v1/#definition-transaction
      *
      * @param description
+     * @return this for chaining.
      */
-    public void setDescription(String description) {
+    public Transaction setDescription(String description) {
         this.description = PayPalUtils.ensureMaxLength(description, 127);
+        return this;
     }
 
     @JsonProperty("item_list")
@@ -79,8 +89,13 @@ public class Transaction {
         return itemList;
     }
 
-    public void setItemList(ItemList itemList) {
+    /**
+     * @param itemList
+     * @return this for chaining.
+     */
+    public Transaction setItemList(ItemList itemList) {
         this.itemList = itemList;
+        return this;
     }
 
     public Payee getPayee() {

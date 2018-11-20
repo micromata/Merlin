@@ -1,14 +1,20 @@
 package de.micromata.merlin.paypal.data;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import de.micromata.merlin.paypal.PayPalConfig;
 
 import java.util.List;
 
-public class PaymentApproval {
+/**
+ * After executing a payment through {@link de.micromata.merlin.paypal.PayPalConnector#executePayment(PayPalConfig, String, String)}
+ * PayPal responds with this object containing everything concerning the approved and executed Payment.
+ */
+public class PaymentExecuted {
     private String id, intent, state, cart, createTime;
     private Payer payer;
     private List<Transaction> transactions;
     private List<Link> links;
+    private String origninalPayPalResponse;
 
     public String getId() {
         return id;
@@ -41,5 +47,16 @@ public class PaymentApproval {
 
     public List<Link> getLinks() {
         return links;
+    }
+
+    /**
+     * @return the original response from PayPal. This object is generated from this json string.
+     */
+    public String getOrigninalPayPalResponse() {
+        return origninalPayPalResponse;
+    }
+
+    public void setOrigninalPayPalResponse(String origninalPayPalResponse) {
+        this.origninalPayPalResponse = origninalPayPalResponse;
     }
 }

@@ -11,6 +11,8 @@ import java.io.IOException;
 
 /**
  * The url of this servlet should be configured in {@link PayPalConfig#getCancelUrl()}.
+ * This is an example servlet for dealing with payment cancellations called by PayPal if the user
+ * cancelled the payment process.
  */
 public class PaymentCancelServlet extends HttpServlet {
     private static Logger log = LoggerFactory.getLogger(PaymentCancelServlet.class);

@@ -7,6 +7,10 @@ import de.micromata.merlin.paypal.utils.PayPalUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Use this class to prepare your payment. This payment will be sent to PayPal:
+ * {@link de.micromata.merlin.paypal.PayPalConnector#createPayment(PayPalConfig, Payment)}
+ */
 public class Payment {
     private String intent = "sale";
     private Payer payer = new Payer();

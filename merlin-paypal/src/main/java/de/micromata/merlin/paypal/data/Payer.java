@@ -19,6 +19,10 @@ public class Payer {
         return paymentMethod;
     }
 
+    void setPaymentMethod(String paymentMethod) {
+        this.paymentMethod = paymentMethod;
+    }
+
     public void setPaymentMethod(PaymentMethod paymentMethod) {
         this.paymentMethod = paymentMethod.name().toLowerCase();
     }

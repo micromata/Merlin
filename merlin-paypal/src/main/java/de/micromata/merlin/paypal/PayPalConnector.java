@@ -1,7 +1,7 @@
 package de.micromata.merlin.paypal;
 
-import de.micromata.merlin.paypal.data.PaymentApproval;
-import de.micromata.merlin.paypal.data.PaymentExecution;
+import de.micromata.merlin.paypal.data.PaymentExecuted;
+import de.micromata.merlin.paypal.data.PaymentCreated;
 import de.micromata.merlin.paypal.data.Payment;
 import de.micromata.merlin.paypal.json.JsonUtils;
 import org.slf4j.Logger;
@@ -12,6 +12,9 @@ import java.net.MalformedURLException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Provides PayPal calls and transforms requests and responses to Java POJO's.
+ */
 public class PayPalConnector {
     private static Logger log = LoggerFactory.getLogger(PayPalConnector.class);
 
@@ -23,20 +26,21 @@ public class PayPalConnector {
      *
      * @param config
      * @param payment
-     * @return
+     * @return the created payment understood, processed and returned by PayPal.
      * @throws PayPalRestException
      */
-    public static PaymentExecution createPayment(PayPalConfig config, Payment payment) throws PayPalRestException {
+    public static PaymentCreated createPayment(PayPalConfig config, Payment payment) throws PayPalRestException {
         try {
             String url = getUrl(config, "/v1/payments/payment");
             payment.setConfig(config);
             payment.recalculate();
             log.info("Create payment: " + JsonUtils.toJson(payment));
             String response = executeCall(config, url, JsonUtils.toJson(payment));
-            PaymentExecution executionPayment = JsonUtils.fromJson(PaymentExecution.class, response);
+            PaymentCreated executionPayment = JsonUtils.fromJson(PaymentCreated.class, response);
             if (executionPayment == null) {
                 throw new PayPalRestException("Error while creating payment: " + response);
             }
+            executionPayment.setOrigninalPayPalResponse(response);
             log.info("Created execution payment: " + JsonUtils.toJson(executionPayment));
             return executionPayment;
         } catch (Exception ex) {
@@ -45,25 +49,26 @@ public class PayPalConnector {
     }
 
     /**
-     * After the approved payment we have to execute the payment as a last step.
+     * After finishing the payment by the user on the PayPal site, we have to execute this payment as a last step.
      *
      * @param config
      * @param payementId
      * @param payerId
-     * @return The returned PaymentApproval contain everything related to this payment, such as id, payer, refund urls etc.
+     * @return The returned PaymentExecuted contain everything related to this payment, such as id, payer, refund urls etc.
      * @throws PayPalRestException
      */
-    public static PaymentApproval executeApprovedPayment(PayPalConfig config, String payementId, String payerId) throws PayPalRestException {
+    public static PaymentExecuted executePayment(PayPalConfig config, String payementId, String payerId) throws PayPalRestException {
         try {
             String url = getUrl(config, "/v1/payments/payment/" + payementId + "/execute");
             log.info("Approve payment: paymentId=" + payementId + ", payerId=" + payerId);
             String payload = "{\"payer_id\" : \"" + payerId + "\"}";
             String response = executeCall(config, url, payload);
             if (log.isDebugEnabled()) log.info("Response: " + response);
-            PaymentApproval approval = JsonUtils.fromJson(PaymentApproval.class, response);
+            PaymentExecuted approval = JsonUtils.fromJson(PaymentExecuted.class, response);
             if (approval == null) {
                 throw new PayPalRestException("Error while creating payment: " + response);
             }
+            approval.setOrigninalPayPalResponse(response);
             log.info("Payment approved: " + JsonUtils.toJson(approval));
             return approval;
         } catch (Exception ex) {
@@ -72,6 +77,9 @@ public class PayPalConnector {
     }
 
     /**
+     * You may use the returned access token for doing PayPal calls inside your web pages.
+     * <br/>
+     * Please, never ever use the PayPal credentials (client_id and secret) directly in your web pages.
      * curl - v https:api.sandbox.paypal.com/v1/oauth2/token -H "Accept: application/json" -H "Accept-Language: en_US"
      * -u "<client_id>:<secret>" -d "grant_type=client_credentials"
      */
