@@ -1,11 +1,9 @@
-package de.micromata.merlin.paypal.utils;
-
-import org.apache.commons.lang3.StringUtils;
+package de.micromata.merlin.paypal;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-public class PayPalUtils {
+public class Utils {
 
     /**
      * Ensures scale 2.
@@ -44,7 +42,19 @@ public class PayPalUtils {
         return amount.toString();
     }
 
+    public static boolean isBlank(String value) {
+        return value == null || value.trim().length() == 0;
+    }
+
+    public static boolean isNotBlank(String value) {
+        return value != null && value.trim().length() > 0;
+    }
+
     public static String ensureMaxLength(String value, int length) {
-        return StringUtils.abbreviate(value, length);
+        final String abbrevMarker = "...";
+        if (value == null || value.length() <= length || value.length() < 3) {
+            return value;
+        }
+        return value.substring(0, value.length() - 4) + abbrevMarker;
     }
 }

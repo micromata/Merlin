@@ -1,6 +1,5 @@
 package de.micromata.merlin.paypal;
 
-import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.DefaultServlet;
 import org.eclipse.jetty.servlet.ServletContextHandler;
@@ -32,7 +31,7 @@ public class JettyServer {
 
         String applicationHome = System.getProperty("applicationHome");
         Path path;
-        if (StringUtils.isBlank(applicationHome)) {
+        if (Utils.isBlank(applicationHome)) {
             applicationHome = System.getProperty("user.dir");
             log.info("applicationHome is not given as JVM   parameter. Using current working dir (OK for start in IDE): " + applicationHome);
             path = Paths.get(applicationHome, "merlin-paypal-server", "web");

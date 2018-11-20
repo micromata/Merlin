@@ -1,7 +1,6 @@
 package de.micromata.merlin.paypal;
 
 import de.micromata.merlin.paypal.data.*;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,7 +59,7 @@ public class PaymentTestServlet extends HttpServlet {
         details.setTax(tax);
         transaction.createAmount(Currency.EUR, details);
         payment.addTransaction(transaction);
-        if (StringUtils.isNotBlank(noteToPayer)) {
+        if (Utils.isNotBlank(noteToPayer)) {
             payment.setNoteToPayer(noteToPayer);
         }
         payment.setShipping(ShippingPreference.NO_SHIPPING);
@@ -73,7 +72,7 @@ public class PaymentTestServlet extends HttpServlet {
             return;
         }
         String redirectUrl = executionPayment.getPayPalUrlForUserPayment();
-        if (StringUtils.isNotBlank(redirectUrl)) {
+        if (Utils.isNotBlank(redirectUrl)) {
             resp.sendRedirect(redirectUrl);
         } else {
             resp.sendRedirect("/index.html");

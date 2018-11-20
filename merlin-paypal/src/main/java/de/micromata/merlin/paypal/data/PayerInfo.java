@@ -1,7 +1,7 @@
 package de.micromata.merlin.paypal.data;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import de.micromata.merlin.paypal.utils.PayPalUtils;
+import de.micromata.merlin.paypal.Utils;
 
 public class PayerInfo {
     private String email, firstName, lastName, payerId, countryCode;
@@ -16,7 +16,7 @@ public class PayerInfo {
      * @param email
      */
     public void setEmail(String email) {
-        this.email = PayPalUtils.ensureMaxLength(email, 127);
+        this.email = Utils.ensureMaxLength(email, 127);
     }
 
     @JsonProperty(value = "first_name")

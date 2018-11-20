@@ -1,7 +1,7 @@
 package de.micromata.merlin.paypal.data;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import de.micromata.merlin.paypal.utils.PayPalUtils;
+import de.micromata.merlin.paypal.Utils;
 
 public class ShippingAddress {
     private String recipientName, line1, line2, city, state, postalCode, countryCode;
@@ -25,7 +25,7 @@ public class ShippingAddress {
      * @param line1
      */
     public void setLine1(String line1) {
-        this.line1 = PayPalUtils.ensureMaxLength(line1, 100);
+        this.line1 = Utils.ensureMaxLength(line1, 100);
     }
 
     public String getLine2() {
@@ -38,7 +38,7 @@ public class ShippingAddress {
      * @param line2
      */
     public void setLine2(String line2) {
-        this.line2 = PayPalUtils.ensureMaxLength(line2, 100);
+        this.line2 = Utils.ensureMaxLength(line2, 100);
     }
 
     public String getCity() {
@@ -51,7 +51,7 @@ public class ShippingAddress {
      * @param city
      */
     public void setCity(String city) {
-        this.city = PayPalUtils.ensureMaxLength(city, 64);
+        this.city = Utils.ensureMaxLength(city, 64);
     }
 
     public String getState() {
@@ -64,7 +64,7 @@ public class ShippingAddress {
      * @param state
      */
     public void setState(String state) {
-        this.state = PayPalUtils.ensureMaxLength(state, 40);
+        this.state = Utils.ensureMaxLength(state, 40);
     }
 
     @JsonProperty(value = "postal_code")

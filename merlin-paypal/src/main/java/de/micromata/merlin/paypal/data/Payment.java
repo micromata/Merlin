@@ -2,7 +2,7 @@ package de.micromata.merlin.paypal.data;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import de.micromata.merlin.paypal.PayPalConfig;
-import de.micromata.merlin.paypal.utils.PayPalUtils;
+import de.micromata.merlin.paypal.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +50,7 @@ public class Payment {
      * @return
      */
     public Payment setNoteToPayer(String noteToPayer) {
-        this.noteToPayer = PayPalUtils.ensureMaxLength(noteToPayer, 165);
+        this.noteToPayer = Utils.ensureMaxLength(noteToPayer, 165);
         return this;
     }
 

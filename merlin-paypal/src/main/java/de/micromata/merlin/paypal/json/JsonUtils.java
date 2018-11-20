@@ -5,7 +5,6 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.commons.text.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,11 +42,6 @@ public class JsonUtils {
             log.error(ex.getMessage(), ex);
             return "";
         }
-    }
-
-    public static String toJson(String str) {
-        if (str == null) return "";
-        return StringEscapeUtils.escapeJson(str);
     }
 
     public static <T> T fromJson(Class<T> clazz, String json) {

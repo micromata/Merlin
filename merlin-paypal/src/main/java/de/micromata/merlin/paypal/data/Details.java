@@ -1,6 +1,6 @@
 package de.micromata.merlin.paypal.data;
 
-import de.micromata.merlin.paypal.utils.PayPalUtils;
+import de.micromata.merlin.paypal.Utils;
 
 import java.beans.Transient;
 import java.math.BigDecimal;
@@ -16,8 +16,8 @@ public class Details {
     @Transient
     public BigDecimal getTotal() {
         BigDecimal total = BigDecimal.ZERO;
-        total = PayPalUtils.add(total, shipping, tax, subtotal);
-        return PayPalUtils.roundAmount(total);
+        total = Utils.add(total, shipping, tax, subtotal);
+        return Utils.roundAmount(total);
     }
 
 
@@ -32,7 +32,7 @@ public class Details {
      * @return this for chaining.
      */
     public Details setShipping(BigDecimal shipping) {
-        this.shipping = PayPalUtils.roundAmount(shipping);
+        this.shipping = Utils.roundAmount(shipping);
         return this;
     }
 
@@ -51,7 +51,7 @@ public class Details {
      * @return this for chaining.
      */
     public Details setTax(BigDecimal tax) {
-        this.tax = PayPalUtils.roundAmount(tax);
+        this.tax = Utils.roundAmount(tax);
         return this;
     }
 
@@ -66,7 +66,7 @@ public class Details {
     public void calculateSubtotal(Transaction transaction) {
         subtotal = BigDecimal.ZERO;
         for (Item item : transaction.getItemList().getItems()) {
-            subtotal = PayPalUtils.add(subtotal, item.getPrice().multiply(new BigDecimal(item.getQuantity())));
+            subtotal = Utils.add(subtotal, item.getPrice().multiply(new BigDecimal(item.getQuantity())));
         }
     }
 }

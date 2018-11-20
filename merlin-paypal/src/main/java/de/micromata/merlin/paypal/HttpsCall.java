@@ -1,14 +1,10 @@
 package de.micromata.merlin.paypal;
 
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.net.ssl.HttpsURLConnection;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.StringWriter;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -63,7 +59,9 @@ public class HttpsCall {
                     + conn.getResponseCode());
         }
         StringWriter out = new StringWriter();
-        IOUtils.copy(new InputStreamReader(conn.getInputStream()), out);
+
+
+        copy(new InputStreamReader(conn.getInputStream()), out);
         conn.disconnect();
         if (log.isDebugEnabled()) log.debug("Response: " + out.toString());
         return out.toString();
@@ -109,5 +107,15 @@ public class HttpsCall {
     public HttpsCall setAccept(MimeType accept) {
         this.accept = accept;
         return this;
+    }
+
+    private static final int BUFFER_SIZE = 4 * 1024;
+
+    private void copy(final Reader input, final Writer output) throws IOException {
+        char[] buffer = new char[BUFFER_SIZE];
+        int n;
+        while (-1 != (n = input.read(buffer))) {
+            output.write(buffer, 0, n);
+        }
     }
 }

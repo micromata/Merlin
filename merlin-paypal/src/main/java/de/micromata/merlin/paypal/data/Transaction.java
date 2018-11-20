@@ -1,7 +1,7 @@
 package de.micromata.merlin.paypal.data;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import de.micromata.merlin.paypal.utils.PayPalUtils;
+import de.micromata.merlin.paypal.Utils;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -65,7 +65,7 @@ public class Transaction {
      * @return this for chaining.
      */
     public Transaction setInoviceNumber(String inoviceNumber) {
-        this.inoviceNumber = PayPalUtils.ensureMaxLength(inoviceNumber, 127);
+        this.inoviceNumber = Utils.ensureMaxLength(inoviceNumber, 127);
         return this;
     }
 
@@ -80,7 +80,7 @@ public class Transaction {
      * @return this for chaining.
      */
     public Transaction setDescription(String description) {
-        this.description = PayPalUtils.ensureMaxLength(description, 127);
+        this.description = Utils.ensureMaxLength(description, 127);
         return this;
     }
 

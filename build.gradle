@@ -26,8 +26,6 @@ subprojects {
     }
 
     dependencies {
-        compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.8.1'
-        compile group: 'commons-io', name: 'commons-io', version: '2.6'
         compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
         testCompile group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.25'
         testImplementation(

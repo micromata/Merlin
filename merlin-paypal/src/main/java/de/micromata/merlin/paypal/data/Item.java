@@ -1,6 +1,6 @@
 package de.micromata.merlin.paypal.data;
 
-import de.micromata.merlin.paypal.utils.PayPalUtils;
+import de.micromata.merlin.paypal.Utils;
 
 import java.math.BigDecimal;
 
@@ -20,7 +20,7 @@ public class Item {
      * @return
      */
     public Item setName(String name) {
-        this.name = PayPalUtils.ensureMaxLength(name, 127);
+        this.name = Utils.ensureMaxLength(name, 127);
         return this;
     }
 
@@ -43,7 +43,7 @@ public class Item {
     }
 
     public Item setPrice(BigDecimal price) {
-        this.price = PayPalUtils.roundAmount(price);
+        this.price = Utils.roundAmount(price);
         return this;
     }
 

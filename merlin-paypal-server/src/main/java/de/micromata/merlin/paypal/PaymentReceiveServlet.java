@@ -2,7 +2,6 @@ package de.micromata.merlin.paypal;
 
 import de.micromata.merlin.paypal.data.PaymentExecuted;
 import de.micromata.merlin.paypal.json.JsonUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,19 +58,19 @@ public class PaymentReceiveServlet extends HttpServlet {
      */
     protected void executePayment(HttpServletRequest req, HttpServletResponse resp, String paymentId, String payerId) throws IOException, PayPalRestException {
         log.info("Payment received: paymentId=" + paymentId + ", PayerID=" + payerId);
-        if (StringUtils.isBlank(paymentId)) {
+        if (Utils.isBlank(paymentId)) {
             log.error("Can't execute payment, paymentId not given. Aborting payment...");
             redirectToErrorPage(resp);
             return;
         }
-        if (StringUtils.isBlank(payerId)) {
+        if (Utils.isBlank(payerId)) {
             log.error("Can't execute payment, payerId not given. Aborting payment...");
             redirectToErrorPage(resp);
             return;
         }
-        PaymentExecuted approval = PayPalConnector.executePayment(config, paymentId, payerId);
-        if (approval != null) {
-            log.info("Payment executed: " + JsonUtils.toJson(approval));
+        PaymentExecuted paymentExecuted = PayPalConnector.executePayment(config, paymentId, payerId);
+        if (paymentExecuted != null) {
+            log.info("Payment executed: " + JsonUtils.toJson(paymentExecuted));
             resp.setStatus(302);
             resp.setHeader("Location", "/paymentExecuted.html");
             return;

@@ -1,5 +1,6 @@
 package de.micromata.merlin.paypal;
 
+import de.micromata.merlin.paypal.data.Payment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -74,6 +75,10 @@ public class PayPalConfig {
         return this;
     }
 
+    /**
+     * This default return url is used if not explicitly set.
+     * @return The default return url used in {@link PayPalConnector#createPayment(PayPalConfig, Payment)}.
+     */
     public String getReturnUrl() {
         return returnUrl;
     }
@@ -87,6 +92,10 @@ public class PayPalConfig {
         return cancelUrl;
     }
 
+    /**
+     * This default cancel url is used if not explicitly set.
+     * @return The default cancel url used in {@link PayPalConnector#createPayment(PayPalConfig, Payment)}.
+     */
     public PayPalConfig setCancelUrl(String cancelUrl) {
         this.cancelUrl = cancelUrl;
         return this;

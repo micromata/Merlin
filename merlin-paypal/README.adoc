@@ -14,19 +14,22 @@ Playground for an easy PayPal integration. This approach is not planned to be pa
 
 This document describes all the steps you need to integrate PayPal in your own Java application.
 
-1. `merlin-paypal` contains some useful helper classes and demonstrates how to integrate PayPal. It's not there much magic.
+1. `merlin-paypal` contains the core classes you need for your own PayPal integration. It's not there much magic.
 2. `merlin-paypal-server` contains a ready to run command line server for testing PayPal transactions (sandbox and live).
+It also contains two example servlets needed by PayPal to cancel or to confirm a payment.
+
 
 === How does the PayPal integration work?
 1. You define a payment including prices, items etc.
 2. You create this payment by publishing it to PayPal with your PayPal credentials.
-3. PayPal returns a redirect url where to redirect the customer for processing the payment.
-4. After the payment PayPal will callback your server (on success as well as after cancellation by the user).
-5. You confirm/execute the payment by calling PayPal.
+3. PayPal returns an url where to redirect the customer for processing the payment.
+4. After an successful or cancelled payment PayPal will callback your server (on success as well as after cancellation by the user).
+5. You confirm/execute the payment by calling PayPal back.
+6. Enjoy the money!
 
 You may also refer: https://developer.paypal.com/docs/checkout/how-to/server-integration/#how-a-server-integration-works[PayPal flow diagram of a payment^]
 
-=== Create PayPal credentials for your app
+=== Step 1: Create PayPal credentials for your app
 First you need credentials for testing and preparing your going-live.
 
 1. On the https://developer.paypal.com/developer/applications[My Apps & Credentials^] page, click *Log into Dashboard*.
@@ -41,7 +44,7 @@ temporarily valid access token for authentification.
 ====
 
 
-=== Configuration of your app
+=== Step 2: Configuration of your app
 Create a property file for testing.
 
 For now, it's enough to enter the `client_id` and the `secret` you get from the previous step.
@@ -54,7 +57,7 @@ paypal.secret=<YOUR APPLICATION CLIENT SECRET>
 You may name this file `.merlin-paypal` and place it in your user home directory. The Merlin server will detect this file
 automatically. You may alternatively define any other filename and specify this filename with the command line option.
 
-=== Create PayPal sandbox account
+=== Step 3: Create PayPal sandbox account
 You need a sandbox account to test sandbox installations:
 https://developer.paypal.com/docs/classic/lifecycle/sb_create-accounts/[create PayPal sandbox account^]
 
@@ -63,7 +66,7 @@ https://developer.paypal.com/docs/classic/lifecycle/sb_create-accounts/[create P
 The normal PayPal accounts aren't valid for PayPal's sandbox.
 ====
 
-=== Run Merlin-PayPal server for some tests
+=== Step 4: Run Merlin-PayPal server for some tests
 Simply execute `de.micromata.merlin.paypal.PayPalMain` in your IDE (e. g. IntelliJ with installed Gradle plugin) or:
 
 1. Run `gradle distZip` for a ready to run server (including Unix, MacOS and Windows start scripts).
@@ -71,6 +74,7 @@ Simply execute `de.micromata.merlin.paypal.PayPalMain` in your IDE (e. g. Intell
 3. Start the server in your terminal: `bin/merlin-paypal-server` or `bin/merlin-paypal-server -f <configfile>`
 4. Open your web browser: `http://localhost:8142`.
 
+=== Step 5: Run the server on a public available host
 If you run the Merlin-PayPal-Server on a private host, you will be redirected to PayPal but you can't receive any call back by PayPal. For a complete testing you should
 run Merlin-PayPal-Server on a public available host. Please configure the urls in the configuration file by adding the following lines:
 
@@ -82,7 +86,7 @@ paypal.return_url=http:/159.69.120.42:8142/receivePayment
 paypal.cancel_url=http://159.69.120.42:8142/cancelPayment
 ----
 
-=== Test the live PayPal
+=== Step 6: Do live tests
 After successfully testing against PayPal's sandbox your may want to connect to the real world by adding the following lines:
 
 .~/.merlin-paypal
@@ -105,25 +109,7 @@ paypalConfig = new PayPalConfig().setClientId("<client_id>").setClientSecret("<s
 
 === Java code for payments
 
-==== Create a payment
-[source,java]
-----
-PaymentAmount amount = new PaymentAmount(PaymentAmount.Currency.EUR).setSubtotal(29.99).setTax(5.70);
-// Invoice number must be unique or null, add your shop description and the description of the item to sale.
-Transaction transaction = PaymentCreator.createTransaction(amount, invoicenumber, description, itemDescription);
-String href = PaymentCreator.publish(paypalConfig, transaction);
-----
-`href` contains the link where to redirect the user for proceeding with the payment. Through the API you may configure
-more complex shopping charts including shipping costs etc.
-
-==== Add paypal return servlets to your app
-See `PaymentReceiveServlet` and `PaymentCancelServlet` of module merlin-paypal-server as example and configure these both
-urls in your PayPalConfig.
-
-
-==== Confirm/execute a payment
-
-.PaymentReceiveServlet.java
+==== Step 1: Create a payment
 [source,java]
 ----
 Payment payment = new Payment().setShipping(ShippingPreference.NO_SHIPPING);
@@ -132,17 +118,58 @@ transaction.addItem("Online Elections 2019", 29.99);
 Details details = new Details().setTax(5.70);
 transaction.createAmount(Currency.EUR, details);
 transaction.setInoviceNumber("1234");
-payment.addTransaction(transaction).setNoteToPayer("Enjoy your Elections with POLYAS.");
+payment.addTransaction(transaction);
+payment.setNoteToPayer("Please contact ..."); // Note to payer for important messages.
 // Do the PayPal call and see the returned PaymentExecution object:
 PaymentExecution paymentExecution = PayPalConnector.createPayment(config, payment);
+----
+`href` contains the link where to redirect the user for proceeding with the payment. Through the API you may configure
+more complex shopping charts including shipping costs etc.
+
+==== Step 2: Add the call-backs for PayPal after the user's payment process
+See `PaymentReceiveServlet` and `PaymentCancelServlet` of module merlin-paypal-server as an example and configure these both
+urls in your PayPalConfig. +
+(You may overwrite these default urls for every single payment, if you need payment or user specific return urls.)
+
+
+==== Step 3: Confirm/execute a payment
+Place this code in your servlet which PayPal calls after a user's successful payment:
+
+.PaymentReceiveServlet.java
+[source,java]
+----
+String paymentId = request.getParameter("paymentId"); // Request parameter given by PayPal
+String payerId = request.getParameter("PayerID");
+PaymentExecuted paymentExecuted = PayPalConnector.executePayment(config, paymentId, payerId);
+if (paymentExecuted != null) {
+  // paymentExecuted contain all information related to the PayPal payment,
+}
 ----
 
 === See a live demo
 The https://demo.paypal.com/us/demo/go_platform/pcbt[demo store^] show how a modern integration should finally look like.
 
 
-== ToDo
+=== Why do not use BrainSDK?
+The BrainSDK seems to be behind the API. I wasn't able to set the flag `NO_SHIPPING` and the BrainSDK doesn't care about
+any field restrictions (such as minimum and maximum field length or supported field values).
 
-=== Get rid of BrainSDK
-It seems to be that the BrainSDK is behind the current API of PayPal. Dropping the shipment address etc. isn't possible, is it?
-The BrainSDK contains lousy POJOs. I just need GSON or any JSON-library to drop it and implement only the functionality we need.
+If you miss some functionality feel free to extend this module. It's very easy to extend calls and POJOs.
+
+It takes only less than one day to replace BrainSDK by an own implementation for the whole payment process.
+
+=== Project dependencies
+This merlin-paypal library is designed with a minimal set of dependencies for an light weight integration in your own app:
+
+[%autowidth, frame="topbot",options="header"]
+|=======
+| jar | version | Usage
+| org.slf4j:slf4j-api|1.7.25|Common logging wrapper for compatibility with your logging framework (java logger, log4j etc.)
+| com.fasterxml.jackson.core:jackson-core|2.9.7|Needed for json serialization and deserialization.
+| com.fasterxml.jackson.core:jackson-annotations|2.9.7|ibid.
+| com.fasterxml.jackson.core:jackson-databind|2.9.7|ibid.
+|=======
+
+Jackson is used because Gson is not enough flexible for serializing and deserializing synthetic fields (such
+as calculated amounts in trans
+
