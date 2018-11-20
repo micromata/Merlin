@@ -95,6 +95,27 @@ After successfully testing against PayPal's sandbox your may want to connect to 
 paypal.mode=live
 ----
 
+Don't forget to replace the values `paypal.client-id` and `paypal.secret` by the live credentials of PayPal.
+
+A final live complete configuration looks like:
+
+.~/.merlin-paypal
+----
+# Supported modes are sandbox (default) and live:
+ paypal.mode=live
+ paypal.client_id=<your client id>
+ paypal.secret=<your client secret>
+ # return url called by Paypal after successful payment:
+ paypal.return_url=http://159.69.120.42:8142/receivePayment
+ # cancel url called by Paypal after cancelled payment:
+ paypal.cancel_url=http://159.69.120.42:8142/cancelPayment
+----
+
+[NOTE]
+====
+For dealing with both configurations (sandbox and live) on the same system, create both configuration files and
+work e. g. with symbolic links you can easily switch: `ln -s .merlin-paypal-sandbox .merlin-paypal`
+====
 
 == Writing your own app
 === Configuration
@@ -114,17 +135,29 @@ paypalConfig = new PayPalConfig().setClientId("<client_id>").setClientSecret("<s
 ----
 Payment payment = new Payment().setShipping(ShippingPreference.NO_SHIPPING);
 Transaction transaction = new Transaction();
-transaction.addItem("Online Elections 2019", 29.99);
-Details details = new Details().setTax(5.70);
-transaction.createAmount(Currency.EUR, details);
-transaction.setInoviceNumber("1234");
-payment.addTransaction(transaction);
+transaction.addItem("Merlin software", 29.99);   // The item to sell for 29.99 EUR.
+Details details = new Details().setTax(5.70);    // The tax for all items.
+transaction.createAmount(Currency.EUR, details); // Doesn the math for you.
+transaction.setInoviceNumber("1234"); // Must be unique, can't be used twice.
+payment.addTransaction(transaction);  // A payment may contain multiple transactions.
 payment.setNoteToPayer("Please contact ..."); // Note to payer for important messages.
 // Do the PayPal call and see the returned PaymentExecution object:
-PaymentExecution paymentExecution = PayPalConnector.createPayment(config, payment);
+PaymentCreated paymentCreated = PayPalConnector.createPayment(paypalConfig, payment);
+String redirectUrl;
+if (paymentCreated != null) {
+  redirectUrl = paymentCreated.getPayPalUrlForUserPayment();
+  response.sendRedirect(redirectUrl); // Redirect the user to the PayPal site.
+}
 ----
-`href` contains the link where to redirect the user for proceeding with the payment. Through the API you may configure
+`redirectUrl` contains the link where to redirect the user for proceeding with the payment. +
+Through the API you may configure
 more complex shopping charts including shipping costs etc.
+
+[NOTE]
+====
+Merlin paypal supports chaining for creating objects and setting properties, such as: +
+`new Payment().setShipping(...).addTransaction(...)`
+====
 
 ==== Step 2: Add the call-backs for PayPal after the user's payment process
 See `PaymentReceiveServlet` and `PaymentCancelServlet` of module merlin-paypal-server as an example and configure these both
@@ -142,7 +175,8 @@ String paymentId = request.getParameter("paymentId"); // Request parameter given
 String payerId = request.getParameter("PayerID");
 PaymentExecuted paymentExecuted = PayPalConnector.executePayment(config, paymentId, payerId);
 if (paymentExecuted != null) {
-  // paymentExecuted contain all information related to the PayPal payment,
+  // paymentExecuted contains all information related to the PayPal payment:
+  // payer, transaction, items, amounts, refund urls, time stamps etc.
 }
 ----
 

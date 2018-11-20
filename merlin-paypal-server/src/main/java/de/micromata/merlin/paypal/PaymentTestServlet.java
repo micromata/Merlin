@@ -64,14 +64,14 @@ public class PaymentTestServlet extends HttpServlet {
         }
         payment.setShipping(ShippingPreference.NO_SHIPPING);
 
-        PaymentCreated executionPayment = null;
+        PaymentCreated paymentCreated = null;
         try {
-            executionPayment = PayPalConnector.createPayment(paypalConfig, payment);
+            paymentCreated = PayPalConnector.createPayment(paypalConfig, payment);
         } catch (PayPalRestException ex) {
             log.error("Error while executing payment: " + ex.getMessage(), ex);
             return;
         }
-        String redirectUrl = executionPayment.getPayPalUrlForUserPayment();
+        String redirectUrl = paymentCreated.getPayPalUrlForUserPayment();
         if (Utils.isNotBlank(redirectUrl)) {
             resp.sendRedirect(redirectUrl);
         } else {
