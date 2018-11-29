@@ -1,17 +1,17 @@
 plugins {
-    id 'com.gradle.build-scan' version '1.16'
+    id 'com.gradle.build-scan' version '2.0.2'
 }
 
 allprojects {
     apply plugin: 'maven'
 
     group = 'de.micromata.merlin'
-    version = '0.11-SNAPSHOT'
+    version = '1.0'
 }
 
 subprojects {
     apply plugin: 'java'
-    sourceCompatibility = 1.9
+    sourceCompatibility = 1.9 // Needed: since 1.9 i18n properties in UTF-8 format.
     targetCompatibility = 1.9
 
     tasks.withType(JavaCompile) {
