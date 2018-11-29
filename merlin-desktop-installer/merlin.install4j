@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <install4j version="7.0.8" transformSequenceNumber="7">
-  <directoryPresets config="./resources" />
-  <application name="Merlin" distributionSourceDir="" applicationId="5115-4774-2533-4349" mediaDir="../../Install4j/Merlin" mediaFilePattern="${compiler:sys.shortName}_${compiler:sys.platform}_${compiler:sys.version}" compression="6" lzmaCompression="false" pack200Compression="false" excludeSignedFromPacking="true" commonExternalFiles="false" createMd5Sums="true" shrinkRuntime="true" shortName="merlin" publisher="Micromata GmbH" publisherWeb="www.micromata.de" version="0.11dev" allPathsRelative="true" backupOnSave="false" autoSave="false" convertDotsToUnderscores="true" macSignature="????" macVolumeId="4356b34315fd64b9" javaMinVersion="9" javaMaxVersion="" allowBetaVM="false" jdkMode="jdk" jdkName="JDK 1.8">
+  <directoryPresets config="../../Install4j/Micromata-MacOS-CodeSigning.p12" />
+  <application name="Merlin" distributionSourceDir="" applicationId="5115-4774-2533-4349" mediaDir="../../Install4j/Merlin" mediaFilePattern="${compiler:sys.shortName}_${compiler:sys.platform}_${compiler:sys.version}" compression="6" lzmaCompression="false" pack200Compression="false" excludeSignedFromPacking="true" commonExternalFiles="false" createMd5Sums="true" shrinkRuntime="true" shortName="merlin" publisher="Micromata GmbH" publisherWeb="www.micromata.de" version="1.0" allPathsRelative="true" backupOnSave="false" autoSave="false" convertDotsToUnderscores="true" macSignature="????" macVolumeId="4356b34315fd64b9" javaMinVersion="9" javaMaxVersion="" allowBetaVM="false" jdkMode="jdk" jdkName="JDK 1.8">
     <languages skipLanguageSelection="false" languageSelectionInPrincipalLanguage="false">
       <principalLanguage id="en" customLocalizationFile="" />
       <additionalLanguages>
@@ -15,7 +15,7 @@
     </searchSequence>
     <variables />
     <mergedProjects />
-    <codeSigning macEnabled="false" macPkcs12File="../../Install4j/k.reinhard@me.com.p12" windowsEnabled="true" windowsKeySource="pkcs12" windowsPvkFile="" windowsSpcFile="" windowsPkcs12File="../../Install4j/Micromata-CodeSigning.pfx" windowsPkcs11Library="" windowsPkcs11Slot="">
+    <codeSigning macEnabled="true" macPkcs12File="../../Install4j/Micromata-MacOS-CodeSigning.p12" windowsEnabled="true" windowsKeySource="pkcs12" windowsPvkFile="" windowsSpcFile="" windowsPkcs12File="../../Install4j/Micromata-CodeSigning.pfx" windowsPkcs11Library="" windowsPkcs11Slot="">
       <windowsKeystoreIdentifier issuer="" serial="" subject="" />
       <windowsPkcs11Identifier issuer="" serial="" subject="" />
     </codeSigning>
@@ -100,7 +100,7 @@
       </iconImageFiles>
     </launcher>
   </launchers>
-  <installerGui installerType="1" addOnAppId="" suggestPreviousLocations="true" autoUpdateDescriptorUrl="https://github.com/kreinhard/merlin/raw/master/merlin-desktop-installer/updates.xml" useAutoUpdateBaseUrl="true" autoUpdateBaseUrl="https://sourceforge.net/projects/merlinrunner/files/0.10/">
+  <installerGui installerType="1" addOnAppId="" suggestPreviousLocations="true" autoUpdateDescriptorUrl="https://github.com/kreinhard/merlin/raw/master/merlin-desktop-installer/updates.xml" useAutoUpdateBaseUrl="true" autoUpdateBaseUrl="https://sourceforge.net/projects/merlinrunner/files/1.0/">
     <staticMembers script="" />
     <customCode />
     <autoUpdate useMinUpdatableVersion="false" minUpdatableVersion="" useMaxUpdatableVersion="false" maxUpdatableVersion="">
@@ -2390,6 +2390,8 @@ return true;</string>
       </installerScript>
     </unixInstaller>
   </mediaSets>
-  <buildIds buildAll="true" />
+  <buildIds buildAll="false">
+    <mediaSet refId="61" />
+  </buildIds>
   <buildOptions verbose="false" faster="false" disableSigning="false" disableJreBundling="false" debug="false" />
 </install4j>
