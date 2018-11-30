@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<updateDescriptor baseUrl="https://sourceforge.net/projects/merlinrunner/files/0.9/">
-  <entry targetMediaFileId="61" updatableVersionMin="" updatableVersionMax="" fileName="merlin-macos-0_1.dmg" newVersion="0.1" newMediaFileId="61" fileSize="63255320" md5Sum="59dc00b3a4554187e1e7bef6315fc8dd" bundledJre="" archive="false" singleBundle="true">
+<updateDescriptor baseUrl="https://sourceforge.net/projects/merlinrunner/files/1.0/">
+  <entry targetMediaFileId="61" updatableVersionMin="" updatableVersionMax="" fileName="merlin-macos-1_0.dmg" newVersion="1.0" newMediaFileId="61" fileSize="63255320" md5Sum="ecdbcfdd2c98ec0091010666c1e4ed04" bundledJre="" archive="false" singleBundle="true">
+    <comment language="en" />
+    <comment language="de" />
+  </entry>
+  <entry targetMediaFileId="587" updatableVersionMin="" updatableVersionMax="" fileName="merlin-windows-1_0.exe" newVersion="1.0" newMediaFileId="587" fileSize="69819408" md5Sum="c294c691cbae7f4ce7fb74a6268b8c9d" bundledJre="" archive="false" singleBundle="false">
+    <comment language="en" />
+    <comment language="de" />
+  </entry>
+  <entry targetMediaFileId="715" updatableVersionMin="" updatableVersionMax="" fileName="merlin-linux-1_0.sh" newVersion="1.0" newMediaFileId="715" fileSize="72451976" md5Sum="622ba2527c0f8e2350ff00808d47076c" bundledJre="" archive="false" singleBundle="false">
     <comment language="en" />
     <comment language="de" />
   </entry>
