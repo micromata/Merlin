@@ -6,12 +6,13 @@ Contains resources and scripts for building new releases of Merlin's desktop app
 1. Increase version in `build.gradle`.
 2. In top directory of merlin: `gradle clean test dist`
 3. Run Install4j
-   1. General settings -> Application Info -> Version __current version__
-   2. Installer -> Auto-Update Options -> Base url for installers: https://sourceforge.net/projects/pforge/files/Merlin/0.9/
-   3. Build project
+   1. General settings -> Application Info -> Version __0.1__ (old fake version) and test update from this fake version to the last published one.
+   2. General settings -> Application Info -> Version __current version__
+   3. Installer -> Auto-Update Options -> Base url for installers: https://sourceforge.net/projects/pforge/files/Merlin/0.9/
+   4. Build project
 4. `gradle postDist`
 5. Testing
-   1. Testing update from previous installation (also with current installation but with 'faked' old version).
+   1. Testing update from previous installation.
    2. install, test web and java-code.
    3. Check installation: Assure that no javafx*.jar is in the lib dir.
 6. Creating Github release
