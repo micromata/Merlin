@@ -1,6 +1,7 @@
 package de.micromata.merlin.server;
 
 import de.micromata.merlin.CoreI18n;
+import de.micromata.merlin.I18n;
 
 import java.text.MessageFormat;
 import java.util.*;
@@ -30,7 +31,7 @@ public class I18nClientMessages {
         Map<String, String> map = new HashMap<>();
         //addAllMessages(map, new AppI18n(locale).getResourceBundle(), keysOnly);
         addAllMessages(map, new CoreI18n(locale).getResourceBundle(), keysOnly);
-        ResourceBundle bundle = ResourceBundle.getBundle(BUNDLE_NAME, locale);
+        ResourceBundle bundle = I18n.getBundle(BUNDLE_NAME, locale);
         addAllMessages(map, bundle, keysOnly);
         return new TreeMap<>(map); // Sorted by keys.
     }

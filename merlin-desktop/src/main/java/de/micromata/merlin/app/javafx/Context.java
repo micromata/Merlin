@@ -1,5 +1,6 @@
 package de.micromata.merlin.app.javafx;
 
+import de.micromata.merlin.I18n;
 import de.micromata.merlin.server.ConfigurationHandler;
 import de.micromata.merlin.server.Languages;
 import org.slf4j.Logger;
@@ -60,7 +61,7 @@ public class Context {
         return instance;
     }
 
-    Context() {
+    private Context() {
         // Install4j:
         // Installer -> Screens & Actions -> Installation -> + (Add action)
         // Action: Set a key in the Java preference store
@@ -76,6 +77,6 @@ public class Context {
             locale = Locale.getDefault();
             log.info("Using the default language of the server host: " + locale);
         }
-        resourceBundle = ResourceBundle.getBundle(BUNDLE_NAME, locale);
+        resourceBundle = I18n.getBundle(BUNDLE_NAME, locale);
     }
 }

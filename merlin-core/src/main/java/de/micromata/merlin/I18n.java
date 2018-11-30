@@ -34,11 +34,11 @@ public class I18n {
      * Uses the default message bundle "MessagesBundle" of class path with systems default locale.
      */
     public I18n(String bundleName) {
-        this.resourceBundle = ResourceBundle.getBundle(bundleName);
+        this.resourceBundle = I18n.getBundle(bundleName);
     }
 
     public I18n(String bundleName, Locale locale) {
-        this.resourceBundle = ResourceBundle.getBundle(bundleName, locale);
+        this.resourceBundle = I18n.getBundle(bundleName, locale);
     }
 
     /**
@@ -79,5 +79,31 @@ public class I18n {
 
     public ResourceBundle getResourceBundle() {
         return resourceBundle;
+    }
+
+    /**
+     *
+     * @param bundleName
+     * @param locale
+     * @return The root bundle if the given locale's language is "en" or language not found, otherwise the desired bundle for the given locale.
+     */
+    public static ResourceBundle getBundle(String bundleName, Locale locale) {
+        if ("en".equals(locale.getLanguage())) {
+            return ResourceBundle.getBundle(bundleName, Locale.ROOT);
+        }
+        return ResourceBundle.getBundle(bundleName, locale);
+        //return ResourceBundle.getBundle(bundleName, locale,
+        //        ResourceBundle.Control.getNoFallbackControl(ResourceBundle.Control.FORMAT_PROPERTIES));
+    }
+
+    /**
+     * Simply calls {@link ResourceBundle#getBundle(String)}.
+     * @param bundleName
+     * @return The bundle for {@link Locale#getDefault()} or root bundle if not found..
+     */
+    public static ResourceBundle getBundle(String bundleName) {
+        return ResourceBundle.getBundle(bundleName);
+        //return ResourceBundle.getBundle(bundleName, locale,
+        //        ResourceBundle.Control.getNoFallbackControl(ResourceBundle.Control.FORMAT_PROPERTIES));
     }
 }
