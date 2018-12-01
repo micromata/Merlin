@@ -32,6 +32,7 @@ public class ExcelSheet {
     private Set<ExcelValidationErrorMessage> validationErrors;
     private boolean modified;
     private I18n i18n;
+    private int maxMarkedErrors = 100;
 
     ExcelSheet(ExcelWorkbook workbook, Sheet poiSheet) {
         log.debug("Reading sheet '" + poiSheet.getSheetName() + "'");
@@ -295,6 +296,7 @@ public class ExcelSheet {
     /**
      * Don't forget to call analyze(true) first.
      * Is an alias for !{@link #hasValidationErrors()}.
+     *
      * @return true if no error messages exist, otherwise false.
      */
     public boolean isValid() {
@@ -303,6 +305,7 @@ public class ExcelSheet {
 
     /**
      * Don't forget to call analyze(true) first.
+     *
      * @return true if no error messages exist, otherwise false.
      */
     public boolean hasValidationErrors() {
@@ -372,7 +375,7 @@ public class ExcelSheet {
     }
 
     /**
-     * Marks and comments validation errors of cells of this sheet by mamipulating the Excel sheet.
+     * Marks and comments validation errors of cells of this sheet by manipulating the Excel sheet.
      * Refer {@link #isModified()} for checking if any modification was done.
      * Please don't forget to call {@link #analyze(boolean)} first with parameter validate=true.
      *
@@ -384,7 +387,12 @@ public class ExcelSheet {
         columnWithValidationErrorMessages = excelWriterContext.getCellCleaner().clean(this, excelWriterContext);
         analyze(true);
         Set<ExcelColumnDef> highlightedColumnHeads = new HashSet<>();
+        int errorCount = 0;
         for (ExcelValidationErrorMessage validationError : getAllValidationErrors()) {
+            if (maxMarkedErrors >= 0 && ++errorCount > maxMarkedErrors) {
+                // Maximum number of errors to mark is exceeded.
+                break;
+            }
             ExcelColumnDef columnDef = validationError.getColumnDef();
             Row row = poiSheet.getRow(validationError.getRow());
             if (excelWriterContext.isAddErrorColumn()) {
@@ -425,6 +433,18 @@ public class ExcelSheet {
             // adjust column width to fit the content
             poiSheet.autoSizeColumn(columnWithValidationErrorMessages);
         }
+        return this;
+    }
+
+    /**
+     * @param maxMarkedErrors The number of marked errors should be limited (default is 100). Otherwise for very large Excel sheet with a lot of errors, the
+     *                        system may be collapse.
+     *                        <br>
+     *                        If set to -1 an unlimited number of errors will be marked.
+     * @return
+     */
+    public ExcelSheet setMaxMarkedErrors(int maxMarkedErrors) {
+        this.maxMarkedErrors = maxMarkedErrors;
         return this;
     }
 
