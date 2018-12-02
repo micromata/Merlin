@@ -8,6 +8,8 @@ import org.junit.jupiter.api.Test;
 import java.io.File;
 import java.util.Iterator;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 public class ImportTest {
     @Test
     void importTest() {
@@ -35,8 +37,12 @@ public class ImportTest {
             voter.city = sheet.getCellString(row, "City");
             voter.email = sheet.getCellString(row, "E-Mail");
             voter.number = sheet.getCellString(row, "Number");
-            set.add(voter);
+            set.add(voter, voter.number);
         }
+        ImportStatistics stats = set.getStatistics();
+        assertEquals(8, stats.getNumberOfFaultyElements(), "Number of elements with multiple pks.");
+        assertEquals(100, stats.getTotalNumberOfElements());
+        assertEquals(100, stats.getNumberOfNotReconciledElements());
     }
 
     class Voter {

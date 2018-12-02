@@ -5,9 +5,15 @@ import lombok.Getter;
 /**
  * This holds statistics of (imported) data entries.
  */
-public class ImportStatistics<T> {
+public class ImportStatistics {
     @Getter
     private int totalNumberOfElements;
+
+    /**
+     * Number of elements not yet reconciled (against already stored / persisted entries).
+     */
+    @Getter
+    private int numberOfNotReconciledElements;
 
     /**
      * Number of elements not already stored / not found in the data base.
@@ -34,15 +40,60 @@ public class ImportStatistics<T> {
     private int numberOfFaultyElements;
 
     /**
-     * Is true, if no reconciliation is done or any modification is done after the last
-     * reconciliation.
+     * Number of saved / committed elements (e. g. to the data base).
      */
     @Getter
-    private boolean dirty = true;
+    private int numberOfCommittedElements;
 
     /**
-     * Number of saved / commited elements (e. g. to the data base).
+     * Number of unsaved / uncommitted elements (e. g. to the data base).
      */
     @Getter
-    private int numberOfCommittedElements = -1;
+    private int numberOfUncommittedElements;
+
+    public ImportStatistics() {
+        reset(0);
+    }
+
+    /**
+     * @return this for chaining.
+     */
+    public ImportStatistics reset(int totalNumberOfElements) {
+        this.totalNumberOfElements = totalNumberOfElements;
+        this.numberOfNotReconciledElements = 0;
+        this.numberOfFaultyElements = 0;
+        this.numberOfCommittedElements = 0;
+        this.numberOfModifiedElements = 0;
+        this.numberOfUnmodifiedElements = 0;
+        this.numberOfNewElements = 0;
+        return this;
+    }
+
+    void incrementNumberOfNotReconciledElements() {
+        ++this.numberOfNotReconciledElements;
+    }
+
+    void incrementNumberOfNewElements() {
+        ++this.numberOfNewElements;
+    }
+
+    void incrementNumberOfModifiedElements() {
+        ++this.numberOfModifiedElements;
+    }
+
+    void incrementNumberOfUnmodifiedElements() {
+        ++this.numberOfUnmodifiedElements;
+    }
+
+    void incrementNumberOfFaultyElements() {
+        ++this.numberOfFaultyElements;
+    }
+
+    void incrementNumberOfCommittedElements() {
+        ++this.numberOfCommittedElements;
+    }
+
+    void incrementNumberOfUncommittedElements() {
+        ++this.numberOfUncommittedElements;
+    }
 }

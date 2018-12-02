@@ -11,15 +11,46 @@ import java.util.Map;
  * This holds a list of {@link ImportDataEntry}, upload e. g. by one sheet (e. g. Excel sheet) or csv file.
  */
 public class ImportSet<T> {
+    public enum Status {
+        NOT_RECONCILED("not_reconciled"), RECONCILED("reconciled"), HAS_ERRORS("has_errors"),
+        IMPORTED("imported"), NOTHING_TODO("nothing_to_do");
+
+        private String key;
+
+        /**
+         * @return The key may be used e. g. for i18n.
+         */
+        public String getKey() {
+            return key;
+        }
+
+        Status(String key) {
+            this.key = key;
+        }
+
+        public boolean isIn(Status... status) {
+            for (Status st : status) {
+                if (this == st) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
+
     private int counter = -1;
     @Getter
     private List<ImportDataEntry<T>> dataEntries = new ArrayList<>();
     @Getter
-    private ImportStatus status = ImportStatus.NOT_RECONCILED;
-    @Getter
-    private ImportStatistics<T> statistics = new ImportStatistics<>();
+    private Status status = Status.NOT_RECONCILED;
+    private ImportStatistics statistics = new ImportStatistics();
     private Map<Object, ImportDataEntry<T>> entryMapByIndex = new HashMap<>();
     private Map<Object, ImportDataEntry<T>> entryMapByPrimaryKey = new HashMap<>();
+    /**
+     * Is true, if no reconciliation is done or any modification is done after the last
+     * reconciliation.
+     */
+    private boolean dirty = true;
 
     /**
      * Adds a new {@link ImportDataEntry} with the given value to the list.
@@ -39,19 +70,66 @@ public class ImportSet<T> {
      * @return this for chaining.
      */
     public ImportSet<T> add(T entry, Object primaryKey) {
+        dirty = true;
         ImportDataEntry<T> importEntry = new ImportDataEntry<>();
         importEntry.setValue(entry).setIndex(++counter);
         dataEntries.add(importEntry);
         entryMapByIndex.put(importEntry.getIndex(), importEntry);
         if (primaryKey != null) {
-            ImportDataEntry<T> existingEntry = entryMapByIndex.get(primaryKey);
+            ImportDataEntry<T> existingEntry = entryMapByPrimaryKey.get(primaryKey);
             if (existingEntry != null) {
-                existingEntry.setUniqueConstraintViolation(true);
-                importEntry.setUniqueConstraintViolation(true);
+                existingEntry.addError("merlin.importer.validation_error.primary_key_not_unique", primaryKey);
+                importEntry.addError("merlin.importer.validation_error.primary_key_not_unique", primaryKey);
             } else {
                 entryMapByPrimaryKey.put(primaryKey, importEntry);
             }
         }
         return this;
+    }
+
+    public ImportStatistics getStatistics() {
+        if (dirty == false) {
+            return statistics;
+        }
+        statistics.reset(dataEntries.size());
+        for (ImportDataEntry<T> entry : dataEntries) {
+            if (entry.getStatus() == null) {
+                statistics.incrementNumberOfNotReconciledElements();
+            } else
+            switch (entry.getStatus()) {
+                case FAULTY:
+                    statistics.incrementNumberOfFaultyElements();
+                    statistics.incrementNumberOfUncommittedElements();
+                    statistics.incrementNumberOfNotReconciledElements();
+                    break;
+                case NEW:
+                    statistics.incrementNumberOfNewElements();
+                    break;
+                case MODIFIED:
+                    statistics.incrementNumberOfModifiedElements();
+                    break;
+                case UNMODIFIED:
+                    statistics.incrementNumberOfUnmodifiedElements();
+                    break;
+                case COMMITTED:
+                    statistics.incrementNumberOfCommittedElements();
+                    break;
+            }
+        }
+        return statistics;
+    }
+
+    public ImportStatistics reconcile() {
+        return statistics;
+    }
+
+    /**
+     * Override this method for supporting reconciling of new entries to import against any previous persisted entry.
+     *
+     * @param entry The new entry to import.
+     * @return The already persisted entry (if exist) with the same index / primary key (e. g. in the data base).
+     */
+    public T getAlreadyPersistedEntry(ImportDataEntry<T> entry) {
+        return null;
     }
 }

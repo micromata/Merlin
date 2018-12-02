@@ -1,8 +1,13 @@
 package de.micromata.merlin.importer;
 
+import de.micromata.merlin.ResultMessage;
+import de.micromata.merlin.ResultMessageStatus;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Holds one single data entry (e. g. one row of an Excel or CSV-file.
@@ -10,6 +15,10 @@ import lombok.Setter;
  * @param <T>
  */
 public class ImportDataEntry<T> {
+    enum Status {NEW, MODIFIED, UNMODIFIED, COMMITTED, FAULTY}
+
+    private List<ResultMessage> errorMessages;
+
     /**
      * If your data entries has already a primary key, such as PIN etc., you should use this. Otherwise
      */
@@ -49,5 +58,29 @@ public class ImportDataEntry<T> {
      */
     @Getter
     @Setter(AccessLevel.PACKAGE)
-    protected boolean uniqueConstraintViolation;
+    protected Status status;
+
+    /**
+     * Creates a {@link ResultMessage} and add this as error message.
+     * @param i18nKey Error message with the reason why this entry can't be imported as i18n key.
+     * @param params Optional params for the i18n message.
+     * @return this for chaining.
+     */
+    public ImportDataEntry<T> addError(String i18nKey, Object... params) {
+        if (this.errorMessages == null) {
+            this.errorMessages = new ArrayList<>();
+        } else {
+            // Check, if the error was already added:
+            for (ResultMessage resultMessage : this.errorMessages) {
+                if (i18nKey.equals(resultMessage.getMessageId())) {
+                    // Was already added.
+                    return this;
+                }
+            }
+        }
+        ResultMessage errorMessage = new ResultMessage(i18nKey, ResultMessageStatus.ERROR, params);
+        this.errorMessages.add(errorMessage);
+        this.status = Status.FAULTY;
+        return this;
+    }
 }
