@@ -21,9 +21,9 @@ public class ZoneminderThingsReader {
         while (it.hasNext()) {
             Row row = it.next();
             ZoneminderThing thing = new ZoneminderThing();
-            thing.setLabel(sheet.getCell(row, "label"));
-            thing.setId(sheet.getCell(row, "id"));
-            thing.setNumber(sheet.getCell(row, "number"));
+            thing.setLabel(sheet.getCellString(row, "label"));
+            thing.setId(sheet.getCellString(row, "id"));
+            thing.setNumber(sheet.getCellString(row, "number"));
             //DataStorage.getDefaultInstance().add(thing);
             counter++;
         }

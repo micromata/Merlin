@@ -175,7 +175,7 @@ public class ExcelSheet {
      * @param columnHeadname
      * @return
      */
-    public String getCell(Row row, String columnHeadname) {
+    public String getCellString(Row row, String columnHeadname) {
         findAndReadHeadRow();
         ExcelColumnDef columnDef = getColumnDef(columnHeadname);
         if (columnDef == null) {
