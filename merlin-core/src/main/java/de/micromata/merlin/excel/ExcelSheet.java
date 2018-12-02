@@ -189,11 +189,25 @@ public class ExcelSheet {
 
     /**
      * @param row
+     * @param columnHeadname
+     * @return The cell of the specified column of the current row (uses internal interator).
+     */
+    public Cell getCell(Row row, String columnHeadname) {
+        findAndReadHeadRow();
+        ExcelColumnDef columnDef = getColumnDef(columnHeadname);
+        return getCell(row, columnDef);
+    }
+
+    /**
+     * @param row
      * @param columnDef
      * @return The cell of the specified column of the current row (uses internal interator).
      */
     public Cell getCell(Row row, ExcelColumnDef columnDef) {
         findAndReadHeadRow();
+        if (columnDef == null) {
+            return null;
+        }
         if (columnDef.getColumnNumber() < 0) {
             log.debug("Column '" + columnDef.getColumnHeadname() + "' not found in sheet '" + getSheetName() + "': can't run cell.");
             return null;
