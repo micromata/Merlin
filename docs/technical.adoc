@@ -42,6 +42,7 @@ OpenJDK 11 is supported as well. The minimum required version of Java is 9.
 |Jackson|Serializing and deserializing JSON.
 |Jersey|Rest services.
 |JUnit|The Java test framework.
+|Lombok|Do you like tons of getter and setter methods? Not? Me, too. Let's go for Lombok.
 |Mockito|For mocking test objects.
 |org.slf4j|The logging framework for the backend.
 |=======
@@ -62,5 +63,15 @@ OpenJDK 11 is supported as well. The minimum required version of Java is 9.
 The full source code of Merlin is hosted by Github:
 [.text-center]
 https://github.com/micromata/Merlin/[Merlin on GitHub^] +
+[.text-left]
+
+=== Lombok required
+==== Installing Lombok in IntelliJ
+[.text-center]
+https://github.com/mplushnikov/lombok-intellij-plugin[Lombok Intellij plugin description^] +
+[.text-left]
+Or go to
+[.text-center]
+https://projectlombok.org/[Lombok home page^] +
 [.text-left]
 

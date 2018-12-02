@@ -1,6 +1,13 @@
 plugins {
     id 'com.gradle.build-scan' version '2.0.2'
+    //id 'io.franzbecker.gradle-lombok' version '1.14'
 }
+
+/*
+lombok {
+    version = '1.18.4'
+    sha256 = "" // skip verifyLombok task
+}*/
 
 allprojects {
     apply plugin: 'maven'
