@@ -6,13 +6,16 @@ import org.apache.poi.ss.usermodel.Row;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ImportTest {
     @Test
     void importTest() {
+        Map<String, Voter> db = new HashMap<>();
         ExcelWorkbook excelWorkbook = new ExcelWorkbook(new File(Definitions.EXAMPLES_EXCEL_TEST_DIR, "Test.xlsx"));
         ExcelSheet sheet = excelWorkbook.getSheet("Validator-Test");
         sheet.registerColumn("Name", new ExcelColumnValidator().setRequired());
@@ -25,7 +28,12 @@ public class ImportTest {
         sheet.registerColumn("Number", new ExcelColumnValidator().setUnique());
 
         Iterator<Row> it = sheet.getDataRowIterator();
-        ImportSet<Voter> set = new ImportSet<>();
+        ImportSet<Voter> set = new ImportSet<>() {
+            @Override
+            public Voter getAlreadyPersistedEntry(ImportDataEntry<Voter> entry) {
+                return db.get(entry.getPrimaryKey());
+            }
+        };
         while (it.hasNext()) {
             Row row = it.next();
             Voter voter = new Voter();
@@ -43,6 +51,12 @@ public class ImportTest {
         assertEquals(8, stats.getNumberOfFaultyElements(), "Number of elements with multiple pks.");
         assertEquals(100, stats.getTotalNumberOfElements());
         assertEquals(100, stats.getNumberOfNotReconciledElements());
+
+        set.reconcile();
+        assertEquals(8, stats.getNumberOfFaultyElements(), "Number of elements with multiple pks.");
+        assertEquals(100, stats.getTotalNumberOfElements());
+        assertEquals(8, stats.getNumberOfNotReconciledElements());
+        assertEquals(92, stats.getNumberOfNewElements());
     }
 
     class Voter {

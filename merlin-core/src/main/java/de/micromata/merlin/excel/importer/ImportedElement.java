@@ -23,6 +23,7 @@
 
 package de.micromata.merlin.excel.importer;
 
+import de.micromata.merlin.importer.PropertyDelta;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
 

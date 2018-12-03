@@ -120,7 +120,29 @@ public class ImportSet<T> {
     }
 
     public ImportStatistics reconcile() {
-        return statistics;
+        for (ImportDataEntry<T> entry : this.dataEntries) {
+            if (entry.getStatus() == ImportDataEntry.Status.FAULTY) {
+                continue;
+            }
+            T oldEntry = getAlreadyPersistedEntry(entry);
+            if (oldEntry != null) {
+                entry.setOldValue(oldEntry);
+                reconcile(entry);
+            } else {
+                entry.setStatus(ImportDataEntry.Status.NEW);
+            }
+        }
+        dirty =  true;
+        return getStatistics();
+    }
+
+
+    /**
+     * You should override this method for enabling this functionality.
+     * <br>
+     * Compares {@link ImportDataEntry#oldValue} with {@link ImportDataEntry#value}. Will only be called, if {@link ImportDataEntry#oldValue} is given.
+     */
+    protected void reconcile(ImportDataEntry<T> entry) {
     }
 
     /**
