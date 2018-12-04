@@ -8,4 +8,5 @@ dependencies {
     compile group: 'org.apache.poi', name: 'poi-ooxml', version:'4.0.0'
     compileOnly "org.projectlombok:lombok:1.18.4"
     testCompile group: 'org.mockito', name: 'mockito-core', version:'2.21.0'
+    testCompileOnly "org.projectlombok:lombok:1.18.4"
 }
