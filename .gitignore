@@ -56,3 +56,4 @@ hs_err_pid*
 *.iml
 *.iws
 tmp
+merlin-i18n-importer/out
