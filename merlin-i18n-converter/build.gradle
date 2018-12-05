@@ -1,4 +1,4 @@
-description = 'merlin-i18n-importer'
+description = 'merlin-i18n-converter'
 
 buildscript {
     repositories {

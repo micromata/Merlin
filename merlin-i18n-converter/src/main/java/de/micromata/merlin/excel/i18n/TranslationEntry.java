@@ -1,6 +1,7 @@
 package de.micromata.merlin.excel.i18n;
 
 import lombok.Getter;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,6 +20,10 @@ public class TranslationEntry {
     }
 
     public void putTranslation(String lang, String value) {
+        if (StringUtils.isEmpty(value) && StringUtils.isNotEmpty(getTranslation(lang))) {
+            // Don't overwrite existing values with empty values.
+            return;
+        }
         values.put(lang, value);
     }
 }
