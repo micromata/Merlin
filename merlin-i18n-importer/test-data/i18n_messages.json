@@ -1,0 +1,29 @@
+{
+  "merlin.excel.validation_error.display_all": {
+    "value": {
+      "de": "",
+      "fr": "",
+      "it": "",
+      "en": ""
+    },
+    "default": "merlin.excel.validation_error.display_all"
+  },
+  "merlin.excel.validation_error.display_column": {
+    "value": {
+      "de": "In Blatt ''{0}'': {1}",
+      "fr": "L'élection est terminée.",
+      "it": "L'elezione è finita.",
+      "en": "The election has ended."
+    },
+    "default": "merlin.excel.validation_error.display_column"
+  },
+  "merlin.excel.validation_error.error_column_headname": {
+    "value": {
+      "de": "Mindestens eine Liste ist ungültig. Der Stimmzettel wird ungültig gewertet.",
+      "fr": "Au moins une liste n’est pas valide. Votre vote est considéré comme nulle.",
+      "it": "Almeno una lista non è valida. Modifichi la sua scelta altrimenti il voto verrà considerato nullo.",
+      "en": "At least one list is invalid. Your ballot will be counted as invalid."
+    },
+    "default": "merlin.excel.validation_error.error_column_headname"
+  }
+}

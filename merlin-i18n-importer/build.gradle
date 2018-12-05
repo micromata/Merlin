@@ -1,0 +1,17 @@
+description = 'merlin-i18n-importer'
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+}
+
+dependencies {
+    compile project(':merlin-core')
+    compile group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.25'
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.6'
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.9.6'
+
+    compileOnly "org.projectlombok:lombok:1.18.4"
+    testCompileOnly "org.projectlombok:lombok:1.18.4"
+}

@@ -1,5 +1,6 @@
 rootProject.name = 'merlin-parent'
 include 'merlin-core'
+include 'merlin-i18n-importer'
 include 'merlin-desktop'
 include 'merlin-desktop-installer'
 include 'merlin-docs'
