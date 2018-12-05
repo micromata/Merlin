@@ -46,6 +46,16 @@ public class ExcelSheet {
     }
 
     /**
+     * Forces reloading of head row. This is useful if you get the head row, read it manually to add new
+     * {@link ExcelColumnDef} objects and to restart.
+     */
+    public void reset() {
+        headRow = null;
+        modified = false;
+        validationErrors = null;
+    }
+
+    /**
      * Analyzes sheet.
      * <p>
      * Each cell will be analyzed by calling ExcelColumnListener for each column with given
@@ -183,7 +193,12 @@ public class ExcelSheet {
                     + "'. Checked also '" + columnHeadname.toLowerCase() + "'.");
             return null;
         }
-        Cell cell = row.getCell(columnDef.getColumnNumber());
+        int colnumber = columnDef.getColumnNumber();
+        if (colnumber == -1) {
+            log.warn("Column " + columnDef.getColumnNumberAsLetters() + " named '" + columnDef.getColumnHeadname() + "' not found.");
+            return null;
+        }
+        Cell cell = row.getCell(colnumber);
         return PoiHelper.getValueAsString(cell);
     }
 

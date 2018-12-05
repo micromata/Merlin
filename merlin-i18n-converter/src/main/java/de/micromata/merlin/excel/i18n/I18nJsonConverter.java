@@ -16,32 +16,32 @@ import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
 
-public class I18nJsonImporter {
-    private static Logger log = LoggerFactory.getLogger(I18nJsonImporter.class);
+public class I18nJsonConverter {
+    private static Logger log = LoggerFactory.getLogger(I18nJsonConverter.class);
 
     @Getter
     private Translations translations;
     @Setter
     private String carriageReturn = "\n";
 
-    public I18nJsonImporter() {
+    public I18nJsonConverter() {
         this.translations = new Translations();
     }
 
-    public I18nJsonImporter(Translations translations) {
+    public I18nJsonConverter(Translations translations) {
         this.translations = translations;
     }
 
     public void importTranslations(Reader reader) throws IOException {
-        Map<String, I18nJsonImportEntry> map = new HashMap<>();
+        Map<String, I18nJsonEntry> map = new HashMap<>();
         StringWriter writer = new StringWriter();
         IOUtils.copy(reader, writer);
         ObjectMapper mapper = new ObjectMapper();
-        map = mapper.readValue(writer.toString(), new TypeReference<Map<String, I18nJsonImportEntry>>() {
+        map = mapper.readValue(writer.toString(), new TypeReference<Map<String, I18nJsonEntry>>() {
         });
-        for (Map.Entry<String, I18nJsonImportEntry> mapEntry : map.entrySet()) {
+        for (Map.Entry<String, I18nJsonEntry> mapEntry : map.entrySet()) {
             String key = mapEntry.getKey();
-            I18nJsonImportEntry entry = mapEntry.getValue();
+            I18nJsonEntry entry = mapEntry.getValue();
             for (Map.Entry<String, String> translation : entry.value.entrySet()) {
                 translations.addTranslation(translation.getKey(), key, translation.getValue());
             }
@@ -56,30 +56,22 @@ public class I18nJsonImporter {
             if (firstKey) firstKey = false;
             else sb.append(",");
             sb.append(carriageReturn);
-            sb.append("\"").append(key).append("\": {").append(carriageReturn); // "de.micromata.key": {
-            sb.append("  \"value\": {").append(carriageReturn);                 //   "value" : {
+            sb.append("  \"").append(key).append("\": {").append(carriageReturn); // "de.micromata.key": {
+            sb.append("    \"value\": {").append(carriageReturn);                 //   "value" : {
             boolean firstLang = true;
             for (String lang : translations.getUsedLangs()) {
                 String text = StringUtils.defaultString(translations.getTranslation(lang, key));
                 if (firstLang) firstLang = false;
                 else sb.append(",").append(carriageReturn);
-                sb.append("    \"").append(key).append("\": \"")
+                sb.append("      \"").append(lang).append("\": \"")
                         .append(text).append("\"");                             //     "de": "Schlüssel"
-                writer.write("=");
-                writer.write(text);
-                writer.write("\n");
             }
-            sb.append("  },").append(carriageReturn);                           //   },
-            sb.append("  \"default\": \"").append(key).append("\"")
+            sb.append(carriageReturn).append("    },").append(carriageReturn);  //   },
+            sb.append("    \"default\": \"").append(key).append("\"")
                     .append(carriageReturn);                                    //   "default": "de.micromata.key"
-            sb.append("}");                                                     // }
+            sb.append("  }");                                                     // }
         }
-        sb.append("}").append(carriageReturn);
+        sb.append(carriageReturn).append("}").append(carriageReturn);
         writer.write(sb.toString());
-    }
-
-    public class ImportTranslation {
-        private Map<String, String> value;
-        private String defaultValue;
     }
 }

@@ -8,17 +8,17 @@ import java.io.Reader;
 import java.io.Writer;
 import java.util.Properties;
 
-public class I18nPropertiesImporter {
+public class I18nPropertiesConverter {
     @Getter
     private Translations translations;
     @Setter
     private String carriageReturn = "\n";
 
-    public I18nPropertiesImporter() {
+    public I18nPropertiesConverter() {
         this.translations = new Translations();
     }
 
-    public I18nPropertiesImporter(Translations translations) {
+    public I18nPropertiesConverter(Translations translations) {
         this.translations = translations;
     }
 

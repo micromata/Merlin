@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Map;
 
-class I18nJsonImportEntry {
+class I18nJsonEntry {
     @JsonProperty
     Map<String, String> value;
     @JsonProperty("default")

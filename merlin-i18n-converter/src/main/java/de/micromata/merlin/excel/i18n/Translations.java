@@ -31,7 +31,11 @@ public class Translations {
     }
 
     public String getTranslation(String lang, String key) {
-        TranslationEntry entry = translations.get(key);
+        TranslationEntry entry = getEntry(key);
         return entry != null ? entry.getTranslation(lang) : null;
+    }
+
+    public TranslationEntry getEntry(String key) {
+        return translations.get(key);
     }
 }

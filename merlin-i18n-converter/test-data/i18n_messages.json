@@ -10,7 +10,7 @@
   },
   "merlin.excel.validation_error.display_column": {
     "value": {
-      "de": "In Blatt ''{0}'': {1}",
+      "de": "Die Wahl ist beendet.",
       "fr": "L'élection est terminée.",
       "it": "L'elezione è finita.",
       "en": "The election has ended."
