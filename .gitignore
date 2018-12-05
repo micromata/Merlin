@@ -8,6 +8,7 @@ merlin-core/out/
 merlin-core/target/
 merlin-desktop/build
 merlin-desktop/out
+merlin-i18n-converter/build
 merlin-i18n-converter/out
 merlin-server/build
 merlin-server/out
