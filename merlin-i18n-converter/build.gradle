@@ -8,6 +8,7 @@ buildscript {
 
 dependencies {
     compile project(':merlin-core')
+    compile group: 'org.apache.commons', name: 'commons-text', version: '1.6'
     compile group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.25'
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.6'
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.9.6'

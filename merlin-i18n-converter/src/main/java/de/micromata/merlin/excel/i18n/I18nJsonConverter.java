@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,6 +23,11 @@ public class I18nJsonConverter {
     private Translations translations;
     @Setter
     private String carriageReturn = "\n";
+    /**
+     * If false (default) all translations will be written. If true, only "" will be written for every language.
+     */
+    @Setter
+    private boolean writeEmptyTranslations = false;
 
     public I18nJsonConverter() {
         this.translations = new Translations();
@@ -60,18 +65,25 @@ public class I18nJsonConverter {
             sb.append("    \"value\": {").append(carriageReturn);                 //   "value" : {
             boolean firstLang = true;
             for (String lang : translations.getUsedLangs()) {
-                String text = StringUtils.defaultString(translations.getTranslation(lang, key));
+                String text = escapeJson(translations.getTranslation(lang, key));
                 if (firstLang) firstLang = false;
                 else sb.append(",").append(carriageReturn);
                 sb.append("      \"").append(lang).append("\": \"")
-                        .append(text).append("\"");                             //     "de": "Schlüssel"
+                        .append(text).append("\"");                               //     "de": "Schlüssel"
             }
-            sb.append(carriageReturn).append("    },").append(carriageReturn);  //   },
+            sb.append(carriageReturn).append("    },").append(carriageReturn);    //   },
             sb.append("    \"default\": \"").append(key).append("\"")
-                    .append(carriageReturn);                                    //   "default": "de.micromata.key"
+                    .append(carriageReturn);                                      //   "default": "de.micromata.key"
             sb.append("  }");                                                     // }
         }
         sb.append(carriageReturn).append("}").append(carriageReturn);
         writer.write(sb.toString());
+    }
+
+    private String escapeJson(String text) {
+        if (text == null) {
+            return "";
+        }
+        return StringEscapeUtils.escapeJson(text);
     }
 }

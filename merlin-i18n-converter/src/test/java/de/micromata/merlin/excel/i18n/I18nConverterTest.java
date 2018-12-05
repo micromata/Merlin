@@ -102,4 +102,54 @@ public class I18nConverterTest {
         assertEquals("Almeno una lista non è valida. Modifichi la sua scelta altrimenti il voto verrà considerato nullo.",
                 translations.getTranslation("it", "merlin.excel.validation_error.error_column_headname"));
     }
+
+    // Works only for me ;-)
+    @Test
+    void realTest() throws IOException {
+        String realTestDir = "/Users/kai/Documents/merlin-i18n";
+        String baseoutFilename = "i18n-translations";
+
+        File file = new File(realTestDir, "messages_de.properties");
+        if (!file.exists()) {
+            return;
+        }
+        I18nPropertiesConverter propsConverter = new I18nPropertiesConverter();
+        propsConverter.importTranslations("de", new FileReader(file));
+        Translations translations = propsConverter.getTranslations();
+        translations.setCreateKeyIfNotPresent(false);
+
+        I18nJsonConverter jsonConverter = new I18nJsonConverter(translations);
+        file = new File(realTestDir, "systemtexte.json");
+        jsonConverter.importTranslations(new FileReader(file));
+
+        file = new File(realTestDir, "translations.xlsx");
+        I18nExcelConverter excelConverter = new I18nExcelConverter(translations);
+        try (FileOutputStream outputStream = new FileOutputStream(file)) {
+            excelConverter.write(outputStream);
+        }
+
+
+        file = new File(realTestDir, "POLYAS-Election-translations-Kai.xlsx");
+        if (!file.exists()) {
+            return;
+        }
+        excelConverter = new I18nExcelConverter();
+        try (FileInputStream inputStream = new FileInputStream(file)) {
+            excelConverter.importTranslations(inputStream, file.getName());
+        }
+        translations = excelConverter.getTranslations();
+
+        propsConverter = new I18nPropertiesConverter(translations);
+        try (Writer writer = new FileWriter(new File(realTestDir, baseoutFilename + "_de.properties"))) {
+            propsConverter.write("de", writer);
+        }
+        try (Writer writer = new FileWriter(new File(realTestDir, baseoutFilename + ".properties"))) {
+            propsConverter.write("en", writer);
+        }
+
+        jsonConverter = new I18nJsonConverter(translations);
+        try (Writer writer = new FileWriter(new File(realTestDir, baseoutFilename + ".json"))) {
+            jsonConverter.write(writer);
+        }
+    }
 }
