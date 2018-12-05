@@ -1,3 +1,7 @@
+plugins {
+    id 'io.franzbecker.gradle-lombok' version '1.14'
+}
+
 description = 'merlin-core'
 
 dependencies {
@@ -9,4 +13,9 @@ dependencies {
     compileOnly "org.projectlombok:lombok:1.18.4"
     testCompile group: 'org.mockito', name: 'mockito-core', version:'2.21.0'
     testCompileOnly "org.projectlombok:lombok:1.18.4"
+}
+
+lombok {
+    version = '1.18.4'
+    sha256 = "" // skip verifyLombok task
 }
