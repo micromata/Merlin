@@ -8,6 +8,7 @@ merlin-core/out/
 merlin-core/target/
 merlin-desktop/build
 merlin-desktop/out
+merlin-i18n-converter/out
 merlin-server/build
 merlin-server/out
 merlin-server/tmp
@@ -56,4 +57,3 @@ hs_err_pid*
 *.iml
 *.iws
 tmp
-merlin-i18n-importer/out
