@@ -1,10 +1,9 @@
-description = 'merlin-i18n-converter'
-
-buildscript {
-    repositories {
-        mavenCentral()
-    }
+plugins {
+    id 'io.franzbecker.gradle-lombok' version '1.14'
+    id 'java'
 }
+
+description = 'merlin-i18n-converter'
 
 dependencies {
     compile project(':merlin-core')
@@ -12,7 +11,26 @@ dependencies {
     compile group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.25'
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.6'
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.9.6'
+    compile group: 'commons-cli', name: 'commons-cli', version: '1.4'
 
     compileOnly "org.projectlombok:lombok:1.18.4"
     testCompileOnly "org.projectlombok:lombok:1.18.4"
 }
+
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
+lombok {
+    version = '1.18.4'
+    sha256 = "" // skip verifyLombok task
+}
+
+apply plugin: 'application'
+mainClassName = "de.micromata.merlin.excel.i18n.Main"
+
+apply plugin: 'distribution'
+
+
+task(dist).dependsOn distZip
