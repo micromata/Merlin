@@ -4,6 +4,8 @@ import org.apache.commons.cli.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.*;
+
 public class Main {
     private static Logger log = LoggerFactory.getLogger(Main.class);
 
@@ -19,8 +21,25 @@ public class Main {
     private void _start(String[] args) {
         // create Options object
         Options options = new Options();
-        options.addOption("o", "output", true, "The base name of the output files. Default is 'i18n.'.");
+        options.addOption("b", "basename", true, "The base name of the output files. Default is 'i18n-generated'.");
+
+        Option option = new Option("r", "read", true,
+                "Reads the translations of the given filename. Doesn't overwrite existing translations and create new keys if not exist.");
+        option.setArgs(Option.UNLIMITED_VALUES);
+        options.addOption(option);
+
+        option = new Option("ro", "read-overwrite", true,
+                "Reads the translations of the given filename. Does overwrite existing translations and create new keys if not exist.");
+        option.setArgs(Option.UNLIMITED_VALUES);
+        options.addOption(option);
+
+        option = new Option("rm", "read-merge", true,
+                "Reads the translations of the given filename. Doesn't overwrite existing translations and doesn't create new keys if not exist.");
+        option.setArgs(Option.UNLIMITED_VALUES);
+        options.addOption(option);
+
         options.addOption("h", "help", false, "Print this help screen.");
+
         CommandLineParser parser = new DefaultParser();
         try {
             // parse the command line arguments
@@ -29,19 +48,67 @@ public class Main {
                 printHelp(options);
                 return;
             }
-            String basename = "i18n.";
-            if (line.hasOption('o')) {
-                basename = line.getOptionValue("o");
-            }
-            String[] files = line.getArgs();
-            if (files == null ||files.length == 0) {
-                printHelp(options);
-                return;
+            String basename = "i18n-generated";
+            if (line.hasOption('b')) {
+                basename = line.getOptionValue("b");
             }
 
+            I18nConverter i18nConverter = new I18nConverter();
+            Translations translations = i18nConverter.getTranslations();
+            Option[] parsedOptions = line.getOptions();
+            for (Option parsedOption : parsedOptions) {
+                if ("b".equals(parsedOption.getOpt())) {
+                    continue;
+                }
+                String[] files = parsedOption.getValues();
+                for (String file : files) {
+                    if ("r".equals(parsedOption.getOpt())) {
+                        translations.setOverwriteExistingTranslations(false).setCreateKeyIfNotPresent(true);
+                    } else if ("ro".equals(parsedOption.getOpt())) {
+                        translations.setOverwriteExistingTranslations(true).setCreateKeyIfNotPresent(true);
+                    } else if ("rm".equals(parsedOption.getOpt())) {
+                        translations.setOverwriteExistingTranslations(false).setCreateKeyIfNotPresent(false);
+                    } else {
+                        log.error("Unsupported option: " + option.getValue());
+                    }
+                    i18nConverter.importTranslations(new File(file));
+                }
+            }
+            String[] files = line.getArgs();
+            if (files != null && files.length > 0) {
+                translations.setOverwriteExistingTranslations(false).setCreateKeyIfNotPresent(true);
+                for (String file : files) {
+                    i18nConverter.importTranslations(new File(file));
+                }
+            }
+            if (translations.getKeys().size() == 0) {
+                log.info("No translations imported....");
+                printHelp(options);
+            } else {
+                File file = new File(basename + ".json");
+                try (Writer writer = new FileWriter(file)) {
+                    new I18nJsonConverter(translations).write(writer);
+                }
+                file = new File(basename + ".xlsx");
+                try (OutputStream outputStream = new FileOutputStream(file)) {
+                    new I18nExcelConverter(translations).write(outputStream);
+                }
+                for (String lang : translations.getUsedLangs()) {
+                    if (lang.length() > 0) {
+                        file = new File(basename + "_" + lang + ".properties");
+                    } else {
+                        file = new File(basename + ".properties");
+                    }
+                    try (Writer writer = new FileWriter(file)) {
+                        new I18nPropertiesConverter(translations).write(lang, writer);
+                    }
+                }
+            }
+        } catch (IOException ex) {
+            log.error("Error while procesing files: " + ex.getMessage());
         } catch (ParseException ex) {
             // oops, something went wrong
-            System.err.println("Parsing failed.  Reason: " + ex.getMessage());
+            log.error("Parsing failed.  Reason: " + ex.getMessage());
             printHelp(options);
         }
     }
@@ -49,6 +116,9 @@ public class Main {
 
     private static void printHelp(Options options) {
         HelpFormatter formatter = new HelpFormatter();
-        formatter.printHelp("merlin-i18n-converter [OPTIONS] [FILE1] [FILE2]...", options);
+        formatter.printHelp("merlin-i18n-converter [OPTIONS] [FILE1] [FILE2]...",
+                "Read i18n translations of different formats, merges and writes the translations to different foramts.",
+                options,
+                "The optional given files [FILE1] [FILE2]... will be read with the flag -r");
     }
 }

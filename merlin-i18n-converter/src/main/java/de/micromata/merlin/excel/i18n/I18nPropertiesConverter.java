@@ -2,6 +2,7 @@ package de.micromata.merlin.excel.i18n;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -35,6 +36,9 @@ public class I18nPropertiesConverter {
     public void write(String lang, Writer writer) throws IOException {
         for (String key : translations.getKeys()) {
             String text = translations.getTranslation(lang, key);
+            if (StringUtils.isEmpty(text)) {
+                continue;
+            }
             writer.write(key);
             writer.write("=");
             writer.write(text);
