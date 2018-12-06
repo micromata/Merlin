@@ -45,8 +45,11 @@ public class I18nConverter {
             return;
         }
         I18nPropertiesConverter i18nPropertiesConverter = new I18nPropertiesConverter(translations);
-        try (Reader reader= new FileReader(file)) {
-            i18nPropertiesConverter.importTranslations("en", reader);
+        String basename = FilenameUtils.getBaseName(file.getName());
+        int pos = basename.indexOf('_');
+        String lang = pos >= 0 && pos < basename.length() -1 ? basename.substring(pos + 1) : "";
+        try (Reader reader = new FileReader(file)) {
+            i18nPropertiesConverter.importTranslations(lang, reader);
         }
     }
 }

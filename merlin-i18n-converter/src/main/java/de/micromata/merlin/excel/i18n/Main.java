@@ -21,7 +21,6 @@ public class Main {
         Options options = new Options();
         options.addOption("o", "output", true, "The base name of the output files. Default is 'i18n.'.");
         options.addOption("h", "help", false, "Print this help screen.");
-        options.addOption("p", "properties", true, "Read a property file‚");
         CommandLineParser parser = new DefaultParser();
         try {
             // parse the command line arguments
