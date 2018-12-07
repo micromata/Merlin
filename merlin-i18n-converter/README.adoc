@@ -12,6 +12,9 @@ This converter converts:
 2. i18n Json files
 3. Excel sheets (with translations) in the formats `xlsx` and `xls`.
 
+## Download
+
+https://sourceforge.net/projects/merlinrunner/files/merlin-i18n-converter/
 
 ## Usage
 
