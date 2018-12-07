@@ -119,6 +119,7 @@ public class Main {
         formatter.printHelp("merlin-i18n-converter [OPTIONS] [FILE1] [FILE2]...",
                 "Read i18n translations of different formats, merges and writes the translations to different foramts.",
                 options,
-                "The optional given files [FILE1] [FILE2]... will be read with the flag -r");
+                "The optional given files [FILE1] [FILE2]... will be read with the flag -r.\n\n"
+        + "Further information on: https://github.com/micromata/Merlin/tree/master/merlin-i18n-converter");
     }
 }
