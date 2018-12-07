@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.nio.charset.Charset;
 
 public class Main {
     private static Logger log = LoggerFactory.getLogger(Main.class);
@@ -94,7 +95,7 @@ public class Main {
                 printHelp(options);
             } else {
                 File file = new File(basename + ".json");
-                try (Writer writer = new FileWriter(file)) {
+                try (Writer writer = new FileWriter(file, Charset.forName("UTF-8"))) {
                     new I18nJsonConverter(translations).setKeysOnly(keysOnly).write(writer);
                 }
                 file = new File(basename + ".xlsx");
@@ -107,9 +108,13 @@ public class Main {
                     } else {
                         file = new File(basename + ".properties");
                     }
-                    try (Writer writer = new FileWriter(file)) {
+                    try (Writer writer = new FileWriter(file, Charset.forName("UTF-8"))) {
                         new I18nPropertiesConverter(translations).write(lang, writer);
                     }
+                }
+                file = new File(basename + ".log");
+                try (Writer writer = new FileWriter(file, Charset.forName("UTF-8"))) {
+                    writer.write(translations.getLogging());
                 }
             }
         } catch (IOException ex) {

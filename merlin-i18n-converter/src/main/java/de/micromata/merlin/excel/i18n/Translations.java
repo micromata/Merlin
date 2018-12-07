@@ -18,6 +18,8 @@ public class Translations {
     private String i18nKey;
     @Getter
     private Set<String> usedLangs = new TreeSet<>();
+    private StringBuilder logging = new StringBuilder();
+
     /**
      * If true, then new keys will be added (default). If false, only translations to existing keys will be added.
      * Translations for not existing keys will be ignored on import.
@@ -34,8 +36,12 @@ public class Translations {
         if (!keys.contains(key)) {
             if (!createKeyIfNotPresent) {
                 // Don't add translations for non-existing keys.
+                logging.append("I lang='" + lang + "', key='" + key + "'. Skipping new key (cli option -.read-merge). Translation='"
+                        + translation + "'\n");
                 return;
             }
+            logging.append("C lang='" + lang + "', key='" + key + "'. Create new key (cli option -.read-merge). Translation='"
+                    + translation + "'\n");
             keys.add(key);
         }
         usedLangs.add(lang);
@@ -45,8 +51,12 @@ public class Translations {
             translations.put(key, entry);
         } else if (!overwriteExistingTranslations && StringUtils.isNotBlank(entry.getTranslation(lang))) {
             // Do not overwrite existing translations.
+            logging.append("I lang='" + lang + "', key='" + key + "'. Doesn't overwrite existing translation '" + entry.getTranslation(lang)
+                    + "'. Ignoring new translation='"
+                    + translation + "'\n");
             return;
         }
+        logging.append("A lang='" + lang + "', key='" + key + "'. Adding translation '" + translation + "'\n");
         entry.putTranslation(lang, translation);
     }
 
@@ -57,5 +67,9 @@ public class Translations {
 
     public TranslationEntry getEntry(String key) {
         return translations.get(key);
+    }
+
+    public String getLogging() {
+        return logging.toString();
     }
 }
