@@ -16,6 +16,9 @@ This converter converts:
 
 https://sourceforge.net/projects/merlinrunner/files/merlin-i18n-converter/
 
+This download contains a ready-to-run version for all Java platforms (MacOS, Linux and Windows).
+Java 9 or higher must be installed.
+
 ## Usage
 
 ----
