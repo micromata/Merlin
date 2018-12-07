@@ -1,4 +1,10 @@
-# Merlin I18n converter
+Merlin I18n converter
+=====================
+Micromata GmbH, Kai Reinhard
+:toc:
+:toclevels: 4
+
+Copyright (C) 2018
 
 This converter converts:
 
@@ -16,6 +22,8 @@ translations to different foramts.
  -b,--basename <arg>          The base name of the output files. Default
                               is 'i18n-generated'.
  -h,--help                    Print this help screen.
+ -ko,--keys-only              Don't export the translations for the json
+                              file, only the keys.
  -r,--read <arg>              Reads the translations of the given
                               filename. Doesn't overwrite existing
                               translations and create new keys if not
@@ -44,16 +52,9 @@ Reads all `my-app*.properties` files (e. g. `my-app.properties`, `my-app_de.prop
 one key in one language will be overwritten. The translations of the json file will be merged
 but no new keys will be created.
 
-The following files will be created (as an example):
+The file `i18n-generated.xlsx` will be generated.
+The additional created file `i18n-generated.log` contains verbose logging information of what was really done.
 
-----
-i18n-generated.json
-i18n-generated.xlsx
-i18n-generated.properties
-i18n-generated.properties
-i18n-generated.properties
-i18n-generated.properties
-----
 The property files contain the Java i18n properties, the Excel file all the translations for editing and the
 json file all translations in json format.
 
@@ -68,18 +69,22 @@ Reads all translations for all languages from the given Excel file and generates
 
 ----
 i18n-generated.json
+i18n-generated.log
 i18n-generated.xlsx
-i18n-generated.properties
-i18n-generated.properties
-i18n-generated.properties
-i18n-generated.properties
+i18n-generated_de.properties
+i18n-generated_en.properties
+i18n-generated_fr.properties
+i18n-generated_it.properties
 ----
 The property files contain the Java i18n properties, the Excel file all the translations for editing and the
 json file all translations in json format.
 
 You may add the Java i18n properties or the json file to the resources of your app.
 
-## Create merlin-i18n-converter
+## Download ready-to-run version
+
+
+## Create merlin-i18n-converter from the sources
 
 1. `gradle distZip` generates the app including start scripts in one zip archive.
 2. Unpack `build/distributions/merlin-i18n-converter-1.0.zip`and start `bin/merlin-i18n-converter` (on MacOS and Linux)
