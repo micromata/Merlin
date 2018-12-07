@@ -1,0 +1,50 @@
+# Merlin I18n converter
+
+This converter converts:
+1. Java i18n property files
+2. i18n Json files
+3. Excel documents (with translations)
+
+
+## Usage
+
+[source]
+----
+usage: merlin-i18n-converter [OPTIONS] [FILE1] [FILE2]...
+Read i18n translations of different formats, merges and writes the
+translations to different foramts.
+ -b,--basename <arg>          The base name of the output files. Default
+                              is 'i18n-generated'.
+ -h,--help                    Print this help screen.
+ -r,--read <arg>              Reads the translations of the given
+                              filename. Doesn't overwrite existing
+                              translations and create new keys if not
+                              exist.
+ -rm,--read-merge <arg>       Reads the translations of the given
+                              filename. Doesn't overwrite existing
+                              translations and doesn't create new keys if
+                              not exist.
+ -ro,--read-overwrite <arg>   Reads the translations of the given
+                              filename. Does overwrite existing
+                              translations and create new keys if not
+                              exist.
+The optional given files [FILE1] [FILE2]... will be read with the flag -r.
+----
+
+## Example
+
+----
+merlin-i18n-converter -b my-app -r my-app*.properties -rm my-app.json
+----
+
+Reads all `my-app*.properties` files (e. g. `my-app.properties`, `my-app_de.properties`,
+`my-app_it.properties`) and afterwards the translations of `my-app.json`. No translation for
+one key in one language will be overwritten. The translations of the json file will be merged
+but no new keys will be created.
+
+
+## Create merlin-i18n-converter
+
+1. `gradle distZip` generates the app including start scripts in one zip archive.
+2. Unpack `build/distributions/merlin-i18n-converter-1.0.zip`and start `bin/merlin-i18n-converter` (on MacOS and Linux)
+   or `bin/merlin-i18n-converter.bat` on Windows.
