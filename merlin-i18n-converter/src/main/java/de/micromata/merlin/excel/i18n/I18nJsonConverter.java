@@ -23,6 +23,9 @@ public class I18nJsonConverter {
     private Translations translations;
     @Setter
     private String carriageReturn = "\n";
+    @Setter
+    private boolean keysOnly;
+
     /**
      * If false (default) all translations will be written. If true, only "" will be written for every language.
      */
@@ -65,7 +68,7 @@ public class I18nJsonConverter {
             sb.append("    \"value\": {").append(carriageReturn);                 //   "value" : {
             boolean firstLang = true;
             for (String lang : translations.getUsedLangs()) {
-                String text = escapeJson(translations.getTranslation(lang, key));
+                String text = keysOnly ? "" : escapeJson(translations.getTranslation(lang, key));
                 if (firstLang) firstLang = false;
                 else sb.append(",").append(carriageReturn);
                 sb.append("      \"").append(lang).append("\": \"")

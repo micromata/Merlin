@@ -38,6 +38,9 @@ public class Main {
         option.setArgs(Option.UNLIMITED_VALUES);
         options.addOption(option);
 
+        options.addOption("ko", "keys-only", false,
+                "Don't export the translations for the json file, only the keys.");
+
         options.addOption("h", "help", false, "Print this help screen.");
 
         CommandLineParser parser = new DefaultParser();
@@ -52,12 +55,17 @@ public class Main {
             if (line.hasOption('b')) {
                 basename = line.getOptionValue("b");
             }
+            boolean keysOnly = false;
+            if (line.hasOption("ko")) {
+                keysOnly = true;
+            }
 
             I18nConverter i18nConverter = new I18nConverter();
             Translations translations = i18nConverter.getTranslations();
             Option[] parsedOptions = line.getOptions();
             for (Option parsedOption : parsedOptions) {
-                if ("b".equals(parsedOption.getOpt())) {
+                if ("b".equals(parsedOption.getOpt()) ||
+                        "ko".equals(parsedOption.getOpt())) {
                     continue;
                 }
                 String[] files = parsedOption.getValues();
@@ -87,7 +95,7 @@ public class Main {
             } else {
                 File file = new File(basename + ".json");
                 try (Writer writer = new FileWriter(file)) {
-                    new I18nJsonConverter(translations).write(writer);
+                    new I18nJsonConverter(translations).setKeysOnly(keysOnly).write(writer);
                 }
                 file = new File(basename + ".xlsx");
                 try (OutputStream outputStream = new FileOutputStream(file)) {
@@ -120,6 +128,6 @@ public class Main {
                 "Read i18n translations of different formats, merges and writes the translations to different foramts.",
                 options,
                 "The optional given files [FILE1] [FILE2]... will be read with the flag -r.\n\n"
-        + "Further information on: https://github.com/micromata/Merlin/tree/master/merlin-i18n-converter");
+                        + "Further information on: https://github.com/micromata/Merlin/tree/master/merlin-i18n-converter");
     }
 }
