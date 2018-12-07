@@ -4,7 +4,7 @@ This converter converts:
 
 1. Java i18n property files
 2. i18n Json files
-3. Excel documents (with translations)
+3. Excel sheets (with translations) in the formats `xlsx` and `xls`.
 
 
 ## Usage
@@ -36,7 +36,7 @@ The optional given files [FILE1] [FILE2]... will be read with the flag -r.
 ### Converting to Excel
 
 ----
-merlin-i18n-converter -b my-app -r my-app*.properties -rm my-app.json
+merlin-i18n-converter -r my-app*.properties -rm my-app.json
 ----
 
 Reads all `my-app*.properties` files (e. g. `my-app.properties`, `my-app_de.properties`,
@@ -47,31 +47,32 @@ but no new keys will be created.
 The following files will be created (as an example):
 
 ----
-my-app.json
-my-app.xlsx
-my-app_de.properties
-my-app_en.properties
-my-app_fr.properties
-my-app_it.properties
+i18n-generated.json
+i18n-generated.xlsx
+i18n-generated.properties
+i18n-generated.properties
+i18n-generated.properties
+i18n-generated.properties
 ----
 The property files contain the Java i18n properties, the Excel file all the translations for editing and the
 json file all translations in json format.
 
 ### Converting from Excel
 
+Edit the generated Excel file and rename it to e. g. `my-app.xlsx`.
 ----
-merlin-i18n-converter -b my-app -r my-app.xlsx
+merlin-i18n-converter -r my-app.xlsx
 ----
 
 Reads all translations for all languages from the given Excel file and generates (as an example):
 
 ----
-my-app.json
-my-app.xlsx
-my-app_de.properties
-my-app_en.properties
-my-app_fr.properties
-my-app_it.properties
+i18n-generated.json
+i18n-generated.xlsx
+i18n-generated.properties
+i18n-generated.properties
+i18n-generated.properties
+i18n-generated.properties
 ----
 The property files contain the Java i18n properties, the Excel file all the translations for editing and the
 json file all translations in json format.
