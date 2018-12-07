@@ -83,9 +83,6 @@ json file all translations in json format.
 
 You may add the Java i18n properties or the json file to the resources of your app.
 
-## Download ready-to-run version
-
-
 ## Create merlin-i18n-converter from the sources
 
 1. `gradle distZip` generates the app including start scripts in one zip archive.
