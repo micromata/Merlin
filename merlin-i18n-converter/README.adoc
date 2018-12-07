@@ -1,6 +1,7 @@
 # Merlin I18n converter
 
 This converter converts:
+
 1. Java i18n property files
 2. i18n Json files
 3. Excel documents (with translations)
