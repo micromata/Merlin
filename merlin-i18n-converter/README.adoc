@@ -9,7 +9,6 @@ This converter converts:
 
 ## Usage
 
-[source]
 ----
 usage: merlin-i18n-converter [OPTIONS] [FILE1] [FILE2]...
 Read i18n translations of different formats, merges and writes the
@@ -32,7 +31,9 @@ translations to different foramts.
 The optional given files [FILE1] [FILE2]... will be read with the flag -r.
 ----
 
-## Example
+## Examples
+
+### Converting to Excel
 
 ----
 merlin-i18n-converter -b my-app -r my-app*.properties -rm my-app.json
@@ -43,6 +44,39 @@ Reads all `my-app*.properties` files (e. g. `my-app.properties`, `my-app_de.prop
 one key in one language will be overwritten. The translations of the json file will be merged
 but no new keys will be created.
 
+The following files will be created (as an example):
+
+----
+my-app.json
+my-app.xlsx
+my-app_de.properties
+my-app_en.properties
+my-app_fr.properties
+my-app_it.properties
+----
+The property files contain the Java i18n properties, the Excel file all the translations for editing and the
+json file all translations in json format.
+
+### Converting from Excel
+
+----
+merlin-i18n-converter -b my-app -r my-app.xlsx
+----
+
+Reads all translations for all languages from the given Excel file and generates (as an example):
+
+----
+my-app.json
+my-app.xlsx
+my-app_de.properties
+my-app_en.properties
+my-app_fr.properties
+my-app_it.properties
+----
+The property files contain the Java i18n properties, the Excel file all the translations for editing and the
+json file all translations in json format.
+
+You may add the Java i18n properties or the json file to the resources of your app.
 
 ## Create merlin-i18n-converter
 
