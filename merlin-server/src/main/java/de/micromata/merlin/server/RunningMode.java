@@ -12,17 +12,11 @@ public class RunningMode {
 
     public enum Mode {PRODUCTION, DEVELOPMENT}
 
-    ;
-
     public enum ServerType {DESKTOP, SERVER}
-
-    ;
 
     public enum UserManagement {SINGLE}
 
     public enum OSType {MAC_OS, WINDOWS, LINUX, OTHER}
-
-    ;
 
     private static boolean running;
     private static File baseDir;
