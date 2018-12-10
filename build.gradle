@@ -1,5 +1,4 @@
 plugins {
-    id 'com.gradle.build-scan' version '2.0.2'
     //id 'io.franzbecker.gradle-lombok' version '1.14'
 }
 
@@ -84,11 +83,6 @@ subprojects {
             }
         }
     }*/
-}
-
-buildScan {
-    termsOfServiceUrl = 'https://gradle.com/terms-of-service'
-    termsOfServiceAgree = 'yes'
 }
 
 wrapper {
