@@ -28,6 +28,22 @@ public class I18nConverter {
             log.error("File '" + file.getAbsolutePath() + "' doesn't exist. Skipping.");
             return;
         }
+        if (file.isDirectory()) {
+            log.info("Reading json tree from directory: " + file.getAbsolutePath());
+            for (File subdir : file.listFiles()) {
+                if (subdir.getName().length() == 2) {
+                    String lang = subdir.getName();
+                    log.info("Processing lang '" + lang + "'.");
+                    for (File translationFile : subdir.listFiles()) {
+                        if (translationFile.getName().endsWith(".json")) {
+                            log.info("Processing json tree for language '" + lang + "' with file: " + translationFile.getAbsolutePath());
+                            importJsonTree(lang, translationFile);
+                        }
+                    }
+                }
+            }
+            return;
+        }
         String extension = FilenameUtils.getExtension(file.getName()).toLowerCase();
         if (extension.startsWith("xls")) {
             importExcel(file);
@@ -51,9 +67,17 @@ public class I18nConverter {
 
     private void importJson(String content, File file) throws IOException {
         log.info("Importing json translations: " + file.getAbsolutePath());
-        I18nJsonTreeConverter jsonConverter = new I18nJsonTreeConverter(translations);
+        I18nJsonConverter jsonConverter = new I18nJsonConverter(translations);
         try (Reader reader = new StringReader(content)) {
-            jsonConverter.importTranslations(reader, "de");
+            jsonConverter.importTranslations(reader);
+        }
+    }
+
+    private void importJsonTree(String lang, File file) throws IOException {
+        log.info("Importing json translations (lang=" + lang + "): " + file.getAbsolutePath());
+        I18nJsonTreeConverter jsonConverter = new I18nJsonTreeConverter(translations);
+        try (Reader reader = new FileReader(file)) {
+            jsonConverter.importTranslations(reader, lang);
         }
     }
 
