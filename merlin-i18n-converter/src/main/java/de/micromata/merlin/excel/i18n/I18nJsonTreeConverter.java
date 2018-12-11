@@ -15,6 +15,7 @@ import java.io.Reader;
 import java.io.Writer;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class I18nJsonTreeConverter {
     private static Logger log = LoggerFactory.getLogger(I18nJsonTreeConverter.class);
@@ -69,24 +70,27 @@ public class I18nJsonTreeConverter {
 
 
     public void write(String lang, Writer writer) throws IOException {
+        Node root = buildNodes();
         StringBuilder sb = new StringBuilder();
-        sb.append("{");
-        Iterator<String> it = dictionary.getKeys().iterator();
-        write(lang, sb, it, "", 0);
-        writer.write(sb.toString());
+        write(lang, sb, root);
         sb.append(carriageReturn).append("}").append(carriageReturn);
+        writer.write(sb.toString());
     }
 
-    private void write(String lang, StringBuilder sb, Iterator<String> it, String prefix, int level) {
-        boolean firstKey = true;
-        while (it.hasNext()) {
-            String key = it.next();
-            String translation = dictionary.getTranslation(key, lang);
-            if (firstKey) firstKey = false;
-            else sb.append(",");
+    private void write(String lang, StringBuilder sb, Node node) {
+        if (node.keyPart != null) {
+            for (int i = 0; i < node.level; i++) sb.append("  ");
+            sb.append("\"").append(node.keyPart).append("\" : ");
+        }
+        if (node.childs == null) {
+            String translation = escapeJson(dictionary.getTranslation(lang, node.i18nKey));
+            sb.append("\"").append(translation).append("\"");
+            return;
+        }
+        sb.append("{");
+        for (Map.Entry<String, Node> entry : node.childs.entrySet()) {
             sb.append(carriageReturn);
-            sb.append(StringUtils.repeat("  ", level));
-            sb.append(key).append("\":  \"").append(translation).append("\"");
+            write(lang, sb, entry.getValue());
         }
     }
 
@@ -95,5 +99,53 @@ public class I18nJsonTreeConverter {
             return "";
         }
         return StringEscapeUtils.escapeJson(text);
+    }
+
+    private Node buildNodes() {
+        Node root = new Node(null, 0);
+        for (String i18nKey : dictionary.getKeys()) {
+            String[] keyParts = StringUtils.split(i18nKey, '.');
+            addNodes(root, i18nKey, keyParts, 0);
+        }
+        return root;
+    }
+
+    private void addNodes(Node parent, String i18nKey, String[] keyParts, int level) {
+        String keyPart = keyParts[level];
+        Node node = parent.ensureAndGetChild(keyPart);
+        if (level < keyParts.length - 1) {
+            addNodes(node, i18nKey, keyParts, level + 1);
+        } else {
+            node.i18nKey = i18nKey;
+        }
+    }
+
+    private class Node implements Comparable<Node> {
+        String keyPart;
+        String i18nKey;
+        int level;
+        Map<String, Node> childs;
+
+        Node(String keyPart, int level) {
+            this.keyPart = keyPart;
+            this.level = level;
+        }
+
+        Node ensureAndGetChild(String keyPart) {
+            if (childs == null) {
+                childs = new TreeMap<String, Node>();
+            }
+            Node child = childs.get(keyPart);
+            if (child == null) {
+                child = new Node(keyPart, level + 1);
+                childs.put(keyPart, child);
+            }
+            return child;
+        }
+
+        @Override
+        public int compareTo(Node o) {
+            return keyPart.compareTo(o.keyPart);
+        }
     }
 }
