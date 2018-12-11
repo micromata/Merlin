@@ -13,13 +13,13 @@ public class I18nConverter {
     private static Logger log = LoggerFactory.getLogger(I18nConverter.class);
 
     @Getter
-    private Translations translations;
+    private Dictionary translations;
 
     public I18nConverter() {
-        this.translations = new Translations();
+        this.translations = new Dictionary();
     }
 
-    public I18nConverter(Translations translations) {
+    public I18nConverter(Dictionary translations) {
         this.translations = translations;
     }
 
@@ -51,9 +51,9 @@ public class I18nConverter {
 
     private void importJson(String content, File file) throws IOException {
         log.info("Importing json translations: " + file.getAbsolutePath());
-        I18nJsonConverter jsonConverter = new I18nJsonConverter(translations);
+        I18nJsonTreeConverter jsonConverter = new I18nJsonTreeConverter(translations);
         try (Reader reader = new StringReader(content)) {
-            jsonConverter.importTranslations(reader);
+            jsonConverter.importTranslations(reader, "de");
         }
     }
 

@@ -11,15 +11,15 @@ import java.util.Properties;
 
 public class I18nPropertiesConverter {
     @Getter
-    private Translations translations;
+    private Dictionary translations;
     @Setter
     private String carriageReturn = "\n";
 
     public I18nPropertiesConverter() {
-        this.translations = new Translations();
+        this.translations = new Dictionary();
     }
 
-    public I18nPropertiesConverter(Translations translations) {
+    public I18nPropertiesConverter(Dictionary translations) {
         this.translations = translations;
     }
 

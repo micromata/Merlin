@@ -19,7 +19,7 @@ public class I18nConverterTest {
         propsConverter.importTranslations("de", new FileReader(file));
         file = new File(TEST_DIR, "i18n_messages_en.properties");
         propsConverter.importTranslations("en", new FileReader(file));
-        Translations translations = propsConverter.getTranslations();
+        Dictionary translations = propsConverter.getTranslations();
         assertEquals(4, translations.getKeys().size());
         assertEquals("In Blatt ''{0}'', Spalte {1}:''{2}'' und Zeile #{3}: {4}",
                 translations.getTranslation("de", "merlin.excel.validation_error.display_all"));
@@ -45,7 +45,7 @@ public class I18nConverterTest {
         I18nJsonConverter jsonConverter = new I18nJsonConverter();
         File file = new File(TEST_DIR, JSON_FILE);
         jsonConverter.importTranslations(new FileReader(file));
-        Translations translations = jsonConverter.getTranslations();
+        Dictionary translations = jsonConverter.getTranslations();
         assertEquals(3, translations.getKeys().size());
         assertEquals("", translations.getTranslation("de", "merlin.excel.validation_error.display_all"));
         assertEquals("Almeno una lista non è valida. Modifichi la sua scelta altrimenti il voto verrà considerato nullo.",
@@ -72,7 +72,7 @@ public class I18nConverterTest {
         propsConverter.importTranslations("de", new FileReader(file));
         file = new File(TEST_DIR, "i18n_messages_en.properties");
         propsConverter.importTranslations("en", new FileReader(file));
-        Translations translations = propsConverter.getTranslations();
+        Dictionary translations = propsConverter.getTranslations();
 
         I18nJsonConverter jsonConverter = new I18nJsonConverter(translations);
         file = new File(TEST_DIR, JSON_FILE);
@@ -115,7 +115,7 @@ public class I18nConverterTest {
         }
         I18nPropertiesConverter propsConverter = new I18nPropertiesConverter();
         propsConverter.importTranslations("de", new FileReader(file));
-        Translations translations = propsConverter.getTranslations();
+        Dictionary translations = propsConverter.getTranslations();
         translations.setCreateKeyIfNotPresent(false);
 
         I18nJsonConverter jsonConverter = new I18nJsonConverter(translations);

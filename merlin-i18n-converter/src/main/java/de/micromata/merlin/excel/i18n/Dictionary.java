@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-public class Translations {
+public class Dictionary {
     private Map<String, TranslationEntry> translations = new HashMap<>();
     @Getter
     private Set<String> keys = new TreeSet<>();

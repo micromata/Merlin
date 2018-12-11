@@ -20,13 +20,13 @@ public class I18nExcelConverter {
     private static Logger log = LoggerFactory.getLogger(I18nExcelConverter.class);
 
     @Getter
-    private Translations translations;
+    private Dictionary translations;
 
     public I18nExcelConverter() {
-        this.translations = new Translations();
+        this.translations = new Dictionary();
     }
 
-    public I18nExcelConverter(Translations translations) {
+    public I18nExcelConverter(Dictionary translations) {
         this.translations = translations;
     }
 

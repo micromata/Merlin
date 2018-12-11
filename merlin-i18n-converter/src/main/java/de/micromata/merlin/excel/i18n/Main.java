@@ -62,7 +62,7 @@ public class Main {
             }
 
             I18nConverter i18nConverter = new I18nConverter();
-            Translations translations = i18nConverter.getTranslations();
+            Dictionary translations = i18nConverter.getTranslations();
             Option[] parsedOptions = line.getOptions();
             for (Option parsedOption : parsedOptions) {
                 if ("b".equals(parsedOption.getOpt()) ||
@@ -95,10 +95,12 @@ public class Main {
                 printHelp(options);
             } else {
                 File file = new File(basename + ".json");
-                try (Writer writer = new FileWriter(file, Charset.forName("UTF-8"))) {
+                log.info("Writing file " + file.getAbsolutePath());
+                try (Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), Charset.forName("UTF-8")))) {
                     new I18nJsonConverter(translations).setKeysOnly(keysOnly).write(writer);
                 }
                 file = new File(basename + ".xlsx");
+                log.info("Writing file " + file.getAbsolutePath());
                 try (OutputStream outputStream = new FileOutputStream(file)) {
                     new I18nExcelConverter(translations).write(outputStream);
                 }
@@ -108,12 +110,14 @@ public class Main {
                     } else {
                         file = new File(basename + ".properties");
                     }
-                    try (Writer writer = new FileWriter(file, Charset.forName("UTF-8"))) {
+                    log.info("Writing file " + file.getAbsolutePath());
+                    try (Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), Charset.forName("UTF-8")))) {
                         new I18nPropertiesConverter(translations).write(lang, writer);
                     }
                 }
                 file = new File(basename + ".log");
-                try (Writer writer = new FileWriter(file, Charset.forName("UTF-8"))) {
+                log.info("Writing file " + file.getAbsolutePath());
+                try (Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), Charset.forName("UTF-8")))) {
                     writer.write(translations.getLogging());
                 }
             }
