@@ -126,9 +126,8 @@ public class Main {
     }
 
     private static void writeFiles(Dictionary dictionary, String basename, boolean keysOnly, ZipOutputStream zipOut) throws IOException {
-        String addingCreating = zipOut != null ? "Adding" : "Writing";
         File file = new File(basename + ".json");
-        log.info(addingCreating + " file " + file.getAbsolutePath());
+        logAddingCreatingFile(null, file, zipOut);
         if (zipOut != null) {
             zipOut.putNextEntry(new ZipEntry(file.getName()));
             new I18nJsonConverter(dictionary).setKeysOnly(keysOnly).write(new OutputStreamWriter(zipOut));
@@ -138,7 +137,7 @@ public class Main {
             }
         }
         file = new File(basename + ".xlsx");
-        log.info(addingCreating + " file " + file.getAbsolutePath());
+        logAddingCreatingFile(null, file, zipOut);
         if (zipOut != null) {
             zipOut.putNextEntry(new ZipEntry(file.getName()));
             new I18nExcelConverter(dictionary).write(zipOut);
@@ -153,7 +152,7 @@ public class Main {
             } else {
                 file = new File(basename + ".properties");
             }
-            log.info(addingCreating + " file " + file.getAbsolutePath());
+            logAddingCreatingFile(null, file, zipOut);
             if (zipOut != null) {
                 zipOut.putNextEntry(new ZipEntry(file.getName()));
                 new I18nPropertiesConverter(dictionary).write(lang, new OutputStreamWriter(zipOut));
@@ -163,8 +162,29 @@ public class Main {
                 }
             }
         }
+        for (String lang : dictionary.getUsedLangs()) {
+            File dir = null;
+            if (lang.length() > 0) {
+                dir = new File(lang);
+                if (zipOut == null && !dir.exists()) {
+                    dir.mkdir();
+                }
+                file = new File(dir,"translation.json");
+            } else {
+                file = new File("translation.json");
+            }
+            logAddingCreatingFile(dir, file, zipOut);
+            if (zipOut != null) {
+                zipOut.putNextEntry(new ZipEntry(file.toString()));
+                new I18nJsonTreeConverter(dictionary).write(lang, new OutputStreamWriter(zipOut));
+            } else {
+                try (Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), Charset.forName("UTF-8")))) {
+                    new I18nJsonTreeConverter(dictionary).write(lang, writer);
+                }
+            }
+        }
         file = new File(basename + ".log");
-        log.info(addingCreating + " file " + file.getAbsolutePath());
+        logAddingCreatingFile(null, file, zipOut);
         if (zipOut != null) {
             zipOut.putNextEntry(new ZipEntry(file.getName()));
             zipOut.write(dictionary.getLogging().getBytes());
@@ -172,6 +192,15 @@ public class Main {
             try (Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), Charset.forName("UTF-8")))) {
                 writer.write(dictionary.getLogging());
             }
+        }
+    }
+
+    private static void logAddingCreatingFile(File dir, File file, ZipOutputStream zipOut) {
+        if (zipOut != null) {
+            String subdir = dir != null ? dir.getName() + "/" : "";
+            log.info("Adding file " + subdir + file.getName());
+        } else {
+            log.info("Creating file " + file.getAbsolutePath());
         }
     }
 
