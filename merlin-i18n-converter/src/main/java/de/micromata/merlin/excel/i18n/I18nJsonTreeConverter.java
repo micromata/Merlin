@@ -68,31 +68,26 @@ public class I18nJsonTreeConverter {
     }
 
 
-    public void write(Writer writer) throws IOException {
+    public void write(String lang, Writer writer) throws IOException {
         StringBuilder sb = new StringBuilder();
         sb.append("{");
+        Iterator<String> it = dictionary.getKeys().iterator();
+        write(lang, sb, it, "", 0);
+        writer.write(sb.toString());
+        sb.append(carriageReturn).append("}").append(carriageReturn);
+    }
+
+    private void write(String lang, StringBuilder sb, Iterator<String> it, String prefix, int level) {
         boolean firstKey = true;
-        for (String key : dictionary.getKeys()) {
+        while (it.hasNext()) {
+            String key = it.next();
+            String translation = dictionary.getTranslation(key, lang);
             if (firstKey) firstKey = false;
             else sb.append(",");
             sb.append(carriageReturn);
-            sb.append("  \"").append(key).append("\": {").append(carriageReturn); // "de.micromata.key": {
-            sb.append("    \"value\": {").append(carriageReturn);                 //   "value" : {
-            boolean firstLang = true;
-            for (String lang : dictionary.getUsedLangs()) {
-                String text = keysOnly ? "" : escapeJson(dictionary.getTranslation(lang, key));
-                if (firstLang) firstLang = false;
-                else sb.append(",").append(carriageReturn);
-                sb.append("      \"").append(lang).append("\": \"")
-                        .append(text).append("\"");                               //     "de": "Schlüssel"
-            }
-            sb.append(carriageReturn).append("    },").append(carriageReturn);    //   },
-            sb.append("    \"default\": \"").append(key).append("\"")
-                    .append(carriageReturn);                                      //   "default": "de.micromata.key"
-            sb.append("  }");                                                     // }
+            sb.append(StringUtils.repeat("  ", level));
+            sb.append(key).append("\":  \"").append(translation).append("\"");
         }
-        sb.append(carriageReturn).append("}").append(carriageReturn);
-        writer.write(sb.toString());
     }
 
     private String escapeJson(String text) {
