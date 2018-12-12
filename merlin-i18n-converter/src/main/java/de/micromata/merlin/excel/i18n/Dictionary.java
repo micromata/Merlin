@@ -9,6 +9,9 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.*;
 
 public class Dictionary {
+    /**
+     * key is the i18n-key.
+     */
     @JsonProperty
     private Map<String, TranslationEntry> translations = new HashMap<>();
     @Getter
@@ -82,5 +85,36 @@ public class Dictionary {
 
     public Dictionary() {
         logging.append("Date of generation: " + new Date() + "\n\n");
+    }
+
+    public SortedSet<TranslationDiffEntry> getDifferences(Dictionary other, String lang) {
+        SortedSet<TranslationDiffEntry> result = new TreeSet<>();
+        for (TranslationEntry entry : translations.values()) {
+            String i18nKey = entry.getI18nKey();
+            String thisValue = entry.getTranslation(lang);
+            if (thisValue == null) {
+                continue;
+            }
+            String otherValue = other.getTranslation(lang, i18nKey);
+            if (otherValue != null && otherValue.equals(thisValue)) {
+                // Values aren't modified.
+                continue;
+            }
+            result.add(new TranslationDiffEntry(i18nKey, thisValue, otherValue));
+        }
+        for (TranslationEntry entry : other.translations.values()) {
+            String i18nKey = entry.getI18nKey();
+            String otherValue = entry.getTranslation(lang);
+            if (otherValue == null) {
+                continue;
+            }
+            String thisValue = getTranslation(lang, i18nKey);
+            if (thisValue != null && thisValue.equals(otherValue)) {
+                // Values aren't modified.
+                continue;
+            }
+            result.add(new TranslationDiffEntry(i18nKey, thisValue, otherValue));
+        }
+        return result;
     }
 }

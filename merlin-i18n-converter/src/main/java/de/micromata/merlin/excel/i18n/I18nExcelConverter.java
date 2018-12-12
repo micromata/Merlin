@@ -14,6 +14,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.SortedSet;
 import java.util.TreeSet;
 
 public class I18nExcelConverter {
@@ -90,6 +91,24 @@ public class I18nExcelConverter {
             if (entry == null) continue; // Shouldn't occur.
             for (String lang : dictionary.getUsedLangs()) {
                 row.createCells(StringUtils.defaultString(entry.getTranslation(lang)));
+            }
+        }
+
+        if (this.diffDictionary != null) {
+            for (String lang : diffDictionary.getUsedLangs()) {
+                SortedSet<TranslationDiffEntry> diffs = dictionary.getDifferences(diffDictionary, lang);
+                if (diffs.size() == 0) {
+                    log.info("No differences found for lang '" + lang + "'.");
+                    continue;
+                }
+                log.info("Found " + diffs.size() + " differing entries for lang '" + lang + "'.");
+                sheet = workbook.createOrGetSheet(lang + " diffs");
+                row = sheet.createRow();
+                row.createCells("key", "this", "other");
+                for (TranslationDiffEntry diffEntry : diffs) {
+                    row = sheet.createRow();
+                    row.createCells(diffEntry.getI18nKey(), diffEntry.getThisValue(), diffEntry.getOtherValue());
+                }
             }
         }
         workbook.getPOIWorkbook().write(outputStream);

@@ -82,6 +82,14 @@ public class Main {
             if (line.hasOption("ko")) {
                 this.keysOnly = true;
             }
+            if (line.hasOption("d")) {
+                String filename = line.getOptionValue("d");
+                log.info("Reading other dictionary for detecting differences: " + filename);
+                StringWriter writer = new StringWriter();
+                IOUtils.copy(new FileReader(new File(filename)), writer);
+                ObjectMapper mapper = new ObjectMapper();
+                this.diffDictionary = mapper.readValue(writer.toString(), Dictionary.class);
+            }
 
             this.i18nConverter = new I18nConverter();
             this.dictionary = i18nConverter.getTranslations();
@@ -126,13 +134,6 @@ public class Main {
                 } else {
                     writeZip();
                 }
-            }
-            if (line.hasOption("d")) {
-                StringWriter writer = new StringWriter();
-                IOUtils.copy(new FileReader(new File(line.getOptionValue("d"))), writer);
-                ObjectMapper mapper = new ObjectMapper();
-                this.diffDictionary = mapper.readValue(writer.toString(), Dictionary.class);
-                log.info(toJson(this.dictionary));
             }
         } catch (IOException ex) {
             log.error("Error while procesing files: " + ex.getMessage());
