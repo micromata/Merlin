@@ -1,11 +1,11 @@
 package de.micromata.merlin.excel.i18n;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.core.util.BufferRecyclers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.text.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -81,12 +81,13 @@ public class I18nJsonConverter {
         }
         sb.append(carriageReturn).append("}").append(carriageReturn);
         writer.write(sb.toString());
+        writer.flush();
     }
 
     private String escapeJson(String text) {
         if (text == null) {
             return "";
         }
-        return StringEscapeUtils.escapeJson(text);
+        return new String(BufferRecyclers.getJsonStringEncoder().quoteAsString(text));
     }
 }

@@ -130,7 +130,7 @@ public class Main {
         logAddingCreatingFile(null, file, zipOut);
         if (zipOut != null) {
             zipOut.putNextEntry(new ZipEntry(file.getName()));
-            new I18nJsonConverter(dictionary).setKeysOnly(keysOnly).write(new OutputStreamWriter(zipOut));
+            new I18nJsonConverter(dictionary).setKeysOnly(keysOnly).write(new OutputStreamWriter(zipOut, Charset.forName("UTF-8")));
         } else {
             try (Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), Charset.forName("UTF-8")))) {
                 new I18nJsonConverter(dictionary).setKeysOnly(keysOnly).write(writer);
@@ -155,7 +155,7 @@ public class Main {
             logAddingCreatingFile(null, file, zipOut);
             if (zipOut != null) {
                 zipOut.putNextEntry(new ZipEntry(file.getName()));
-                new I18nPropertiesConverter(dictionary).write(lang, new OutputStreamWriter(zipOut));
+                new I18nPropertiesConverter(dictionary).write(lang, new OutputStreamWriter(zipOut, Charset.forName("UTF-8")));
             } else {
                 try (Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), Charset.forName("UTF-8")))) {
                     new I18nPropertiesConverter(dictionary).write(lang, writer);
@@ -176,7 +176,7 @@ public class Main {
             logAddingCreatingFile(dir, file, zipOut);
             if (zipOut != null) {
                 zipOut.putNextEntry(new ZipEntry(file.toString()));
-                new I18nJsonTreeConverter(dictionary).write(lang, new OutputStreamWriter(zipOut));
+                new I18nJsonTreeConverter(dictionary).write(lang, new OutputStreamWriter(zipOut, Charset.forName("UTF-8")));
             } else {
                 try (Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), Charset.forName("UTF-8")))) {
                     new I18nJsonTreeConverter(dictionary).write(lang, writer);

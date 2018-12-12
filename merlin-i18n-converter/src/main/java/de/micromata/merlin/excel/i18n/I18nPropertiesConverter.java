@@ -44,5 +44,6 @@ public class I18nPropertiesConverter {
             writer.write(text);
             writer.write(carriageReturn);
         }
+        writer.flush();
     }
 }

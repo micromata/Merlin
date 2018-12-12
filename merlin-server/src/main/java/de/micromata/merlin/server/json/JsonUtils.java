@@ -3,9 +3,9 @@ package de.micromata.merlin.server.json;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.core.util.BufferRecyclers;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.commons.text.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,7 +46,7 @@ public class JsonUtils {
 
     public static String toJson(String str) {
         if (str == null) return "";
-        return StringEscapeUtils.escapeJson(str);
+        return new String(BufferRecyclers.getJsonStringEncoder().quoteAsString(str));
     }
 
     public static <T> T fromJson(Class<T> clazz, String json) {

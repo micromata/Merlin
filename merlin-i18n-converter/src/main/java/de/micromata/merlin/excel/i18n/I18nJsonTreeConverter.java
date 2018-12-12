@@ -1,12 +1,12 @@
 package de.micromata.merlin.excel.i18n;
 
+import com.fasterxml.jackson.core.util.BufferRecyclers;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.text.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -75,12 +75,14 @@ public class I18nJsonTreeConverter {
         write(lang, sb, root);
         sb.append(carriageReturn).append("}").append(carriageReturn);
         writer.write(sb.toString());
+        writer.flush();
     }
 
     private void write(String lang, StringBuilder sb, Node node) {
-        if (node.keyPart != null) {
+        if (node.level > 0) {
+            // Skip this only for root note:
             for (int i = 0; i < node.level; i++) sb.append("  ");
-            sb.append("\"").append(node.keyPart).append("\" : ");
+            sb.append("\"").append(node.keyPart).append("\": ");
         }
         if (node.childs == null) {
             String translation = escapeJson(dictionary.getTranslation(lang, node.i18nKey));
@@ -92,13 +94,17 @@ public class I18nJsonTreeConverter {
             sb.append(carriageReturn);
             write(lang, sb, entry.getValue());
         }
+        sb.append(carriageReturn);
+        for (int i = 0; i < node.level; i++) sb.append("  ");
+        sb.append("}");
+        sb.append(carriageReturn);
     }
 
     private String escapeJson(String text) {
         if (text == null) {
             return "";
         }
-        return StringEscapeUtils.escapeJson(text);
+        return new String(BufferRecyclers.getJsonStringEncoder().quoteAsString(text));
     }
 
     private Node buildNodes() {
