@@ -20,14 +20,20 @@ public class I18nExcelConverter {
     private static Logger log = LoggerFactory.getLogger(I18nExcelConverter.class);
 
     @Getter
-    private Dictionary translations;
+    private Dictionary dictionary;
+    private Dictionary diffDictionary;
 
     public I18nExcelConverter() {
-        this.translations = new Dictionary();
+        this.dictionary = new Dictionary();
     }
 
-    public I18nExcelConverter(Dictionary translations) {
-        this.translations = translations;
+    public I18nExcelConverter(Dictionary dictionary) {
+        this(dictionary, null);
+    }
+
+    public I18nExcelConverter(Dictionary dictionary, Dictionary diffDictionary) {
+        this.dictionary = dictionary;
+        this.diffDictionary = diffDictionary;
     }
 
     /**
@@ -59,10 +65,10 @@ public class I18nExcelConverter {
         Iterator<Row> it = sheet.getDataRowIterator();
         while (it.hasNext()) {
             Row row = it.next();
-            String key = sheet.getCellString(row,"key");
+            String key = sheet.getCellString(row, "key");
             for (String lang : languages) {
                 String translation = sheet.getCellString(row, lang);
-                translations.addTranslation(lang, key, translation);
+                dictionary.addTranslation(lang, key, translation);
             }
         }
         workbook.close();
@@ -74,15 +80,15 @@ public class I18nExcelConverter {
         ExcelSheet sheet = workbook.createOrGetSheet("Translations");
         ExcelRow row = sheet.createRow();
         row.createCells("key");
-        for (String lang : translations.getUsedLangs()) {
+        for (String lang : dictionary.getUsedLangs()) {
             row.createCells(lang);
         }
-        for (String key : translations.getKeys()) {
+        for (String key : dictionary.getKeys()) {
             row = sheet.createRow();
             row.createCells(key);
-            TranslationEntry entry = translations.getEntry(key);
+            TranslationEntry entry = dictionary.getEntry(key);
             if (entry == null) continue; // Shouldn't occur.
-            for (String lang : translations.getUsedLangs()) {
+            for (String lang : dictionary.getUsedLangs()) {
                 row.createCells(StringUtils.defaultString(entry.getTranslation(lang)));
             }
         }

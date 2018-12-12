@@ -9,7 +9,11 @@ import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.nio.charset.Charset;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -20,7 +24,7 @@ public class Main {
 
     private static final Main main = new Main();
     private I18nConverter i18nConverter;
-    private Dictionary dictionary;
+    private Dictionary dictionary, diffDictionary;
     private String basename;
     private boolean keysOnly;
 
@@ -57,6 +61,9 @@ public class Main {
         options.addOption("nz", "no-zip", false,
                 "Don't write files to zip archive, write files directly.");
 
+        options.addOption("d", "diff", true,
+                "Reads the given dictionary and shows the differences of the current read translation source files (in XLS).");
+
         options.addOption("h", "help", false, "Print this help screen.");
 
         CommandLineParser parser = new DefaultParser();
@@ -80,9 +87,9 @@ public class Main {
             this.dictionary = i18nConverter.getTranslations();
             Option[] parsedOptions = line.getOptions();
             for (Option parsedOption : parsedOptions) {
-                if ("b".equals(parsedOption.getOpt()) ||
-                        "ko".equals(parsedOption.getOpt()) ||
-                        "nz".equals(parsedOption.getOpt())) {
+                if (!"r".equals(parsedOption.getOpt()) &&
+                        !"ro".equals(parsedOption.getOpt()) &&
+                        !"rm".equals(parsedOption.getOpt())) {
                     continue;
                 }
                 String[] optionFiles = parsedOption.getValues();
@@ -120,6 +127,13 @@ public class Main {
                     writeZip();
                 }
             }
+            if (line.hasOption("d")) {
+                StringWriter writer = new StringWriter();
+                IOUtils.copy(new FileReader(new File(line.getOptionValue("d"))), writer);
+                ObjectMapper mapper = new ObjectMapper();
+                this.diffDictionary = mapper.readValue(writer.toString(), Dictionary.class);
+                log.info(toJson(this.dictionary));
+            }
         } catch (IOException ex) {
             log.error("Error while procesing files: " + ex.getMessage());
         } catch (ParseException ex) {
@@ -130,7 +144,11 @@ public class Main {
     }
 
     private void writeZip() {
-        File zipFile = new File(basename + ".zip");
+        TimeZone tz = TimeZone.getTimeZone("UTC");
+        DateFormat iso = new SimpleDateFormat("yyyy-MM-dd_HH-mm"); // Quoted "Z" to indicate UTC, no timezone offset
+        iso.setTimeZone(tz);
+
+        File zipFile = new File(iso.format(new Date()) + "-" + basename + ".zip");
         log.info("Writing file " + zipFile.getAbsolutePath());
         try (ZipOutputStream zipOut = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(zipFile)))) {
             writeFiles(dictionary, basename, keysOnly, zipOut);
@@ -150,7 +168,7 @@ public class Main {
     }
 
     private void writeJson(ZipOutputStream zipOut) throws IOException {
-        File file = new File(generatedDir,basename + ".json");
+        File file = new File(generatedDir, basename + ".json");
         logAddingCreatingFile(null, file, zipOut);
         if (zipOut != null) {
             zipOut.putNextEntry(new ZipEntry(file.toString()));
@@ -173,7 +191,7 @@ public class Main {
                 }
                 file = new File(dir, "translation.json");
             } else {
-                file = new File(generatedDir,"translation.json");
+                file = new File(generatedDir, "translation.json");
             }
             logAddingCreatingFile(dir, file, zipOut);
             if (zipOut != null) {
@@ -188,14 +206,14 @@ public class Main {
     }
 
     private void writeExcel(ZipOutputStream zipOut) throws IOException {
-        File file = new File(generatedDir,basename + ".xlsx");
+        File file = new File(generatedDir, basename + ".xlsx");
         logAddingCreatingFile(null, file, zipOut);
         if (zipOut != null) {
             zipOut.putNextEntry(new ZipEntry(file.toString()));
-            new I18nExcelConverter(dictionary).write(zipOut);
+            new I18nExcelConverter(dictionary, diffDictionary).write(zipOut);
         } else {
             try (OutputStream outputStream = new FileOutputStream(file)) {
-                new I18nExcelConverter(dictionary).write(outputStream);
+                new I18nExcelConverter(dictionary, diffDictionary).write(outputStream);
             }
         }
     }
@@ -204,9 +222,9 @@ public class Main {
         File file;
         for (String lang : dictionary.getUsedLangs()) {
             if (lang.length() > 0) {
-                file = new File(generatedDir,basename + "_" + lang + ".properties");
+                file = new File(generatedDir, basename + "_" + lang + ".properties");
             } else {
-                file = new File(generatedDir,basename + ".properties");
+                file = new File(generatedDir, basename + ".properties");
             }
             logAddingCreatingFile(null, file, zipOut);
             if (zipOut != null) {
@@ -292,10 +310,10 @@ public class Main {
 
     private void printHelp(Options options) {
         HelpFormatter formatter = new HelpFormatter();
-        formatter.printHelp("merlin-i18n-converter [OPTIONS] [FILE1] [FILE2]...",
+        formatter.printHelp("merlin-i18n-converter [OPTIONS] [DIR/FILE1] [DIR/FILE2]...",
                 "Read i18n translations of different formats, merges and writes the translations to different foramts.",
                 options,
-                "The optional given files [FILE1] [FILE2]... will be read with the flag -r.\n\n"
+                "The optional given files [DIR/FILE1] [DIR/FILE2]... will be read with the flag -r.\n\n"
                         + "Further information on: https://github.com/micromata/Merlin/tree/master/merlin-i18n-converter");
     }
 }

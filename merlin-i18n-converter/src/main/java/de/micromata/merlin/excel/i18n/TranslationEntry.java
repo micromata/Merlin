@@ -11,8 +11,17 @@ public class TranslationEntry {
     @Getter
     @JsonProperty
     private String i18nKey;
+    /**
+     * Key is lang, value is the translation string.
+     */
     @JsonProperty
     private Map<String, String> values = new HashMap<>();
+
+    /**
+     * For deserialization.
+     */
+    TranslationEntry() {
+    }
 
     public TranslationEntry(String i18nKey) {
         this.i18nKey = i18nKey;

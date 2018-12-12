@@ -22,7 +22,7 @@ Java 9 or higher must be installed.
 ## Usage
 
 ----
-usage: merlin-i18n-converter [OPTIONS] [FILE1] [FILE2]...
+usage: merlin-i18n-converter [OPTIONS] [DIR/FILE1] [DIR/FILE2]...
 Read i18n translations of different formats, merges and writes the
 translations to different foramts.
  -b,--basename <arg>          The base name of the output files. Default
@@ -30,6 +30,8 @@ translations to different foramts.
  -h,--help                    Print this help screen.
  -ko,--keys-only              Don't export the translations for the json
                               file, only the keys.
+ -nz,--no-zip                 Don't write files to zip archive, write
+                              files directly.
  -r,--read <arg>              Reads the translations of the given
                               filename. Doesn't overwrite existing
                               translations and create new keys if not
@@ -42,7 +44,8 @@ translations to different foramts.
                               filename. Does overwrite existing
                               translations and create new keys if not
                               exist.
-The optional given files [FILE1] [FILE2]... will be read with the flag -r.
+The optional given files [DIR/FILE1] [DIR/FILE2]... will be read with the
+flag -r.
 ----
 
 ## Examples
@@ -73,6 +76,8 @@ merlin-i18n-converter my-app.xlsx
 Reads all translations for all languages from the given Excel file and generates (as an example):
 
 ----
+de/translation.json
+en/translation.json
 i18n-generated.json
 i18n-generated.log
 i18n-generated.xlsx

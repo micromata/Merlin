@@ -6,10 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 public class Dictionary {
     @JsonProperty
@@ -80,5 +77,10 @@ public class Dictionary {
 
     public void log(String log) {
         logging.append(log).append("\n");
+    }
+
+
+    public Dictionary() {
+        logging.append("Date of generation: " + new Date() + "\n\n");
     }
 }

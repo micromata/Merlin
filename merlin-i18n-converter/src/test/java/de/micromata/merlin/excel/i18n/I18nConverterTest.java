@@ -92,7 +92,7 @@ public class I18nConverterTest {
 
         // Reread file:
         excelConverter = new I18nExcelConverter(); // Clean translations.
-        translations = excelConverter.getTranslations();
+        translations = excelConverter.getDictionary();
         try (FileInputStream inputStream = new FileInputStream(file)) {
             excelConverter.importTranslations(inputStream, "I18n-message.xlsx");
         }
@@ -137,7 +137,7 @@ public class I18nConverterTest {
         try (FileInputStream inputStream = new FileInputStream(file)) {
             excelConverter.importTranslations(inputStream, file.getName());
         }
-        translations = excelConverter.getTranslations();
+        translations = excelConverter.getDictionary();
 
         propsConverter = new I18nPropertiesConverter(translations);
         try (Writer writer = new FileWriter(new File(realTestDir, baseoutFilename + "_de.properties"))) {
