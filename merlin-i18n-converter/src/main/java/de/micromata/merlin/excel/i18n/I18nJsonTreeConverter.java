@@ -73,7 +73,6 @@ public class I18nJsonTreeConverter {
         Node root = buildNodes();
         StringBuilder sb = new StringBuilder();
         write(lang, sb, root);
-        sb.append(carriageReturn).append("}").append(carriageReturn);
         writer.write(sb.toString());
         writer.flush();
     }
@@ -90,14 +89,17 @@ public class I18nJsonTreeConverter {
             return;
         }
         sb.append("{");
+        int counter = node.childs.size();
         for (Map.Entry<String, Node> entry : node.childs.entrySet()) {
             sb.append(carriageReturn);
             write(lang, sb, entry.getValue());
+            if (--counter > 0) {
+                sb.append(",");
+            }
         }
         sb.append(carriageReturn);
         for (int i = 0; i < node.level; i++) sb.append("  ");
         sb.append("}");
-        sb.append(carriageReturn);
     }
 
     private String escapeJson(String text) {
