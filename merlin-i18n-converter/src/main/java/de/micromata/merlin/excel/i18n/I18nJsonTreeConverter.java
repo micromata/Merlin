@@ -55,9 +55,22 @@ public class I18nJsonTreeConverter {
             JsonNode child = childEntry.getValue();
             if (child.getNodeType() == JsonNodeType.OBJECT) {
                 traverse(lang, child, buildKey(parentKey, key));
+            } else if (child.getNodeType() == JsonNodeType.ARRAY) {
+                dictionary.addTranslation(lang, buildKey(parentKey, key), prettyPrintJsonString(child));
             } else {
                 dictionary.addTranslation(lang, buildKey(parentKey, key), child.textValue());
             }
+        }
+    }
+
+    public String prettyPrintJsonString(JsonNode jsonNode) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            Object json = mapper.readValue(jsonNode.toString(), Object.class);
+            return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(json);
+        } catch (Exception ex) {
+            log.error("*** error while converting json: " + ex.getMessage());
+            return "*** error while converting json: " + ex.getMessage();
         }
     }
 
@@ -84,8 +97,12 @@ public class I18nJsonTreeConverter {
             sb.append("\"").append(node.keyPart).append("\": ");
         }
         if (node.childs == null) {
-            String translation = escapeJson(dictionary.getTranslation(lang, node.i18nKey));
-            sb.append("\"").append(translation).append("\"");
+            String translation = dictionary.getTranslation(lang, node.i18nKey);
+            if (isJsonContent(translation)) {
+                sb.append(translation);
+            } else {
+                sb.append("\"").append(escapeJson(translation)).append("\"");
+            }
             return;
         }
         sb.append("{");
@@ -106,7 +123,14 @@ public class I18nJsonTreeConverter {
         if (text == null) {
             return "";
         }
+        if (isJsonContent(text)) {
+            return text;
+        }
         return new String(BufferRecyclers.getJsonStringEncoder().quoteAsString(text));
+    }
+
+    private boolean isJsonContent(String text) {
+        return text != null && StringUtils.deleteWhitespace(text).startsWith("[{");
     }
 
     private Node buildNodes() {
