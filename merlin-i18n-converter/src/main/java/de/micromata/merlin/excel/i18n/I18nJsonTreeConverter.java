@@ -99,7 +99,10 @@ public class I18nJsonTreeConverter {
         if (node.childs == null) {
             String translation = dictionary.getTranslation(lang, node.i18nKey);
             if (isJsonContent(translation)) {
-                sb.append(translation);
+                for (String line : translation.split("\n")) {
+                    for (int i = 0; i < node.level; i++) sb.append("  ");
+                    sb.append(line).append("\n");
+                }
             } else {
                 sb.append("\"").append(escapeJson(translation)).append("\"");
             }
