@@ -8,12 +8,19 @@ import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.nio.charset.Charset;
+import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Map;
 
 public class I18nConverter {
     private static Logger log = LoggerFactory.getLogger(I18nConverter.class);
 
     @Getter
     private Dictionary translations;
+
+    // Key is source file, value is dest file.
+    @Getter
+    private Map<File, File> importedFiles = new HashMap<>();
 
     public I18nConverter() {
         this.translations = new Dictionary();
@@ -30,6 +37,7 @@ public class I18nConverter {
         }
         if (file.isDirectory()) {
             log.info("Reading json tree from directory: " + file.getAbsolutePath());
+            Path baseDirPath = file.toPath();
             for (File subdir : file.listFiles()) {
                 if (subdir.getName().length() == 2) {
                     String lang = subdir.getName();
@@ -38,6 +46,8 @@ public class I18nConverter {
                         if (translationFile.getName().endsWith(".json")) {
                             log.info("Processing json tree for language '" + lang + "' with file: " + translationFile.getAbsolutePath());
                             importJsonTree(lang, translationFile);
+                            Path filePath = translationFile.toPath();
+                            importedFiles.put(translationFile, baseDirPath.relativize(filePath).toFile());
                         }
                     }
                 }
@@ -47,14 +57,17 @@ public class I18nConverter {
         String extension = FilenameUtils.getExtension(file.getName()).toLowerCase();
         if (extension.startsWith("xls")) {
             importExcel(file);
+            importedFiles.put(file, new File(file.getName()));
             return;
         }
         String content = FileUtils.readFileToString(file, Charset.forName("UTF-8"));
         if (content.trim().startsWith("{")) {
             importJson(content, file);
+            importedFiles.put(file, new File(file.getName()));
             return;
         }
         importProperties(content, file);
+        importedFiles.put(file, new File(file.getName()));
     }
 
     private void importExcel(File file) throws IOException {

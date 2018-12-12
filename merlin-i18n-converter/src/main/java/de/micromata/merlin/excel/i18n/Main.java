@@ -1,18 +1,28 @@
 package de.micromata.merlin.excel.i18n;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.cli.*;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.nio.charset.Charset;
+import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 public class Main {
     private static Logger log = LoggerFactory.getLogger(Main.class);
+    private static final String generatedDir = "generated";
+    private static final String sourcesDir = "sources";
 
     private static final Main main = new Main();
+    private I18nConverter i18nConverter;
+    private Dictionary dictionary;
+    private String basename;
+    private boolean keysOnly;
 
     private Main() {
     }
@@ -57,17 +67,17 @@ public class Main {
                 printHelp(options);
                 return;
             }
-            String basename = "i18n-generated";
+            this.basename = "i18n-generated";
             if (line.hasOption('b')) {
-                basename = line.getOptionValue("b");
+                this.basename = line.getOptionValue("b");
             }
-            boolean keysOnly = false;
+            this.keysOnly = false;
             if (line.hasOption("ko")) {
-                keysOnly = true;
+                this.keysOnly = true;
             }
 
-            I18nConverter i18nConverter = new I18nConverter();
-            Dictionary dictionary = i18nConverter.getTranslations();
+            this.i18nConverter = new I18nConverter();
+            this.dictionary = i18nConverter.getTranslations();
             Option[] parsedOptions = line.getOptions();
             for (Option parsedOption : parsedOptions) {
                 if ("b".equals(parsedOption.getOpt()) ||
@@ -75,8 +85,8 @@ public class Main {
                         "nz".equals(parsedOption.getOpt())) {
                     continue;
                 }
-                String[] files = parsedOption.getValues();
-                for (String file : files) {
+                String[] optionFiles = parsedOption.getValues();
+                for (String filename : optionFiles) {
                     if ("r".equals(parsedOption.getOpt())) {
                         dictionary.setOverwriteExistingTranslations(false).setCreateKeyIfNotPresent(true);
                     } else if ("ro".equals(parsedOption.getOpt())) {
@@ -86,14 +96,18 @@ public class Main {
                     } else {
                         log.error("Unsupported option: " + option.getValue());
                     }
-                    i18nConverter.importTranslations(new File(file));
+                    File file = new File(filename);
+                    dictionary.log("*** Reading with option -" + parsedOption.getLongOpt() + ": " + file.getAbsolutePath());
+                    i18nConverter.importTranslations(file);
                 }
             }
-            String[] files = line.getArgs();
-            if (files != null && files.length > 0) {
+            String[] argFiles = line.getArgs();
+            if (argFiles != null && argFiles.length > 0) {
                 dictionary.setOverwriteExistingTranslations(false).setCreateKeyIfNotPresent(true);
-                for (String file : files) {
-                    i18nConverter.importTranslations(new File(file));
+                for (String filename : argFiles) {
+                    File file = new File(filename);
+                    dictionary.log("*** Reading : " + file.getAbsolutePath());
+                    i18nConverter.importTranslations(file);
                 }
             }
             if (dictionary.getKeys().size() == 0) {
@@ -101,9 +115,9 @@ public class Main {
                 printHelp(options);
             } else {
                 if (line.hasOption("nz")) {
-                    writeFiles(dictionary, basename, keysOnly);
+                    writeFiles();
                 } else {
-                    writeZip(dictionary, basename, keysOnly);
+                    writeZip();
                 }
             }
         } catch (IOException ex) {
@@ -115,7 +129,7 @@ public class Main {
         }
     }
 
-    private static void writeZip(Dictionary dictionary, String basename, boolean keysOnly) {
+    private void writeZip() {
         File zipFile = new File(basename + ".zip");
         log.info("Writing file " + zipFile.getAbsolutePath());
         try (ZipOutputStream zipOut = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(zipFile)))) {
@@ -125,53 +139,41 @@ public class Main {
         }
     }
 
-    private static void writeFiles(Dictionary dictionary, String basename, boolean keysOnly, ZipOutputStream zipOut) throws IOException {
-        File file = new File(basename + ".json");
+    private void writeFiles(Dictionary dictionary, String basename, boolean keysOnly, ZipOutputStream zipOut) throws IOException {
+        writeSources(zipOut);
+        writeJson(zipOut);
+        writeJsonTree(zipOut);
+        writeExcel(zipOut);
+        writeProperties(zipOut);
+        writeLogFile(zipOut);
+        writeDictionary(zipOut);
+    }
+
+    private void writeJson(ZipOutputStream zipOut) throws IOException {
+        File file = new File(generatedDir,basename + ".json");
         logAddingCreatingFile(null, file, zipOut);
         if (zipOut != null) {
-            zipOut.putNextEntry(new ZipEntry(file.getName()));
+            zipOut.putNextEntry(new ZipEntry(file.toString()));
             new I18nJsonConverter(dictionary).setKeysOnly(keysOnly).write(new OutputStreamWriter(zipOut, Charset.forName("UTF-8")));
         } else {
             try (Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), Charset.forName("UTF-8")))) {
                 new I18nJsonConverter(dictionary).setKeysOnly(keysOnly).write(writer);
             }
         }
-        file = new File(basename + ".xlsx");
-        logAddingCreatingFile(null, file, zipOut);
-        if (zipOut != null) {
-            zipOut.putNextEntry(new ZipEntry(file.getName()));
-            new I18nExcelConverter(dictionary).write(zipOut);
-        } else {
-            try (OutputStream outputStream = new FileOutputStream(file)) {
-                new I18nExcelConverter(dictionary).write(outputStream);
-            }
-        }
-        for (String lang : dictionary.getUsedLangs()) {
-            if (lang.length() > 0) {
-                file = new File(basename + "_" + lang + ".properties");
-            } else {
-                file = new File(basename + ".properties");
-            }
-            logAddingCreatingFile(null, file, zipOut);
-            if (zipOut != null) {
-                zipOut.putNextEntry(new ZipEntry(file.getName()));
-                new I18nPropertiesConverter(dictionary).write(lang, new OutputStreamWriter(zipOut, Charset.forName("UTF-8")));
-            } else {
-                try (Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), Charset.forName("UTF-8")))) {
-                    new I18nPropertiesConverter(dictionary).write(lang, writer);
-                }
-            }
-        }
+    }
+
+    private void writeJsonTree(ZipOutputStream zipOut) throws IOException {
+        File file;
         for (String lang : dictionary.getUsedLangs()) {
             File dir = null;
             if (lang.length() > 0) {
-                dir = new File(lang);
+                dir = new File(generatedDir, lang);
                 if (zipOut == null && !dir.exists()) {
                     dir.mkdir();
                 }
-                file = new File(dir,"translation.json");
+                file = new File(dir, "translation.json");
             } else {
-                file = new File("translation.json");
+                file = new File(generatedDir,"translation.json");
             }
             logAddingCreatingFile(dir, file, zipOut);
             if (zipOut != null) {
@@ -183,7 +185,85 @@ public class Main {
                 }
             }
         }
-        file = new File(basename + ".log");
+    }
+
+    private void writeExcel(ZipOutputStream zipOut) throws IOException {
+        File file = new File(generatedDir,basename + ".xlsx");
+        logAddingCreatingFile(null, file, zipOut);
+        if (zipOut != null) {
+            zipOut.putNextEntry(new ZipEntry(file.toString()));
+            new I18nExcelConverter(dictionary).write(zipOut);
+        } else {
+            try (OutputStream outputStream = new FileOutputStream(file)) {
+                new I18nExcelConverter(dictionary).write(outputStream);
+            }
+        }
+    }
+
+    private void writeProperties(ZipOutputStream zipOut) throws IOException {
+        File file;
+        for (String lang : dictionary.getUsedLangs()) {
+            if (lang.length() > 0) {
+                file = new File(generatedDir,basename + "_" + lang + ".properties");
+            } else {
+                file = new File(generatedDir,basename + ".properties");
+            }
+            logAddingCreatingFile(null, file, zipOut);
+            if (zipOut != null) {
+                zipOut.putNextEntry(new ZipEntry(file.toString()));
+                new I18nPropertiesConverter(dictionary).write(lang, new OutputStreamWriter(zipOut, Charset.forName("UTF-8")));
+            } else {
+                try (Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), Charset.forName("UTF-8")))) {
+                    new I18nPropertiesConverter(dictionary).write(lang, writer);
+                }
+            }
+        }
+    }
+
+    private void writeDictionary(ZipOutputStream zipOut) throws IOException {
+        File file = new File(basename + "-dictionary.json");
+        logAddingCreatingFile(null, file, zipOut);
+        String json = toJson(dictionary);
+        if (zipOut != null) {
+            zipOut.putNextEntry(new ZipEntry(file.toString()));
+            zipOut.write(json.getBytes());
+        } else {
+            try (Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), Charset.forName("UTF-8")))) {
+                writer.write(json);
+            }
+        }
+    }
+
+    private String toJson(Object obj) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        try {
+            return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(obj);
+        } catch (IOException ex) {
+            log.error(ex.getMessage(), ex);
+            return "";
+        }
+    }
+
+    private void writeSources(ZipOutputStream zipOut) throws IOException {
+        if (zipOut == null) {
+            return;
+        }
+        for (Map.Entry<File, File> entry : i18nConverter.getImportedFiles().entrySet()) {
+            File source = entry.getKey();
+            File destFile = new File(sourcesDir, entry.getValue().toString());
+            logAddingCreatingFile(new File(sourcesDir), destFile, zipOut);
+            if (zipOut != null) {
+                zipOut.putNextEntry(new ZipEntry(destFile.toString()));
+                IOUtils.copy(new FileReader(source), zipOut, Charset.forName("UTF-8"));
+            } else {
+                // Do nothing.
+            }
+        }
+    }
+
+    private void writeLogFile(ZipOutputStream zipOut) throws IOException {
+        File file = new File(basename + ".log");
         logAddingCreatingFile(null, file, zipOut);
         if (zipOut != null) {
             zipOut.putNextEntry(new ZipEntry(file.getName()));
@@ -195,7 +275,8 @@ public class Main {
         }
     }
 
-    private static void logAddingCreatingFile(File dir, File file, ZipOutputStream zipOut) {
+
+    private void logAddingCreatingFile(File dir, File file, ZipOutputStream zipOut) {
         if (zipOut != null) {
             String subdir = dir != null ? dir.getName() + "/" : "";
             log.info("Adding file " + subdir + file.getName());
@@ -204,12 +285,12 @@ public class Main {
         }
     }
 
-    private static void writeFiles(Dictionary dictionary, String basename, boolean keysOnly) throws IOException {
+    private void writeFiles() throws IOException {
         writeFiles(dictionary, basename, keysOnly, null);
     }
 
 
-    private static void printHelp(Options options) {
+    private void printHelp(Options options) {
         HelpFormatter formatter = new HelpFormatter();
         formatter.printHelp("merlin-i18n-converter [OPTIONS] [FILE1] [FILE2]...",
                 "Read i18n translations of different formats, merges and writes the translations to different foramts.",

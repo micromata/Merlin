@@ -1,5 +1,7 @@
 package de.micromata.merlin.excel.i18n;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
@@ -10,6 +12,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 public class Dictionary {
+    @JsonProperty
     private Map<String, TranslationEntry> translations = new HashMap<>();
     @Getter
     private Set<String> keys = new TreeSet<>();
@@ -26,10 +29,12 @@ public class Dictionary {
      */
     @Getter
     @Setter
+    @JsonIgnore
     private boolean createKeyIfNotPresent = true;
 
     @Getter
     @Setter
+    @JsonIgnore
     private boolean overwriteExistingTranslations = false;
 
     public void addTranslation(String lang, String key, String translation) {
@@ -71,5 +76,9 @@ public class Dictionary {
 
     public String getLogging() {
         return logging.toString();
+    }
+
+    public void log(String log) {
+        logging.append(log).append("\n");
     }
 }
