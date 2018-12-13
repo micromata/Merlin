@@ -556,6 +556,10 @@ public class ExcelSheet {
         }
     }
 
+    public void autosize(int columnIndex) {
+        poiSheet.autoSizeColumn(columnIndex);
+    }
+
     public void setColumnWidth(int columnIndex, int width) {
         poiSheet.setColumnWidth(columnIndex, width);
     }
