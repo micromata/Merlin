@@ -3,8 +3,8 @@ package de.micromata.merlin.excel.i18n;
 import de.micromata.merlin.excel.*;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +23,9 @@ public class I18nExcelConverter {
     @Getter
     private Dictionary dictionary;
     private Dictionary diffDictionary;
+    private CellStyle cellStyleHeadRow;
+    private CellStyle cellStyleTranslation;
+    private CellStyle cellStyleKey;
 
     public I18nExcelConverter() {
         this.dictionary = new Dictionary();
@@ -78,21 +81,30 @@ public class I18nExcelConverter {
     public void write(OutputStream outputStream) throws IOException {
         Workbook poiWorkbook = new XSSFWorkbook();
         ExcelWorkbook workbook = new ExcelWorkbook(poiWorkbook);
+        createStyles(workbook);
         ExcelSheet sheet = workbook.createOrGetSheet("Translations");
         ExcelRow row = sheet.createRow();
-        row.createCells("key");
+        row.createCells(cellStyleHeadRow, "key");
+        sheet.setColumnWidth(0, 10000);
+        int col = 0;
         for (String lang : dictionary.getUsedLangs()) {
-            row.createCells(lang);
+            sheet.setColumnWidth(++col, 20000);
+            row.createCells(cellStyleHeadRow, lang);
         }
+        row.setHeight(20);
+
+        int rows = 1;
         for (String key : dictionary.getKeys()) {
             row = sheet.createRow();
-            row.createCells(key);
+            rows++;
+            row.createCells(cellStyleKey, key);
             TranslationEntry entry = dictionary.getEntry(key);
             if (entry == null) continue; // Shouldn't occur.
             for (String lang : dictionary.getUsedLangs()) {
-                row.createCells(StringUtils.defaultString(entry.getTranslation(lang)));
+                row.createCells(cellStyleTranslation, StringUtils.defaultString(entry.getTranslation(lang)));
             }
         }
+        sheet.getPoiSheet().setAutoFilter(new CellRangeAddress(0, rows, 0, col));
 
         if (this.diffDictionary != null) {
             for (String lang : diffDictionary.getUsedLangs()) {
@@ -104,14 +116,38 @@ public class I18nExcelConverter {
                 log.info("Found " + diffs.size() + " differing entries for lang '" + lang + "'.");
                 sheet = workbook.createOrGetSheet(lang + " diffs");
                 row = sheet.createRow();
-                row.createCells("key", "this", "other");
+                row.createCells(cellStyleHeadRow, "key", "this", "other");
+                sheet.setColumnWidth(0, 10000);
+                sheet.setColumnWidth(1, 20000);
+                sheet.setColumnWidth(2, 20000);
+                rows = 1;
                 for (TranslationDiffEntry diffEntry : diffs) {
                     row = sheet.createRow();
-                    row.createCells(diffEntry.getI18nKey(), diffEntry.getThisValue(), diffEntry.getOtherValue());
+                    rows++;
+                    row.createCells(cellStyleKey, diffEntry.getI18nKey());
+                    row.createCells(cellStyleTranslation, diffEntry.getThisValue(), diffEntry.getOtherValue());
                 }
+                sheet.autosize(0);
+                sheet.getPoiSheet().setAutoFilter(new CellRangeAddress(0, rows, 0, 2));
             }
         }
         workbook.getPOIWorkbook().write(outputStream);
         workbook.close();
+    }
+
+    private void createStyles(ExcelWorkbook workbook) {
+        cellStyleHeadRow = workbook.getPOIWorkbook().createCellStyle();
+        Font font = workbook.getPOIWorkbook().createFont();
+        font.setColor(IndexedColors.ROYAL_BLUE.index);
+        font.setBold(true);
+        font.setFontHeightInPoints((short) 12);
+        cellStyleHeadRow.setFont(font);
+
+        cellStyleTranslation = workbook.getPOIWorkbook().createCellStyle();
+        cellStyleTranslation.setWrapText(true);
+        cellStyleTranslation.setVerticalAlignment(VerticalAlignment.TOP);
+
+        cellStyleKey = workbook.getPOIWorkbook().createCellStyle();
+        cellStyleKey.setVerticalAlignment(VerticalAlignment.TOP);
     }
 }
