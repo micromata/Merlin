@@ -81,20 +81,31 @@ merlin-i18n-converter my-app.xlsx
 Reads all translations for all languages from the given Excel file and generates (as an example):
 
 ----
-de/translation.json
-en/translation.json
-i18n-generated.json
+generated/de/translation.json
+generated/en/translation.json
+generated/i18n-generated.json
+generated/i18n-generated.xlsx
+generated/i18n-generated_de.properties
+generated/i18n-generated_en.properties
+generated/i18n-generated_fr.properties
+generated/i18n-generated_it.properties
+i18n-generated-dictionary.json
 i18n-generated.log
-i18n-generated.xlsx
-i18n-generated_de.properties
-i18n-generated_en.properties
-i18n-generated_fr.properties
-i18n-generated_it.properties
+sources/*
 ----
 The property files contain the Java i18n properties, the Excel file all the translations for editing and the
 json file all translations in json format.
 
 You may add the Java i18n properties or the json file to the resources of your app.
+
+### Show differences between versions
+----
+merlin-i18n-converter -d old-my-app.xlsx my-app.xlsx
+----
+
+Shows the differences between the two versions of your translations. The flag `-d` accepts also the Merlin-dictionary format
+`i18n-generated-dictionary.json` as well as all other json and property formats.
+
 
 ## Create merlin-i18n-converter from the sources
 

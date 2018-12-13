@@ -24,7 +24,7 @@ public class Main {
 
     private static final Main main = new Main();
     private I18nConverter i18nConverter;
-    private Dictionary dictionary, diffDictionary;
+    private Dictionary dictionary;
     private String basename;
     private boolean keysOnly;
 
@@ -82,6 +82,7 @@ public class Main {
             if (line.hasOption("ko")) {
                 this.keysOnly = true;
             }
+            this.dictionary = new Dictionary();
             if (line.hasOption("d")) {
                 String filename = line.getOptionValue("d");
                 log.info("Reading other dictionary for detecting differences: " + filename);
@@ -89,16 +90,17 @@ public class Main {
                     StringWriter writer = new StringWriter();
                     IOUtils.copy(new FileReader(new File(filename)), writer);
                     ObjectMapper mapper = new ObjectMapper();
-                    this.diffDictionary = mapper.readValue(writer.toString(), Dictionary.class);
+                    Dictionary diffDictionary = mapper.readValue(writer.toString(), Dictionary.class);
+                    this.dictionary.setDiffDictionary(diffDictionary);
                 } else {
-                    this.diffDictionary = new Dictionary();
-                    I18nConverter diffConverter = new I18nConverter(this.diffDictionary);
+                    Dictionary diffDictionary = new Dictionary();
+                    I18nConverter diffConverter = new I18nConverter(diffDictionary);
                     diffConverter.importTranslations(new File(filename));
+                    this.dictionary.setDiffDictionary(diffDictionary);
                 }
             }
 
-            this.i18nConverter = new I18nConverter();
-            this.dictionary = i18nConverter.getDictionary();
+            this.i18nConverter = new I18nConverter(this.dictionary);
             Option[] parsedOptions = line.getOptions();
             for (Option parsedOption : parsedOptions) {
                 if (!"r".equals(parsedOption.getOpt()) &&
@@ -217,10 +219,10 @@ public class Main {
         logAddingCreatingFile(null, file, zipOut);
         if (zipOut != null) {
             zipOut.putNextEntry(new ZipEntry(file.toString()));
-            new I18nExcelConverter(dictionary, diffDictionary).write(zipOut);
+            new I18nExcelConverter(dictionary).write(zipOut);
         } else {
             try (OutputStream outputStream = new FileOutputStream(file)) {
-                new I18nExcelConverter(dictionary, diffDictionary).write(outputStream);
+                new I18nExcelConverter(dictionary).write(outputStream);
             }
         }
     }

@@ -22,7 +22,6 @@ public class I18nExcelConverter {
 
     @Getter
     private Dictionary dictionary;
-    private Dictionary diffDictionary;
     private CellStyle cellStyleHeadRow;
     private CellStyle cellStyleTranslation;
     private CellStyle cellStyleKey;
@@ -32,12 +31,7 @@ public class I18nExcelConverter {
     }
 
     public I18nExcelConverter(Dictionary dictionary) {
-        this(dictionary, null);
-    }
-
-    public I18nExcelConverter(Dictionary dictionary, Dictionary diffDictionary) {
         this.dictionary = dictionary;
-        this.diffDictionary = diffDictionary;
     }
 
     /**
@@ -106,9 +100,9 @@ public class I18nExcelConverter {
         }
         sheet.getPoiSheet().setAutoFilter(new CellRangeAddress(0, rows, 0, col));
 
-        if (this.diffDictionary != null) {
-            for (String lang : diffDictionary.getUsedLangs()) {
-                SortedSet<TranslationDiffEntry> diffs = dictionary.getDifferences(diffDictionary, lang);
+        if (this.dictionary.getDiffDictionary() != null) {
+            for (String lang : this.dictionary.getDiffDictionary().getUsedLangs()) {
+                SortedSet<TranslationDiffEntry> diffs = dictionary.getDifferences(lang);
                 if (diffs.size() == 0) {
                     log.info("No differences found for lang '" + lang + "'.");
                     continue;

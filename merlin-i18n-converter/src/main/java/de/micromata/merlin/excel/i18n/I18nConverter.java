@@ -22,10 +22,6 @@ public class I18nConverter {
     @Getter
     private Map<File, File> importedFiles = new HashMap<>();
 
-    public I18nConverter() {
-        this.dictionary = new Dictionary();
-    }
-
     public I18nConverter(Dictionary dictionary) {
         this.dictionary = dictionary;
     }

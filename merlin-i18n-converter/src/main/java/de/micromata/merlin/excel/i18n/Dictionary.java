@@ -19,6 +19,15 @@ public class Dictionary {
     @Getter
     private Set<String> usedLangs = new TreeSet<>();
     private StringBuilder logging = new StringBuilder();
+    /**
+     * Key is lang and value contains all differing translations.
+     */
+    @JsonIgnore
+    private Map<String, SortedSet<TranslationDiffEntry>> diffEntryMap = new HashMap<>();
+    @JsonIgnore
+    @Getter
+    @Setter
+    private Dictionary diffDictionary;
 
     /**
      * If true, then new keys will be added (default). If false, only translations to existing keys will be added.
@@ -84,16 +93,21 @@ public class Dictionary {
         logging.append("Date of generation: " + new Date() + "\n\n");
     }
 
-    public SortedSet<TranslationDiffEntry> getDifferences(Dictionary other, String lang) {
-        SortedSet<TranslationDiffEntry> result = new TreeSet<>();
+    public SortedSet<TranslationDiffEntry> getDifferences(String lang) {
+        SortedSet<TranslationDiffEntry> result = diffEntryMap.get(lang);
+        if (result != null) {
+            return result;
+        }
+        result = new TreeSet<>();
         for (TranslationEntry entry : translations.values()) {
             checkDiff(result, entry.getI18nKey(), entry.getTranslation(lang),
-                    other.getTranslation(lang, entry.getI18nKey()));
+                    diffDictionary.getTranslation(lang, entry.getI18nKey()));
         }
-        for (TranslationEntry otherEntry : other.translations.values()) {
+        for (TranslationEntry otherEntry : diffDictionary.translations.values()) {
             checkDiff(result, otherEntry.getI18nKey(), getTranslation(lang, otherEntry.getI18nKey()),
                     otherEntry.getTranslation(lang));
         }
+        diffEntryMap.put(lang, result);
         return result;
     }
 
