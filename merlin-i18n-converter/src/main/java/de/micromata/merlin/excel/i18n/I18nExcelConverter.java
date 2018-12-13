@@ -12,10 +12,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Iterator;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.*;
 
 public class I18nExcelConverter {
     private static Logger log = LoggerFactory.getLogger(I18nExcelConverter.class);
@@ -26,6 +23,7 @@ public class I18nExcelConverter {
     private CellStyle cellStyleTranslation;
     private CellStyle cellStyleTranslationModified;
     private CellStyle cellStyleKey;
+    private Font diffFontDelete, diffFontInsert;
 
     public I18nExcelConverter() {
         this.dictionary = new Dictionary();
@@ -116,16 +114,22 @@ public class I18nExcelConverter {
                 log.info("Found " + diffs.size() + " differing entries for lang '" + lang + "'.");
                 sheet = workbook.createOrGetSheet(lang + " diffs");
                 row = sheet.createRow();
-                row.createCells(cellStyleHeadRow, "key", "this", "other");
+                row.createCells(cellStyleHeadRow, "key", "diff", "this", "other");
                 row.setHeight(20);
                 sheet.setColumnWidth(0, 10000);
                 sheet.setColumnWidth(1, 20000);
                 sheet.setColumnWidth(2, 20000);
+                sheet.setColumnWidth(3, 20000);
                 rows = 1;
                 for (TranslationDiffEntry diffEntry : diffs) {
                     row = sheet.createRow();
                     rows++;
                     row.createCells(cellStyleKey, diffEntry.getI18nKey());
+                    RichTextString richTextString = createDiffRichTextCell(workbook, diffEntry.getThisValue(),
+                            diffEntry.getOtherValue());
+                    Cell cell = row.getRow().createCell(1);
+                    cell.setCellValue(richTextString);
+                    cell.setCellStyle(cellStyleTranslation);
                     row.createCells(cellStyleTranslation, diffEntry.getThisValue(), diffEntry.getOtherValue());
                 }
                 sheet.getPoiSheet().setAutoFilter(new CellRangeAddress(0, rows, 0, 2));
@@ -155,5 +159,50 @@ public class I18nExcelConverter {
 
         cellStyleKey = workbook.getPOIWorkbook().createCellStyle();
         cellStyleKey.setVerticalAlignment(VerticalAlignment.TOP);
+
+        diffFontInsert = workbook.getPOIWorkbook().createFont();
+        diffFontInsert.setUnderline(Font.U_SINGLE);
+        diffFontInsert.setColor(IndexedColors.BLUE.getIndex());
+
+        diffFontDelete = workbook.getPOIWorkbook().createFont();
+        diffFontDelete.setStrikeout(true);
+        diffFontDelete.setColor(IndexedColors.RED.getIndex());
+    }
+
+    private RichTextString createDiffRichTextCell(ExcelWorkbook workbook, String value1, String value2) {
+        DiffUtil diffUtil = new DiffUtil();
+        LinkedList<DiffUtil.Diff> diffList = diffUtil.diff_main(StringUtils.defaultString(value1), StringUtils.defaultString(value2));
+        diffUtil.diff_cleanupSemantic(diffList);
+        StringBuilder sb = new StringBuilder();
+        int pos = 0;
+        List<MyDiff> myDiffs = new ArrayList<>();
+        for (DiffUtil.Diff diff : diffList) {
+            sb.append(diff.text);
+            myDiffs.add(new MyDiff(diff.operation, pos, pos + diff.text.length()));
+            pos += diff.text.length();
+        }
+        RichTextString richTextString = workbook.getPOIWorkbook().getCreationHelper().createRichTextString(sb.toString());
+        for (MyDiff diff : myDiffs) {
+            if (diff.operation == DiffUtil.Operation.INSERT) {
+                richTextString.applyFont(diff.startIdx, diff.stopIdx, diffFontInsert);
+            } else if (diff.operation == DiffUtil.Operation.DELETE) {
+                richTextString.applyFont(diff.startIdx, diff.stopIdx, diffFontDelete);
+            }
+            DiffUtil.Operation operation = diff.operation;
+            //richTextString.
+        }
+        return richTextString;
+
+    }
+
+    private class MyDiff {
+        DiffUtil.Operation operation;
+        int startIdx, stopIdx;
+
+        MyDiff(DiffUtil.Operation operation, int startIdx, int stopIdx) {
+            this.operation = operation;
+            this.startIdx = startIdx;
+            this.stopIdx = stopIdx;
+        }
     }
 }
