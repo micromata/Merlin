@@ -24,6 +24,7 @@ public class I18nExcelConverter {
     private Dictionary dictionary;
     private CellStyle cellStyleHeadRow;
     private CellStyle cellStyleTranslation;
+    private CellStyle cellStyleTranslationModified;
     private CellStyle cellStyleKey;
 
     public I18nExcelConverter() {
@@ -95,7 +96,12 @@ public class I18nExcelConverter {
             TranslationEntry entry = dictionary.getEntry(key);
             if (entry == null) continue; // Shouldn't occur.
             for (String lang : dictionary.getUsedLangs()) {
-                row.createCells(cellStyleTranslation, StringUtils.defaultString(entry.getTranslation(lang)));
+                if (dictionary.isModified(lang, key)) {
+                    row.createCells(cellStyleTranslationModified, StringUtils.defaultString(entry.getTranslation(lang)));
+                    row.getRow().getCell(0).setCellStyle(cellStyleTranslationModified);
+                } else {
+                    row.createCells(cellStyleTranslation, StringUtils.defaultString(entry.getTranslation(lang)));
+                }
             }
         }
         sheet.getPoiSheet().setAutoFilter(new CellRangeAddress(0, rows, 0, col));
@@ -140,6 +146,12 @@ public class I18nExcelConverter {
         cellStyleTranslation = workbook.getPOIWorkbook().createCellStyle();
         cellStyleTranslation.setWrapText(true);
         cellStyleTranslation.setVerticalAlignment(VerticalAlignment.TOP);
+
+        cellStyleTranslationModified = workbook.getPOIWorkbook().createCellStyle();
+        cellStyleTranslationModified.setWrapText(true);
+        cellStyleTranslationModified.setVerticalAlignment(VerticalAlignment.TOP);
+        cellStyleTranslationModified.setFillForegroundColor(IndexedColors.YELLOW.getIndex());
+        cellStyleTranslationModified.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 
         cellStyleKey = workbook.getPOIWorkbook().createCellStyle();
         cellStyleKey.setVerticalAlignment(VerticalAlignment.TOP);

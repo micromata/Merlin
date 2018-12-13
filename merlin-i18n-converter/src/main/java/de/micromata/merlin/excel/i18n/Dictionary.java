@@ -93,12 +93,29 @@ public class Dictionary {
         logging.append("Date of generation: " + new Date() + "\n\n");
     }
 
+    public boolean isModified(String lang, String key) {
+        if (diffDictionary == null || key == null) {
+            return false;
+        }
+        SortedSet<TranslationDiffEntry> result = getDifferences(lang);
+        for (TranslationDiffEntry entry : result) {
+            if (key.equals(entry.getI18nKey())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public SortedSet<TranslationDiffEntry> getDifferences(String lang) {
         SortedSet<TranslationDiffEntry> result = diffEntryMap.get(lang);
         if (result != null) {
             return result;
         }
         result = new TreeSet<>();
+        diffEntryMap.put(lang, result);
+        if (diffDictionary == null) {
+            return result;
+        }
         for (TranslationEntry entry : translations.values()) {
             checkDiff(result, entry.getI18nKey(), entry.getTranslation(lang),
                     diffDictionary.getTranslation(lang, entry.getI18nKey()));
@@ -107,7 +124,6 @@ public class Dictionary {
             checkDiff(result, otherEntry.getI18nKey(), getTranslation(lang, otherEntry.getI18nKey()),
                     otherEntry.getTranslation(lang));
         }
-        diffEntryMap.put(lang, result);
         return result;
     }
 
