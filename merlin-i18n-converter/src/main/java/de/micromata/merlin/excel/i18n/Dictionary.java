@@ -102,9 +102,9 @@ public class Dictionary {
             }
             result.add(new TranslationDiffEntry(i18nKey, thisValue, otherValue));
         }
-        for (TranslationEntry entry : other.translations.values()) {
-            String i18nKey = entry.getI18nKey();
-            String otherValue = entry.getTranslation(lang);
+        for (TranslationEntry otherEntry : other.translations.values()) {
+            String i18nKey = otherEntry.getI18nKey();
+            String otherValue = otherEntry.getTranslation(lang);
             if (otherValue == null) {
                 continue;
             }
