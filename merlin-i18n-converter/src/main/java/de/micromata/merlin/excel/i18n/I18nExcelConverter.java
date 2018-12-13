@@ -117,6 +117,7 @@ public class I18nExcelConverter {
                 sheet = workbook.createOrGetSheet(lang + " diffs");
                 row = sheet.createRow();
                 row.createCells(cellStyleHeadRow, "key", "this", "other");
+                row.setHeight(20);
                 sheet.setColumnWidth(0, 10000);
                 sheet.setColumnWidth(1, 20000);
                 sheet.setColumnWidth(2, 20000);
@@ -127,7 +128,6 @@ public class I18nExcelConverter {
                     row.createCells(cellStyleKey, diffEntry.getI18nKey());
                     row.createCells(cellStyleTranslation, diffEntry.getThisValue(), diffEntry.getOtherValue());
                 }
-                sheet.autosize(0);
                 sheet.getPoiSheet().setAutoFilter(new CellRangeAddress(0, rows, 0, 2));
             }
         }

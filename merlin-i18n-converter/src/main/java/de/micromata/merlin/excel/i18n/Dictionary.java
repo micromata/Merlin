@@ -17,9 +17,6 @@ public class Dictionary {
     @Getter
     private Set<String> keys = new TreeSet<>();
     @Getter
-    @Setter
-    private String i18nKey;
-    @Getter
     private Set<String> usedLangs = new TreeSet<>();
     private StringBuilder logging = new StringBuilder();
 
@@ -90,31 +87,19 @@ public class Dictionary {
     public SortedSet<TranslationDiffEntry> getDifferences(Dictionary other, String lang) {
         SortedSet<TranslationDiffEntry> result = new TreeSet<>();
         for (TranslationEntry entry : translations.values()) {
-            String i18nKey = entry.getI18nKey();
-            String thisValue = entry.getTranslation(lang);
-            if (thisValue == null) {
-                continue;
-            }
-            String otherValue = other.getTranslation(lang, i18nKey);
-            if (otherValue != null && otherValue.equals(thisValue)) {
-                // Values aren't modified.
-                continue;
-            }
-            result.add(new TranslationDiffEntry(i18nKey, thisValue, otherValue));
+            checkDiff(result, entry.getI18nKey(), entry.getTranslation(lang),
+                    other.getTranslation(lang, entry.getI18nKey()));
         }
         for (TranslationEntry otherEntry : other.translations.values()) {
-            String i18nKey = otherEntry.getI18nKey();
-            String otherValue = otherEntry.getTranslation(lang);
-            if (otherValue == null) {
-                continue;
-            }
-            String thisValue = getTranslation(lang, i18nKey);
-            if (thisValue != null && thisValue.equals(otherValue)) {
-                // Values aren't modified.
-                continue;
-            }
-            result.add(new TranslationDiffEntry(i18nKey, thisValue, otherValue));
+            checkDiff(result, otherEntry.getI18nKey(), getTranslation(lang, otherEntry.getI18nKey()),
+                    otherEntry.getTranslation(lang));
         }
         return result;
+    }
+
+    private void checkDiff(SortedSet<TranslationDiffEntry> result, String i18nKey, String thisValue, String otherValue) {
+        if (StringUtils.equals(StringUtils.defaultString(thisValue), StringUtils.defaultString(otherValue)))
+            return;
+        result.add(new TranslationDiffEntry(i18nKey, thisValue, otherValue));
     }
 }

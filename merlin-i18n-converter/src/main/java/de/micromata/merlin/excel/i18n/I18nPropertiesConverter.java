@@ -11,16 +11,16 @@ import java.util.Properties;
 
 public class I18nPropertiesConverter {
     @Getter
-    private Dictionary translations;
+    private Dictionary dictionary;
     @Setter
     private String carriageReturn = "\n";
 
     public I18nPropertiesConverter() {
-        this.translations = new Dictionary();
+        this.dictionary = new Dictionary();
     }
 
-    public I18nPropertiesConverter(Dictionary translations) {
-        this.translations = translations;
+    public I18nPropertiesConverter(Dictionary dictionary) {
+        this.dictionary = dictionary;
     }
 
     public void importTranslations(String lang, Reader reader) throws IOException {
@@ -29,13 +29,13 @@ public class I18nPropertiesConverter {
         for (Object keyObject : props.keySet()) {
             String key = (String)keyObject;
             String value = (String)props.get(keyObject);
-            translations.addTranslation(lang, key, value);
+            dictionary.addTranslation(lang, key, value);
         }
     }
 
     public void write(String lang, Writer writer) throws IOException {
-        for (String key : translations.getKeys()) {
-            String text = translations.getTranslation(lang, key);
+        for (String key : dictionary.getKeys()) {
+            String text = dictionary.getTranslation(lang, key);
             if (StringUtils.isEmpty(text)) {
                 continue;
             }

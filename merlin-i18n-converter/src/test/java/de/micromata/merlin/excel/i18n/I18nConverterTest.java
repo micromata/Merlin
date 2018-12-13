@@ -19,12 +19,12 @@ public class I18nConverterTest {
         propsConverter.importTranslations("de", new FileReader(file));
         file = new File(TEST_DIR, "i18n_messages_en.properties");
         propsConverter.importTranslations("en", new FileReader(file));
-        Dictionary translations = propsConverter.getTranslations();
-        assertEquals(4, translations.getKeys().size());
+        Dictionary dictionary = propsConverter.getDictionary();
+        assertEquals(4, dictionary.getKeys().size());
         assertEquals("In Blatt ''{0}'', Spalte {1}:''{2}'' und Zeile #{3}: {4}",
-                translations.getTranslation("de", "merlin.excel.validation_error.display_all"));
+                dictionary.getTranslation("de", "merlin.excel.validation_error.display_all"));
         assertEquals("In sheet ''{0}'', column {1}:''{2}'' and row #{3}: {4}",
-                translations.getTranslation("en", "merlin.excel.validation_error.display_all"));
+                dictionary.getTranslation("en", "merlin.excel.validation_error.display_all"));
         file = new File(OUT_DIR, I18N_FILE);
         try (Writer writer = new FileWriter(file)) {
             propsConverter.write("de", writer);
@@ -33,11 +33,11 @@ public class I18nConverterTest {
         // Reread file:
         propsConverter = new I18nPropertiesConverter();
         propsConverter.importTranslations("de", new FileReader(file));
-        translations = propsConverter.getTranslations();
-        assertEquals(4, translations.getKeys().size());
+        dictionary = propsConverter.getDictionary();
+        assertEquals(4, dictionary.getKeys().size());
         assertEquals("In Blatt ''{0}'', Spalte {1}:''{2}'' und Zeile #{3}: {4}",
-                translations.getTranslation("de", "merlin.excel.validation_error.display_all"));
-        assertEquals(null, translations.getTranslation("en", "merlin.excel.validation_error.display_all"));
+                dictionary.getTranslation("de", "merlin.excel.validation_error.display_all"));
+        assertEquals(null, dictionary.getTranslation("en", "merlin.excel.validation_error.display_all"));
     }
 
     @Test
@@ -45,11 +45,11 @@ public class I18nConverterTest {
         I18nJsonConverter jsonConverter = new I18nJsonConverter();
         File file = new File(TEST_DIR, JSON_FILE);
         jsonConverter.importTranslations(new FileReader(file));
-        Dictionary translations = jsonConverter.getTranslations();
-        assertEquals(3, translations.getKeys().size());
-        assertEquals("", translations.getTranslation("de", "merlin.excel.validation_error.display_all"));
+        Dictionary dictionary = jsonConverter.getDictionary();
+        assertEquals(3, dictionary.getKeys().size());
+        assertEquals("", dictionary.getTranslation("de", "merlin.excel.validation_error.display_all"));
         assertEquals("Almeno una lista non è valida. Modifichi la sua scelta altrimenti il voto verrà considerato nullo.",
-                translations.getTranslation("it", "merlin.excel.validation_error.error_column_headname"));
+                dictionary.getTranslation("it", "merlin.excel.validation_error.error_column_headname"));
         file = new File(OUT_DIR, JSON_FILE);
         try (Writer writer = new FileWriter(file)) {
             jsonConverter.write(writer);
@@ -58,11 +58,11 @@ public class I18nConverterTest {
         // Reread file:
         jsonConverter = new I18nJsonConverter();
         jsonConverter.importTranslations(new FileReader(file));
-        translations = jsonConverter.getTranslations();
-        assertEquals(3, translations.getKeys().size());
-        assertEquals("", translations.getTranslation("de", "merlin.excel.validation_error.display_all"));
+        dictionary = jsonConverter.getDictionary();
+        assertEquals(3, dictionary.getKeys().size());
+        assertEquals("", dictionary.getTranslation("de", "merlin.excel.validation_error.display_all"));
         assertEquals("Almeno una lista non è valida. Modifichi la sua scelta altrimenti il voto verrà considerato nullo.",
-                translations.getTranslation("it", "merlin.excel.validation_error.error_column_headname"));
+                dictionary.getTranslation("it", "merlin.excel.validation_error.error_column_headname"));
     }
 
     @Test
@@ -72,35 +72,35 @@ public class I18nConverterTest {
         propsConverter.importTranslations("de", new FileReader(file));
         file = new File(TEST_DIR, "i18n_messages_en.properties");
         propsConverter.importTranslations("en", new FileReader(file));
-        Dictionary translations = propsConverter.getTranslations();
+        Dictionary dictionary = propsConverter.getDictionary();
 
-        I18nJsonConverter jsonConverter = new I18nJsonConverter(translations);
+        I18nJsonConverter jsonConverter = new I18nJsonConverter(dictionary);
         file = new File(TEST_DIR, JSON_FILE);
         jsonConverter.importTranslations(new FileReader(file));
 
-        assertEquals(4, translations.getKeys().size());
+        assertEquals(4, dictionary.getKeys().size());
         assertEquals("In Blatt ''{0}'', Spalte {1}:''{2}'' und Zeile #{3}: {4}",
-                translations.getTranslation("de", "merlin.excel.validation_error.display_all"));
+                dictionary.getTranslation("de", "merlin.excel.validation_error.display_all"));
         assertEquals("Almeno una lista non è valida. Modifichi la sua scelta altrimenti il voto verrà considerato nullo.",
-                translations.getTranslation("it", "merlin.excel.validation_error.error_column_headname"));
+                dictionary.getTranslation("it", "merlin.excel.validation_error.error_column_headname"));
 
         file = new File(OUT_DIR, "I18n-messages.xlsx");
-        I18nExcelConverter excelConverter = new I18nExcelConverter(translations);
+        I18nExcelConverter excelConverter = new I18nExcelConverter(dictionary);
         try (FileOutputStream outputStream = new FileOutputStream(file)) {
             excelConverter.write(outputStream);
         }
 
         // Reread file:
         excelConverter = new I18nExcelConverter(); // Clean translations.
-        translations = excelConverter.getDictionary();
+        dictionary = excelConverter.getDictionary();
         try (FileInputStream inputStream = new FileInputStream(file)) {
             excelConverter.importTranslations(inputStream, "I18n-message.xlsx");
         }
-        assertEquals(4, translations.getKeys().size());
+        assertEquals(4, dictionary.getKeys().size());
         assertEquals("In Blatt ''{0}'', Spalte {1}:''{2}'' und Zeile #{3}: {4}",
-                translations.getTranslation("de", "merlin.excel.validation_error.display_all"));
+                dictionary.getTranslation("de", "merlin.excel.validation_error.display_all"));
         assertEquals("Almeno una lista non è valida. Modifichi la sua scelta altrimenti il voto verrà considerato nullo.",
-                translations.getTranslation("it", "merlin.excel.validation_error.error_column_headname"));
+                dictionary.getTranslation("it", "merlin.excel.validation_error.error_column_headname"));
     }
 
     // Works only for me ;-)
@@ -115,15 +115,15 @@ public class I18nConverterTest {
         }
         I18nPropertiesConverter propsConverter = new I18nPropertiesConverter();
         propsConverter.importTranslations("de", new FileReader(file));
-        Dictionary translations = propsConverter.getTranslations();
-        translations.setCreateKeyIfNotPresent(false);
+        Dictionary dictionary = propsConverter.getDictionary();
+        dictionary.setCreateKeyIfNotPresent(false);
 
-        I18nJsonConverter jsonConverter = new I18nJsonConverter(translations);
+        I18nJsonConverter jsonConverter = new I18nJsonConverter(dictionary);
         file = new File(realTestDir, "systemtexte.json");
         jsonConverter.importTranslations(new FileReader(file));
 
         file = new File(realTestDir, "translations.xlsx");
-        I18nExcelConverter excelConverter = new I18nExcelConverter(translations);
+        I18nExcelConverter excelConverter = new I18nExcelConverter(dictionary);
         try (FileOutputStream outputStream = new FileOutputStream(file)) {
             excelConverter.write(outputStream);
         }
@@ -137,9 +137,9 @@ public class I18nConverterTest {
         try (FileInputStream inputStream = new FileInputStream(file)) {
             excelConverter.importTranslations(inputStream, file.getName());
         }
-        translations = excelConverter.getDictionary();
+        dictionary = excelConverter.getDictionary();
 
-        propsConverter = new I18nPropertiesConverter(translations);
+        propsConverter = new I18nPropertiesConverter(dictionary);
         try (Writer writer = new FileWriter(new File(realTestDir, baseoutFilename + "_de.properties"))) {
             propsConverter.write("de", writer);
         }
@@ -147,7 +147,7 @@ public class I18nConverterTest {
             propsConverter.write("en", writer);
         }
 
-        jsonConverter = new I18nJsonConverter(translations);
+        jsonConverter = new I18nJsonConverter(dictionary);
         try (Writer writer = new FileWriter(new File(realTestDir, baseoutFilename + ".json"))) {
             jsonConverter.write(writer);
         }

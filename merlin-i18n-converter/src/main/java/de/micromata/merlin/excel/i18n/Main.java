@@ -62,7 +62,7 @@ public class Main {
                 "Don't write files to zip archive, write files directly.");
 
         options.addOption("d", "diff", true,
-                "Reads the given dictionary and shows the differences of the current read translation source files (in XLS).");
+                "Reads the given dictionary (*-dictionary.json or any translation file) and shows the differences of the current read translation source files (in generated Excel file).");
 
         options.addOption("h", "help", false, "Print this help screen.");
 
@@ -85,14 +85,20 @@ public class Main {
             if (line.hasOption("d")) {
                 String filename = line.getOptionValue("d");
                 log.info("Reading other dictionary for detecting differences: " + filename);
-                StringWriter writer = new StringWriter();
-                IOUtils.copy(new FileReader(new File(filename)), writer);
-                ObjectMapper mapper = new ObjectMapper();
-                this.diffDictionary = mapper.readValue(writer.toString(), Dictionary.class);
+                if (filename.endsWith("dictionary.json")) {
+                    StringWriter writer = new StringWriter();
+                    IOUtils.copy(new FileReader(new File(filename)), writer);
+                    ObjectMapper mapper = new ObjectMapper();
+                    this.diffDictionary = mapper.readValue(writer.toString(), Dictionary.class);
+                } else {
+                    this.diffDictionary = new Dictionary();
+                    I18nConverter diffConverter = new I18nConverter(this.diffDictionary);
+                    diffConverter.importTranslations(new File(filename));
+                }
             }
 
             this.i18nConverter = new I18nConverter();
-            this.dictionary = i18nConverter.getTranslations();
+            this.dictionary = i18nConverter.getDictionary();
             Option[] parsedOptions = line.getOptions();
             for (Option parsedOption : parsedOptions) {
                 if (!"r".equals(parsedOption.getOpt()) &&

@@ -37,8 +37,8 @@ public class I18nJsonTreeConverter {
         this.dictionary = new Dictionary();
     }
 
-    public I18nJsonTreeConverter(Dictionary translations) {
-        this.dictionary = translations;
+    public I18nJsonTreeConverter(Dictionary dictionary) {
+        this.dictionary = dictionary;
     }
 
     public void importTranslations(Reader reader, String lang) throws IOException {

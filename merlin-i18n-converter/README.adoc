@@ -27,6 +27,11 @@ Read i18n translations of different formats, merges and writes the
 translations to different foramts.
  -b,--basename <arg>          The base name of the output files. Default
                               is 'i18n-generated'.
+ -d,--diff <arg>              Reads the given dictionary
+                              (*-dictionary.json or any translation file)
+                              and shows the differences of the current
+                              read translation source files (in generated
+                              Excel file).
  -h,--help                    Print this help screen.
  -ko,--keys-only              Don't export the translations for the json
                               file, only the keys.

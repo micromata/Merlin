@@ -20,7 +20,7 @@ public class I18nJsonConverter {
     private static Logger log = LoggerFactory.getLogger(I18nJsonConverter.class);
 
     @Getter
-    private Dictionary translations;
+    private Dictionary dictionary;
     @Setter
     private String carriageReturn = "\n";
     @Setter
@@ -33,11 +33,11 @@ public class I18nJsonConverter {
     private boolean writeEmptyTranslations = false;
 
     public I18nJsonConverter() {
-        this.translations = new Dictionary();
+        this.dictionary = new Dictionary();
     }
 
     public I18nJsonConverter(Dictionary translations) {
-        this.translations = translations;
+        this.dictionary = translations;
     }
 
     public void importTranslations(Reader reader) throws IOException {
@@ -51,7 +51,7 @@ public class I18nJsonConverter {
             String key = mapEntry.getKey();
             I18nJsonEntry entry = mapEntry.getValue();
             for (Map.Entry<String, String> translation : entry.value.entrySet()) {
-                translations.addTranslation(translation.getKey(), key, translation.getValue());
+                dictionary.addTranslation(translation.getKey(), key, translation.getValue());
             }
         }
     }
@@ -60,15 +60,15 @@ public class I18nJsonConverter {
         StringBuilder sb = new StringBuilder();
         sb.append("{");
         boolean firstKey = true;
-        for (String key : translations.getKeys()) {
+        for (String key : dictionary.getKeys()) {
             if (firstKey) firstKey = false;
             else sb.append(",");
             sb.append(carriageReturn);
             sb.append("  \"").append(key).append("\": {").append(carriageReturn); // "de.micromata.key": {
             sb.append("    \"value\": {").append(carriageReturn);                 //   "value" : {
             boolean firstLang = true;
-            for (String lang : translations.getUsedLangs()) {
-                String text = keysOnly ? "" : escapeJson(translations.getTranslation(lang, key));
+            for (String lang : dictionary.getUsedLangs()) {
+                String text = keysOnly ? "" : escapeJson(dictionary.getTranslation(lang, key));
                 if (firstLang) firstLang = false;
                 else sb.append(",").append(carriageReturn);
                 sb.append("      \"").append(lang).append("\": \"")

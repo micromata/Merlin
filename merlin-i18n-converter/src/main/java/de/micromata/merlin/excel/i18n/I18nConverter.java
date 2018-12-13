@@ -16,18 +16,18 @@ public class I18nConverter {
     private static Logger log = LoggerFactory.getLogger(I18nConverter.class);
 
     @Getter
-    private Dictionary translations;
+    private Dictionary dictionary;
 
     // Key is source file, value is dest file.
     @Getter
     private Map<File, File> importedFiles = new HashMap<>();
 
     public I18nConverter() {
-        this.translations = new Dictionary();
+        this.dictionary = new Dictionary();
     }
 
-    public I18nConverter(Dictionary translations) {
-        this.translations = translations;
+    public I18nConverter(Dictionary dictionary) {
+        this.dictionary = dictionary;
     }
 
     public void importTranslations(File file) throws IOException {
@@ -72,7 +72,7 @@ public class I18nConverter {
 
     private void importExcel(File file) throws IOException {
         log.info("Importing Excel translations: " + file.getAbsolutePath());
-        I18nExcelConverter i18nExcelConverter = new I18nExcelConverter(translations);
+        I18nExcelConverter i18nExcelConverter = new I18nExcelConverter(dictionary);
         try (InputStream intputStream = new FileInputStream(file)) {
             i18nExcelConverter.importTranslations(intputStream, file.getName());
         }
@@ -80,7 +80,7 @@ public class I18nConverter {
 
     private void importJson(String content, File file) throws IOException {
         log.info("Importing json translations: " + file.getAbsolutePath());
-        I18nJsonConverter jsonConverter = new I18nJsonConverter(translations);
+        I18nJsonConverter jsonConverter = new I18nJsonConverter(dictionary);
         try (Reader reader = new StringReader(content)) {
             jsonConverter.importTranslations(reader);
         }
@@ -88,14 +88,14 @@ public class I18nConverter {
 
     private void importJsonTree(String lang, File file) throws IOException {
         log.info("Importing json translations (lang=" + lang + "): " + file.getAbsolutePath());
-        I18nJsonTreeConverter jsonConverter = new I18nJsonTreeConverter(translations);
+        I18nJsonTreeConverter jsonConverter = new I18nJsonTreeConverter(dictionary);
         try (Reader reader = new FileReader(file)) {
             jsonConverter.importTranslations(reader, lang);
         }
     }
 
     private void importProperties(String content, File file) throws IOException {
-        I18nPropertiesConverter i18nPropertiesConverter = new I18nPropertiesConverter(translations);
+        I18nPropertiesConverter i18nPropertiesConverter = new I18nPropertiesConverter(dictionary);
         String basename = FilenameUtils.getBaseName(file.getName());
         int pos = basename.indexOf('_');
         String lang = pos >= 0 && pos < basename.length() - 1 ? basename.substring(pos + 1) : "";
