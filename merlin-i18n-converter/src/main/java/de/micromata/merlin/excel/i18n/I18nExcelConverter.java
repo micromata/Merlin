@@ -65,7 +65,7 @@ public class I18nExcelConverter {
             Row row = it.next();
             String key = sheet.getCellString(row, "key");
             for (String lang : languages) {
-                String translation = sheet.getCellString(row, lang);
+                String translation = StringUtils.trim(sheet.getCellString(row, lang));
                 dictionary.addTranslation(lang, key, translation);
             }
         }
