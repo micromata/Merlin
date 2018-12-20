@@ -198,7 +198,7 @@ public class Main {
                 if (zipOut == null && !dir.exists()) {
                     dir.mkdir();
                 }
-                file = new File(dir, "translation.json");
+                file = new File(dir, "translations.json");
             } else {
                 file = new File(generatedDir, "translation.json");
             }
