@@ -55,6 +55,7 @@ public class I18nExcelConverter {
                 log.error("Ignoring column named '" + lang + "'. It's not seemed to be a language column.");
                 continue;
             }
+            lang = lang.toLowerCase();
             languages.add(lang);
             sheet.registerColumn(lang, new ExcelColumnValidator());
         }
@@ -125,8 +126,8 @@ public class I18nExcelConverter {
                     row = sheet.createRow();
                     rows++;
                     row.createCells(cellStyleKey, diffEntry.getI18nKey());
-                    RichTextString richTextString = createDiffRichTextCell(workbook, diffEntry.getThisValue(),
-                            diffEntry.getOtherValue());
+                    RichTextString richTextString = createDiffRichTextCell(workbook, diffEntry.getOtherValue(),
+                            diffEntry.getThisValue());
                     Cell cell = row.getRow().createCell(1);
                     cell.setCellValue(richTextString);
                     cell.setCellStyle(cellStyleTranslation);
