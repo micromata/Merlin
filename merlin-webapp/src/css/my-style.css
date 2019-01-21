@@ -171,6 +171,10 @@ ul.nav-tabs .nav-link:hover {
 	color: #47a7eb;
 }
 
+ul.nav-tabs a.active {
+	font-weight: bold;
+}
+
 .tab-pane.active {
 	padding: 20px;
 }
