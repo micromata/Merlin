@@ -72,10 +72,10 @@ public class AbstractExcelWriter {
     }
 
     /**
-     * @param variable
-     * @param value
+     * @param variable    The variable name to add.
+     * @param value       The value of the variable to add.
      * @param description If i18n key, the translation will be used, otherwise the description itself.
-     * @return
+     * @return The description cell of this added row.
      */
     protected ExcelCell addConfigRow(String variable, Object value, String description) {
         ExcelRow row = currentSheet.createRow();

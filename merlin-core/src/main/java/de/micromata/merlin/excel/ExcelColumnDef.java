@@ -30,7 +30,7 @@ public class ExcelColumnDef {
     /**
      * Return the number of this column (0-based). The number is set by {@link ExcelSheet#findAndReadHeadRow()}.
      *
-     * @return
+     * @return the column number.
      */
     public int getColumnNumber() {
         return columnNumber;

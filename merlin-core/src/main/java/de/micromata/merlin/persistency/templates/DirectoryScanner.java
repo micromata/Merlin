@@ -30,7 +30,7 @@ public class DirectoryScanner {
     private long lastRefresh = -1;
 
     /**
-     * @param dir
+     * @param dir The root dir.
      * @param recursive If true, the directory will be searched recursively for Merlin templates. Default is false.
      */
     public DirectoryScanner(Path dir, boolean recursive) {
@@ -122,7 +122,7 @@ public class DirectoryScanner {
     /**
      * Tries to find a template definition matching the file name of template (same filename and path without file extension).
      * Any matching template definition will be assigned.
-     * @param template
+     * @param template The template to assign.
      * @see FileDescriptor#matches(FileDescriptor)
      */
     public void assignMatchingTemplateDefinitionByFilename(Template template) {
@@ -149,7 +149,7 @@ public class DirectoryScanner {
 
     /**
      * @param idOrPrimaryKey Id or primary key of the template definition to search for.
-     * @return
+     * @return The found TemplateDefinition or null if not found.
      */
     public TemplateDefinition getTemplateDefinition(String idOrPrimaryKey) {
         if (idOrPrimaryKey == null) {

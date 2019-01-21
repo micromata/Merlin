@@ -41,7 +41,7 @@ public class WordTemplateChecker {
     /**
      * Sets the template definition and analyzed used, defined and unused variables.
      *
-     * @param templateDefinition
+     * @param templateDefinition The template definition to assign.
      * @see Template#assignTemplateDefinition(TemplateDefinition)
      */
     public void assignTemplateDefinition(TemplateDefinition templateDefinition) {

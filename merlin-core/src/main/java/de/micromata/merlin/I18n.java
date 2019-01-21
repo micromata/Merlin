@@ -32,6 +32,8 @@ public class I18n {
 
     /**
      * Uses the default message bundle "MessagesBundle" of class path with systems default locale.
+     *
+     * @param bundleName The name of the bundle.
      */
     public I18n(String bundleName) {
         this.resourceBundle = I18n.getBundle(bundleName);
@@ -44,7 +46,7 @@ public class I18n {
     /**
      * Throws an error if messageId not found.
      *
-     * @param messageId
+     * @param messageId The id of the message to translate.
      * @return localized message.
      */
     public String getMessage(String messageId) {
@@ -52,7 +54,7 @@ public class I18n {
     }
 
     /**
-     * @param messageId
+     * @param messageId The id of the message to translate.
      * @return true, if the messageId is found in the bundle, otherwise false.
      */
     public boolean containsMessage(String messageId) {
@@ -60,7 +62,7 @@ public class I18n {
     }
 
     /**
-     * @param messageId
+     * @param messageId The id of the message to translate.
      * @param params    Message parameter to replace in message.
      * @return localized message.
      * @see MessageFormat#format(String, Object...)
@@ -82,9 +84,8 @@ public class I18n {
     }
 
     /**
-     *
-     * @param bundleName
-     * @param locale
+     * @param bundleName The name of the bundle.
+     * @param locale     The locale to use.
      * @return The root bundle if the given locale's language is "en" or language not found, otherwise the desired bundle for the given locale.
      */
     public static ResourceBundle getBundle(String bundleName, Locale locale) {
@@ -98,7 +99,8 @@ public class I18n {
 
     /**
      * Simply calls {@link ResourceBundle#getBundle(String)}.
-     * @param bundleName
+     *
+     * @param bundleName The bundle to use.
      * @return The bundle for {@link Locale#getDefault()} or root bundle if not found..
      */
     public static ResourceBundle getBundle(String bundleName) {

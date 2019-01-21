@@ -17,7 +17,7 @@ public class SerialDataExcelWriter extends AbstractExcelWriter {
     /**
      * The properties in template are overwriting any settings in serialData.
      *
-     * @param serialData
+     * @param serialData The serial data to set.
      */
     public SerialDataExcelWriter(SerialData serialData) {
         this.serialData = serialData;

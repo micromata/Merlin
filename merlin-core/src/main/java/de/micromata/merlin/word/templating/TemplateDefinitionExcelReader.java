@@ -50,11 +50,11 @@ public class TemplateDefinitionExcelReader {
     }
 
     /**
-     * @param workbook
+     * @param workbook the workbook to read.
      * @param templateDefinitionRequired if true, a templateDefinition is required (default) and an error message will be logged
      *                                   if no valid template definition found. If false, you may check, if an Excel
      *                                   file is a template definition file (used by DirectoryScanner).
-     * @return
+     * @return The template definition.
      */
     public TemplateDefinition readFromWorkbook(ExcelWorkbook workbook, boolean templateDefinitionRequired) {
         templateDefinition = readConfigFromWorkbook(workbook);

@@ -31,7 +31,7 @@ public class Variables {
     /**
      * The variable if found. If not and the formatted value is given, the formatted value will be returned. If none of the values is given, null is returned.
      *
-     * @param variable
+     * @param variable The name of the variable to get the value from.
      * @return value
      */
     public Object get(String variable) {
@@ -43,7 +43,7 @@ public class Variables {
 
     /**
      * Return the formatted value if given. If not the unformatted value will be taken, if given. If not the defaultString will be returned.
-     * @param variable
+     * @param variable The name of the variable to get the value from.
      * @param defaultString "" as default.
      * @return value
      */

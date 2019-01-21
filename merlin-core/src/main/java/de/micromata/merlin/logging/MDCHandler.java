@@ -11,8 +11,8 @@ public class MDCHandler {
     /**
      * Writes the given value to MDC. Any previous existing value will be preserved.
      *
-     * @param key
-     * @param value
+     * @param key The key of the value.
+     * @param value The value.
      */
     public void put(MDCKey key, String value) {
         if (key == null) {

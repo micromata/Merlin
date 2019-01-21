@@ -44,8 +44,8 @@ public class Data {
     }
 
     /**
-     * @param property
-     * @param offset
+     * @param property the property for {@link #getString(String)}.
+     * @param offset offset for {@link StringUtils#rightPad(String, int)}
      * @return Formatted string with fixed length of length of longest property of this type.
      */
     public String getRightPadString(String property, int offset) {

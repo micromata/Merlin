@@ -103,7 +103,7 @@ public class ExcelSheet {
     }
 
     /**
-     * @param columnHeads
+     * @param columnHeads The column heads to register.
      * @return this for chaining.
      */
     public ExcelSheet registerColumns(String... columnHeads) {
@@ -118,7 +118,7 @@ public class ExcelSheet {
     }
 
     /**
-     * @param columnHead
+     * @param columnHead The column head to register.
      * @return Created and registered ExcelColumnDef.
      */
     public ExcelColumnDef registerColumn(String columnHead) {
@@ -132,8 +132,8 @@ public class ExcelSheet {
     }
 
     /**
-     * @param columnHead
-     * @param listener
+     * @param columnHead The column head to register.
+     * @param listener The listener to use.
      * @return Created and registered ExcelColumnDef.
      */
     public ExcelColumnDef registerColumn(String columnHead, ExcelColumnListener listener) {
@@ -147,8 +147,8 @@ public class ExcelSheet {
     }
 
     /**
-     * @param columnDef
-     * @param listener
+     * @param columnDef The column to register.
+     * @param listener The listener to use.
      * @return this for chaining.
      */
     public ExcelSheet registerColumn(ExcelColumnDef columnDef, ExcelColumnListener listener) {
@@ -181,9 +181,9 @@ public class ExcelSheet {
     }
 
     /**
-     * @param row
-     * @param columnHeadname
-     * @return
+     * @param row The row to get the cell value from.
+     * @param columnHeadname The name of the column to get.
+     * @return The String value of the specified column cell.
      */
     public String getCellString(Row row, String columnHeadname) {
         findAndReadHeadRow();
@@ -203,8 +203,8 @@ public class ExcelSheet {
     }
 
     /**
-     * @param row
-     * @param columnHeadname
+     * @param row The row to get the cell from.
+     * @param columnHeadname The name of the column to get the cell from.
      * @return The cell of the specified column of the current row (uses internal interator).
      */
     public Cell getCell(Row row, String columnHeadname) {
@@ -214,8 +214,8 @@ public class ExcelSheet {
     }
 
     /**
-     * @param row
-     * @param columnDef
+     * @param row The row to get the cell from.
+     * @param columnDef The specified column to get the cell from.
      * @return The cell of the specified column of the current row (uses internal interator).
      */
     public Cell getCell(Row row, ExcelColumnDef columnDef) {
@@ -232,8 +232,8 @@ public class ExcelSheet {
 
     /**
      * @param row       Excel row number (starting with 0, POI row number).
-     * @param columnDef
-     * @return
+     * @param columnDef The specified column to get the cell from.
+     * @return The specified cell.
      */
     public Cell getCell(int row, ExcelColumnDef columnDef) {
         findAndReadHeadRow();
@@ -470,7 +470,7 @@ public class ExcelSheet {
      *                        system may be collapse.
      *                        <br>
      *                        If set to -1 an unlimited number of errors will be marked.
-     * @return
+     * @return This for chaining.
      */
     public ExcelSheet setMaxMarkedErrors(int maxMarkedErrors) {
         this.maxMarkedErrors = maxMarkedErrors;
@@ -539,7 +539,7 @@ public class ExcelSheet {
     /**
      * Appends the row.
      *
-     * @return
+     * @return The created row.
      */
     public ExcelRow createRow() {
         int rowCount = poiSheet.getLastRowNum();

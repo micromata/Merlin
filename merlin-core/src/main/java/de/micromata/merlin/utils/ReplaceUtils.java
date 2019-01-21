@@ -37,9 +37,9 @@ public class ReplaceUtils {
     /**
      * Creates replace entries for variables and comments.
      *
-     * @param text
-     * @param replaceEntries
-     * @param variables
+     * @param text           The text to process.
+     * @param replaceEntries The replace entries.
+     * @param variables      The variables to use.
      */
     public static void createReplaceEntries(String text, List<ReplaceEntry> replaceEntries, Variables variables) {
         Matcher matcher = VARIABLE_PATTERN.matcher(text);
@@ -65,9 +65,9 @@ public class ReplaceUtils {
     /**
      * Replaces all occurrences.
      *
-     * @param text
-     * @param replaceEntries
-     * @return
+     * @param text           The text to process.
+     * @param replaceEntries The replace entries.
+     * @return The processed text.
      */
     public static String replace(String text, List<ReplaceEntry> replaceEntries) {
         for (ReplaceEntry entry : replaceEntries) {
@@ -88,16 +88,16 @@ public class ReplaceUtils {
     }
 
     /**
-     * Preserved characters (Windows): 0x00-0x1F 0x7F " * / : < > ? \ |
+     * Preserved characters (Windows): 0x00-0x1F 0x7F " * / : &lt; &gt; ? \ |
      * Preserved characters (Mac OS): ':'
      * Preserved characters (Unix): '/'
      * Max length: 255
      *
-     * @param filename
+     * @param filename         The filename to encode.
      * @param reducedCharsOnly if true, only {@link #ALLOWED_FILENAME_CHARS} are allowed and German Umlaute are replaced
-     *                         'Ä'->'Ae' etc. If not, all characters excluding {@link #PRESERVED_FILENAME_CHARS} are allowed and
+     *                         'Ä'-&gt;'Ae' etc. If not, all characters excluding {@link #PRESERVED_FILENAME_CHARS} are allowed and
      *                         all white spaces will be replaced by ' ' char.
-     * @return
+     * @return The encoded filename.
      */
 
     public static String encodeFilename(String filename, boolean reducedCharsOnly) {

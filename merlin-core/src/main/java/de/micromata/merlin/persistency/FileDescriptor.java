@@ -17,7 +17,7 @@ import java.util.Date;
 /**
  * Information about a file location. Used for auto-matching of template files and template definition files (if
  * the filenames are equal (including path, excluding file extension).
- * <br/>
+ * <br>
  * If the template files and definition files aren't stored in a local file system this class can also be used.
  * Directory may represent the area, the relative path the sub area for clustering template files.
  */
@@ -42,7 +42,7 @@ public class FileDescriptor implements Cloneable {
     /**
      * Sets the property directory as absolute path of the given dir.
      *
-     * @param dir
+     * @param dir The directory to set.
      * @return this for chaining.
      */
     public FileDescriptor setDirectory(Path dir) {
@@ -67,7 +67,7 @@ public class FileDescriptor implements Cloneable {
 
     /**
      * @param path path including file name.
-     * @return
+     * @return The FileDescriptor.
      */
     public FileDescriptor setRelativePath(Path path) {
         primaryKey = null;
@@ -104,7 +104,7 @@ public class FileDescriptor implements Cloneable {
     /**
      * The last modified date of the item represented by this FileDescriptor. For file systems it's the last modified
      * date of the file.
-     * @return
+     * @return Time in millis of last modification.
      */
     public long getLastModified() {
         return lastModified;
@@ -133,7 +133,7 @@ public class FileDescriptor implements Cloneable {
     /**
      * Checks if the filename matches the other filename (excluding the file extension).
      *
-     * @param other
+     * @param other The other file descriptor to test for matching.
      * @return true, if the filenames matches and the files are both placed in the same directory (including relative path).
      */
     public boolean matches(FileDescriptor other) {
@@ -154,7 +154,7 @@ public class FileDescriptor implements Cloneable {
     /**
      * Checks weather the given file was modified after last update.
      *
-     * @param file
+     * @param file The file to check.
      * @return true, if the gifen file was modified after last update or if last update is not set.
      */
     public boolean isModified(Path file) {
@@ -179,7 +179,7 @@ public class FileDescriptor implements Cloneable {
     /**
      * Base64 encoded Hash.
      *
-     * @return
+     * @return The primary key.
      */
     public String getPrimaryKey() {
         if (primaryKey != null) {

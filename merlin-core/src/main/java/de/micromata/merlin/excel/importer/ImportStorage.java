@@ -61,7 +61,7 @@ public class ImportStorage<T> implements Serializable
 
   /**
    * Sheets of the import (e. g. mapping of MS Excel sheets).
-   * @return
+   * @return the imported sheets.
    */
   public List<ImportedSheet<T>> getSheets()
   {
@@ -102,7 +102,7 @@ public class ImportStorage<T> implements Serializable
 
   /**
    * File name, if data was imported from a file.
-   * @return
+   * @return The filename.
    */
   public String getFilename()
   {
@@ -123,8 +123,9 @@ public class ImportStorage<T> implements Serializable
   }
 
   /**
-   * Each entry in the sheets (ImportedElements) of the storage should have an unique identifier. Use-age: new
-   * ImportedElement<Xxx>(storage.nextVal(), Xxx.class, ...); Returns the next integer.
+   * Each entry in the sheets (ImportedElements) of the storage should have an unique identifier. Use-age: {@code new
+   * ImportedElement<Xxx>(storage.nextVal(), Xxx.class, ...);} Returns the next integer.
+   * @return next value.
    */
   public synchronized int nextVal()
   {

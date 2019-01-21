@@ -42,7 +42,7 @@ public class ResultMessage {
     }
 
     /**
-     * @param i18n
+     * @param i18n The i18n implementation to use for translation.
      * @return localized message.
      */
     public String getMessage(I18n i18n) {

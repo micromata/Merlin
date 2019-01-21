@@ -61,7 +61,7 @@ public class DirectoryWatchEntry {
     /**
      * For marking items / files as unsupported. Leave them untouched (until any modification of such files is done).
      *
-     * @return
+     * @return True if this item is supported.
      */
     public boolean isSupportedItem() {
         return supportedItem;

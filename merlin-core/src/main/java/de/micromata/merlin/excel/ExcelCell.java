@@ -34,7 +34,7 @@ public class ExcelCell {
 
     /**
      * @param workbook Needed for creating int DataFormat.
-     * @param intValue
+     * @param intValue The value to set.
      * @return this for chaining.
      */
     public ExcelCell setCellValue(ExcelWorkbook workbook, int intValue) {
@@ -44,7 +44,7 @@ public class ExcelCell {
 
     /**
      * @param workbook Needed for creating int DataFormat.
-     * @param booleanValue
+     * @param booleanValue The value to set.
      * @return this for chaining.
      */
     public ExcelCell setCellValue(ExcelWorkbook workbook, boolean booleanValue) {
@@ -54,7 +54,7 @@ public class ExcelCell {
 
     /**
      * @param workbook    Needed for creating int DataFormat.
-     * @param doubleValue
+     * @param doubleValue The value to set.
      * @return this for chaining.
      */
     public ExcelCell setCellValue(ExcelWorkbook workbook, double doubleValue) {

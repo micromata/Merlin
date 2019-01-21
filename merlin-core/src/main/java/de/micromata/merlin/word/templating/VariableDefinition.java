@@ -55,7 +55,7 @@ public class VariableDefinition implements Cloneable {
     }
 
     /**
-     * @param required
+     * @param required The value to set.
      * @return this for chaining.
      */
     public VariableDefinition setRequired(boolean required) {
@@ -66,7 +66,7 @@ public class VariableDefinition implements Cloneable {
     /**
      * Only useful for serial letters. Each variable should occur unique.
      *
-     * @return
+     * @return True if unique otherwise false.
      */
     public boolean isUnique() {
         return unique;
@@ -80,7 +80,7 @@ public class VariableDefinition implements Cloneable {
     }
 
     /**
-     * @param unique
+     * @param unique The value to set.
      * @return this for chaining.
      */
     public VariableDefinition setUnique(boolean unique) {
@@ -93,7 +93,7 @@ public class VariableDefinition implements Cloneable {
     }
 
     /**
-     * @param description
+     * @param description The value to set.
      * @return this for chaining.
      */
     public VariableDefinition setDescription(String description) {
@@ -106,7 +106,7 @@ public class VariableDefinition implements Cloneable {
     }
 
     /**
-     * @param minimumValue
+     * @param minimumValue The value to set.
      * @return this for chaining.
      */
     public VariableDefinition setMinimumValue(Object minimumValue) {
@@ -123,7 +123,7 @@ public class VariableDefinition implements Cloneable {
     }
 
     /**
-     * @param maximumValue
+     * @param maximumValue The value to set.
      * @return this for chaining.
      */
     public VariableDefinition setMaximumValue(Object maximumValue) {
@@ -150,7 +150,7 @@ public class VariableDefinition implements Cloneable {
     }
 
     /**
-     * @param allowedValues
+     * @param allowedValues The allowed values.
      * @return this for chaining.
      */
     public VariableDefinition addAllowedValues(Object... allowedValues) {

@@ -36,7 +36,7 @@ public class WordDocument implements AutoCloseable {
     }
 
     /**
-     * @param document
+     * @param document The document under the hood.
      */
     public WordDocument(XWPFDocument document) {
         this.document = document;
@@ -64,7 +64,7 @@ public class WordDocument implements AutoCloseable {
     }
 
     /**
-     * @param inputStream
+     * @param inputStream The input stream to read the Word document from.
      * @param filename    Only for logging purposes if any error occurs.
      */
     public WordDocument(InputStream inputStream, String filename) {

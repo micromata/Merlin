@@ -55,7 +55,7 @@ public class ImportSet<T> {
     /**
      * Adds a new {@link ImportDataEntry} with the given value to the list.
      *
-     * @param entry
+     * @param entry The entry to add.
      * @return this for chaining.
      */
     public ImportSet<T> add(T entry) {
@@ -65,7 +65,7 @@ public class ImportSet<T> {
     /**
      * Adds a new {@link ImportDataEntry} with the given value to the list.
      *
-     * @param entry
+     * @param entry The entry to add.
      * @param primaryKey If given, this value will be used as primary key. If null, a auto-increment sequence is used.
      * @return this for chaining.
      */
@@ -141,6 +141,7 @@ public class ImportSet<T> {
      * You should override this method for enabling this functionality.
      * <br>
      * Compares {@link ImportDataEntry#oldValue} with {@link ImportDataEntry#value}. Will only be called, if {@link ImportDataEntry#oldValue} is given.
+     * @param entry The entry to reconcile.
      */
     protected void reconcile(ImportDataEntry<T> entry) {
     }

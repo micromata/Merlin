@@ -28,7 +28,7 @@ public class ExcelColumnNumberValidator extends ExcelColumnValidator {
      * Checks if the cell value is of type {@link CellType#NUMERIC} or if {@link #isTryToConvertStringToNumber()} is true if
      * it is possible to convert a string cell value to a number.
      *
-     * @param cell
+     * @param cell The cell to validate.
      * @param rowNumber Row number of cell value in given sheet.
      * @return null if valid, otherwise validation error message to display.
      */
@@ -88,7 +88,7 @@ public class ExcelColumnNumberValidator extends ExcelColumnValidator {
 
     /**
      * If true a string value of a cell will be converted by this validator to a string (if possible). Default is false.
-     * @param tryToConvertStringToNumber
+     * @param tryToConvertStringToNumber The value to set.
      */
     public void setTryToConvertStringToNumber(boolean tryToConvertStringToNumber) {
         this.tryToConvertStringToNumber = tryToConvertStringToNumber;

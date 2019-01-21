@@ -57,7 +57,7 @@ public class ExcelWorkbook implements AutoCloseable {
     }
 
     /**
-     * @param inputStream
+     * @param inputStream The input stream to read the Excel content from.
      * @param filename    Only for logging purposes if any error occurs.
      */
     public ExcelWorkbook(InputStream inputStream, String filename) {
@@ -91,8 +91,9 @@ public class ExcelWorkbook implements AutoCloseable {
     /**
      * A sheet name might be localized, such as "Configuration" and "Konfiguration". Try to get the first sheet matching one
      * of the given sheetNames.
+     *
      * @param i18nKey of the sheet title
-     * @return
+     * @return The specified Excel sheet or null if not found.
      */
     public ExcelSheet getSheetByLocalizedNames(String i18nKey) {
         return getSheetByLocalizedNames(CoreI18n.getAllTranslations(i18nKey));
@@ -101,8 +102,9 @@ public class ExcelWorkbook implements AutoCloseable {
     /**
      * A sheet name might be localized, such as "Configuration" and "Konfiguration". Try to get the first sheet matching one
      * of the given sheetNames.
-     * @param sheetNames
-     * @return
+     *
+     * @param sheetNames The sheet names to look for.
+     * @return The specified Excel sheet or null if not found.
      */
     public ExcelSheet getSheetByLocalizedNames(Set<String> sheetNames) {
         if (CollectionUtils.isEmpty(sheetNames)) {
@@ -165,8 +167,8 @@ public class ExcelWorkbook implements AutoCloseable {
     /**
      * Please re-use cell styles due to limitations of Excel.
      *
-     * @param id
-     * @return
+     * @param id Id of the cell style.
+     * @return The CellStyle to use.
      */
     public CellStyle createOrGetCellStyle(String id) {
         CellStyle cellStyle = cellStyleMap.get(id);
@@ -180,8 +182,8 @@ public class ExcelWorkbook implements AutoCloseable {
     /**
      * Please re-use cell styles due to limitations of Excel.
      *
-     * @param id
-     * @return
+     * @param id The font id to re-use or create.
+     * @return The font to use.
      */
     public Font createOrGetFont(String id) {
         Font font = fontMap.get(id);

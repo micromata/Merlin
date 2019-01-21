@@ -27,7 +27,7 @@ public class Template implements Cloneable, FileDescriptorInterface {
     }
 
     /**
-     * Template id definined inside Word document (if given): <tt>{id = “Employment contract template“}</tt>.
+     * Template id definined inside Word document (if given): {@code {id = “Employment contract template“}}.
      * This id is useful for referencing templates in serial template definitions.
      * @return id if specified inside the Word template.
      */
@@ -64,7 +64,7 @@ public class Template implements Cloneable, FileDescriptorInterface {
      * Please use {@link #assignTemplateDefinition(TemplateDefinition)} for updating statistics (unused variables etc.) or
      * don't forget to call {@link #updateStatistics()}.
      *
-     * @param templateDefinition
+     * @param templateDefinition The template definition to set.
      */
     public void setTemplateDefinition(TemplateDefinition templateDefinition) {
         this.templateDefinition = templateDefinition;
@@ -77,7 +77,7 @@ public class Template implements Cloneable, FileDescriptorInterface {
 
     /**
      *
-     * @return The template definition reference if defined in Word document like <tt>${templateDefinition.refid = "..."}</tt>,
+     * @return The template definition reference if defined in Word document like {@code ${templateDefinition.refid = "..."}},
      * otherwise null.
      */
     public String getTemplateDefinitionReferenceId() {
@@ -130,7 +130,7 @@ public class Template implements Cloneable, FileDescriptorInterface {
      * Creates a template definition from all used variables. This may be used, if not template definition is
      * explicitly set.
      *
-     * @return
+     * @return The created TemplateDefinition.
      */
     public TemplateDefinition createAutoTemplateDefinition() {
         TemplateDefinition autoTemplateDefinition = new TemplateDefinition();

@@ -22,7 +22,7 @@ public class SerialTemplateRunner {
 
     /**
      * @param filename Filename of e. g. Serial template xls file. Used for creating name of zip archive based on this file.
-     * @return
+     * @return The zipped byte array containing the result files.
      */
     public byte[] run(String filename) {
         TemplateDefinition templateDefinition = serialData.getTemplateDefinition();

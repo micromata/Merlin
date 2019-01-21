@@ -61,6 +61,7 @@ public class ImportedElement<T> implements Serializable
 
   /**
    * Later the diff properties should be replaced by HibernateHistory and AbstractBaseDO mechanism.
+   * @param index The index of the element.
    * @param clazz Needed for reflection.
    * @param diffProperties List of property names which will be used for display property changes.
    */
@@ -169,6 +170,7 @@ public class ImportedElement<T> implements Serializable
 
   /**
    * Noch nicht verprobte Datensätze (isReconciled == false) gelten nicht als modifiziert.
+   * @return true if modified, otherwise false.
    */
   public boolean isModified()
   {
@@ -177,6 +179,7 @@ public class ImportedElement<T> implements Serializable
 
   /**
    * Noch nicht verprobte Datensätze (isReconciled == false) gelten weder als modifiziert noch als nicht modifiziert.
+   * @return true if unmodified, otherwise false.
    */
   public boolean isUnmodified()
   {
@@ -185,6 +188,7 @@ public class ImportedElement<T> implements Serializable
 
   /**
    * Noch nicht verprobte Datensätze (isReconciled == false) gelten nicht als neu.
+   * @return true if new.
    */
   public boolean isNew()
   {
@@ -193,6 +197,7 @@ public class ImportedElement<T> implements Serializable
 
   /**
    * Wurde dieser Eintrag schon verprobt? Erst, wenn er verprobt wurde, ergeben die anderen Abfragen isModified etc. Sinn.
+   * @return true if reconciled, otherwise false.
    */
   public boolean isReconciled()
   {
@@ -214,6 +219,7 @@ public class ImportedElement<T> implements Serializable
 
   /**
    * Only selected values will be imported. If hasErrors = true, always false will be returned.
+   * @return true if selected.
    */
   public boolean isSelected()
   {
@@ -222,7 +228,7 @@ public class ImportedElement<T> implements Serializable
 
   /**
    * If hasErrors == true then this item will be deselected.
-   * @param selected
+   * @param selected The value to set.
    */
   public void setSelected(boolean selected)
   {
@@ -235,7 +241,7 @@ public class ImportedElement<T> implements Serializable
 
   /**
    * Should be unique in the ImportedSheet and is use-able for indexed properties (e. g. check boxes).
-   * @return
+   * @return The index of this element.
    */
   public int getIndex()
   {
@@ -244,8 +250,8 @@ public class ImportedElement<T> implements Serializable
 
   /**
    * For properties which can't be mapped due to errors (e. g. referenced element not found).
-   * @param key
-   * @param value
+   * @param key Key of the error property.
+   * @param value Value of the error property.
    */
   public void putErrorProperty(String key, Object value)
   {
@@ -268,7 +274,7 @@ public class ImportedElement<T> implements Serializable
   }
 
   /**
-   * @param key
+   * @param key The key of the error property.
    * @return The error property if found, otherwise null.
    */
   public Object getErrorProperty(String key)

@@ -26,7 +26,7 @@ public class ExcelColumnOptionsValidator extends ExcelColumnValidator {
     /**
      * Cell values must match one of the given options.
      *
-     * @param options
+     * @param options The options to match.
      */
     public ExcelColumnOptionsValidator(String... options) {
         this.options = options;
@@ -35,7 +35,7 @@ public class ExcelColumnOptionsValidator extends ExcelColumnValidator {
     /**
      * Cell values must match one of the given options.
      *
-     * @param options
+     * @param options The options to match.
      */
     public ExcelColumnOptionsValidator(List<Object> options) {
         this.options = options.toArray(new String[0]);
@@ -44,7 +44,7 @@ public class ExcelColumnOptionsValidator extends ExcelColumnValidator {
     /**
      * Checks pattern match if the cell value does match any of the configured options, otherwise returns null.
      *
-     * @param cell
+     * @param cell The cell to validate.
      * @param rowNumber Row number of cell value in given sheet.
      * @return null if valid, otherwise validation error message to display.
      */

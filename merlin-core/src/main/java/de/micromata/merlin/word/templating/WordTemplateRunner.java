@@ -19,7 +19,7 @@ public class WordTemplateRunner {
     /**
      * @param templateDefinition Bind this Template definition to this Word document. Any template definition read inside the
      *                           Word document will be ignored.
-     * @param document
+     * @param document           The document to read.
      */
     public WordTemplateRunner(TemplateDefinition templateDefinition, WordDocument document) {
         this.templateDefinition = templateDefinition;
@@ -29,7 +29,7 @@ public class WordTemplateRunner {
     /**
      * Don't forget to bind the Word template before running {@link #run(Variables)}.
      *
-     * @param document
+     * @param document The document to read.
      */
     public WordTemplateRunner(WordDocument document) {
         this.srcDocument = document;
@@ -40,7 +40,7 @@ public class WordTemplateRunner {
     }
 
     /**
-     * Scans the Word file for template definition, such as: <tt>{templateDefinition.refid="Employee contract definition"}</tt>.
+     * Scans the Word file for template definition, such as: {@code {templateDefinition.refid="Employee contract definition"}}.
      *
      * @return Id of the referenced template definition.
      */
@@ -49,7 +49,7 @@ public class WordTemplateRunner {
     }
 
     /**
-     * Scans the Word file for template id, such as: <tt>{id="Employee contract template"}</tt>.
+     * Scans the Word file for template id, such as:{@code {id="Employee contract template"}}.
      *
      * @return Id of this template if given.
      */

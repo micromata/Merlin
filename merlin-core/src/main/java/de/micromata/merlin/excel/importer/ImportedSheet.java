@@ -66,7 +66,7 @@ public class ImportedSheet<T> implements Serializable {
     /**
      * List of imported elements (e. g. MS Excel rows as bean object).
      *
-     * @return
+     * @return The list of imported elements.
      */
     public List<ImportedElement<T>> getElements() {
         return elements;
@@ -86,6 +86,7 @@ public class ImportedSheet<T> implements Serializable {
 
     /**
      * Nur ungleich 0, falls die Datensätze schon verprobt wurden.
+     * @return The number of new elements.
      */
     public int getNumberOfNewElements() {
         checkStatistics();
@@ -125,6 +126,7 @@ public class ImportedSheet<T> implements Serializable {
 
     /**
      * Nur ungleich 0, falls die Datensätze schon verprobt wurden.
+     * @return The number of modified elements.
      */
     public int getNumberOfModifiedElements() {
         checkStatistics();
@@ -133,6 +135,7 @@ public class ImportedSheet<T> implements Serializable {
 
     /**
      * Nur ungleich 0, falls die Datensätze schon verprobt wurden.
+     * @return The number of unmodified elements.
      */
     public int getNumberOfUnmodifiedElements() {
         return numberOfUnmodifiedElements;
@@ -185,7 +188,7 @@ public class ImportedSheet<T> implements Serializable {
     /**
      * Name of the sheet (e. g. name of the MS Excel sheet).
      *
-     * @return
+     * @return The name of the sheet.
      */
     public String getName() {
         return name;
@@ -197,6 +200,7 @@ public class ImportedSheet<T> implements Serializable {
 
     /**
      * Can be used for opening and closing this sheet in gui.
+     * @return true if open, otherwise false.
      */
     public boolean isOpen() {
         return open;
@@ -223,6 +227,7 @@ public class ImportedSheet<T> implements Serializable {
 
     /**
      * After commit, the number of committed values will be given.
+     * @return The number of committed elements.
      */
     public int getNumberOfCommittedElements() {
         return numberOfCommittedElements;

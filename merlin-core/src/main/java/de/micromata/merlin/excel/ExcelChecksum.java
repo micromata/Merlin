@@ -25,8 +25,8 @@ public class ExcelChecksum {
     private static final String CUSTOM_PROPERTY_CHECKSUM = "MerlinChecksum";
 
     /**
-     * @param workbook
-     * @return
+     * @param workbook The workbook to calculate the checksum for.
+     * @return checksum.
      */
     public static long buildChecksum(Workbook workbook) {
         Adler32 cs = new Adler32();

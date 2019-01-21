@@ -26,10 +26,10 @@ public class ZipUtils {
 
     /**
      * For multiple filenames, the filenames will be modified in a MacOS X style:
-     * <tt>Filename.txt, Filename-2.txt, Filename-2.txt,</tt> ...
+     * {@code Filename.txt, Filename-2.txt, Filename-2.txt, ...}
      *
-     * @param filename
-     * @param content
+     * @param filename The file name of the new zip entry.
+     * @param content The content of the file to add.
      */
     public void addZipEntry(String filename, byte[] content) {
         try {

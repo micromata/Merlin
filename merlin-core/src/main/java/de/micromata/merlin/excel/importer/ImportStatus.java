@@ -38,7 +38,7 @@ public enum ImportStatus
 
   /**
    * The key will be used e. g. for i18n.
-   * @return
+   * @return The key.
    */
   public String getKey()
   {

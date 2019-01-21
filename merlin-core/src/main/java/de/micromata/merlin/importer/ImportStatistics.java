@@ -56,6 +56,7 @@ public class ImportStatistics {
     }
 
     /**
+     * @param totalNumberOfElements The total number of elements to set.
      * @return this for chaining.
      */
     public ImportStatistics reset(int totalNumberOfElements) {

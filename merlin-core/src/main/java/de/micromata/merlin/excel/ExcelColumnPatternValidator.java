@@ -28,7 +28,7 @@ public class ExcelColumnPatternValidator extends ExcelColumnValidator {
     }
 
     /**
-     * @param patternRegExp
+     * @param patternRegExp The regexp for validation.
      */
     public ExcelColumnPatternValidator(String patternRegExp) {
         this.flags = flags;
@@ -37,8 +37,8 @@ public class ExcelColumnPatternValidator extends ExcelColumnValidator {
     }
 
     /**
-     * @param patternRegExp
-     * @param flags         @see {@link Pattern#compile(String, int)}
+     * @param patternRegExp The regexp for validation.
+     * @param flags         See {@link Pattern#compile(String, int)}
      */
     public ExcelColumnPatternValidator(String patternRegExp, int flags) {
         this.flags = flags;
@@ -49,7 +49,7 @@ public class ExcelColumnPatternValidator extends ExcelColumnValidator {
     /**
      * Checks pattern match if {@link #patternRegExp} is given, otherwise returns null.
      *
-     * @param cell
+     * @param cell The cell to validate.
      * @param rowNumber Row number of cell value in given sheet.
      * @return null if valid, otherwise validation error message to display.
      */
@@ -90,7 +90,7 @@ public class ExcelColumnPatternValidator extends ExcelColumnValidator {
 
     /**
      * @param patternRegExp String patternRegExp to validate. If null, no patternRegExp match will be validated.
-     * @param flags         @see {@link Pattern#compile(String, int)}
+     * @param flags         See {@link Pattern#compile(String, int)}
      * @see String#matches(String)
      */
     public void setPatternRegExp(String patternRegExp, int flags) {

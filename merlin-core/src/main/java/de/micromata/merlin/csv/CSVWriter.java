@@ -80,6 +80,7 @@ public class CSVWriter {
      * Appends the given value to the buffer.
      *
      * @param value The value to append.
+     * @return this for chaining.
      */
     public CSVWriter write(final long value) {
         writeSeparator();
@@ -91,6 +92,7 @@ public class CSVWriter {
      * Appends the given value in the format "yyyy-MM-dd HH:mm:ss.SSS".
      *
      * @param value The value to append.
+     * @return this for chaining.
      */
     public CSVWriter write(final Date value) {
         writeSeparator();
@@ -104,9 +106,10 @@ public class CSVWriter {
 
     /**
      * Appends the given value. The string will be encapsulated in quotation marks: " Any occurance of the quotation mark will be quoted by
-     * duplication. Example: hallo -> "hallo", hal"lo -> "hal""lo"
+     * duplication. Example: hallo -&gt; "hallo", hal"lo -&gt; "hal""lo"
      *
      * @param s The value to append.
+     * @return this for chaining.
      */
     public CSVWriter write(final String s) {
         writeSeparator();
@@ -132,6 +135,7 @@ public class CSVWriter {
      * Appends the given value to the buffer in the format "yyyy-MM-dd HH:mm:ss.SSS".
      *
      * @param value The value to append.
+     * @return this for chaining.
      */
     public CSVWriter write(final Object value) {
         writeSeparator();

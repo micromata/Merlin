@@ -25,7 +25,7 @@ public class ExcelValidationErrorMessage extends ResultMessage implements Compar
     }
 
     /**
-     * @param i18n
+     * @param i18n The i18n implementation to use for translation.
      * @return Message including sheet name, column and row.
      */
     public String getMessageWithAllDetails(I18n i18n) {
@@ -39,7 +39,7 @@ public class ExcelValidationErrorMessage extends ResultMessage implements Compar
     }
 
     /**
-     * @param i18n
+     * @param i18n The i18n implementation to use for translation.
      * @return Message including sheet name, column and row.
      */
     public String getMessageWithSheetName(I18n i18n) {
@@ -50,7 +50,7 @@ public class ExcelValidationErrorMessage extends ResultMessage implements Compar
     }
 
     /**
-     * @param i18n
+     * @param i18n The i18n implementation to use for translation.
      * @return Message including column number/name.
      */
     public String getMessageWithColumn(I18n i18n) {
@@ -90,7 +90,7 @@ public class ExcelValidationErrorMessage extends ResultMessage implements Compar
     }
 
     /**
-     * @param cellValue
+     * @param cellValue The value to set.
      * @return this for chaining.
      */
     public ExcelValidationErrorMessage setCellValue(Object cellValue) {

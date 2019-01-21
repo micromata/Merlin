@@ -18,7 +18,7 @@ public class ExcelRow {
     /**
      * Assumes {@link ExcelCellType#STRING}
      *
-     * @return
+     * @return The created cell.
      */
     public ExcelCell createCell() {
         return createCell(ExcelCellType.STRING);

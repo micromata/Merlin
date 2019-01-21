@@ -42,7 +42,7 @@ public class ExcelWriterContext {
     }
 
     /**
-     * @param addErrorSheet
+     * @param addErrorSheet If true, an sheet with validation errors will be added to the workbook.
      * @return this for chaining.
      */
     public ExcelWriterContext setAddErrorSheet(boolean addErrorSheet) {
@@ -55,7 +55,7 @@ public class ExcelWriterContext {
     }
 
     /**
-     * @param addCellComments
+     * @param addCellComments If true, Validation errors will be attached as comments to the cells.
      * @return this for chaining.
      */
     public ExcelWriterContext setAddCellComments(boolean addCellComments) {
@@ -68,7 +68,7 @@ public class ExcelWriterContext {
     }
 
     /**
-     * @param addErrorColumn
+     * @param addErrorColumn If true, a column will be appended containing validation errors.
      * @return this for chaining.
      */
     public ExcelWriterContext setAddErrorColumn(boolean addErrorColumn) {
@@ -131,7 +131,7 @@ public class ExcelWriterContext {
     /**
      * For customizing cell highlighting. For styling you can also use {@link #setErrorHighlightCellStyle(CellStyle)}.
      *
-     * @param cellHighlighter
+     * @param cellHighlighter The own cell highlighter to use for customized styles.
      */
     public void setCellHighlighter(ExcelValidationErrorCellHighlighter cellHighlighter) {
         this.cellHighlighter = cellHighlighter;
@@ -158,7 +158,7 @@ public class ExcelWriterContext {
     /**
      * For customizing error messages in error message column.
      *
-     * @param errorMessageWriter
+     * @param errorMessageWriter The error message writer to use.
      */
     public void setErrorMessageWriter(ExcelValidationErrorMessageWriter errorMessageWriter) {
         this.errorMessageWriter = errorMessageWriter;

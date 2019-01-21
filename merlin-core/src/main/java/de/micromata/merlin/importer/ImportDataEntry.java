@@ -12,7 +12,6 @@ import java.util.List;
 /**
  * Holds one single data entry (e. g. one row of an Excel or CSV-file.
  *
- * @param <T>
  */
 public class ImportDataEntry<T> {
     enum Status {NEW, MODIFIED, UNMODIFIED, COMMITTED, FAULTY}

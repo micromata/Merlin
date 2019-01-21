@@ -41,7 +41,7 @@ public class ExcelColumnValidator extends ExcelColumnListener {
      * Overwrite this for own validation.
      * Checks required and unique if configured, otherwise returns null.
      *
-     * @param cell
+     * @param cell The cell to validate.
      * @param rowNumber Row number of cell value in given sheet.
      * @return null if valid, otherwise validation error message to display.
      */
@@ -124,7 +124,7 @@ public class ExcelColumnValidator extends ExcelColumnListener {
     /**
      * Mark this column and are all its cell values as required.
      *
-     * @param required
+     * @param required The value to set.
      * @return this for chaining.
      */
     public ExcelColumnValidator setRequired(boolean required) {
@@ -156,7 +156,7 @@ public class ExcelColumnValidator extends ExcelColumnListener {
     /**
      * All cell values must be unique, if given.
      *
-     * @param unique
+     * @param unique The value to set.
      * @return this for chaining.
      */
     public ExcelColumnValidator setUnique(boolean unique) {

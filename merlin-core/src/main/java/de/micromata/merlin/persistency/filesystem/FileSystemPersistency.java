@@ -58,11 +58,11 @@ public class FileSystemPersistency implements PersistencyInterface {
 
     /**
      * Builds hash id (MD5, base64 and url encoded) from the canonical path. If SHA256 is not available, {@link String#hashCode()}
-     * will be used instead as a fall back.<br/>
+     * will be used instead as a fall back.<br>
      * Security nodes: We need a fast hash algorithm, MD5 is not secure, but for this purpose the security lack of MD5 should
      * have no negative effect.
-     * @param path
-     * @return
+     * @param path  The path to look for.
+     * @return The primary key.
      * @see #getCanonicalPathString(Path)
      */
     @Override
@@ -85,7 +85,7 @@ public class FileSystemPersistency implements PersistencyInterface {
     }
 
     /**
-     * @param path
+     * @param path The path to look for.
      * @return The file input stream.
      */
     public InputStream getInputStream(Path path) {

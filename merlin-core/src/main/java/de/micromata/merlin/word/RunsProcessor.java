@@ -50,8 +50,8 @@ public class RunsProcessor {
 
     /**
      * Replace all variable by their values. Removes also any occurencies of template id and definition references:
-     * <tt>{templateDefinition.refid = "..."}</tt> and <tt>{id = "..."}</tt>.
-     * @param variables
+     * {@code {templateDefinition.refid = "..."}</tt> and <tt>{id = "..."}}.
+     * @param variables The variable values to insert.
      */
     public void replace(Variables variables) {
         if (runs == null || runs.size() == 0) {

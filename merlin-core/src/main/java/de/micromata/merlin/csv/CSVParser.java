@@ -80,7 +80,7 @@ public class CSVParser {
     /**
      * Parses the first (next) line and returns the cells as string. Stores also the col numbers of the head cols for .
      *
-     * @return
+     * @return cells
      * @see #parseLine()
      * @see #getCell(List, String)
      */
@@ -99,8 +99,8 @@ public class CSVParser {
     /**
      * Get the cell with the given colname (head cols had to be parsed first via {@link #parseHeadCols()}.
      *
-     * @param cells
-     * @param colname
+     * @param cells cells of a row.
+     * @param colname the colname to get the cell for.
      * @return cell content
      */
     public String getCell(final List<String> cells, final String colname) {
@@ -123,7 +123,7 @@ public class CSVParser {
     /**
      * Returns null, if EOF.
      *
-     * @return
+     * @return List of cell values.
      */
     public List<String> parseLine() {
         if (type == Type.EOF) {
@@ -193,7 +193,7 @@ public class CSVParser {
 
     /**
      *
-     * @param csvSeparatorChar
+     * @param csvSeparatorChar separator character.
      * @return this for chaining.
      */
     public CSVParser setCsvSeparatorChar(final char csvSeparatorChar) {

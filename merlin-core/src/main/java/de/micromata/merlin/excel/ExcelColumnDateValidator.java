@@ -21,7 +21,7 @@ public class ExcelColumnDateValidator extends ExcelColumnValidator {
     /**
      * Checks if the cell value is date formatted.
      *
-     * @param cell
+     * @param cell The cell to validate.
      * @param rowNumber Row number of cell value in given sheet.
      * @return null if valid, otherwise validation error message to display.
      */

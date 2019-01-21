@@ -31,7 +31,8 @@ public abstract class AbstractDirectoryWatcher {
     private Map<Path, DirectoryWatchEntry> deletedFilesMap;
 
     /**
-     * @param rootDir
+     * @param rootDir                 The root dir to use.
+     * @param recursive               Watch recursively?
      * @param supportedFileExtensions If null, all files will be proceeded, if given, only files with one of these extensions will
      *                                be proceeded. You may specify: {"docx", "xls", "xlsx"} as well as {".docx". ".xls", ".xlsx"}.
      */
@@ -106,8 +107,10 @@ public abstract class AbstractDirectoryWatcher {
     protected abstract void walkTree(DirectoryWatcherContext context);
 
     /**
-     * @param path
+     * @param path         The current path.
+     * @param itemType     The type of items to visit.
      * @param lastModified the value in milliseconds, since the epoch (1970-01-01T00:00:00Z).
+     * @param context      The context.
      */
     protected void visit(Path path, ItemType itemType, long lastModified, DirectoryWatcherContext context) {
         if (itemType == ItemType.DIR) {
@@ -147,8 +150,8 @@ public abstract class AbstractDirectoryWatcher {
     /**
      * Checks by default the path for having one of the file extensions specified in the constructor (case-insensitive).
      *
-     * @param path
-     * @return
+     * @param path The current path.
+     * @return True if matches, otherwise false.
      */
     protected boolean matches(Path path) {
         return matches(path, supportedFileExtensions);
@@ -210,8 +213,8 @@ public abstract class AbstractDirectoryWatcher {
     /**
      * Tries to get the DirectoryWatchEntry for this given path (directory or file).
      *
-     * @param path
-     * @return
+     * @param path The path to get the watch entry for.
+     * @return The watch entry.
      */
     public DirectoryWatchEntry getEntry(Path path) {
         Validate.notNull(path);
@@ -233,8 +236,8 @@ public abstract class AbstractDirectoryWatcher {
     }
 
     /**
-     * @param path
-     * @param lastCheck
+     * @param path      The path to check.
+     * @param lastCheck The time in millis of last check.
      * @return true, if the lastModified of the path is after lastCheck or if the path object is deleted.
      */
     public boolean isModified(Path path, long lastCheck) {

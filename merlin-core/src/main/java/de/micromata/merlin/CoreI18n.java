@@ -25,7 +25,7 @@ public class CoreI18n extends I18n {
      * Use this if only one locale is used (in a none multi user system).
      * At default the default message bundle "MessagesBundle" of the class path with the system's default locale is used.
      *
-     * @param instance
+     * @param instance The default instance to use.
      */
     public static void setDefault(CoreI18n instance) {
         defaultInstance = instance;
@@ -35,7 +35,7 @@ public class CoreI18n extends I18n {
      * Use this if only one locale is used (in a none multi user system).
      * Uses bundle "MessagesBundle" of the class path with the given locale.
      *
-     * @param locale
+     * @param locale The default locale to use.
      * @return new default instance for chaining.
      */
     public static CoreI18n setDefault(Locale locale) {

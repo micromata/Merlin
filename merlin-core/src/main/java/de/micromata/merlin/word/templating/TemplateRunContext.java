@@ -56,9 +56,9 @@ public class TemplateRunContext {
     /**
      * Convert the values matching the user's locale.
      *
-     * @param variables
+     * @param variables          The variables to convert.
      * @param templateDefinition For getting definitions of variables. If not given, the parameter variables is returen unchanged.
-     * @return
+     * @return The converted variables.
      */
     public Variables convertVariables(Map<String, Object> variables, TemplateDefinition templateDefinition) {
         Variables result = new Variables();
@@ -88,7 +88,7 @@ public class TemplateRunContext {
     /**
      * Default is "dd/MM/yyyy".
      *
-     * @param pattern
+     * @param pattern The date pattern.
      */
     public void setDateFormat(String pattern) {
         setDateFormat(pattern, locale);
@@ -101,7 +101,8 @@ public class TemplateRunContext {
     /**
      * Default is "dd/MM/yyyy".
      *
-     * @param pattern
+     * @param pattern The date pattern.
+     * @param locale  The locale to use.
      */
     public void setDateFormat(String pattern, Locale locale) {
         this.locale = locale;
@@ -260,8 +261,8 @@ public class TemplateRunContext {
     /**
      * Sets i18n and locale. If you want to use your own i18n, please call {@link #setI18n(I18n)} after {@link #setLocale(String, Locale)}.
      *
-     * @param dateFormatPattern
-     * @param locale
+     * @param dateFormatPattern The date format pattern.
+     * @param locale            The locale to use.
      */
     public void setLocale(String dateFormatPattern, Locale locale) {
         i18n = CoreI18n.getDefault().get(locale);

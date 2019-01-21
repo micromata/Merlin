@@ -16,7 +16,7 @@ public class DocumentRange implements Comparable<DocumentRange> {
     }
 
     /**
-     * @param position
+     * @param position The position to check.
      * @return true if the given position is covered (enclosed) by this range.
      */
     public boolean isIn(DocumentPosition position) {

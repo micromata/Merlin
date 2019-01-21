@@ -50,7 +50,7 @@ public class DocumentRemover {
      * First register all ranges to remove. The ranges should be removed in reverse order (beginning from the end
      * of the document to preserve the body element index for next ranges to remove.
      *
-     * @param rangeToRemove
+     * @param rangeToRemove The range to remove.
      */
     public void add(DocumentRange rangeToRemove) {
         init();
