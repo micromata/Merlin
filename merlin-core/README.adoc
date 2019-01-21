@@ -193,18 +193,16 @@ Examples for if-expressions:
 
 == General information of how to publish to Maven central
 
-=== Publishing to Maven Central
-
 This section describes in general how to publish to maven central any artifact.
 
-==== Creating an account for Sonatype
+=== Creating an account for Sonatype
 Create an account at https://oss.sonatype.org.
 
-==== Granting the account for your group
+=== Granting the account for your group
 
 Open a JIRA issue at https://issues.sonatype.org for project `OSSRH` and request the permissions.
 
-==== Signing
+=== Signing
 
 Create
 
@@ -219,11 +217,11 @@ mavenPassword=<your maven password>
 Ensure that `GRADLE_USER_HOME` environment variable points to `~/.gradle` and you key is published under
 http://pool.sks-keyservers.net:11371 and http://keys.gnupg.net:11371/
 
-==== Building
+=== Building
 
 Simply run `gradle clean publish`.
 
-==== Staging a release
+=== Staging a release
 
 Refer https://central.sonatype.org/pages/releasing-the-deployment.html.
 
