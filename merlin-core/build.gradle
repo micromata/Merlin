@@ -1,6 +1,9 @@
 plugins {
     id 'io.franzbecker.gradle-lombok' version '1.14'
     id 'java'
+    id 'java-library'
+    id 'maven-publish'
+    id 'signing'
 }
 
 description = 'merlin-core'
@@ -9,10 +12,10 @@ dependencies {
     compile group: 'commons-io', name: 'commons-io', version: '2.6'
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.8.1'
     compile group: 'commons-beanutils', name: 'commons-beanutils', version: '1.9.3'
-    compile group: 'org.apache.poi', name: 'poi', version:'4.0.0'
-    compile group: 'org.apache.poi', name: 'poi-ooxml', version:'4.0.0'
+    compile group: 'org.apache.poi', name: 'poi', version: '4.0.0'
+    compile group: 'org.apache.poi', name: 'poi-ooxml', version: '4.0.0'
     compileOnly "org.projectlombok:lombok:1.18.4"
-    testCompile group: 'org.mockito', name: 'mockito-core', version:'2.21.0'
+    testCompile group: 'org.mockito', name: 'mockito-core', version: '2.21.0'
     testCompileOnly "org.projectlombok:lombok:1.18.4"
 }
 
@@ -24,4 +27,63 @@ repositories {
 lombok {
     version = '1.18.4'
     sha256 = "" // skip verifyLombok task
+}
+
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allJava
+    classifier = 'sources'
+}
+
+task javadocJar(type: Jar) {
+    from javadoc
+    classifier = 'javadoc'
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifactId = 'merlin-core'
+            from components.java
+            artifact sourcesJar
+            artifact javadocJar
+            pom {
+                name = 'Merlin core'
+                description = 'A Java library for working with Excel and Word including validation, manipulation and templating.'
+                url = 'https://github.com/micromata/merlin'
+                licenses {
+                    license {
+                        name = 'MIT License'
+                        url = 'https://github.com/micromata/merlin/blob/master/LICENSE'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'kreinhard'
+                        name = 'Kai Reinhard'
+                    }
+                }
+                scm {
+                    connection = 'scm:git:git://example.com/my-library.git'
+                    developerConnection = 'scm:git:ssh://example.com/my-library.git'
+                    url = 'http://example.com/my-library/'
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            credentials {
+                username "$mavenUser"
+                password "$mavenPassword"
+            }
+            def releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2"
+            def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots"
+            url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+        }
+    }
+}
+
+signing {
+    useGpgCmd()
+    sign publishing.publications.mavenJava
 }
