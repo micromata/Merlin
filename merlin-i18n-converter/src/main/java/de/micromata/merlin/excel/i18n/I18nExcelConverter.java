@@ -5,6 +5,7 @@ import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -134,6 +135,7 @@ public class I18nExcelConverter {
                     row.createCells(cellStyleTranslation, diffEntry.getThisValue(), diffEntry.getOtherValue());
                 }
                 sheet.getPoiSheet().setAutoFilter(new CellRangeAddress(0, rows, 0, 2));
+                ((XSSFSheet)sheet.getPoiSheet()).protectSheet("MerlinIsGreat");
             }
         }
         workbook.getPOIWorkbook().write(outputStream);

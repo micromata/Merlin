@@ -158,7 +158,7 @@ FormField.defaultProps = {
 
 
 const FormLabelField = (props) => {
-    const forId = props.children.props.id || props.htmlFor || revisedRandId();
+    const forId = props.children.props.id || props.children.props.name || props.htmlFor || revisedRandId();
     return (
         <FormGroup>
             <FormLabel length={props.labelLength} htmlFor={forId}>
