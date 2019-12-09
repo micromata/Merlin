@@ -43,7 +43,8 @@ public class ExcelChecksum {
     }
 
     private static void update(Checksum cs, String value) {
-        if (value != null) cs.update(value.getBytes());
+        byte[] bytes = value.getBytes();
+        if (value != null) cs.update(bytes, 0, bytes.length);
         else cs.update(0);
     }
 
