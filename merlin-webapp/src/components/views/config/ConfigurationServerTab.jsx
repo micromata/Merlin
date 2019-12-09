@@ -69,7 +69,6 @@ class ConfigServerTab extends React.Component {
             showTestData: true,
             webDevelopmentMode: false,
             directoryItems: [],
-            redirect: false,
             expertSettingsOpen: false
         };
 
