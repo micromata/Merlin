@@ -236,7 +236,7 @@ public class TemplateRunContext {
     public void setCellValue(ExcelWorkbook workbook, Cell cell, Object valueObject, VariableType type) {
         Object value = convertValue(valueObject, type);
         if (value == null) {
-            cell.setCellType(CellType.BLANK);
+            cell.setBlank();
             return;
         }
         if (type == VariableType.FLOAT) {
