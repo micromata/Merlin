@@ -240,6 +240,16 @@ public class ExcelSheet {
         return poiSheet.getRow(row).getCell(columnDef.getColumnNumber());
     }
 
+    /**
+     * @param row          Excel row number (starting with 0, POI row number).
+     * @param columnNumber The specified column to get the cell from.
+     * @return The specified cell.
+     */
+    public Cell getCell(int row, int columnNumber) {
+        findAndReadHeadRow();
+        return poiSheet.getRow(row).getCell(columnNumber);
+    }
+
     private void findAndReadHeadRow() {
         if (headRow != null) {
             return; // head row already run.
