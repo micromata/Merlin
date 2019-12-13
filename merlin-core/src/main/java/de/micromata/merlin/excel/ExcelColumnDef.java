@@ -27,12 +27,19 @@ public class ExcelColumnDef {
         this.columnHeadname = columnHeadname != null ? columnHeadname : CellReference.convertNumToColString(columnNumber);
     }
 
+    public boolean found() {
+        return columnNumber >= 0;
+    }
+
     /**
      * Return the number of this column (0-based). The number is set by {@link ExcelSheet#findAndReadHeadRow()}.
      *
      * @return the column number.
      */
     public int getColumnNumber() {
+        if (columnNumber < 0) {
+            throw new IllegalArgumentException("Column '" + columnHeadname + "' not found. Column number is invalid!");
+        }
         return columnNumber;
     }
 

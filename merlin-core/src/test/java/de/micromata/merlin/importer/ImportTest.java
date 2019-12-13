@@ -28,7 +28,7 @@ public class ImportTest {
         sheet.registerColumn("Number", new ExcelColumnValidator().setUnique());
 
         Iterator<Row> it = sheet.getDataRowIterator();
-        ImportSet<Person> set = new ImportSet<>() {
+        ImportSet<Person> set = new ImportSet<Person>() {
             @Override
             public Person getAlreadyPersistedEntry(ImportDataEntry<Person> entry) {
                 return db.get(entry.getPrimaryKey());

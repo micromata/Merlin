@@ -4,9 +4,9 @@ import de.micromata.merlin.CoreI18n;
 import de.micromata.merlin.I18n;
 import de.micromata.merlin.ResultMessageStatus;
 import de.micromata.merlin.data.Data;
+import lombok.val;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.util.CellRangeAddress;
@@ -14,6 +14,7 @@ import org.apache.poi.ss.util.CellReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -27,12 +28,13 @@ public class ExcelSheet {
     private List<ExcelColumnDef> columnDefList = new ArrayList<>();
     private Sheet poiSheet;
     private ExcelWorkbook workbook;
-    private Row headRow = null;
+    private ExcelRow headRow = null;
     private int columnWithValidationErrorMessages = -1;
     private Set<ExcelValidationErrorMessage> validationErrors;
     private boolean modified;
     private I18n i18n;
     private int maxMarkedErrors = 100;
+    private Map<Integer, ExcelRow> excelRowMap = new HashMap<>();
 
     ExcelSheet(ExcelWorkbook workbook, Sheet poiSheet) {
         log.debug("Reading sheet '" + poiSheet.getSheetName() + "'");
@@ -108,7 +110,7 @@ public class ExcelSheet {
      */
     public ExcelSheet registerColumns(String... columnHeads) {
         for (String columnHead : columnHeads) {
-            if (getColumnDef(columnHead) != null) {
+            if (_getColumnDef(columnHead) != null) {
                 log.error("Don't register column heads twice: '" + columnHead + "'.");
                 continue;
             }
@@ -122,9 +124,9 @@ public class ExcelSheet {
      * @return Created and registered ExcelColumnDef.
      */
     public ExcelColumnDef registerColumn(String columnHead) {
-        if (getColumnDef(columnHead) != null) {
+        if (_getColumnDef(columnHead) != null) {
             log.error("Don't register column heads twice: '" + columnHead + "'.");
-            return getColumnDef(columnHead);
+            return _getColumnDef(columnHead);
         }
         ExcelColumnDef columnDef = new ExcelColumnDef(columnHead);
         columnDefList.add(columnDef);
@@ -133,11 +135,11 @@ public class ExcelSheet {
 
     /**
      * @param columnHead The column head to register.
-     * @param listener The listener to use.
+     * @param listener   The listener to use.
      * @return Created and registered ExcelColumnDef.
      */
     public ExcelColumnDef registerColumn(String columnHead, ExcelColumnListener listener) {
-        ExcelColumnDef columnDef = getColumnDef(columnHead);
+        ExcelColumnDef columnDef = _getColumnDef(columnHead);
         if (columnDef == null) {
             columnDef = new ExcelColumnDef(columnHead);
             columnDefList.add(columnDef);
@@ -148,7 +150,7 @@ public class ExcelSheet {
 
     /**
      * @param columnDef The column to register.
-     * @param listener The listener to use.
+     * @param listener  The listener to use.
      * @return this for chaining.
      */
     public ExcelSheet registerColumn(ExcelColumnDef columnDef, ExcelColumnListener listener) {
@@ -164,7 +166,7 @@ public class ExcelSheet {
         findAndReadHeadRow();
         Iterator<Row> it = poiSheet.rowIterator();
         while (it.hasNext()) {
-            if (it.next().equals(headRow)) {
+            if (it.next().equals(headRow.getRow())) {
                 break;
             }
         }
@@ -181,12 +183,12 @@ public class ExcelSheet {
     }
 
     /**
-     * @param row The row to get the cell value from.
+     * @param row            The row to get the cell value from.
      * @param columnHeadname The name of the column to get.
      * @return The String value of the specified column cell.
      */
     public String getCellString(Row row, String columnHeadname) {
-        findAndReadHeadRow();
+        // findAndReadHeadRow(); Will be called in getColumnDef
         ExcelColumnDef columnDef = getColumnDef(columnHeadname);
         if (columnDef == null) {
             log.warn("No entry named '" + columnHeadname + "' found in sheet '" + row.getSheet().getSheetName()
@@ -203,18 +205,18 @@ public class ExcelSheet {
     }
 
     /**
-     * @param row The row to get the cell from.
+     * @param row            The row to get the cell from.
      * @param columnHeadname The name of the column to get the cell from.
      * @return The cell of the specified column of the current row (uses internal interator).
      */
     public Cell getCell(Row row, String columnHeadname) {
-        findAndReadHeadRow();
+        // findAndReadHeadRow(); Will be called in getColumnDef
         ExcelColumnDef columnDef = getColumnDef(columnHeadname);
         return getCell(row, columnDef);
     }
 
     /**
-     * @param row The row to get the cell from.
+     * @param row       The row to get the cell from.
      * @param columnDef The specified column to get the cell from.
      * @return The cell of the specified column of the current row (uses internal interator).
      */
@@ -237,17 +239,17 @@ public class ExcelSheet {
      */
     public Cell getCell(int row, ExcelColumnDef columnDef) {
         findAndReadHeadRow();
-        return poiSheet.getRow(row).getCell(columnDef.getColumnNumber());
+        return getCell(row, columnDef.getColumnNumber());
     }
 
     /**
-     * @param row          Excel row number (starting with 0, POI row number).
+     * @param rowNum       Excel row number (starting with 0, POI row number).
      * @param columnNumber The specified column to get the cell from.
      * @return The specified cell.
      */
-    public Cell getCell(int row, int columnNumber) {
+    public Cell getCell(int rowNum, int columnNumber) {
         findAndReadHeadRow();
-        return poiSheet.getRow(row).getCell(columnNumber);
+        return getRow(rowNum).getCell(columnNumber).getCell();
     }
 
     private void findAndReadHeadRow() {
@@ -255,7 +257,6 @@ public class ExcelSheet {
             return; // head row already run.
         }
         log.debug("Reading head row of sheet '" + poiSheet.getSheetName() + "'.");
-        int numberOfFoundHeadColumns = 0;
         Iterator<Row> rowIterator = poiSheet.rowIterator();
         Row current = null;
         for (int i = 0; i < 10; i++) { // Detect head row, check Row 0-9 for column heads.
@@ -272,9 +273,9 @@ public class ExcelSheet {
                 ++col;
                 String val = PoiHelper.getValueAsString(cell);
                 log.debug("Reading cell '" + val + "' in column " + col);
-                if (getColumnDef(val) != null) {
+                if (_getColumnDef(val) != null) {
                     log.debug("Head column found: '" + val + "' in col #" + col);
-                    headRow = current;
+                    headRow = ensureRow(current);
                     break;
                 }
             }
@@ -292,7 +293,7 @@ public class ExcelSheet {
             ++col;
             String val = PoiHelper.getValueAsString(cell);
             log.debug("Reading head column '" + val + "' in column " + col);
-            ExcelColumnDef columnDef = getColumnDef(val);
+            ExcelColumnDef columnDef = _getColumnDef(val);
             if (columnDef != null) {
                 log.debug("Head column found: '" + val + "' in col #" + col);
                 columnDef.setColumnNumber(col);
@@ -303,6 +304,11 @@ public class ExcelSheet {
     }
 
     public ExcelColumnDef getColumnDef(String columnHeadname) {
+        findAndReadHeadRow();
+        return _getColumnDef(columnHeadname);
+    }
+
+    public ExcelColumnDef _getColumnDef(String columnHeadname) {
         if (StringUtils.isEmpty(columnHeadname)) {
             return null;
         }
@@ -433,16 +439,16 @@ public class ExcelSheet {
                 break;
             }
             ExcelColumnDef columnDef = validationError.getColumnDef();
-            Row row = poiSheet.getRow(validationError.getRow());
+            ExcelRow row = getRow(validationError.getRow());
             if (excelWriterContext.isAddErrorColumn()) {
                 excelWriterContext.getErrorMessageWriter().updateOrCreateCell(excelWriterContext, this,
                         columnWithValidationErrorMessages, row, validationError);
                 modified = true;
             }
             if (columnDef != null) {
-                Cell cell = row.getCell(columnDef.getColumnNumber());
+                ExcelCell cell = row.getCell(columnDef.getColumnNumber());
                 if (cell == null) {
-                    cell = row.createCell(columnDef.getColumnNumber(), CellType.STRING);
+                    cell = row.getCell(columnDef.getColumnNumber(), ExcelCellType.STRING);
                 }
                 if (excelWriterContext.isHighlightErrorCells()) {
                     // Cell validation error. Highlight cell.
@@ -454,7 +460,7 @@ public class ExcelSheet {
                     if (headRow != null && !highlightedColumnHeads.contains(columnDef)) {
                         highlightedColumnHeads.add(columnDef); // Don't highlight column heads twice.
                         // Cell validation error. Highlight column head cell.
-                        Cell headCell = headRow.getCell(columnDef.getColumnNumber());
+                        ExcelCell headCell = headRow.getCell(columnDef.getColumnNumber());
                         excelWriterContext.getCellHighlighter().highlightColumnHeadCell(headCell, excelWriterContext, this,
                                 columnDef, headRow);
                         modified = true;
@@ -473,6 +479,93 @@ public class ExcelSheet {
             poiSheet.autoSizeColumn(columnWithValidationErrorMessages);
         }
         return this;
+    }
+
+    public Cell setBigDecimalValue(int row, String columnHeader, BigDecimal value) {
+        return setBigDecimalValue(row, getColumnDef(columnHeader), value);
+    }
+
+    public Cell setBigDecimalValue(int row, ExcelColumnDef col, BigDecimal value) {
+        return setBigDecimalValue(row, col.getColumnNumber(), value);
+    }
+
+    public Cell setBigDecimalValue(int row, int col, BigDecimal value) {
+        Cell cell = getCell(row, col);
+        if (value == null) cell.setBlank();
+        else {
+            cell.setCellValue(value.doubleValue());
+            cell.setCellStyle(workbook.ensureCellStyle(ExcelCellStandardFormat.FLOAT));
+        }
+        return cell;
+    }
+
+    public Cell setDoubleValue(int row, String columnHeader, Double value) {
+        return setDoubleValue(row, getColumnDef(columnHeader), value);
+    }
+
+    public Cell setDoubleValue(int row, ExcelColumnDef col, Double value) {
+        return setDoubleValue(row, col.getColumnNumber(), value);
+    }
+
+    public Cell setDoubleValue(int row, int col, Double value) {
+        Cell cell = getCell(row, col);
+        if (value == null) cell.setBlank();
+        else {
+            cell.setCellValue(value);
+            cell.setCellStyle(workbook.ensureCellStyle(ExcelCellStandardFormat.FLOAT));
+        }
+        return cell;
+    }
+
+    public Cell setIntValue(int row, String columnHeader, Integer value) {
+        return setIntValue(row, getColumnDef(columnHeader), value);
+    }
+
+    public Cell setIntValue(int row, ExcelColumnDef col, Integer value) {
+        return setIntValue(row, col.getColumnNumber(), value);
+    }
+
+    public Cell setIntValue(int row, int col, Integer value) {
+        Cell cell = getCell(row, col);
+        if (value == null) cell.setBlank();
+        else {
+            cell.setCellValue(value);
+            cell.setCellStyle(workbook.ensureCellStyle(ExcelCellStandardFormat.INT));
+        }
+        return cell;
+    }
+
+    public Cell setStringValue(int row, String columnHeader, String value) {
+        return setStringValue(row, getColumnDef(columnHeader), value);
+    }
+
+    public Cell setStringValue(int row, ExcelColumnDef col, String value) {
+        return setStringValue(row, col.getColumnNumber(), value);
+    }
+
+    public Cell setStringValue(int row, int col, String value) {
+        Cell cell = getCell(row, col);
+        if (value == null) cell.setBlank();
+        else cell.setCellValue(value);
+        return cell;
+    }
+
+    public Cell setDateValue(int row, String columnHeader, Date value, String dateFormat) {
+        return setDateValue(row, getColumnDef(columnHeader), value, dateFormat);
+    }
+
+    public Cell setDateValue(int row, ExcelColumnDef col, Date value, String dateFormat) {
+        return setDateValue(row, col.getColumnNumber(), value, dateFormat);
+    }
+
+    public Cell setDateValue(int row, int col, Date value, String dateFormat) {
+        val cell = getCell(row, col);
+        if (value == null) cell.setBlank();
+        else {
+            cell.setCellValue(value);
+            cell.setCellStyle(workbook.ensureDateCellStyle(dateFormat));
+        }
+        return cell;
     }
 
     /**
@@ -524,11 +617,18 @@ public class ExcelSheet {
         return workbook;
     }
 
-    public ExcelRow getRow(int rowwnum) {
-        return new ExcelRow(poiSheet.getRow(rowwnum));
+    public ExcelRow getRow(int rownum) {
+        ExcelRow excelRow = excelRowMap.get(rownum);
+        if (excelRow == null) {
+            Row row;
+            while ((row = poiSheet.getRow(rownum)) == null) {
+                excelRow = createRow();
+            }
+        }
+        return excelRow;
     }
 
-    public Row getHeadRow() {
+    public ExcelRow getHeadRow() {
         findAndReadHeadRow();
         return headRow;
     }
@@ -557,7 +657,16 @@ public class ExcelSheet {
             rowCount = -1;
         }
         Row row = poiSheet.createRow(rowCount + 1);
-        return new ExcelRow(row);
+        return ensureRow(row);
+    }
+
+    private ExcelRow ensureRow(Row row) {
+        ExcelRow excelRow = excelRowMap.get(row.getRowNum());
+        if (excelRow == null) {
+            excelRow = new ExcelRow(row);
+            excelRowMap.put(row.getRowNum(), excelRow);
+        }
+        return excelRow;
     }
 
     public void autosize() {

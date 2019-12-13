@@ -1,10 +1,8 @@
 package de.micromata.merlin.excel;
 
 import de.micromata.merlin.word.templating.TemplateRunContext;
-import org.apache.poi.ss.usermodel.BuiltinFormats;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.CreationHelper;
 
 import java.util.Date;
 
@@ -14,6 +12,10 @@ import java.util.Date;
 public class ExcelCell {
     private Cell cell;
     private ExcelCellType type;
+
+    ExcelCell(Cell cell) {
+        this(cell, null, null);
+    }
 
     ExcelCell(Cell cell, ExcelCellType type) {
         this(cell, type, null);
@@ -43,7 +45,7 @@ public class ExcelCell {
     }
 
     /**
-     * @param workbook Needed for creating int DataFormat.
+     * @param workbook     Needed for creating int DataFormat.
      * @param booleanValue The value to set.
      * @return this for chaining.
      */
@@ -71,32 +73,27 @@ public class ExcelCell {
         return cell;
     }
 
+    public String getStringCellValue() {
+        return cell.getStringCellValue();
+    }
+
     public static void setCellValue(ExcelWorkbook workbook, Cell cell, double doubleValue) {
         cell.setCellValue(doubleValue);
-        CellStyle cellStyle = workbook.createOrGetCellStyle("DataFormat.float");
-        cellStyle.setDataFormat(workbook.getPOIWorkbook().getCreationHelper().createDataFormat().getFormat("#.#"));
-        cell.setCellStyle(cellStyle);
+        cell.setCellStyle(workbook.ensureCellStyle(ExcelCellStandardFormat.FLOAT));
     }
 
     public static void setCellValue(ExcelWorkbook workbook, Cell cell, int intValue) {
         cell.setCellValue((double) intValue);
-        CellStyle cellStyle = workbook.createOrGetCellStyle("DataFormat.int");
-        cellStyle.setDataFormat((short) BuiltinFormats.getBuiltinFormat("0"));
-        cell.setCellStyle(cellStyle);
+        cell.setCellStyle(workbook.ensureCellStyle(ExcelCellStandardFormat.INT));
     }
 
     public static void setCellValue(ExcelWorkbook workbook, Cell cell, boolean booleanValue) {
         cell.setCellValue(TemplateRunContext.getBooleanAsString(booleanValue));
-        CellStyle cellStyle = workbook.createOrGetCellStyle("DataFormat.int");
-        cellStyle.setDataFormat((short) BuiltinFormats.getBuiltinFormat("0"));
-        cell.setCellStyle(cellStyle);
+        cell.setCellStyle(workbook.ensureCellStyle(ExcelCellStandardFormat.INT));
     }
 
     public static void setCellValue(ExcelWorkbook workbook, Cell cell, String format, Date dateValue) {
-        CellStyle cellStyle = workbook.createOrGetCellStyle("DataFormat.date");
-        CreationHelper createHelper = workbook.getPOIWorkbook().getCreationHelper();
-        cellStyle.setDataFormat(createHelper.createDataFormat().getFormat(format));
         cell.setCellValue(dateValue);
-        cell.setCellStyle(cellStyle);
+        cell.setCellStyle(workbook.ensureDateCellStyle(format));
     }
 }

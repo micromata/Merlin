@@ -164,6 +164,10 @@ public class ExcelWorkbook implements AutoCloseable {
         return false;
     }
 
+    public boolean doesCellStyleExist(String id) {
+        return cellStyleMap.containsKey(id);
+    }
+
     /**
      * Please re-use cell styles due to limitations of Excel.
      *
@@ -177,6 +181,41 @@ public class ExcelWorkbook implements AutoCloseable {
             cellStyleMap.put(id, cellStyle);
         }
         return cellStyle;
+    }
+
+    public CellStyle ensureCellStyle(ExcelCellStandardFormat format) {
+        boolean exist = doesCellStyleExist("DataFormat." + format.name());
+        CellStyle cellStyle = createOrGetCellStyle("DataFormat." + format.name());
+        if (!exist) {
+            if (format == ExcelCellStandardFormat.FLOAT) {
+                cellStyle.setDataFormat(getDataFormat("#.#"));
+            } else if (format == ExcelCellStandardFormat.INT) {
+                cellStyle.setDataFormat((short) BuiltinFormats.getBuiltinFormat("0"));
+            } else if (format == ExcelCellStandardFormat.DATE) {
+                throw new IllegalArgumentException("Please call ensureDateCellStyle instead of ensureCellStyle.");
+            }
+        }
+        return cellStyle;
+    }
+
+    public CellStyle ensureDateCellStyle(String dateFormat) {
+        boolean exist = doesCellStyleExist("DataFormat." + ExcelCellStandardFormat.DATE.name() + "." + dateFormat);
+        CellStyle cellStyle = createOrGetCellStyle("DataFormat." + ExcelCellStandardFormat.DATE.name() + "." + dateFormat);
+        if (!exist) {
+            cellStyle.setDataFormat(getDataFormat(dateFormat));
+        }
+        return cellStyle;
+    }
+
+    public DataFormat createDataFormat() {
+        return getPOIWorkbook().getCreationHelper().createDataFormat();
+    }
+
+    /**
+     * Gets or creates a new data format.
+     */
+    public short getDataFormat(String format) {
+        return createDataFormat().getFormat(format);
     }
 
     /**

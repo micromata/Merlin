@@ -1,26 +1,23 @@
 package de.micromata.merlin.excel;
 
 
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-
 /**
  * Highlight validation errors in the analyzed Excel sheet.
  */
 public class ExcelValidationErrorCellHighlighter {
-    public void highlightErrorCell(Cell cell, ExcelWriterContext context, ExcelSheet sheet, ExcelColumnDef columnDef, Row row) {
+    public void highlightErrorCell(ExcelCell cell, ExcelWriterContext context, ExcelSheet sheet, ExcelColumnDef columnDef, ExcelRow row) {
         cell.setCellStyle(context.getErrorHighlightCellStyle());
     }
 
-    public void highlightColumnHeadCell(Cell cell, ExcelWriterContext context, ExcelSheet sheet, ExcelColumnDef columnDef, Row row) {
+    public void highlightColumnHeadCell(ExcelCell cell, ExcelWriterContext context, ExcelSheet sheet, ExcelColumnDef columnDef, ExcelRow row) {
         if (row == null) {
             return;
         }
         cell.setCellStyle(context.getErrorHighlightCellStyle());
     }
 
-    public void setCellComment(Cell cell, ExcelWriterContext context, ExcelSheet sheet, ExcelColumnDef columnDef,
-                               Row row, String comment) {
+    public void setCellComment(ExcelCell cell, ExcelWriterContext context, ExcelSheet sheet, ExcelColumnDef columnDef,
+                               ExcelRow row, String comment) {
         PoiHelper.setComment(cell, comment);
     }
 

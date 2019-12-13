@@ -13,36 +13,37 @@ import java.util.Iterator;
  * uploading it afterwards.
  */
 public class ExcelValidationErrorCellCleaner {
-    public int clean(ExcelSheet sheet, ExcelWriterContext context) {
-        int columnWithErrorMessages = -1;
-        Row row = sheet.getHeadRow();
-        if (row != null) {
-            for (Cell cell : row) {
-                cell.getCellStyle().setFillPattern(FillPatternType.NO_FILL);
-            }
-            Cell lastCell = row.getCell(row.getLastCellNum() - 1);
-            if (PoiHelper.getValueAsString(lastCell).startsWith("***")) {
-                columnWithErrorMessages = lastCell.getColumnIndex();
-                row.removeCell(lastCell);
-                row.setHeight((short)-1);
-            }
-        }
-        Iterator<Row> it = sheet.getDataRowIterator();
-        while (it.hasNext()) {
-            row = it.next();
-            for (Cell cell : row) {
-                cell.getCellStyle().setFillPattern(FillPatternType.NO_FILL);
-                cell.removeCellComment();
-            }
-            // Remove cell with error messages.
-            if (columnWithErrorMessages >= 0) {
-                Cell cell = row.getCell(columnWithErrorMessages);
-                if (cell != null) {
-                    row.removeCell(cell);
-                    row.setHeight((short)-1);
-                }
-            }
-        }
-        return columnWithErrorMessages;
+  public int clean(ExcelSheet sheet, ExcelWriterContext context) {
+    int columnWithErrorMessages = -1;
+    ExcelRow excelRow = sheet.getHeadRow();
+    Row row = excelRow != null ? excelRow.getRow() : null;
+    if (excelRow != null) {
+      for (Cell cell : row) {
+        cell.getCellStyle().setFillPattern(FillPatternType.NO_FILL);
+      }
+      Cell lastCell = row.getCell(row.getLastCellNum() - 1);
+      if (PoiHelper.getValueAsString(lastCell).startsWith("***")) {
+        columnWithErrorMessages = lastCell.getColumnIndex();
+        row.removeCell(lastCell);
+        row.setHeight((short) -1);
+      }
     }
+    Iterator<Row> it = sheet.getDataRowIterator();
+    while (it.hasNext()) {
+      row = it.next();
+      for (Cell cell : row) {
+        cell.getCellStyle().setFillPattern(FillPatternType.NO_FILL);
+        cell.removeCellComment();
+      }
+      // Remove cell with error messages.
+      if (columnWithErrorMessages >= 0) {
+        Cell cell = row.getCell(columnWithErrorMessages);
+        if (cell != null) {
+          row.removeCell(cell);
+          row.setHeight((short) -1);
+        }
+      }
+    }
+    return columnWithErrorMessages;
+  }
 }

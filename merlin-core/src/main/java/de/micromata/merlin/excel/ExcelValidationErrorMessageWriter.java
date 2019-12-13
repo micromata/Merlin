@@ -9,22 +9,22 @@ public class ExcelValidationErrorMessageWriter {
     private static final String COLUMN_HEAD_ID = "merlin.excel.validation_error.error_column_headname";
 
     public void updateOrCreateCell(ExcelWriterContext context, ExcelSheet sheet, int errorMessagesColumnNumber,
-                                   Row row, ExcelValidationErrorMessage validationError) {
+                                   ExcelRow row, ExcelValidationErrorMessage validationError) {
         if (row == null) {
             // Should only occur in empty sheets.
             return;
         }
         // Add column head of error messages if not yet added:
-        Row headRow = sheet.getHeadRow();
+        ExcelRow headRow = sheet.getHeadRow();
         if (headRow != null) {
-            Cell columnHeadCell = headRow.getCell(errorMessagesColumnNumber);
+            ExcelCell columnHeadCell = headRow.getCell(errorMessagesColumnNumber);
             if (columnHeadCell == null) {
                 columnHeadCell = createNewCell(context, headRow, errorMessagesColumnNumber);
                 addMessage(sheet, headRow, columnHeadCell, "*** "
                         + context.getI18n().getMessage(COLUMN_HEAD_ID) + " ***");
             }
         }
-        Cell cell = row.getCell(errorMessagesColumnNumber);
+        ExcelCell cell = row.getCell(errorMessagesColumnNumber);
         if (cell == null) {
             cell = createNewCell(context, row, errorMessagesColumnNumber);
         }
@@ -32,13 +32,13 @@ public class ExcelValidationErrorMessageWriter {
         addMessage(sheet, row, cell, message);
     }
 
-    private Cell createNewCell(ExcelWriterContext context, Row row, int errorMessagesColumnNumber) {
-        Cell cell = row.createCell(errorMessagesColumnNumber, CellType.STRING);
+    private ExcelCell createNewCell(ExcelWriterContext context, ExcelRow row, int errorMessagesColumnNumber) {
+        ExcelCell cell = row.getCell(errorMessagesColumnNumber, ExcelCellType.STRING);
         cell.setCellStyle(context.getErrorColumnCellStyle());
         return cell;
     }
 
-    private void addMessage(ExcelSheet sheet, Row row, Cell cell, String message) {
+    private void addMessage(ExcelSheet sheet, ExcelRow row, ExcelCell cell, String message) {
         String actValue = cell.getStringCellValue();
         if (StringUtils.isBlank(actValue)) {
             cell.setCellValue(message);
