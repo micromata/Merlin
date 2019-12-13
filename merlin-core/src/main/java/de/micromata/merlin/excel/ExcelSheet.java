@@ -312,9 +312,9 @@ public class ExcelSheet {
         if (StringUtils.isEmpty(columnHeadname)) {
             return null;
         }
-        String lowerColumnHeadname = columnHeadname.toLowerCase();
+        String lowerColumnHeadname = columnHeadname.toLowerCase().trim();
         for (ExcelColumnDef columnDef : columnDefList) {
-            if (lowerColumnHeadname.equals(columnDef.getColumnHeadname().toLowerCase())) {
+            if (lowerColumnHeadname.equals(columnDef.getColumnHeadname().toLowerCase().trim())) {
                 return columnDef;
             }
         }
