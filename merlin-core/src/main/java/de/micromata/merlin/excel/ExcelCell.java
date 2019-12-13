@@ -10,18 +10,20 @@ import java.util.Date;
  * Optional holder for POI cells. Useful for creating new cells.
  */
 public class ExcelCell {
+    private ExcelRow row;
     private Cell cell;
     private ExcelCellType type;
 
-    ExcelCell(Cell cell) {
-        this(cell, null, null);
+    ExcelCell(ExcelRow row, Cell cell) {
+        this(row, cell, null, null);
     }
 
-    ExcelCell(Cell cell, ExcelCellType type) {
-        this(cell, type, null);
+    ExcelCell(ExcelRow row, Cell cell, ExcelCellType type) {
+        this(row, cell, type, null);
     }
 
-    ExcelCell(Cell cell, ExcelCellType type, CellStyle cellStyle) {
+    ExcelCell(ExcelRow row, Cell cell, ExcelCellType type, CellStyle cellStyle) {
+        this.row = row;
         this.cell = cell;
         this.type = type;
         if (cellStyle != null) {
@@ -75,6 +77,10 @@ public class ExcelCell {
 
     public String getStringCellValue() {
         return cell.getStringCellValue();
+    }
+
+    public void evaluateFormularCell() {
+        row.getSheet().getExcelWorkbook().getFormelEvaluator().evaluateFormulaCell(cell);
     }
 
     public static void setCellValue(ExcelWorkbook workbook, Cell cell, double doubleValue) {

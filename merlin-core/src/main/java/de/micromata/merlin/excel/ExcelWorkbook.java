@@ -26,6 +26,7 @@ public class ExcelWorkbook implements AutoCloseable {
     private Map<String, CellStyle> cellStyleMap = new HashMap<>();
     private Map<String, Font> fontMap = new HashMap<>();
     private InputStream inputStream;
+    private FormulaEvaluator formelEvaluator;
 
     public static ExcelWorkbook create(Path path) {
         InputStream inputStream = PersistencyRegistry.getDefault().getInputStream(path);
@@ -231,6 +232,13 @@ public class ExcelWorkbook implements AutoCloseable {
             fontMap.put(id, font);
         }
         return font;
+    }
+
+    public FormulaEvaluator getFormelEvaluator() {
+        if (formelEvaluator == null) {
+            formelEvaluator = workbook.getCreationHelper().createFormulaEvaluator();
+        }
+        return formelEvaluator;
     }
 
     public ByteArrayOutputStream getAsByteArrayOutputStream() {

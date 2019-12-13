@@ -15,8 +15,10 @@ import java.util.Map;
 public class ExcelRow {
     private Row row;
     private Map<Integer, ExcelCell> cellMap = new HashMap<>();
+    private ExcelSheet sheet;
 
-    public ExcelRow(Row row) {
+    public ExcelRow(ExcelSheet sheet, Row row) {
+        this.sheet = sheet;
         this.row = row;
     }
 
@@ -58,7 +60,7 @@ public class ExcelRow {
                 excelCell = createCell(type);
             }
             if (excelCell == null) { // Poi cell exists, but excel cell not yet:
-                excelCell = ensureCell(columnNumber, type);
+                excelCell = ensureCell(cell);
             }
         }
         return excelCell;
@@ -94,7 +96,7 @@ public class ExcelRow {
     private ExcelCell ensureCell(Cell cell) {
         ExcelCell excelCell = cellMap.get(cell.getColumnIndex());
         if (excelCell == null) {
-            excelCell = new ExcelCell(cell);
+            excelCell = new ExcelCell(this, cell);
             cellMap.put(cell.getColumnIndex(), excelCell);
         }
         return excelCell;
@@ -134,5 +136,13 @@ public class ExcelRow {
 
     public Row getRow() {
         return row;
+    }
+
+    public ExcelSheet getSheet() {
+        return sheet;
+    }
+
+    public short getLastCellNum() {
+        return row.getLastCellNum();
     }
 }

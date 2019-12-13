@@ -494,7 +494,11 @@ public class ExcelSheet {
         if (value == null) cell.setBlank();
         else {
             cell.setCellValue(value.doubleValue());
-            cell.setCellStyle(workbook.ensureCellStyle(ExcelCellStandardFormat.FLOAT));
+            if (value.scale() == 0) {
+                cell.setCellStyle(workbook.ensureCellStyle(ExcelCellStandardFormat.INT));
+            } else {
+                cell.setCellStyle(workbook.ensureCellStyle(ExcelCellStandardFormat.FLOAT));
+            }
         }
         return cell;
     }
@@ -624,6 +628,9 @@ public class ExcelSheet {
             while ((row = poiSheet.getRow(rownum)) == null) {
                 excelRow = createRow();
             }
+            if (excelRow == null) { // Poi cell exists, but excel cell not yet:
+                excelRow = ensureRow(row);
+            }
         }
         return excelRow;
     }
@@ -663,7 +670,7 @@ public class ExcelSheet {
     private ExcelRow ensureRow(Row row) {
         ExcelRow excelRow = excelRowMap.get(row.getRowNum());
         if (excelRow == null) {
-            excelRow = new ExcelRow(row);
+            excelRow = new ExcelRow(this, row);
             excelRowMap.put(row.getRowNum(), excelRow);
         }
         return excelRow;
@@ -685,6 +692,19 @@ public class ExcelSheet {
 
     public void addMergeRegion(CellRangeAddress range) {
         poiSheet.addMergedRegion(range);
+    }
+
+    /**
+     * Set auto-filter for the whole first row. Must be called after adding the first row with all heading cells.
+     *
+     * @return this for chaining.
+     */
+    public void setAutoFilter()
+    {
+        final int headingRow = headRow != null ? headRow.getRowNum() : 0;
+        final int lastCol = getRow(headingRow).getLastCellNum();
+        final CellRangeAddress range = new CellRangeAddress(headingRow, headingRow, 0, lastCol);
+        getPoiSheet().setAutoFilter(range);
     }
 
     public int getLastColumn() {
