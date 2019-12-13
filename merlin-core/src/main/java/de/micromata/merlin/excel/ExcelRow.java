@@ -31,26 +31,26 @@ public class ExcelRow {
     }
 
     /**
-     * @param columnDef
-     * @return not null
+     * @param columnDef Registered column definition.
+     * @return The (created) cell. If column definition isn't known, an IllegalArgumentException will be thrown.
      */
     public ExcelCell getCell(ExcelColumnDef columnDef) {
         return getCell(columnDef, null);
     }
 
     /**
-     * @param columnDef
+     * @param columnDef Registered column definition.
      * @param type      Only used, if new cell will be created.
-     * @return not null
+     * @return The (created) cell. If column definition isn't known, an IllegalArgumentException will be thrown.
      */
     public ExcelCell getCell(ExcelColumnDef columnDef, ExcelCellType type) {
         return getCell(columnDef.getColumnNumber(), type);
     }
 
     /**
-     * @param columnNumber
+     * @param columnNumber The column number.
      * @param type         Only used, if new cell will be created.
-     * @return not null
+     * @return The (created) cell, not null.
      */
     public ExcelCell getCell(int columnNumber, ExcelCellType type) {
         ExcelCell excelCell = cellMap.get(columnNumber);

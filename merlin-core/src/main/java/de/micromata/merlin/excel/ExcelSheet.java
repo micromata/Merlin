@@ -696,8 +696,6 @@ public class ExcelSheet {
 
     /**
      * Set auto-filter for the whole first row. Must be called after adding the first row with all heading cells.
-     *
-     * @return this for chaining.
      */
     public void setAutoFilter()
     {

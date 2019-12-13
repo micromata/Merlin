@@ -214,6 +214,8 @@ public class ExcelWorkbook implements AutoCloseable {
 
     /**
      * Gets or creates a new data format.
+     * @param format The cell format (Excel style).
+     * @return The id of the created or reused data format.
      */
     public short getDataFormat(String format) {
         return createDataFormat().getFormat(format);
