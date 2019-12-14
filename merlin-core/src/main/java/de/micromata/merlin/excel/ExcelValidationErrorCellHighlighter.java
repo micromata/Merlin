@@ -16,8 +16,7 @@ public class ExcelValidationErrorCellHighlighter {
         cell.setCellStyle(context.getErrorHighlightCellStyle());
     }
 
-    public void setCellComment(ExcelCell cell, ExcelWriterContext context, ExcelSheet sheet, ExcelColumnDef columnDef,
-                               ExcelRow row, String comment) {
+    public void setCellComment(ExcelCell cell, String comment) {
         PoiHelper.setComment(cell, comment);
     }
 

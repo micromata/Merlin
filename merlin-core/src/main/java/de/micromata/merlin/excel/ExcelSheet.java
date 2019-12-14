@@ -468,8 +468,7 @@ public class ExcelSheet {
                 }
                 if (excelWriterContext.isAddCellComments()) {
                     // Cell validation error. Add error message as comment.
-                    excelWriterContext.getCellHighlighter().setCellComment(cell, excelWriterContext, this,
-                            columnDef, row, validationError.getMessage(i18n));
+                    excelWriterContext.getCellHighlighter().setCellComment(cell, validationError.getMessage(i18n));
                     modified = true;
                 }
             }
