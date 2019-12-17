@@ -700,7 +700,7 @@ public class ExcelSheet {
     {
         final int headingRow = headRow != null ? headRow.getRowNum() : 0;
         final int lastCol = getRow(headingRow).getLastCellNum();
-        final CellRangeAddress range = new CellRangeAddress(headingRow, headingRow, 0, lastCol);
+        final CellRangeAddress range = new CellRangeAddress(headingRow, headingRow, 0, lastCol - 1);
         getPoiSheet().setAutoFilter(range);
     }
 
