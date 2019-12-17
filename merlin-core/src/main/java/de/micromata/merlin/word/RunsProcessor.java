@@ -4,6 +4,7 @@ import de.micromata.merlin.csv.CSVStringUtils;
 import de.micromata.merlin.utils.ReplaceEntry;
 import de.micromata.merlin.utils.ReplaceUtils;
 import de.micromata.merlin.word.templating.Variables;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.slf4j.Logger;
@@ -51,6 +52,7 @@ public class RunsProcessor {
     /**
      * Replace all variable by their values. Removes also any occurencies of template id and definition references:
      * {@code {templateDefinition.refid = "..."}</tt> and <tt>{id = "..."}}.
+     *
      * @param variables The variable values to insert.
      */
     public void replace(Variables variables) {
@@ -143,11 +145,11 @@ public class RunsProcessor {
                 // Append the tail after ${var}:
                 sb.append(text.substring(endPos.getRunCharAt() + 1));
             }
-            setText(firstRun, sb.toString());
+            setText(firstRun, sb.toString(), true);
             return;
         }
         // Setting text of first run:
-        setText(firstRun, sb.toString());
+        setText(firstRun, sb.toString(), true);
 
         // Processing last affected run:
         XWPFRun lastRun = runs.get(endPos.getRunIndex());
@@ -174,7 +176,26 @@ public class RunsProcessor {
     }
 
     private void setText(XWPFRun run, String text) {
-        run.setText(text, 0);
+        setText(run, text, false);
+    }
+
+    private void setText(XWPFRun run, String text, boolean autoBreaks) {
+        if (autoBreaks && StringUtils.contains(text,'\n')) {
+            String str = text.replace("\r\n", "\n");
+            String[] strings = StringUtils.split(str, "\n");
+            boolean first = true;
+            for (String s : strings) {
+                if (first) {
+                    run.setText(s, 0);
+                    first = false;
+                } else {
+                    run.addBreak(); // New line.
+                    run.setText(s);
+                }
+            }
+        } else {
+            run.setText(text, 0);
+        }
         runsText = null; // Force reconstructing of text.
     }
 
