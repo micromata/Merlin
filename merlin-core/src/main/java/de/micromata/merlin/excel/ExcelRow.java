@@ -54,13 +54,16 @@ public class ExcelRow {
      */
     public ExcelCell getCell(int columnNumber, ExcelCellType type) {
         ExcelCell excelCell = cellMap.get(columnNumber);
+        short lastCellNum = (short)(row.getLastCellNum() - 1);
+        if (lastCellNum < 0) {
+            lastCellNum = 0;
+        }
         if (excelCell == null) {
-            Cell cell;
-            while ((cell = row.getCell(columnNumber)) == null) {
-                excelCell = createCell(type);
+            if (columnNumber <= lastCellNum) {
+                return ensureCell(columnNumber, type);
             }
-            if (excelCell == null) { // Poi cell exists, but excel cell not yet:
-                excelCell = ensureCell(cell);
+            for (short colNum = lastCellNum; colNum <= columnNumber; colNum++) {
+                excelCell = ensureCell(colNum, type);
             }
         }
         return excelCell;
@@ -87,7 +90,10 @@ public class ExcelRow {
     private ExcelCell ensureCell(int columnIndex, ExcelCellType type) {
         ExcelCell excelCell = cellMap.get(columnIndex);
         if (excelCell == null) {
-            Cell cell = row.createCell(columnIndex, type != null ? type.getCellType() : CellType.STRING);
+            Cell cell = row.getCell(columnIndex);
+            if (cell == null) {
+                cell = row.createCell(columnIndex, type != null ? type.getCellType() : CellType.STRING);
+            }
             excelCell = ensureCell(cell);
         }
         return excelCell;
