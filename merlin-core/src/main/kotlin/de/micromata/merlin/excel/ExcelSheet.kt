@@ -23,12 +23,12 @@ class ExcelSheet internal constructor(workbook: ExcelWorkbook, poiSheet: Sheet) 
     private val columnDefList: MutableList<ExcelColumnDef> = ArrayList()
     val poiSheet: Sheet
     val excelWorkbook: ExcelWorkbook
-    var headRow: ExcelRow? = null
+    private var _headRow: ExcelRow? = null
+    val headRow: ExcelRow?
         get() {
             findAndReadHeadRow()
-            return headRow
+            return _headRow
         }
-        private set
 
     private var columnWithValidationErrorMessages = -1
     private var validationErrors: MutableSet<ExcelValidationErrorMessage>? = null
@@ -48,7 +48,7 @@ class ExcelSheet internal constructor(workbook: ExcelWorkbook, poiSheet: Sheet) 
      * [ExcelColumnDef] objects and to restart.
      */
     fun reset() {
-        headRow = null
+        _headRow = null
         isModified = false
         validationErrors = null
     }
@@ -72,7 +72,7 @@ class ExcelSheet internal constructor(workbook: ExcelWorkbook, poiSheet: Sheet) 
                 }
                 for (listener in columnDef.getColumnListeners()!!) {
                     if (listener is ExcelColumnValidator) {
-                        if (columnDef.columnNumber < 0) {
+                        if (columnDef._columnNumber < 0) {
                             addValidationError(createValidationErrorMissingColumnByName(columnDef.columnHeadname))
                         }
                     }
@@ -86,12 +86,12 @@ class ExcelSheet internal constructor(workbook: ExcelWorkbook, poiSheet: Sheet) 
                 columnWithValidationErrorMessages = row.lastCellNum.toInt()
             }
             for (columnDef in columnDefList) {
-                if (!columnDef.hasColumnListeners() || columnDef.columnNumber < 0) {
+                if (!columnDef.hasColumnListeners() || columnDef._columnNumber < 0) {
                     continue
                 }
                 for (listener in columnDef.getColumnListeners()!!) {
                     if (listener !is ExcelColumnValidator || validate) {
-                        val cell = row.getCell(columnDef.columnNumber)
+                        val cell = row.getCell(columnDef._columnNumber)
                         listener.readCell(cell, row.rowNum)
                     }
                 }
@@ -121,12 +121,12 @@ class ExcelSheet internal constructor(workbook: ExcelWorkbook, poiSheet: Sheet) 
      * @return Created and registered ExcelColumnDef.
      */
     fun registerColumn(columnHead: String, vararg aliases: String): ExcelColumnDef {
+        val columnDef = ExcelColumnDef(columnHead, *aliases)
         val existing = _getColumnDef(columnHead)
         if (existing != null) {
-            log.error("Don't register column heads twice: '$columnHead'.")
-            return existing
+            columnDef.occurrenceNumber = existing.occurrenceNumber + 1
+            log.info("Multiple registration of column head '$columnHead': #${columnDef.occurrenceNumber}")
         }
-        val columnDef = ExcelColumnDef(columnHead, *aliases)
         columnDefList.add(columnDef)
         return columnDef
     }
@@ -175,7 +175,7 @@ class ExcelSheet internal constructor(workbook: ExcelWorkbook, poiSheet: Sheet) 
     fun readRow(row: Row, data: Data) {
         findAndReadHeadRow()
         for (columnDef in columnDefList) {
-            val cell = row.getCell(columnDef.columnNumber)
+            val cell = row.getCell(columnDef._columnNumber)
             val value = PoiHelper.getValueAsString(cell)
             data.put(columnDef.columnHeadname, value)
         }
@@ -188,6 +188,16 @@ class ExcelSheet internal constructor(workbook: ExcelWorkbook, poiSheet: Sheet) 
      */
     fun getCellString(row: Row, columnHeadname: String): String? { // findAndReadHeadRow(); Will be called in getColumnDef
         val cell = getCell(row, columnHeadname) ?: return null
+        return PoiHelper.getValueAsString(cell)
+    }
+
+    /**
+     * @param row      The row to get the cell value from.
+     * @param columDef The column to get.
+     * @return The String value of the specified column cell.
+     */
+    fun getCellString(row: Row, columnDef: ExcelColumnDef?): String? { // findAndReadHeadRow(); Will be called in getColumnDef
+        val cell = getCell(row, columnDef) ?: return null
         return PoiHelper.getValueAsString(cell)
     }
 
@@ -253,11 +263,11 @@ class ExcelSheet internal constructor(workbook: ExcelWorkbook, poiSheet: Sheet) 
         if (columnDef == null) {
             return null
         }
-        if (columnDef.columnNumber < 0) {
+        if (columnDef._columnNumber < 0) {
             log.debug("Column '" + columnDef.columnHeadname + "' not found in sheet '" + sheetName + "': can't run cell.")
             return null
         }
-        return row.getCell(columnDef.columnNumber)
+        return row.getCell(columnDef._columnNumber)
     }
 
     /**
@@ -267,7 +277,7 @@ class ExcelSheet internal constructor(workbook: ExcelWorkbook, poiSheet: Sheet) 
      */
     fun getCell(row: Int, columnDef: ExcelColumnDef): Cell {
         findAndReadHeadRow()
-        return getCell(row, columnDef.columnNumber)
+        return getCell(row, columnDef._columnNumber)
     }
 
     /**
@@ -281,7 +291,7 @@ class ExcelSheet internal constructor(workbook: ExcelWorkbook, poiSheet: Sheet) 
     }
 
     private fun findAndReadHeadRow() {
-        if (headRow != null) {
+        if (_headRow != null) {
             return  // head row already run.
         }
         log.debug("Reading head row of sheet '" + poiSheet.sheetName + "'.")
@@ -299,34 +309,38 @@ class ExcelSheet internal constructor(workbook: ExcelWorkbook, poiSheet: Sheet) 
             var col = -1
             for (cell in current) {
                 ++col
-                val `val` = PoiHelper.getValueAsString(cell)
-                log.debug("Reading cell '$`val`' in column $col")
-                if (_getColumnDef(`val`) != null) {
-                    log.debug("Head column found: '$`val`' in col #$col")
-                    headRow = ensureRow(current)
+                val cellVal = PoiHelper.getValueAsString(cell)
+                log.debug("Reading cell '$cellVal' in column $col")
+                if (!cellVal.isNullOrBlank() && _getColumnDef(cellVal) != null) {
+                    log.debug("Head column found: '$cellVal' in col #$col")
+                    _headRow = ensureRow(current)
                     break
                 }
             }
-            if (headRow != null) {
+            if (_headRow != null) {
                 break
             }
         }
-        if (headRow == null || current == null) {
+        if (_headRow == null || current == null) {
             log.debug("No head row found in sheet '$sheetName'.")
             return
         }
         // Now run all columns for assigning column numbers to column definitions.
         var col = -1
+        val occurrenceMap = mutableMapOf<String, Int>()
         for (cell in current) {
             ++col
-            val `val` = PoiHelper.getValueAsString(cell)
-            log.debug("Reading head column '$`val`' in column $col")
-            val columnDef = _getColumnDef(`val`)
+            val strVal = PoiHelper.getValueAsString(cell)
+            log.debug("Reading head column '$strVal' in column $col")
+            val normalizedHeaderName = ExcelColumnDef.normalizedHeaderName(strVal)
+            val occurrenceNumber = occurrenceMap[normalizedHeaderName] ?: 1
+            occurrenceMap[normalizedHeaderName] = occurrenceNumber + 1
+            val columnDef = _getColumnDef(strVal, occurrenceNumber)
             if (columnDef != null) {
-                log.debug("Head column found: '$`val`' in col #$col")
-                columnDef.columnNumber = col
+                log.debug("Head column found: '$strVal' in col #$col")
+                columnDef._columnNumber = col
             } else {
-                log.debug("Head column not registered: '$`val`'.")
+                log.debug("Head column not registered: '$strVal'.")
             }
         }
     }
@@ -336,22 +350,27 @@ class ExcelSheet internal constructor(workbook: ExcelWorkbook, poiSheet: Sheet) 
         return _getColumnDef(columnHeadname)
     }
 
-    fun _getColumnDef(columnHeadname: String): ExcelColumnDef? {
+    fun _getColumnDef(columnHeadname: String, occurrenceNumber: Int = 1): ExcelColumnDef? {
         if (StringUtils.isEmpty(columnHeadname)) {
             return null
         }
-        val lowerColumnHeadname = columnHeadname.toLowerCase().trim { it <= ' ' }
         for (columnDef in columnDefList) {
-            if (columnDef.matchName(lowerColumnHeadname)) {
-                return columnDef
+            if (columnDef.match(columnHeadname)) {
+                if (occurrenceNumber == columnDef.occurrenceNumber) {
+                    log.debug("Column '$columnHeadname' found.")
+                    return columnDef
+                } else {
+                    log.debug("Skipping of '$columnHeadname' in col #${columnDef._columnNumber}. Looking further for occurence #$occurrenceNumber")
+                }
             }
         }
+        log.debug("Column definition '$columnHeadname' not found.")
         return null
     }
 
     fun getColumnDef(columnNumber: Int): ExcelColumnDef? {
         for (columnDef in columnDefList) {
-            if (columnNumber == columnDef.columnNumber) {
+            if (columnNumber == columnDef._columnNumber) {
                 return columnDef
             }
         }
@@ -453,6 +472,10 @@ class ExcelSheet internal constructor(workbook: ExcelWorkbook, poiSheet: Sheet) 
      */
     fun markErrors(i18N: I18n?, excelWriterContext: ExcelWriterContext): ExcelSheet {
         columnWithValidationErrorMessages = excelWriterContext.cellCleaner.clean(this, excelWriterContext)
+        if (columnWithValidationErrorMessages < 0) {
+            log.warn("Can't add error messages, no head row found.")
+            return this
+        }
         analyze(true)
         val highlightedColumnHeads: MutableSet<ExcelColumnDef> = HashSet()
         var errorCount = 0
@@ -468,9 +491,9 @@ class ExcelSheet internal constructor(workbook: ExcelWorkbook, poiSheet: Sheet) 
                 isModified = true
             }
             if (columnDef != null) {
-                var cell = row!!.getCell(columnDef.columnNumber)
+                var cell = row!!.getCell(columnDef._columnNumber)
                 if (cell == null) {
-                    cell = row.getCell(columnDef.columnNumber, ExcelCellType.STRING)
+                    cell = row.getCell(columnDef._columnNumber, ExcelCellType.STRING)
                 }
                 if (excelWriterContext.isHighlightErrorCells) { // Cell validation error. Highlight cell.
                     excelWriterContext.cellHighlighter.highlightErrorCell(cell, excelWriterContext, this,
@@ -481,7 +504,7 @@ class ExcelSheet internal constructor(workbook: ExcelWorkbook, poiSheet: Sheet) 
                     if (headRow != null && !highlightedColumnHeads.contains(columnDef)) {
                         highlightedColumnHeads.add(columnDef) // Don't highlight column heads twice.
                         // Cell validation error. Highlight column head cell.
-                        val headCell = headRow!!.getCell(columnDef.columnNumber)
+                        val headCell = headRow!!.getCell(columnDef._columnNumber)
                         excelWriterContext.cellHighlighter.highlightColumnHeadCell(headCell, excelWriterContext, this,
                                 columnDef, headRow)
                         isModified = true
@@ -504,7 +527,7 @@ class ExcelSheet internal constructor(workbook: ExcelWorkbook, poiSheet: Sheet) 
     }
 
     fun setBigDecimalValue(row: Int, col: ExcelColumnDef?, value: BigDecimal?): Cell {
-        return setBigDecimalValue(row, col!!.columnNumber, value)
+        return setBigDecimalValue(row, col!!._columnNumber, value)
     }
 
     fun setBigDecimalValue(row: Int, col: Int, value: BigDecimal?): Cell {
@@ -525,7 +548,7 @@ class ExcelSheet internal constructor(workbook: ExcelWorkbook, poiSheet: Sheet) 
     }
 
     fun setDoubleValue(row: Int, col: ExcelColumnDef?, value: Double?): Cell {
-        return setDoubleValue(row, col!!.columnNumber, value)
+        return setDoubleValue(row, col!!._columnNumber, value)
     }
 
     fun setDoubleValue(row: Int, col: Int, value: Double?): Cell {
@@ -542,7 +565,7 @@ class ExcelSheet internal constructor(workbook: ExcelWorkbook, poiSheet: Sheet) 
     }
 
     fun setIntValue(row: Int, col: ExcelColumnDef?, value: Int?): Cell {
-        return setIntValue(row, col!!.columnNumber, value)
+        return setIntValue(row, col!!._columnNumber, value)
     }
 
     fun setIntValue(row: Int, col: Int, value: Int?): Cell {
@@ -559,7 +582,7 @@ class ExcelSheet internal constructor(workbook: ExcelWorkbook, poiSheet: Sheet) 
     }
 
     fun setStringValue(row: Int, col: ExcelColumnDef?, value: String?): Cell {
-        return setStringValue(row, col!!.columnNumber, value)
+        return setStringValue(row, col!!._columnNumber, value)
     }
 
     fun setStringValue(row: Int, col: Int, value: String?): Cell {
@@ -573,7 +596,7 @@ class ExcelSheet internal constructor(workbook: ExcelWorkbook, poiSheet: Sheet) 
     }
 
     fun setDateValue(row: Int, col: ExcelColumnDef?, value: Date?, dateFormat: String?): Cell {
-        return setDateValue(row, col!!.columnNumber, value, dateFormat)
+        return setDateValue(row, col!!._columnNumber, value, dateFormat)
     }
 
     fun setDateValue(row: Int, col: Int, value: Date?, dateFormat: String?): Cell {

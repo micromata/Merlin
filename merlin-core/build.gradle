@@ -47,6 +47,11 @@ task javadocJar(type: Jar) {
     classifier = 'javadoc'
 }
 
+artifacts {
+    archives sourcesJar
+    archives javadocJar
+}
+
 publishing {
     publications {
         mavenJava(MavenPublication) {
