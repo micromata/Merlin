@@ -80,7 +80,7 @@ public class ExcelCell {
     }
 
     public void evaluateFormularCell() {
-        row.getSheet().getExcelWorkbook().getFormelEvaluator().evaluateFormulaCell(cell);
+        row.getSheet().getExcelWorkbook().getFormulaEvaluator().evaluateFormulaCell(cell);
     }
 
     public static void setCellValue(ExcelWorkbook workbook, Cell cell, double doubleValue) {
