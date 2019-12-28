@@ -1,6 +1,5 @@
 package de.micromata.merlin.importer;
 
-import lombok.Getter;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -38,7 +37,22 @@ public class PojoDiffTest {
     }
 
     public class Person {
-        @Getter
         String surname, name, city, number;
+
+        public String getSurname() {
+            return this.surname;
+        }
+
+        public String getName() {
+            return this.name;
+        }
+
+        public String getCity() {
+            return this.city;
+        }
+
+        public String getNumber() {
+            return this.number;
+        }
     }
 }

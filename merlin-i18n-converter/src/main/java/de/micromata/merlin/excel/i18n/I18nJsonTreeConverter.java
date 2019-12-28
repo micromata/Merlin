@@ -4,8 +4,6 @@ import com.fasterxml.jackson.core.util.BufferRecyclers;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
-import lombok.Getter;
-import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,17 +18,13 @@ import java.util.TreeMap;
 public class I18nJsonTreeConverter {
     private static Logger log = LoggerFactory.getLogger(I18nJsonTreeConverter.class);
 
-    @Getter
     private Dictionary dictionary;
-    @Setter
     private String carriageReturn = "\n";
-    @Setter
     private boolean keysOnly;
 
     /**
      * If false (default) all dictionary will be written. If true, only "" will be written for every language.
      */
-    @Setter
     private boolean writeEmptyTranslations = false;
 
     public I18nJsonTreeConverter() {
@@ -153,6 +147,22 @@ public class I18nJsonTreeConverter {
         } else {
             node.i18nKey = i18nKey;
         }
+    }
+
+    public Dictionary getDictionary() {
+        return this.dictionary;
+    }
+
+    public void setCarriageReturn(String carriageReturn) {
+        this.carriageReturn = carriageReturn;
+    }
+
+    public void setKeysOnly(boolean keysOnly) {
+        this.keysOnly = keysOnly;
+    }
+
+    public void setWriteEmptyTranslations(boolean writeEmptyTranslations) {
+        this.writeEmptyTranslations = writeEmptyTranslations;
     }
 
     private class Node implements Comparable<Node> {

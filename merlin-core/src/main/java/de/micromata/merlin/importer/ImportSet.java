@@ -1,7 +1,5 @@
 package de.micromata.merlin.importer;
 
-import lombok.Getter;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,6 +9,14 @@ import java.util.Map;
  * This holds a list of {@link ImportDataEntry}, upload e. g. by one sheet (e. g. Excel sheet) or csv file.
  */
 public class ImportSet<T> {
+    public List<ImportDataEntry<T>> getDataEntries() {
+        return this.dataEntries;
+    }
+
+    public Status getStatus() {
+        return this.status;
+    }
+
     public enum Status {
         NOT_RECONCILED("not_reconciled"), RECONCILED("reconciled"), HAS_ERRORS("has_errors"),
         IMPORTED("imported"), NOTHING_TODO("nothing_to_do");
@@ -39,9 +45,7 @@ public class ImportSet<T> {
     }
 
     private int counter = -1;
-    @Getter
     private List<ImportDataEntry<T>> dataEntries = new ArrayList<>();
-    @Getter
     private Status status = Status.NOT_RECONCILED;
     private ImportStatistics statistics = new ImportStatistics();
     private Map<Object, ImportDataEntry<T>> entryMapByIndex = new HashMap<>();

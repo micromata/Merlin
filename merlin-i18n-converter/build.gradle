@@ -1,5 +1,4 @@
 plugins {
-    id 'io.franzbecker.gradle-lombok' version '1.14'
     id 'java'
 }
 
@@ -12,19 +11,11 @@ dependencies {
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.6'
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.9.6'
     compile group: 'commons-cli', name: 'commons-cli', version: '1.4'
-
-    compileOnly "org.projectlombok:lombok:1.18.4"
-    testCompileOnly "org.projectlombok:lombok:1.18.4"
 }
 
 repositories {
     mavenCentral()
     jcenter()
-}
-
-lombok {
-    version = '1.18.4'
-    sha256 = "" // skip verifyLombok task
 }
 
 apply plugin: 'application'

@@ -1,7 +1,5 @@
 package de.micromata.merlin.excel.i18n;
 
-import lombok.Getter;
-import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
@@ -10,9 +8,7 @@ import java.io.Writer;
 import java.util.Properties;
 
 public class I18nPropertiesConverter {
-    @Getter
     private Dictionary dictionary;
-    @Setter
     private String carriageReturn = "\n";
 
     public I18nPropertiesConverter() {
@@ -45,5 +41,13 @@ public class I18nPropertiesConverter {
             writer.write(carriageReturn);
         }
         writer.flush();
+    }
+
+    public Dictionary getDictionary() {
+        return this.dictionary;
+    }
+
+    public void setCarriageReturn(String carriageReturn) {
+        this.carriageReturn = carriageReturn;
     }
 }

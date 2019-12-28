@@ -1,6 +1,5 @@
 package de.micromata.merlin.excel.i18n;
 
-import lombok.Getter;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
@@ -15,11 +14,9 @@ import java.util.Map;
 public class I18nConverter {
     private static Logger log = LoggerFactory.getLogger(I18nConverter.class);
 
-    @Getter
     private Dictionary dictionary;
 
     // Key is source file, value is dest file.
-    @Getter
     private Map<File, File> importedFiles = new HashMap<>();
 
     public I18nConverter(Dictionary dictionary) {
@@ -99,5 +96,13 @@ public class I18nConverter {
         try (Reader reader = new StringReader(content)) {
             i18nPropertiesConverter.importTranslations(lang, reader);
         }
+    }
+
+    public Dictionary getDictionary() {
+        return this.dictionary;
+    }
+
+    public Map<File, File> getImportedFiles() {
+        return this.importedFiles;
     }
 }

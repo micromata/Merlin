@@ -4,7 +4,6 @@ import de.micromata.merlin.CoreI18n;
 import de.micromata.merlin.I18n;
 import de.micromata.merlin.ResultMessageStatus;
 import de.micromata.merlin.data.Data;
-import lombok.val;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -562,7 +561,7 @@ public class ExcelSheet {
     }
 
     public Cell setDateValue(int row, int col, Date value, String dateFormat) {
-        val cell = getCell(row, col);
+        Cell cell = getCell(row, col);
         if (value == null) cell.setBlank();
         else {
             cell.setCellValue(value);

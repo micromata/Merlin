@@ -1,54 +1,44 @@
 package de.micromata.merlin.importer;
 
-import lombok.Getter;
-
 /**
  * This holds statistics of (imported) data entries.
  */
 public class ImportStatistics {
-    @Getter
     private int totalNumberOfElements;
 
     /**
      * Number of elements not yet reconciled (against already stored / persisted entries).
      */
-    @Getter
     private int numberOfNotReconciledElements;
 
     /**
      * Number of elements not already stored / not found in the data base.
      */
-    @Getter
     private int numberOfNewElements;
 
     /**
      * Number of elements already stored / found in the data base but modified.
      */
-    @Getter
     private int numberOfModifiedElements;
 
     /**
      * Number of elements already stored / found in the data base but not modified.
      */
-    @Getter
     private int numberOfUnmodifiedElements;
 
     /**
      * Number of elements with errors.
      */
-    @Getter
     private int numberOfFaultyElements;
 
     /**
      * Number of saved / committed elements (e. g. to the data base).
      */
-    @Getter
     private int numberOfCommittedElements;
 
     /**
      * Number of unsaved / uncommitted elements (e. g. to the data base).
      */
-    @Getter
     private int numberOfUncommittedElements;
 
     public ImportStatistics() {
@@ -96,5 +86,37 @@ public class ImportStatistics {
 
     void incrementNumberOfUncommittedElements() {
         ++this.numberOfUncommittedElements;
+    }
+
+    public int getTotalNumberOfElements() {
+        return this.totalNumberOfElements;
+    }
+
+    public int getNumberOfNotReconciledElements() {
+        return this.numberOfNotReconciledElements;
+    }
+
+    public int getNumberOfNewElements() {
+        return this.numberOfNewElements;
+    }
+
+    public int getNumberOfModifiedElements() {
+        return this.numberOfModifiedElements;
+    }
+
+    public int getNumberOfUnmodifiedElements() {
+        return this.numberOfUnmodifiedElements;
+    }
+
+    public int getNumberOfFaultyElements() {
+        return this.numberOfFaultyElements;
+    }
+
+    public int getNumberOfCommittedElements() {
+        return this.numberOfCommittedElements;
+    }
+
+    public int getNumberOfUncommittedElements() {
+        return this.numberOfUncommittedElements;
     }
 }

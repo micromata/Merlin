@@ -2,8 +2,6 @@ package de.micromata.merlin.excel.i18n;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Getter;
-import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
@@ -14,9 +12,7 @@ public class Dictionary {
      */
     @JsonProperty
     private Map<String, TranslationEntry> translations = new HashMap<>();
-    @Getter
     private Set<String> keys = new TreeSet<>();
-    @Getter
     private Set<String> usedLangs = new TreeSet<>();
     private StringBuilder logging = new StringBuilder();
     /**
@@ -25,21 +21,15 @@ public class Dictionary {
     @JsonIgnore
     private Map<String, SortedSet<TranslationDiffEntry>> diffEntryMap = new HashMap<>();
     @JsonIgnore
-    @Getter
-    @Setter
     private Dictionary diffDictionary;
 
     /**
      * If true, then new keys will be added (default). If false, only translations to existing keys will be added.
      * Translations for not existing keys will be ignored on import.
      */
-    @Getter
-    @Setter
     @JsonIgnore
     private boolean createKeyIfNotPresent = true;
 
-    @Getter
-    @Setter
     @JsonIgnore
     private boolean overwriteExistingTranslations = false;
 
@@ -131,5 +121,37 @@ public class Dictionary {
         if (StringUtils.equals(StringUtils.defaultString(thisValue), StringUtils.defaultString(otherValue)))
             return;
         result.add(new TranslationDiffEntry(i18nKey, thisValue, otherValue));
+    }
+
+    public Set<String> getKeys() {
+        return this.keys;
+    }
+
+    public Set<String> getUsedLangs() {
+        return this.usedLangs;
+    }
+
+    public Dictionary getDiffDictionary() {
+        return this.diffDictionary;
+    }
+
+    public boolean isCreateKeyIfNotPresent() {
+        return this.createKeyIfNotPresent;
+    }
+
+    public boolean isOverwriteExistingTranslations() {
+        return this.overwriteExistingTranslations;
+    }
+
+    public void setDiffDictionary(Dictionary diffDictionary) {
+        this.diffDictionary = diffDictionary;
+    }
+
+    public void setCreateKeyIfNotPresent(boolean createKeyIfNotPresent) {
+        this.createKeyIfNotPresent = createKeyIfNotPresent;
+    }
+
+    public void setOverwriteExistingTranslations(boolean overwriteExistingTranslations) {
+        this.overwriteExistingTranslations = overwriteExistingTranslations;
     }
 }

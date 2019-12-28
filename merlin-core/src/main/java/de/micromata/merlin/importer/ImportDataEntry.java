@@ -2,9 +2,6 @@ package de.micromata.merlin.importer;
 
 import de.micromata.merlin.ResultMessage;
 import de.micromata.merlin.ResultMessageStatus;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +11,60 @@ import java.util.List;
  *
  */
 public class ImportDataEntry<T> {
+    public Object getPrimaryKey() {
+        return this.primaryKey;
+    }
+
+    public int getIndex() {
+        return this.index;
+    }
+
+    public T getValue() {
+        return this.value;
+    }
+
+    public T getOldValue() {
+        return this.oldValue;
+    }
+
+    public boolean isSelected() {
+        return this.selected;
+    }
+
+    public Status getStatus() {
+        return this.status;
+    }
+
+    public ImportDataEntry<T> setPrimaryKey(Object primaryKey) {
+        this.primaryKey = primaryKey;
+        return this;
+    }
+
+    public ImportDataEntry<T> setIndex(int index) {
+        this.index = index;
+        return this;
+    }
+
+    public ImportDataEntry<T> setValue(T value) {
+        this.value = value;
+        return this;
+    }
+
+    public ImportDataEntry<T> setOldValue(T oldValue) {
+        this.oldValue = oldValue;
+        return this;
+    }
+
+    public ImportDataEntry<T> setSelected(boolean selected) {
+        this.selected = selected;
+        return this;
+    }
+
+    public ImportDataEntry<T> setStatus(Status status) {
+        this.status = status;
+        return this;
+    }
+
     enum Status {NEW, MODIFIED, UNMODIFIED, COMMITTED, FAULTY}
 
     private List<ResultMessage> errorMessages;
@@ -21,42 +72,30 @@ public class ImportDataEntry<T> {
     /**
      * If your data entries has already a primary key, such as PIN etc., you should use this. Otherwise
      */
-    @Getter
-    @Setter
     protected Object primaryKey;
     /**
      * The index will be automatically set by ImportSet. If no other primary key is given, this index is used for
      * comparing entries with data base entries.
      */
-    @Getter
-    @Setter(AccessLevel.PACKAGE)
     protected int index;
     /**
      * The value to import.
      */
-    @Getter
-    @Setter
     protected T value;
     /**
      * If a value was already imported e. g. in the data base before this current import, the old value should represent
      * the data base version of this object. Is null for the first import or if there was now old value found with the
      * same index or primary key.
      */
-    @Getter
-    @Setter
     protected T oldValue;
     /**
      * If true, this data entry is selected for updating.
      */
-    @Getter
-    @Setter
     protected boolean selected;
 
     /**
      * If true, the primary key is already used by another data entry.
      */
-    @Getter
-    @Setter(AccessLevel.PACKAGE)
     protected Status status;
 
     /**

@@ -1,14 +1,12 @@
 package de.micromata.merlin.excel.i18n;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class TranslationEntry {
-    @Getter
     @JsonProperty
     private String i18nKey;
     /**
@@ -37,5 +35,9 @@ public class TranslationEntry {
             return;
         }
         values.put(lang, value);
+    }
+
+    public String getI18nKey() {
+        return this.i18nKey;
     }
 }

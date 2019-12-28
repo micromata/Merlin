@@ -3,8 +3,6 @@ package de.micromata.merlin.excel.i18n;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.core.util.BufferRecyclers;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.Getter;
-import lombok.Setter;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,17 +17,13 @@ import java.util.Map;
 public class I18nJsonConverter {
     private static Logger log = LoggerFactory.getLogger(I18nJsonConverter.class);
 
-    @Getter
     private Dictionary dictionary;
-    @Setter
     private String carriageReturn = "\n";
-    @Setter
     private boolean keysOnly;
 
     /**
      * If false (default) all translations will be written. If true, only "" will be written for every language.
      */
-    @Setter
     private boolean writeEmptyTranslations = false;
 
     public I18nJsonConverter() {
@@ -89,5 +83,21 @@ public class I18nJsonConverter {
             return "";
         }
         return new String(BufferRecyclers.getJsonStringEncoder().quoteAsString(text));
+    }
+
+    public Dictionary getDictionary() {
+        return this.dictionary;
+    }
+
+    public void setCarriageReturn(String carriageReturn) {
+        this.carriageReturn = carriageReturn;
+    }
+
+    public void setKeysOnly(boolean keysOnly) {
+        this.keysOnly = keysOnly;
+    }
+
+    public void setWriteEmptyTranslations(boolean writeEmptyTranslations) {
+        this.writeEmptyTranslations = writeEmptyTranslations;
     }
 }

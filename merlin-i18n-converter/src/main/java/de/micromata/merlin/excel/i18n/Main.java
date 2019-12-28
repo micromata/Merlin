@@ -111,11 +111,14 @@ public class Main {
                 String[] optionFiles = parsedOption.getValues();
                 for (String filename : optionFiles) {
                     if ("r".equals(parsedOption.getOpt())) {
-                        dictionary.setOverwriteExistingTranslations(false).setCreateKeyIfNotPresent(true);
+                        dictionary.setOverwriteExistingTranslations(false);
+                                dictionary.setCreateKeyIfNotPresent(true);
                     } else if ("ro".equals(parsedOption.getOpt())) {
-                        dictionary.setOverwriteExistingTranslations(true).setCreateKeyIfNotPresent(true);
+                        dictionary.setOverwriteExistingTranslations(true);
+                        dictionary.setCreateKeyIfNotPresent(true);
                     } else if ("rm".equals(parsedOption.getOpt())) {
-                        dictionary.setOverwriteExistingTranslations(false).setCreateKeyIfNotPresent(false);
+                        dictionary.setOverwriteExistingTranslations(false);
+                        dictionary.setCreateKeyIfNotPresent(false);
                     } else {
                         log.error("Unsupported option: " + option.getValue());
                     }
@@ -126,7 +129,8 @@ public class Main {
             }
             String[] argFiles = line.getArgs();
             if (argFiles != null && argFiles.length > 0) {
-                dictionary.setOverwriteExistingTranslations(false).setCreateKeyIfNotPresent(true);
+                dictionary.setOverwriteExistingTranslations(false);
+                dictionary.setCreateKeyIfNotPresent(true);
                 for (String filename : argFiles) {
                     File file = new File(filename);
                     dictionary.log("*** Reading : " + file.getAbsolutePath());
@@ -181,10 +185,14 @@ public class Main {
         logAddingCreatingFile(null, file, zipOut);
         if (zipOut != null) {
             zipOut.putNextEntry(new ZipEntry(file.toString()));
-            new I18nJsonConverter(dictionary).setKeysOnly(keysOnly).write(new OutputStreamWriter(zipOut, Charset.forName("UTF-8")));
+            I18nJsonConverter jsonConverter = new I18nJsonConverter(dictionary);
+            jsonConverter.setKeysOnly(keysOnly);
+            jsonConverter.write(new OutputStreamWriter(zipOut, Charset.forName("UTF-8")));
         } else {
             try (Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), Charset.forName("UTF-8")))) {
-                new I18nJsonConverter(dictionary).setKeysOnly(keysOnly).write(writer);
+                I18nJsonConverter jsonConverter = new I18nJsonConverter(dictionary);
+                jsonConverter.setKeysOnly(keysOnly);
+                jsonConverter.write(writer);
             }
         }
     }

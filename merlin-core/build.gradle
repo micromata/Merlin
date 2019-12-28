@@ -1,5 +1,4 @@
 plugins {
-    id 'io.franzbecker.gradle-lombok' version '1.14'
     id 'java'
     id 'java-library'
     id 'maven-publish'
@@ -18,19 +17,12 @@ dependencies {
     compile group: 'commons-beanutils', name: 'commons-beanutils', version: '1.9.3'
     compile group: 'org.apache.poi', name: 'poi', version: '4.1.1'
     compile group: 'org.apache.poi', name: 'poi-ooxml', version: '4.1.1'
-    compileOnly "org.projectlombok:lombok:1.18.4"
     testCompile group: 'org.mockito', name: 'mockito-core', version: '2.21.0'
-    testCompileOnly "org.projectlombok:lombok:1.18.4"
 }
 
 repositories {
     mavenCentral()
     jcenter()
-}
-
-lombok {
-    version = '1.18.4'
-    sha256 = "" // skip verifyLombok task
 }
 
 task sourcesJar(type: Jar) {

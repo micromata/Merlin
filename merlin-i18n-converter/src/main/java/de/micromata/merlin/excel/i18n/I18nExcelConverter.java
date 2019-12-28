@@ -1,7 +1,6 @@
 package de.micromata.merlin.excel.i18n;
 
 import de.micromata.merlin.excel.*;
-import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
@@ -18,7 +17,6 @@ import java.util.*;
 public class I18nExcelConverter {
     private static Logger log = LoggerFactory.getLogger(I18nExcelConverter.class);
 
-    @Getter
     private Dictionary dictionary;
     private CellStyle cellStyleHeadRow;
     private CellStyle cellStyleTranslation;
@@ -49,7 +47,7 @@ public class I18nExcelConverter {
         sheet.registerColumn("key", new ExcelColumnValidator().setRequired());
 
         Set<String> languages = new TreeSet<>();
-        Row headRow = sheet.getHeadRow();
+        Row headRow = sheet.getHeadRow().getRow();
         for (int cellnum = 1; cellnum < headRow.getLastCellNum(); cellnum++) {
             String lang = PoiHelper.getValueAsString(headRow.getCell(cellnum)).trim();
             if (lang.length() > 3 || !StringUtils.isAlpha(lang)) {
@@ -196,6 +194,10 @@ public class I18nExcelConverter {
         }
         return richTextString;
 
+    }
+
+    public Dictionary getDictionary() {
+        return this.dictionary;
     }
 
     private class MyDiff {

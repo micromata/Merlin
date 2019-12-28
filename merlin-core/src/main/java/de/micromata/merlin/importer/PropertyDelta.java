@@ -1,15 +1,22 @@
 package de.micromata.merlin.importer;
 
-import lombok.Getter;
-
 /**
  * Represents a property change.
  */
 public class PropertyDelta {
-    @Getter
     String property;
-    @Getter
     Object oldValue;
-    @Getter
     Object newValue;
+
+    public String getProperty() {
+        return this.property;
+    }
+
+    public Object getOldValue() {
+        return this.oldValue;
+    }
+
+    public Object getNewValue() {
+        return this.newValue;
+    }
 }
