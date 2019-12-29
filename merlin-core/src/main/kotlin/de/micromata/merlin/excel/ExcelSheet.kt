@@ -23,6 +23,12 @@ class ExcelSheet internal constructor(workbook: ExcelWorkbook, poiSheet: Sheet) 
     private val columnDefList: MutableList<ExcelColumnDef> = ArrayList()
     val poiSheet: Sheet
     val excelWorkbook: ExcelWorkbook
+    /**
+     * If true, all cell values will be trimmed before getting the cell value as string. The Excel cell itself will
+     * not be modified. Default is false.
+     * See: [getCellString]
+     */
+    var autotrimCellValues: Boolean = false
     private var _headRow: ExcelRow? = null
     val headRow: ExcelRow?
         get() {
@@ -185,11 +191,11 @@ class ExcelSheet internal constructor(workbook: ExcelWorkbook, poiSheet: Sheet) 
      * @param row            The row to get the cell value from.
      * @param columnHeadname The name of the column to get.
      * @param nullAsEmpty    If true, null cell
-     * @param trimValue      If true, the returned value will be trimmed, default is false.
+     * @param trimValue      If true, the returned value will be trimmed, default is [autotrimCellValues].
      * @return The String value of the specified column cell.
      */
     @JvmOverloads
-    fun getCellString(row: Row, columnHeadname: String, nullAsEmpty: Boolean = true, trimValue: Boolean = false): String? {
+    fun getCellString(row: Row, columnHeadname: String, nullAsEmpty: Boolean = true, trimValue: Boolean = autotrimCellValues): String? {
         // findAndReadHeadRow(); Will be called in getColumnDef
         val cell = getCell(row, columnHeadname) ?: return if (nullAsEmpty) "" else null
         return PoiHelper.getValueAsString(cell, trimValue)
@@ -199,10 +205,10 @@ class ExcelSheet internal constructor(workbook: ExcelWorkbook, poiSheet: Sheet) 
      * @param row      The row to get the cell value from.
      * @param columnDef The column to get.
      * @param nullAsEmpty    If true, null cell
-     * @param trimVal        If true, the returned value will be trimmed, default is false.
+     * @param trimVal        If true, the returned value will be trimmed, default is [autotrimCellValues].
      * @return The String value of the specified column cell.
      */
-    fun getCellString(row: Row, columnDef: ExcelColumnDef?, nullAsEmpty: Boolean = true, trimValue: Boolean = false): String? {
+    fun getCellString(row: Row, columnDef: ExcelColumnDef?, nullAsEmpty: Boolean = true, trimValue: Boolean = autotrimCellValues): String? {
         // findAndReadHeadRow(); Will be called in getColumnDef
         val cell = getCell(row, columnDef) ?: return if (nullAsEmpty) "" else null
         return PoiHelper.getValueAsString(cell, trimValue)
