@@ -92,8 +92,8 @@ class ExcelColumnDef {
     }
 
     companion object {
-        fun normalizedHeaderName(header: String): String {
-            return header.toLowerCase().trim { it <= ' ' }
+        fun normalizedHeaderName(header: String?): String {
+            return header?.toLowerCase()?.trim { it <= ' ' } ?: ""
         }
     }
 }

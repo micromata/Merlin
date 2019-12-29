@@ -184,21 +184,28 @@ class ExcelSheet internal constructor(workbook: ExcelWorkbook, poiSheet: Sheet) 
     /**
      * @param row            The row to get the cell value from.
      * @param columnHeadname The name of the column to get.
+     * @param nullAsEmpty    If true, null cell
+     * @param trimValue      If true, the returned value will be trimmed, default is false.
      * @return The String value of the specified column cell.
      */
-    fun getCellString(row: Row, columnHeadname: String): String? { // findAndReadHeadRow(); Will be called in getColumnDef
-        val cell = getCell(row, columnHeadname) ?: return null
-        return PoiHelper.getValueAsString(cell)
+    @JvmOverloads
+    fun getCellString(row: Row, columnHeadname: String, nullAsEmpty: Boolean = true, trimValue: Boolean = false): String? {
+        // findAndReadHeadRow(); Will be called in getColumnDef
+        val cell = getCell(row, columnHeadname) ?: return if (nullAsEmpty) "" else null
+        return PoiHelper.getValueAsString(cell, trimValue)
     }
 
     /**
      * @param row      The row to get the cell value from.
-     * @param columDef The column to get.
+     * @param columnDef The column to get.
+     * @param nullAsEmpty    If true, null cell
+     * @param trimVal        If true, the returned value will be trimmed, default is false.
      * @return The String value of the specified column cell.
      */
-    fun getCellString(row: Row, columnDef: ExcelColumnDef?): String? { // findAndReadHeadRow(); Will be called in getColumnDef
-        val cell = getCell(row, columnDef) ?: return null
-        return PoiHelper.getValueAsString(cell)
+    fun getCellString(row: Row, columnDef: ExcelColumnDef?, nullAsEmpty: Boolean = true, trimValue: Boolean = false): String? {
+        // findAndReadHeadRow(); Will be called in getColumnDef
+        val cell = getCell(row, columnDef) ?: return if (nullAsEmpty) "" else null
+        return PoiHelper.getValueAsString(cell, trimValue)
     }
 
     /**
@@ -331,6 +338,8 @@ class ExcelSheet internal constructor(workbook: ExcelWorkbook, poiSheet: Sheet) 
         for (cell in current) {
             ++col
             val strVal = PoiHelper.getValueAsString(cell)
+            if (strVal.isNullOrBlank())
+                continue
             log.debug("Reading head column '$strVal' in column $col")
             val normalizedHeaderName = ExcelColumnDef.normalizedHeaderName(strVal)
             val occurrenceNumber = occurrenceMap[normalizedHeaderName] ?: 1
@@ -444,23 +453,6 @@ class ExcelSheet internal constructor(workbook: ExcelWorkbook, poiSheet: Sheet) 
             return allValidationErrors
         }
 
-    fun markErrors(i18n: I18n?): ExcelSheet {
-        return markErrors(i18n, ExcelWriterContext(i18n, excelWorkbook))
-    }
-
-    /**
-     * Marks and comments validation errors of cells of this sheet by mamipulating the Excel sheet.
-     * Refer [.isModified] for checking if any modification was done.
-     * Please don't forget to call [.analyze] first with parameter validate=true.
-     *
-     * @param excelWriterContext Defines the type of response (how to display and highlight validation errors).
-     * @return this for chaining.
-     */
-    @JvmOverloads
-    fun markErrors(excelWriterContext: ExcelWriterContext = ExcelWriterContext(i18n, excelWorkbook)): ExcelSheet {
-        return markErrors(i18n, excelWriterContext)
-    }
-
     /**
      * Marks and comments validation errors of cells of this sheet by manipulating the Excel sheet.
      * Refer [.isModified] for checking if any modification was done.
@@ -470,7 +462,8 @@ class ExcelSheet internal constructor(workbook: ExcelWorkbook, poiSheet: Sheet) 
      * @param excelWriterContext Defines the type of response (how to display and highlight validation errors).
      * @return this for chaining.
      */
-    fun markErrors(i18N: I18n?, excelWriterContext: ExcelWriterContext): ExcelSheet {
+    @JvmOverloads
+    fun markErrors(excelWriterContext: ExcelWriterContext = ExcelWriterContext(i18n, excelWorkbook)): ExcelSheet {
         columnWithValidationErrorMessages = excelWriterContext.cellCleaner.clean(this, excelWriterContext)
         if (columnWithValidationErrorMessages < 0) {
             log.warn("Can't add error messages, no head row found.")

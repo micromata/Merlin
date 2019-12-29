@@ -1,19 +1,16 @@
 package de.micromata.merlin.excel
 
-import de.micromata.merlin.CoreI18n
 import de.micromata.merlin.Definitions
 import org.apache.poi.ss.usermodel.Row
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.slf4j.LoggerFactory
 import java.io.File
-import java.util.*
 
 internal class ExcelWorkbookColumnsTest {
     private val log = LoggerFactory.getLogger(ExcelWorkbookColumnsTest::class.java)
     @Test
     fun configReaderValidationTest() {
-        val coreI18N = CoreI18n.setDefault(Locale.ROOT)
         val excelWorkbook = ExcelWorkbook(File(Definitions.EXAMPLES_EXCEL_TEST_DIR, "Workbook-Test.xlsx"))
         val excelSheet = excelWorkbook.getSheet("sheet 1")!!
         excelSheet.registerColumn("E-Mail")

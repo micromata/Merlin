@@ -37,7 +37,6 @@ class ExcelWorkbookTest {
 
     @Test
     void validationExcelResponseTest() throws IOException {
-        CoreI18n coreI18N = CoreI18n.setDefault(Locale.ROOT);
         validationexcelResponseTest(CoreI18n.getDefault(), "");
         validationexcelResponseTest(CoreI18n.setDefault(Locale.GERMAN), "_de");
     }
