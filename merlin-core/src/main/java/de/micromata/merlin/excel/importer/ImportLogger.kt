@@ -55,6 +55,9 @@ class ImportLogger
             }
     }
 
+    var successCounter = 0
+        private set
+
     val events = mutableListOf<Event>()
 
     val eventsAsString: String
@@ -78,6 +81,12 @@ class ImportLogger
     val errorEventsAsString: String
         get() = errorEvents.joinToString("\n") { it.toString() }
 
+    val hasEvents: Boolean
+        get() = !events.isEmpty()
+
+    val hasErrorEvents: Boolean
+        get() = !errorEvents.isEmpty()
+
     @JvmOverloads
     fun info(message: String, row: Int? = null, col: Int? = null) {
         events.add(Event(message, Level.INFO, row, col))
@@ -91,5 +100,11 @@ class ImportLogger
     @JvmOverloads
     fun error(message: String, row: Int? = null, col: Int? = null) {
         events.add(Event(message, Level.ERROR, row, col))
+    }
+
+    fun incrementSuccesscounter() {
+        synchronized(this) {
+            ++this.successCounter
+        }
     }
 }
