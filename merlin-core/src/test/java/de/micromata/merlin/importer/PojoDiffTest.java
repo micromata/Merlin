@@ -27,10 +27,10 @@ public class PojoDiffTest {
 
     private void testDelta(List<PropertyDelta> deltas, String property, String oldValue, String newValue) {
         for (PropertyDelta delta : deltas) {
-            if (property.equals(delta.property)) {
-                assertEquals(property, delta.property);
-                assertEquals(oldValue, delta.oldValue);
-                assertEquals(newValue, delta.newValue);
+            if (property.equals(delta.getProperty())) {
+                assertEquals(property, delta.getProperty());
+                assertEquals(oldValue, delta.getOldValue());
+                assertEquals(newValue, delta.getNewValue());
                 return;
             }
         }

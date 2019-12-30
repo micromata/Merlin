@@ -24,38 +24,36 @@
 package de.micromata.merlin.excel.importer;
 
 /**
+ *
  */
-public enum ImportStatus
-{
-  NOT_RECONCILED("notReconciled"), RECONCILED("reconciled"), HAS_ERRORS("hasErrors"), IMPORTED("imported"), NOTHING_TODO("nothingToDo");
+public enum ImportStatus {
+    NOT_RECONCILED("notReconciled"), RECONCILED("reconciled"), HAS_ERRORS("hasErrors"), IMPORTED("imported"), NOTHING_TODO("nothingToDo");
 
-  private String key;
+    private String key;
 
-  public String getI18nKey()
-  {
-    return "common.import.status." + key;
-  }
-
-  /**
-   * The key will be used e. g. for i18n.
-   * @return The key.
-   */
-  public String getKey()
-  {
-    return key;
-  }
-
-  ImportStatus(String key)
-  {
-    this.key = key;
-  }
-  
-  public boolean isIn(ImportStatus... status) {
-    for (ImportStatus st : status) {
-      if (this == st) {
-        return true;
-      }
+    ImportStatus(String key) {
+        this.key = key;
     }
-    return false;
-  }
+
+    public String getI18nKey() {
+        return "common.import.status." + key;
+    }
+
+    /**
+     * The key will be used e. g. for i18n.
+     *
+     * @return The key.
+     */
+    public String getKey() {
+        return key;
+    }
+
+    public boolean isIn(ImportStatus... status) {
+        for (ImportStatus st : status) {
+            if (this == st) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

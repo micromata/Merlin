@@ -86,6 +86,7 @@ public class ImportedSheet<T> implements Serializable {
 
     /**
      * Nur ungleich 0, falls die Datensätze schon verprobt wurden.
+     *
      * @return The number of new elements.
      */
     public int getNumberOfNewElements() {
@@ -126,6 +127,7 @@ public class ImportedSheet<T> implements Serializable {
 
     /**
      * Nur ungleich 0, falls die Datensätze schon verprobt wurden.
+     *
      * @return The number of modified elements.
      */
     public int getNumberOfModifiedElements() {
@@ -135,6 +137,7 @@ public class ImportedSheet<T> implements Serializable {
 
     /**
      * Nur ungleich 0, falls die Datensätze schon verprobt wurden.
+     *
      * @return The number of unmodified elements.
      */
     public int getNumberOfUnmodifiedElements() {
@@ -200,6 +203,7 @@ public class ImportedSheet<T> implements Serializable {
 
     /**
      * Can be used for opening and closing this sheet in gui.
+     *
      * @return true if open, otherwise false.
      */
     public boolean isOpen() {
@@ -217,6 +221,32 @@ public class ImportedSheet<T> implements Serializable {
         return status;
     }
 
+    public void setStatus(final ImportStatus status) {
+        boolean allowed = true;
+        if (this.status == ImportStatus.NOT_RECONCILED || this.status == null) {
+            if (status.isIn(ImportStatus.IMPORTED, ImportStatus.NOTHING_TODO) == true) {
+                // State change not allowed.
+                allowed = false;
+            }
+        } else if (this.status == ImportStatus.RECONCILED) {
+            // Everything is allowed
+        } else {
+            // Everything is allowed
+        }
+        if (allowed == false) {
+            throw new UnsupportedOperationException("State change not allowed: '" + this.status + "' -> '" + status + "'");
+        }
+        this.status = status;
+        if (status == ImportStatus.RECONCILED) {
+            reconciled = true;
+        } else if (status == ImportStatus.NOT_RECONCILED) {
+            reconciled = false;
+        }
+        if (isFaulty() == true) {
+            this.status = ImportStatus.HAS_ERRORS;
+        }
+    }
+
     public boolean isReconciled() {
         return reconciled;
     }
@@ -227,6 +257,7 @@ public class ImportedSheet<T> implements Serializable {
 
     /**
      * After commit, the number of committed values will be given.
+     *
      * @return The number of committed elements.
      */
     public int getNumberOfCommittedElements() {
@@ -284,31 +315,5 @@ public class ImportedSheet<T> implements Serializable {
             }
         }
         return errorProperties;
-    }
-
-    public void setStatus(final ImportStatus status) {
-        boolean allowed = true;
-        if (this.status == ImportStatus.NOT_RECONCILED || this.status == null) {
-            if (status.isIn(ImportStatus.IMPORTED, ImportStatus.NOTHING_TODO) == true) {
-                // State change not allowed.
-                allowed = false;
-            }
-        } else if (this.status == ImportStatus.RECONCILED) {
-            // Everything is allowed
-        } else {
-            // Everything is allowed
-        }
-        if (allowed == false) {
-            throw new UnsupportedOperationException("State change not allowed: '" + this.status + "' -> '" + status + "'");
-        }
-        this.status = status;
-        if (status == ImportStatus.RECONCILED) {
-            reconciled = true;
-        } else if (status == ImportStatus.NOT_RECONCILED) {
-            reconciled = false;
-        }
-        if (isFaulty() == true) {
-            this.status = ImportStatus.HAS_ERRORS;
-        }
     }
 }

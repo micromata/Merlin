@@ -34,109 +34,99 @@ import java.util.List;
 
 /**
  * Stores the imported data for displaying and committing.
- * 
+ *
  * @author Kai Reinhard (k.reinhard@micromata.de)
- * 
  */
-public class ImportStorage<T> implements Serializable
-{
-  private Logger log = LoggerFactory.getLogger(ImportStorage.class);
+public class ImportStorage<T> implements Serializable {
+    private Logger log = LoggerFactory.getLogger(ImportStorage.class);
 
-  private List<ImportedSheet<T>> sheets;
+    private List<ImportedSheet<T>> sheets;
 
-  private String filename;
+    private String filename;
 
-  private Object id;
+    private Object id;
 
-  private int sequence = 0;
+    private int sequence = 0;
 
-  public ImportStorage()
-  {
-  }
-
-  public ImportStorage(final Object id)
-  {
-    this.id = id;
-  }
-
-  /**
-   * Sheets of the import (e. g. mapping of MS Excel sheets).
-   * @return the imported sheets.
-   */
-  public List<ImportedSheet<T>> getSheets()
-  {
-    return sheets;
-  }
-
-  public void addSheet(final ImportedSheet<T> sheet)
-  {
-    Validate.notNull(sheet);
-    if (sheets == null) {
-      sheets = new ArrayList<ImportedSheet<T>>();
+    public ImportStorage() {
     }
-    sheets.add(sheet);
-  }
 
-  public ImportedSheet<T> getNamedSheet(final String name)
-  {
-    if (CollectionUtils.isEmpty(sheets) == true) {
-      return null;
+    public ImportStorage(final Object id) {
+        this.id = id;
     }
-    for (final ImportedSheet<T> sheet : sheets) {
-      if (name.equals(sheet.getName()) == true) {
-        return sheet;
-      }
+
+    /**
+     * Sheets of the import (e. g. mapping of MS Excel sheets).
+     *
+     * @return the imported sheets.
+     */
+    public List<ImportedSheet<T>> getSheets() {
+        return sheets;
     }
-    return null;
-  }
 
-  public void setSheetOpen(final String name, final boolean open)
-  {
-    final ImportedSheet<T> sheet = getNamedSheet(name);
-    if (sheet != null) {
-      sheet.setOpen(open);
-    } else {
-      log.warn("Sheet with name '" + name + "' not found. Can't open/close this sheet in gui.");
+    public void addSheet(final ImportedSheet<T> sheet) {
+        Validate.notNull(sheet);
+        if (sheets == null) {
+            sheets = new ArrayList<ImportedSheet<T>>();
+        }
+        sheets.add(sheet);
     }
-  }
 
-  /**
-   * File name, if data was imported from a file.
-   * @return The filename.
-   */
-  public String getFilename()
-  {
-    return filename;
-  }
+    public ImportedSheet<T> getNamedSheet(final String name) {
+        if (CollectionUtils.isEmpty(sheets) == true) {
+            return null;
+        }
+        for (final ImportedSheet<T> sheet : sheets) {
+            if (name.equals(sheet.getName()) == true) {
+                return sheet;
+            }
+        }
+        return null;
+    }
 
-  public void setFilename(final String filename)
-  {
-    this.filename = filename;
-  }
+    public void setSheetOpen(final String name, final boolean open) {
+        final ImportedSheet<T> sheet = getNamedSheet(name);
+        if (sheet != null) {
+            sheet.setOpen(open);
+        } else {
+            log.warn("Sheet with name '" + name + "' not found. Can't open/close this sheet in gui.");
+        }
+    }
 
-  /*
-   * @return the name given to constructor or null if default constructor was used. Use-ful for managing multiple storages.
-   */
-  public Object getId()
-  {
-    return id;
-  }
+    /**
+     * File name, if data was imported from a file.
+     *
+     * @return The filename.
+     */
+    public String getFilename() {
+        return filename;
+    }
 
-  /**
-   * Each entry in the sheets (ImportedElements) of the storage should have an unique identifier. Use-age: {@code new
-   * ImportedElement<Xxx>(storage.nextVal(), Xxx.class, ...);} Returns the next integer.
-   * @return next value.
-   */
-  public synchronized int nextVal()
-  {
-    return sequence++;
-  }
+    public void setFilename(final String filename) {
+        this.filename = filename;
+    }
 
-  /**
-   * @return the last int given by nextVal without incrementing the underlaying sequencer.
-   */
-  public int getLastVal()
-  {
-    return sequence;
-  }
+    /*
+     * @return the name given to constructor or null if default constructor was used. Use-ful for managing multiple storages.
+     */
+    public Object getId() {
+        return id;
+    }
+
+    /**
+     * Each entry in the sheets (ImportedElements) of the storage should have an unique identifier. Use-age: {@code new
+     * ImportedElement<Xxx>(storage.nextVal(), Xxx.class, ...);} Returns the next integer.
+     *
+     * @return next value.
+     */
+    public synchronized int nextVal() {
+        return sequence++;
+    }
+
+    /**
+     * @return the last int given by nextVal without incrementing the underlaying sequencer.
+     */
+    public int getLastVal() {
+        return sequence;
+    }
 }
