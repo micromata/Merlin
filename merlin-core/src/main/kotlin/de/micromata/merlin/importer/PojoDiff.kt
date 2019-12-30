@@ -11,7 +11,7 @@ import java.util.*
 object PojoDiff {
     private val log = LoggerFactory.getLogger(PojoDiff::class.java)
     @JvmStatic
-    fun getPropertyChanges(oldObject: Any?, newObject: Any?, vararg fieldsToIgnore: String?): List<PropertyDelta>? {
+    fun getPropertyChanges(oldObject: Any?, newObject: Any?, vararg fieldsToIgnore: String): List<PropertyDelta>? {
         if (oldObject == null || newObject == null) {
             return null
         }
@@ -20,16 +20,18 @@ object PojoDiff {
         for (desc in descs) {
             val propertyName = desc.name
             if ("class" == propertyName) continue
-            if (Arrays.asList<String>(*fieldsToIgnore).contains(propertyName)) { // check if field name is in ignoring list then skip that iteration. and continue to next.
+            if (listOf(*fieldsToIgnore).contains(propertyName)) { // check if field name is in ignoring list then skip that iteration. and continue to next.
                 continue
             }
             try {
                 val oldObjPropertyValue = PropertyUtils.getProperty(oldObject, propertyName) // value of property/field in oldObject.
                 val newObjPropertyValue = PropertyUtils.getProperty(newObject, propertyName) // value of property/field in newObject.
-                if (oldObjPropertyValue == null && oldObjPropertyValue == null) { // if both objects are null then no need to do further steps just skip that iteration.
+                @Suppress("ControlFlowWithEmptyBody")
+                if (oldObjPropertyValue == null && newObjPropertyValue == null) { // if both objects are null then no need to do further steps just skip that iteration.
                     continue
                 } else if (oldObjPropertyValue != null && newObjPropertyValue == null
-                        || oldObjPropertyValue == null && newObjPropertyValue != null) { // if one of the object is null and another is not-null then it means there is a change then return false.
+                        || oldObjPropertyValue == null && newObjPropertyValue != null) {
+                    // if one of the object is null and another is not-null then it means there is a change then return false.
                 } else if (oldObjPropertyValue == newObjPropertyValue) {
                     continue
                 }

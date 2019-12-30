@@ -51,7 +51,7 @@ open class ImportedElement<T>
          * @return The index of this element.
          */
         val index: Int,
-        val clazz: Class<T>, vararg diffProperties: String) : Serializable {
+        private val clazz: Class<T>, vararg diffProperties: String) : Serializable {
 
     private val diffProperties = diffProperties
 
@@ -219,14 +219,14 @@ open class ImportedElement<T>
                 if (onlyPublicGetter == true && Modifier.isPublic(method.modifiers) == false) {
                     continue
                 }
-                var matches = false
-                matches = if (Boolean::class.javaPrimitiveType!!.isAssignableFrom(method.returnType) == true) {
-                    "is$cap" == method.name == true || "has$cap" == method.name == true || "get$cap" == method.name == true
-                } else {
-                    "get$cap" == method.name == true
-                }
-                if (matches == true) {
-                    if (method.isBridge == false) { // Don't return bridged methods (methods defined in interface or super class with different return type).
+                var matches =
+                        if (Boolean::class.javaPrimitiveType!!.isAssignableFrom(method.returnType) == true) {
+                            "is$cap" == method.name || "has$cap" == method.name || "get$cap" == method.name
+                        } else {
+                            "get$cap" == method.name
+                        }
+                if (matches) {
+                    if (!method.isBridge) { // Don't return bridged methods (methods defined in interface or super class with different return type).
                         return method
                     }
                 }
@@ -236,11 +236,11 @@ open class ImportedElement<T>
         }
 
         private fun getAllDeclaredMethods(clazz: Class<*>): Array<Method>? {
-            var clazz = clazz
-            var methods = clazz.declaredMethods
-            while (clazz.superclass != null) {
-                clazz = clazz.superclass
-                methods = ArrayUtils.addAll(methods, *clazz.declaredMethods) as Array<Method>
+            var cls = clazz
+            var methods = cls.declaredMethods
+            while (cls.superclass != null) {
+                cls = cls.superclass
+                methods = ArrayUtils.addAll(methods, *cls.declaredMethods) as Array<Method>
             }
             return methods
         }

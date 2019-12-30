@@ -24,6 +24,9 @@ class ExcelWorkbook : AutoCloseable {
     private val cellStyleMap: MutableMap<String, CellStyle?> = HashMap()
     private val fontMap: MutableMap<String, Font?> = HashMap()
     private var inputStream: InputStream? = null
+    var filename: String? = null
+    private set
+
     var formulaEvaluator: FormulaEvaluator? = null
         get() {
             if (field == null) {
@@ -57,6 +60,7 @@ class ExcelWorkbook : AutoCloseable {
     }
 
     private fun open(inputStream: InputStream, filename: String) {
+        this.filename = File(filename).name
         this.inputStream = inputStream
         try {
             pOIWorkbook = WorkbookFactory.create(inputStream)
@@ -230,6 +234,15 @@ class ExcelWorkbook : AutoCloseable {
             fontMap[id] = font
         }
         return font
+    }
+
+    fun setActiveSheet(sheetIdx: Int) {
+        pOIWorkbook.setActiveSheet(sheetIdx)
+    }
+
+    fun setActiveSheet(sheetName: String) {
+        val sheet = getSheet(sheetName) ?: return
+        setActiveSheet(sheet.sheetIndex)
     }
 
     val asByteArrayOutputStream: ByteArrayOutputStream
