@@ -4,7 +4,6 @@ import de.micromata.merlin.utils.Converter
 import de.micromata.merlin.word.ConditionalComparator
 import org.apache.poi.ss.usermodel.Cell
 import org.apache.poi.ss.usermodel.CellType
-import org.slf4j.LoggerFactory
 
 /**
  * Validates Excel cells (must be numbers).
@@ -20,8 +19,7 @@ class ExcelColumnNumberValidator @JvmOverloads constructor(
          * @param maximum If given each number must be equals or lower than this given maximum value. Default is null.
          */
         var maximum: Double? = null) : ExcelColumnValidator() {
-    private val log = LoggerFactory.getLogger(ExcelColumnNumberValidator::class.java)
-
+    
     /**
      * If true a string value of a cell will be converted by this validator to a string (if possible). Default is false.
      * @param tryToConvertStringToNumber The value to set.
@@ -36,7 +34,7 @@ class ExcelColumnNumberValidator @JvmOverloads constructor(
      * @param rowNumber Row number of cell value in given sheet.
      * @return null if valid, otherwise validation error message to display.
      */
-    override fun isValid(cell: Cell, rowNumber: Int): ExcelValidationErrorMessage? {
+    override fun isValid(cell: Cell?, rowNumber: Int): ExcelValidationErrorMessage? {
         val errorMessage = super.isValid(cell, rowNumber)
         if (errorMessage != null) {
             return errorMessage
@@ -44,8 +42,9 @@ class ExcelColumnNumberValidator @JvmOverloads constructor(
         if (PoiHelper.isEmpty(cell)) {
             return null // Do not check empty cells. If required, it's done by super.
         }
+        // cell is not null:
         var doubleValue: Double? = null
-        if (cell.cellType == CellType.NUMERIC) {
+        if (cell!!.cellType == CellType.NUMERIC) {
             doubleValue = cell.numericCellValue
         } else if (isTryToConvertStringToNumber && cell.cellType == CellType.STRING) {
             doubleValue = Converter.createDouble(cell.stringCellValue)

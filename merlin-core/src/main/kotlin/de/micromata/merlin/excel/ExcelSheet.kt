@@ -170,6 +170,8 @@ class ExcelSheet internal constructor(workbook: ExcelWorkbook, poiSheet: Sheet) 
         get() {
             findAndReadHeadRow()
             val it = poiSheet.rowIterator()
+            if (headRow == null)
+                return it
             while (it.hasNext()) {
                 if (it.next() == headRow!!.row) {
                     break
