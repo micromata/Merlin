@@ -34,7 +34,12 @@ import java.util.*
  *
  * @author Kai Reinhard (k.reinhard@micromata.de)
  */
-class ImportStorage<T> @JvmOverloads constructor(var id: Any? = null) : Serializable {
+class ImportStorage<T>
+@JvmOverloads
+constructor(var id: Any? = null)
+    : Serializable {
+
+    val logger = ImportLogger()
 
     var workbook: ExcelWorkbook? = null
 
@@ -84,7 +89,7 @@ class ImportStorage<T> @JvmOverloads constructor(var id: Any? = null) : Serializ
     fun setSheetOpen(name: String, open: Boolean) {
         val sheet = getNamedSheet(name)
         if (sheet != null) {
-            sheet.setOpen(open)
+            sheet.isOpen = open
         } else {
             log.warn("Sheet with name '$name' not found. Can't open/close this sheet in gui.")
         }

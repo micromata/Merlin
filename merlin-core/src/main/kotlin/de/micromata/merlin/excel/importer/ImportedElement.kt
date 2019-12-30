@@ -23,7 +23,6 @@
 package de.micromata.merlin.excel.importer
 
 import de.micromata.merlin.importer.PropertyDelta
-import org.apache.commons.collections4.CollectionUtils
 import org.apache.commons.collections4.MapUtils
 import org.apache.commons.lang3.ArrayUtils
 import org.apache.commons.lang3.StringUtils
@@ -31,7 +30,6 @@ import java.io.Serializable
 import java.lang.reflect.Method
 import java.lang.reflect.Modifier
 import java.math.BigDecimal
-import java.util.*
 
 /**
  * Stores one imported object (e. g. MS Excel row as bean object). It also contains information about the status: New object or modified
@@ -51,9 +49,7 @@ open class ImportedElement<T>
          * @return The index of this element.
          */
         val index: Int,
-        private val clazz: Class<T>, vararg diffProperties: String) : Serializable {
-
-    private val diffProperties = diffProperties
+        private val clazz: Class<T>, vararg val diffProperties: String) : Serializable {
 
     var value: T? = null
         set(value) {
@@ -85,10 +81,10 @@ open class ImportedElement<T>
                 val origValue = method.invoke(oldValue)
                 createPropertyDelta(fieldname, newValue, origValue, method.returnType)?.let { deltas.add(it) }
             }
-            deltas.addAll(addAdditionalPropertyDeltas());
+            deltas.addAll(addAdditionalPropertyDeltas())
 
             if (deltas.isNotEmpty()) {
-                propertyDeltas = deltas;
+                propertyDeltas = deltas
             }
             return propertyDeltas
         }
@@ -101,22 +97,17 @@ open class ImportedElement<T>
     var isReconciled = false
     /**
      * Only selected values will be imported. If hasErrors = true, always false will be returned.
-     * @return true if selected.
-     */
-    /**
-     * If hasErrors == true then this item will be deselected.
-     * @param selected The value to set.
      */
     var selected = false
-        get() = isFaulty == false && field
+        get() = !isFaulty && field
         set(selected) {
-            field = if (isFaulty == false) {
+            field = if (!isFaulty ) {
                 selected
             } else {
                 false
             }
         }
-    private var errorProperties: MutableMap<String?, Any?>? = null
+    private var errorProperties: MutableMap<String, Any>? = null
 
     open fun valueAsString(value: Any?): String? {
         return value?.toString()
@@ -127,12 +118,12 @@ open class ImportedElement<T>
      *
      * @return Collection of additional property deltas.
      */
-    open protected fun addAdditionalPropertyDeltas(): Collection<PropertyDelta> {
+    protected open fun addAdditionalPropertyDeltas(): Collection<PropertyDelta> {
         return emptyList()
     }
 
     protected fun createPropertyDelta(fieldname: String?, newValue: Any?, origValue: Any?, type: Class<*>?): PropertyDelta? {
-        var modified =
+        val modified =
                 if (type?.isAssignableFrom(BigDecimal::class.java) == true) {
                     when {
                         origValue == null -> newValue != null
@@ -153,21 +144,21 @@ open class ImportedElement<T>
      * @return true if modified, otherwise false.
      */
     val isModified: Boolean
-        get() = isReconciled == true && oldValue != null && CollectionUtils.isEmpty(propertyChanges) == false
+        get() = isReconciled && oldValue != null && !propertyChanges.isNullOrEmpty()
 
     /**
      * Noch nicht verprobte Datensätze (isReconciled == false) gelten weder als modifiziert noch als nicht modifiziert.
      * @return true if unmodified, otherwise false.
      */
     val isUnmodified: Boolean
-        get() = isReconciled == true && oldValue != null && oldValue == value == true
+        get() = isReconciled && oldValue != null && oldValue == value
 
     /**
      * Noch nicht verprobte Datensätze (isReconciled == false) gelten nicht als neu.
      * @return true if new.
      */
     val isNew: Boolean
-        get() = isReconciled == true && oldValue == null
+        get() = isReconciled && oldValue == null
 
     /**
      * @return true, if errorProperties is not empty, otherwise false.
@@ -180,9 +171,9 @@ open class ImportedElement<T>
      * @param key Key of the error property.
      * @param value Value of the error property.
      */
-    fun putErrorProperty(key: String?, value: Any?) {
+    fun putErrorProperty(key: String, value: Any) {
         if (errorProperties == null) {
-            errorProperties = HashMap()
+            errorProperties = mutableMapOf()
         }
         errorProperties!![key] = value
     }
@@ -193,8 +184,8 @@ open class ImportedElement<T>
         }
     }
 
-    fun getErrorProperties(): Map<String?, Any?>? {
-        return errorProperties
+    fun getErrorProperties(): Map<String, Any>? {
+        return errorProperties?.toMap()
     }
 
     /**
@@ -216,11 +207,11 @@ open class ImportedElement<T>
             val cap = StringUtils.capitalize(fieldname)
             val methods: Array<Method> = getAllDeclaredMethods(clazz) ?: return null
             for (method in methods) {
-                if (onlyPublicGetter == true && Modifier.isPublic(method.modifiers) == false) {
+                if (onlyPublicGetter && !Modifier.isPublic(method.modifiers)) {
                     continue
                 }
-                var matches =
-                        if (Boolean::class.javaPrimitiveType!!.isAssignableFrom(method.returnType) == true) {
+                val matches =
+                        if (Boolean::class.javaPrimitiveType!!.isAssignableFrom(method.returnType)) {
                             "is$cap" == method.name || "has$cap" == method.name || "get$cap" == method.name
                         } else {
                             "get$cap" == method.name
