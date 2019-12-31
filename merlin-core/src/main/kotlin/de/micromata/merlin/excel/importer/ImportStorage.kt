@@ -42,7 +42,7 @@ constructor(var id: Any? = null)
     val logger = ImportLogger()
 
     var workbook: ExcelWorkbook? = null
-        private set(value) {
+        set(value) {
             field = value
             logger.excelWorkbook = value
         }
