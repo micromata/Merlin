@@ -25,7 +25,7 @@ public class FiFoBuffer<T> {
 
     public T get(int index) {
         synchronized (list) {
-            if (index <= 0 || index >= list.size()) {
+            if (index < 0 || index >= list.size()) {
                 return null;
             }
             return list.get(index);
