@@ -23,6 +23,7 @@
 package de.micromata.merlin.excel.importer
 
 import de.micromata.merlin.excel.ExcelSheet
+import org.slf4j.Logger
 import java.io.Serializable
 import java.util.*
 
@@ -41,9 +42,10 @@ constructor(excelSheet: ExcelSheet? = null,
             /**
              * Only used as prefix for standard logger (slf4j).
              */
-            logPrefix: String? = null)
+            logPrefix: String? = null,
+            logger: Logger? = null)
     : Serializable {
-    val logger = ImportLogger(excelSheet, logLevel, logPrefix)
+    val logger = ImportLogger(excelSheet, logLevel, logPrefix, logger)
 
     private var elements: MutableList<ImportedElement<T>>? = null
 
