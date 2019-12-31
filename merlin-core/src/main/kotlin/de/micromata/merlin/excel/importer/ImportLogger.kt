@@ -1,6 +1,8 @@
 package de.micromata.merlin.excel.importer
 
+import de.micromata.merlin.excel.ExcelColumnName
 import de.micromata.merlin.excel.ExcelSheet
+import org.apache.poi.ss.usermodel.Row
 import org.apache.poi.ss.util.CellReference
 import java.io.Serializable
 
@@ -70,20 +72,43 @@ class ImportLogger
         events.add(Event(message, Level.INFO, row, col))
     }
 
-    @JvmOverloads
-    fun warn(message: String, row: Int? = null, col: Int? = null) {
-        events.add(Event(message, Level.WARN, row, col))
+    fun info(message: String, row: Row, columnName: ExcelColumnName) {
+        val col = excelSheet?.getColumnDef(columnName.head)?.columnNumber
+        info(message, row.rowNum, col)
     }
 
     @JvmOverloads
-    fun error(message: String, row: Int? = null, col: Int? = null) {
+    fun warn(message: String, row: Int? = null, col: Int? = null, markInExcelSheet: Boolean = false) {
+        events.add(Event(message, Level.WARN, row, col))
+        if (markInExcelSheet && row != null && col != null)
+            markError(message, row, col)
+    }
+
+    fun warn(message: String, row: Row, columnName: ExcelColumnName, markInExcelSheet: Boolean = false) {
+        val col = excelSheet?.getColumnDef(columnName.head)?.columnNumber
+        warn(message, row.rowNum, col, markInExcelSheet)
+    }
+
+    @JvmOverloads
+    fun error(message: String, row: Int? = null, col: Int? = null, markInExcelSheet: Boolean = false) {
         events.add(Event(message, Level.ERROR, row, col))
+        if (markInExcelSheet && row != null && col != null)
+            markError(message, row, col)
+    }
+
+    fun error(message: String, row: Row, columnName: ExcelColumnName, markInExcelSheet: Boolean = false) {
+        val col = excelSheet?.getColumnDef(columnName.head)?.columnNumber
+        error(message, row.rowNum, col, markInExcelSheet)
     }
 
     fun addValidationErrors(sheet: ExcelSheet) {
         sheet.allValidationErrors.forEach {
             error(it.message, it.row, it.columnDef.columnNumber)
         }
+    }
+
+    private fun markError(msg: String, row: Int, col: Int) {
+        println("TBD: mark errors in Excel sheet.")
     }
 
     fun incrementSuccesscounter() {

@@ -110,13 +110,20 @@ class ExcelSheet internal constructor(workbook: ExcelWorkbook, poiSheet: Sheet) 
      * @param columnHeads The column heads to register.
      * @return this for chaining.
      */
+    fun registerColumns(vararg columnHeads: ExcelColumnName): ExcelSheet {
+        for (name in columnHeads) {
+            registerColumn(name.head, *name.aliases)
+        }
+        return this
+    }
+
+    /**
+     * @param columnHeads The column heads to register.
+     * @return this for chaining.
+     */
     fun registerColumns(vararg columnHeads: String): ExcelSheet {
         for (columnHead in columnHeads) {
-            if (_getColumnDef(columnHead) != null) {
-                log.error("Don't register column heads twice: '$columnHead'.")
-                continue
-            }
-            columnDefList.add(ExcelColumnDef(columnHead))
+            registerColumn(columnHead)
         }
         return this
     }
@@ -142,6 +149,18 @@ class ExcelSheet internal constructor(workbook: ExcelWorkbook, poiSheet: Sheet) 
      * @param listener   The listener to use.
      * @return Created and registered ExcelColumnDef.
      */
+    @JvmOverloads
+    fun registerColumn(columnHead: ExcelColumnName, listener: ExcelColumnListener? = null): ExcelColumnDef {
+        val columnDef = registerColumn(columnHead, listener)
+        columnDef.columnAliases = columnHead.aliases
+        return columnDef
+    }
+
+    /**
+     * @param columnHead The column head to register.
+     * @param listener   The listener to use.
+     * @return Created and registered ExcelColumnDef.
+     */
     fun registerColumn(columnHead: String, listener: ExcelColumnListener): ExcelColumnDef {
         var columnDef = _getColumnDef(columnHead)
         if (columnDef == null) {
@@ -157,9 +176,12 @@ class ExcelSheet internal constructor(workbook: ExcelWorkbook, poiSheet: Sheet) 
      * @param listener  The listener to use.
      * @return this for chaining.
      */
-    fun registerColumn(columnDef: ExcelColumnDef, listener: ExcelColumnListener): ExcelSheet {
-        columnDef.addColumnListener(listener)
-        listener.setSheet(this)
+    @JvmOverloads
+    fun registerColumn(columnDef: ExcelColumnDef, listener: ExcelColumnListener? = null): ExcelSheet {
+        if (listener != null) {
+            columnDef.addColumnListener(listener)
+            listener.setSheet(this)
+        }
         return this
     }
 
@@ -190,6 +212,18 @@ class ExcelSheet internal constructor(workbook: ExcelWorkbook, poiSheet: Sheet) 
     }
 
     /**
+     * @param row         The row to get the cell value from.
+     * @param columnName  The name of the column to get.
+     * @param nullAsEmpty If true, null cell
+     * @param trimValue   If true, the returned value will be trimmed, default is [autotrimCellValues].
+     * @return The String value of the specified column cell.
+     */
+    @JvmOverloads
+    fun getCellString(row: Row, columnName: ExcelColumnName, nullAsEmpty: Boolean = true, trimValue: Boolean = autotrimCellValues): String? {
+        return getCellString(row, columnName.head, nullAsEmpty, trimValue)
+    }
+
+    /**
      * @param row            The row to get the cell value from.
      * @param columnHeadname The name of the column to get.
      * @param nullAsEmpty    If true, null cell
@@ -217,6 +251,15 @@ class ExcelSheet internal constructor(workbook: ExcelWorkbook, poiSheet: Sheet) 
     }
 
     /**
+     * @param row        The row to get the cell value from.
+     * @param columnName The name of the column to get.
+     * @return The String value of the specified column cell.
+     */
+    fun getCellInt(row: Row, columnName: ExcelColumnName): Int? { // findAndReadHeadRow(); Will be called in getColumnDef
+        return getCellInt(row, columnName.head)
+    }
+
+    /**
      * @param row            The row to get the cell value from.
      * @param columnHeadname The name of the column to get.
      * @return The String value of the specified column cell.
@@ -228,6 +271,15 @@ class ExcelSheet internal constructor(workbook: ExcelWorkbook, poiSheet: Sheet) 
             return null
         }
         return cell.numericCellValue.toInt()
+    }
+
+    /**
+     * @param row        The row to get the cell value from.
+     * @param columnName The name of the column to get.
+     * @return The String value of the specified column cell.
+     */
+    fun getCellDouble(row: Row, columnName: ExcelColumnName): Double? { // findAndReadHeadRow(); Will be called in getColumnDef
+        return getCellDouble(row, columnName.head)
     }
 
     /**
@@ -245,6 +297,15 @@ class ExcelSheet internal constructor(workbook: ExcelWorkbook, poiSheet: Sheet) 
     }
 
     /**
+     * @param row        The row to get the cell value from.
+     * @param columnName The name of the column to get.
+     * @return The String value of the specified column cell.
+     */
+    fun getCellDate(row: Row, columnName: ExcelColumnName): Date? { // findAndReadHeadRow(); Will be called in getColumnDef
+        return getCellDate(row, columnName)
+    }
+
+    /**
      * @param row            The row to get the cell value from.
      * @param columnHeadname The name of the column to get.
      * @return The String value of the specified column cell.
@@ -256,6 +317,15 @@ class ExcelSheet internal constructor(workbook: ExcelWorkbook, poiSheet: Sheet) 
             return null
         }
         return cell.dateCellValue
+    }
+
+    /**
+     * @param row        The row to get the cell from.
+     * @param columnName The name of the column to get the cell from.
+     * @return The cell of the specified column of the current row (uses internal interator).
+     */
+    fun getCell(row: Row, columnName: ExcelColumnName): Cell? { // findAndReadHeadRow(); Will be called in getColumnDef
+        return getCell(row, columnName.head)
     }
 
     /**
@@ -360,6 +430,10 @@ class ExcelSheet internal constructor(workbook: ExcelWorkbook, poiSheet: Sheet) 
                 log.debug("Head column not registered: '$strVal'.")
             }
         }
+    }
+
+    fun getColumnDef(columnName: ExcelColumnName): ExcelColumnDef? {
+        return getColumnDef(columnName.head)
     }
 
     fun getColumnDef(columnHeadname: String): ExcelColumnDef? {
