@@ -202,7 +202,7 @@ class ExcelSheet internal constructor(val excelWorkbook: ExcelWorkbook, val poiS
                     break
                 }
             }
-            return it
+            return ExcelSheetRowIterator(this, it)
         }
 
     fun readRow(row: Row, data: Data) {
@@ -418,21 +418,19 @@ class ExcelSheet internal constructor(val excelWorkbook: ExcelWorkbook, val poiS
             return
         }
         // Now run all columns for assigning column numbers to column definitions.
-        var col = -1
         val occurrenceMap = mutableMapOf<String, Int>()
         for (cell in current) {
-            ++col
             val strVal = PoiHelper.getValueAsString(cell)
             if (strVal.isNullOrBlank())
                 continue
-            log.debug("Reading head column '$strVal' in column $col")
+            log.debug("Reading head column '$strVal' in column ${cell.columnIndex}")
             val normalizedHeaderName = ExcelColumnDef.normalizedHeaderName(strVal)
             val occurrenceNumber = occurrenceMap[normalizedHeaderName] ?: 1
             occurrenceMap[normalizedHeaderName] = occurrenceNumber + 1
             val columnDef = _getColumnDef(strVal, occurrenceNumber)
             if (columnDef != null) {
-                log.debug("Head column found: '$strVal' in col #$col")
-                columnDef._columnNumber = col
+                log.debug("Head column found: '$strVal' in col #${cell.columnIndex}")
+                columnDef._columnNumber = cell.columnIndex
             } else {
                 log.debug("Head column not registered: '$strVal'.")
             }
@@ -732,7 +730,7 @@ class ExcelSheet internal constructor(val excelWorkbook: ExcelWorkbook, val poiS
      * @return true If all specified cells of the row is empty, otherwise false.
      */
     @Suppress("unused")
-    fun isRowEmpty(row: Row, vararg columnHeadNames: String): Boolean {
+    fun isRowEmptyByName(row: Row, vararg columnHeadNames: String): Boolean {
         return isRowEmpty(row, columnHeadNames.toList())
     }
 
@@ -748,7 +746,7 @@ class ExcelSheet internal constructor(val excelWorkbook: ExcelWorkbook, val poiS
     fun isRowEmpty(row: Row, columnHeadNames: List<String>): Boolean {
         if (columnHeadNames.isNullOrEmpty()) {
             for (col in 0 until row.lastCellNum) { // lastCellNum is +1, so do not include it.
-                if (PoiHelper.isEmpty(row.getCell(col)))
+                if (!PoiHelper.isEmpty(row.getCell(col)))
                     return false
             }
         } else {
