@@ -48,7 +48,7 @@ constructor(excelSheet: ExcelSheet? = null,
              */
             logger: Logger? = null)
     : Serializable {
-    val logger = ImportLogger(excelSheet, logLevel, logPrefix, logger)
+    val logger = ImportLogger(excelSheet?.excelWorkbook, excelSheet, logLevel, logPrefix, logger)
 
     private var elements: MutableList<ImportedElement<T>>? = null
 

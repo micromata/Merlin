@@ -2,6 +2,7 @@ package de.micromata.merlin.excel.importer
 
 import de.micromata.merlin.excel.ExcelColumnName
 import de.micromata.merlin.excel.ExcelSheet
+import de.micromata.merlin.excel.ExcelWorkbook
 import org.apache.poi.ss.usermodel.Row
 import org.apache.poi.ss.util.CellReference
 import org.slf4j.Logger
@@ -13,21 +14,24 @@ import java.io.Serializable
  *
  * @author Kai Reinhard (k.reinhard@micromata.de)
  */
-class ImportLogger
-@JvmOverloads constructor(val excelSheet: ExcelSheet? = null,
-                          /**
-                           * If given, all events of log level or higher will be logged to standard logger (slf4j).
-                           */
-                          val logLevel: Level? = null,
-                          /**
-                           * Only used as prefix for standard logger (slf4j).
-                           */
-                          val logPrefix: String? = null,
-                          /**
-                           * If given, this logger is used instead of the built-in.
-                           */
-                          val logger: Logger? = null
+class ImportLogger(excelWorkbook: ExcelWorkbook? = null,
+                   val excelSheet: ExcelSheet? = null,
+                   /**
+                    * If given, all events of log level or higher will be logged to standard logger (slf4j).
+                    */
+                   val logLevel: Level? = null,
+                   /**
+                    * Only used as prefix for standard logger (slf4j).
+                    */
+                   val logPrefix: String? = null,
+                   /**
+                    * If given, this logger is used instead of the built-in.
+                    */
+                   val logger: Logger? = null
 ) : Serializable {
+    var excelWorkbook: ExcelWorkbook? = excelWorkbook
+        internal set
+
     enum class Level { INFO, WARN, ERROR }
     data class Event(val message: String,
                      val level: Level = Level.INFO,
@@ -42,9 +46,9 @@ class ImportLogger
                     if (col == null) ""
                     else " [col=${CellReference.convertNumToColString(col)}]"
                 } else if (col == null) {
-                    " [row?$row]"
+                    " [row?${row + 1}]"
                 } else {
-                    " [$row, ${CellReference.convertNumToColString(col)}]"
+                    " [${CellReference.convertNumToColString(col)}${row + 1}]"
                 }
             }
     }
