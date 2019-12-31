@@ -79,5 +79,5 @@ subprojects {
 }
 
 wrapper {
-    gradleVersion = '4.10.2'
+    gradleVersion = '6.0.1'
 }

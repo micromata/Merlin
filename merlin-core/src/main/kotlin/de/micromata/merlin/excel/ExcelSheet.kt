@@ -39,7 +39,7 @@ class ExcelSheet internal constructor(workbook: ExcelWorkbook, poiSheet: Sheet) 
     private var columnWithValidationErrorMessages = -1
     private var validationErrors: MutableSet<ExcelValidationErrorMessage>? = null
     /**
-     * @return true, if this sheet was modified (by calling [.markErrors].
+     * @return true, if this sheet was modified (by calling [markErrors].
      */
     var isModified = false
     private var i18n: I18n
@@ -64,7 +64,7 @@ class ExcelSheet internal constructor(workbook: ExcelWorkbook, poiSheet: Sheet) 
      *
      *
      * Each cell will be analyzed by calling ExcelColumnListener for each column with given
-     * ExcelColumnListener. If no Analyzer is set for a columng, the column cells will not be analyzed.
+     * ExcelColumnListener. If no Analyzer is set for a column, the column cells will not be analyzed.
      *
      * @param validate if true, then each cell of a column with a given ExcelColumnValidator will be validated.
      * @return this for chaining.
@@ -463,8 +463,8 @@ class ExcelSheet internal constructor(workbook: ExcelWorkbook, poiSheet: Sheet) 
 
     /**
      * Marks and comments validation errors of cells of this sheet by manipulating the Excel sheet.
-     * Refer [.isModified] for checking if any modification was done.
-     * Please don't forget to call [.analyze] first with parameter validate=true.
+     * Refer [isModified] for checking if any modification was done.
+     * Please don't forget to call [analyze] first with parameter validate=true.
      *
      * @param i18N               For localizing messages.
      * @param excelWriterContext Defines the type of response (how to display and highlight validation errors).

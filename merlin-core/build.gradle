@@ -37,19 +37,9 @@ repositories {
     jcenter()
 }
 
-task sourcesJar(type: Jar) {
-    from sourceSets.main.allJava
-    classifier = 'sources'
-}
-
-task javadocJar(type: Jar) {
-    from javadoc
-    classifier = 'javadoc'
-}
-
-artifacts {
-    archives sourcesJar
-    archives javadocJar
+java {
+    withJavadocJar()
+    withSourcesJar()
 }
 
 publishing {
@@ -57,8 +47,6 @@ publishing {
         mavenJava(MavenPublication) {
             artifactId = 'merlin-core'
             from components.java
-            artifact sourcesJar
-            artifact javadocJar
             pom {
                 name = 'Merlin core'
                 description = 'A Java library for working with Excel and Word including validation, manipulation and templating.'
