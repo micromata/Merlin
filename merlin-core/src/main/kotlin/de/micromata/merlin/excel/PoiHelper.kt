@@ -59,9 +59,7 @@ object PoiHelper {
         if (cell.cellType == CellType.BLANK) {
             return true
         }
-        return if (cell.cellType == CellType.STRING && cell.stringCellValue.trim { it <= ' ' }.isEmpty()) {
-            true
-        } else false
+        return cell.cellType == CellType.STRING && cell.stringCellValue.trim { it <= ' ' }.isEmpty()
     }
 
     @JvmStatic

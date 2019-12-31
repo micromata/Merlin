@@ -4,6 +4,7 @@ import de.micromata.merlin.excel.ExcelColumnName
 import de.micromata.merlin.excel.ExcelSheet
 import org.apache.poi.ss.usermodel.Row
 import org.apache.poi.ss.util.CellReference
+import org.slf4j.LoggerFactory
 import java.io.Serializable
 
 /**
@@ -12,7 +13,15 @@ import java.io.Serializable
  * @author Kai Reinhard (k.reinhard@micromata.de)
  */
 class ImportLogger
-@JvmOverloads constructor(val excelSheet: ExcelSheet? = null)
+@JvmOverloads constructor(val excelSheet: ExcelSheet? = null,
+                          /**
+                           * If given, all events of log level or higher will be logged to standard logger (slf4j).
+                           */
+                          val logLevel: Level? = null,
+                          /**
+                           * Only used as prefix for standard logger (slf4j).
+                           */
+                          val logPrefix: String? = null)
     : Serializable {
     enum class Level { INFO, WARN, ERROR }
     data class Event(val message: String,
@@ -62,24 +71,29 @@ class ImportLogger
         get() = errorEvents.joinToString("\n") { it.toString() }
 
     val hasEvents: Boolean
-        get() = !events.isEmpty()
+        get() = events.isNotEmpty()
 
     val hasErrorEvents: Boolean
-        get() = !errorEvents.isEmpty()
+        get() = errorEvents.isNotEmpty()
 
     @JvmOverloads
     fun info(message: String, row: Int? = null, col: Int? = null) {
-        events.add(Event(message, Level.INFO, row, col))
+        val event = Event(message, Level.INFO, row, col)
+        events.add(event)
+        logMessage(event, Level.INFO, log::info)
     }
 
-    fun info(message: String, row: Row, columnName: ExcelColumnName) {
-        val col = excelSheet?.getColumnDef(columnName.head)?.columnNumber
+    @JvmOverloads
+    fun info(message: String, row: Row, columnName: ExcelColumnName? = null) {
+        val col = if (columnName != null) excelSheet?.getColumnDef(columnName.head)?.columnNumber else null
         info(message, row.rowNum, col)
     }
 
     @JvmOverloads
     fun warn(message: String, row: Int? = null, col: Int? = null, markInExcelSheet: Boolean = false) {
-        events.add(Event(message, Level.WARN, row, col))
+        val event = Event(message, Level.WARN, row, col)
+        events.add(event)
+        logMessage(event, Level.WARN, log::info)
         if (markInExcelSheet && row != null && col != null)
             markError(message, row, col)
     }
@@ -91,7 +105,9 @@ class ImportLogger
 
     @JvmOverloads
     fun error(message: String, row: Int? = null, col: Int? = null, markInExcelSheet: Boolean = false) {
-        events.add(Event(message, Level.ERROR, row, col))
+        val event = Event(message, Level.ERROR, row, col)
+        events.add(event)
+        logMessage(event, Level.ERROR, log::info)
         if (markInExcelSheet && row != null && col != null)
             markError(message, row, col)
     }
@@ -115,5 +131,25 @@ class ImportLogger
         synchronized(this) {
             ++this.successCounter
         }
+    }
+
+    private fun logMessage(event: Event, level: Level, log: (String) -> Unit) {
+        if (logLevel == null || logLevel < level)
+            return
+        val sb = StringBuilder()
+        if (!logPrefix.isNullOrEmpty()) {
+            sb.append(logPrefix).append(" ")
+        }
+        if (excelSheet != null) {
+            sb.append("Sheet '")
+                    .append(excelSheet.sheetName)
+                    .append("': ")
+        }
+        sb.append(event)
+        log(sb.toString())
+    }
+
+    companion object {
+        private val log = LoggerFactory.getLogger(ImportLogger::class.java)
     }
 }

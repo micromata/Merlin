@@ -713,6 +713,44 @@ class ExcelSheet internal constructor(workbook: ExcelWorkbook, poiSheet: Sheet) 
                 .setSheet(this).setRow(if (headRow != null) headRow!!.rowNum else 0)
     }
 
+    /**
+     * @return true If all specified cells of the row is empty, otherwise false.
+     */
+    fun isRowEmpty(row: Row, vararg columnHeadNames: String): Boolean {
+        return isRowEmpty(row, columnHeadNames.toList())
+    }
+
+    fun isRowEmpty(row: Row, vararg columnNames: ExcelColumnName): Boolean {
+        return isRowEmpty(row, columnNames.map { it.head })
+    }
+
+    /**
+     * @return true If all specified cells of the row is empty, otherwise false.
+     */
+    fun isRowEmpty(row: Row, columnHeadNames: List<String>): Boolean {
+        if (columnHeadNames.isNullOrEmpty()) {
+            for (col in 0 until row.lastCellNum) { // lastCellNum is +1, so do not include it.
+                if (PoiHelper.isEmpty(row.getCell(col)))
+                    return false
+            }
+        } else {
+            columnHeadNames.forEach {
+                if (isCellEmpty(row, it))
+                    return false
+            }
+        }
+        return true
+    }
+
+    fun isCellEmpty(row: Row, columnName: ExcelColumnName): Boolean {
+        return isCellEmpty(row, columnName.head)
+    }
+
+    fun isCellEmpty(row: Row, columnHeadname: String): Boolean {
+        val cell = getCell(row, columnHeadname)
+        return PoiHelper.isEmpty(cell)
+    }
+
     fun getRow(rownum: Int): ExcelRow? {
         var excelRow = excelRowMap[rownum]
         if (excelRow == null) {

@@ -33,9 +33,17 @@ import java.util.*
  */
 class ImportedSheet<T>
 @JvmOverloads
-constructor(val excelSheet: ExcelSheet? = null)
+constructor(excelSheet: ExcelSheet? = null,
+            /**
+             * If given, all events of log level or higher will be logged to standard logger (slf4j).
+             */
+            logLevel: ImportLogger.Level? = null,
+            /**
+             * Only used as prefix for standard logger (slf4j).
+             */
+            logPrefix: String? = null)
     : Serializable {
-    val logger = ImportLogger()
+    val logger = ImportLogger(excelSheet, logLevel, logPrefix)
 
     private var elements: MutableList<ImportedElement<T>>? = null
 
