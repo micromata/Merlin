@@ -39,8 +39,9 @@ constructor(val sheet: ExcelSheet,
 
     private var columnListeners: MutableList<ExcelColumnListener>? = null
 
-    val columnValidators
-        get() = columnListeners?.filter { it is ExcelColumnValidator }
+    @Suppress("UNCHECKED_CAST")
+    val columnValidators: List<ExcelColumnValidator>
+        get() = columnListeners?.filter { it is ExcelColumnValidator } as List<ExcelColumnValidator>
 
     fun found(): Boolean {
         return _columnNumber >= 0
@@ -90,7 +91,7 @@ constructor(val sheet: ExcelSheet,
         val sb = StringBuilder()
         addFieldValue(sb, "head", this.columnHeadname)
         if (this.columnAliases.isNotEmpty()) {
-            addFieldValue(sb, "alias", this.columnAliases.joinToString(", "))
+            addFieldValue(sb, "alias", this.columnAliases.joinToString("; "))
         }
         if (this.occurrenceNumber > 1) {
             addFieldValue(sb, "occurenceNumber", this.occurrenceNumber)
@@ -107,6 +108,8 @@ constructor(val sheet: ExcelSheet,
 
     private fun addFieldValue(sb: StringBuilder, field: String, value: Any?) {
         if (value == null) return
+        if (sb.length > 0)
+            sb.append(", ")
         sb.append(field).append("=")
         if (value is String)
             sb.append("\"").append(value).append("\"")

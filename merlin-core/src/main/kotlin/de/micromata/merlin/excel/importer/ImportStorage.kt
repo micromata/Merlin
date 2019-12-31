@@ -25,6 +25,7 @@ package de.micromata.merlin.excel.importer
 import de.micromata.merlin.excel.ExcelWorkbook
 import org.apache.commons.collections4.CollectionUtils
 import org.apache.commons.lang3.Validate
+import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.io.Serializable
 import java.util.*
@@ -36,10 +37,23 @@ import java.util.*
  */
 class ImportStorage<T>
 @JvmOverloads
-constructor(var id: Any? = null)
+constructor(var id: Any? = null,
+            excelWorkbook: ExcelWorkbook? = null,
+            /**
+             * If given, all events of log level or higher will be logged to standard logger (slf4j).
+             */
+            logLevel: ImportLogger.Level? = null,
+            /**
+             * Only used as prefix for standard logger (slf4j).
+             */
+            logPrefix: String? = null,
+            /**
+             * If given, this logger is used instead of the built-in.
+             */
+            logger: Logger? = null)
     : Serializable {
 
-    val logger = ImportLogger()
+    val logger = ImportLogger(excelWorkbook, null, logLevel, logPrefix, logger)
 
     var workbook: ExcelWorkbook? = null
         set(value) {
