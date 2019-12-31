@@ -23,6 +23,9 @@ class ImportLogger
                            * Only used as prefix for standard logger (slf4j).
                            */
                           val logPrefix: String? = null,
+                          /**
+                           * If given, this logger is used instead of the built-in.
+                           */
                           val logger: Logger? = null
 ) : Serializable {
     enum class Level { INFO, WARN, ERROR }

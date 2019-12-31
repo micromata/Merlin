@@ -1,7 +1,6 @@
 package de.micromata.merlin.excel
 
 import de.micromata.merlin.CoreI18n
-import de.micromata.merlin.I18n
 import de.micromata.merlin.ResultMessageStatus
 import de.micromata.merlin.data.Data
 import org.apache.commons.lang3.StringUtils
@@ -18,16 +17,19 @@ import java.util.*
 /**
  * Wraps and enhances a POI sheet.
  */
-class ExcelSheet internal constructor(workbook: ExcelWorkbook, poiSheet: Sheet) {
-    private val log = LoggerFactory.getLogger(ExcelSheet::class.java)
+class ExcelSheet internal constructor(val excelWorkbook: ExcelWorkbook, val poiSheet: Sheet) {
     private val columnDefList: MutableList<ExcelColumnDef> = ArrayList()
-    val poiSheet: Sheet
-    val excelWorkbook: ExcelWorkbook
+
+    init {
+        log.debug("Reading sheet '" + poiSheet.sheetName + "'")
+    }
+
     /**
      * If true, all cell values will be trimmed before getting the cell value as string. The Excel cell itself will
      * not be modified. Default is false.
      * See: [getCellString]
      */
+    @Suppress("MemberVisibilityCanBePrivate")
     var autotrimCellValues: Boolean = false
     private var _headRow: ExcelRow? = null
     val headRow: ExcelRow?
@@ -42,12 +44,9 @@ class ExcelSheet internal constructor(workbook: ExcelWorkbook, poiSheet: Sheet) 
      * @return true, if this sheet was modified (by calling [markErrors].
      */
     var isModified = false
-    private var i18n: I18n
+    private val i18n = CoreI18n.getDefault()
     private var maxMarkedErrors = 100
     private val excelRowMap: MutableMap<Int, ExcelRow> = HashMap()
-    fun setI18n(i18n: I18n) {
-        this.i18n = i18n
-    }
 
     /**
      * Forces reloading of head row. This is useful if you get the head row, read it manually to add new
@@ -110,6 +109,7 @@ class ExcelSheet internal constructor(workbook: ExcelWorkbook, poiSheet: Sheet) 
      * @param columnHeads The column heads to register.
      * @return this for chaining.
      */
+    @Suppress("unused")
     @JvmOverloads
     fun registerColumns(vararg columnHeads: ExcelColumnName, listener: ExcelColumnListener? = null): ExcelSheet {
         for (name in columnHeads) {
@@ -125,18 +125,17 @@ class ExcelSheet internal constructor(workbook: ExcelWorkbook, poiSheet: Sheet) 
     @JvmOverloads
     fun registerColumns(vararg columnHeads: String, listener: ExcelColumnListener? = null): ExcelSheet {
         for (columnHead in columnHeads) {
-            registerColumn(columnHead, *emptyArray(), listener = listener)
+            registerColumn(columnHead, listener = listener)
         }
         return this
     }
 
     /**
      * @param columnHead The column head to register.
-     * @param aliases Sometimes table heads changed for different imports. Register any used aliases for detecting the column by aliases too.
      * @return Created and registered ExcelColumnDef.
      */
-    @JvmOverloads
     fun registerColumn(columnHead: String, listener: ExcelColumnListener? = null): ExcelColumnDef {
+        @Suppress("RemoveRedundantSpreadOperator")
         return registerColumn(columnHead, *emptyArray(), listener = listener)
     }
 
@@ -147,7 +146,7 @@ class ExcelSheet internal constructor(workbook: ExcelWorkbook, poiSheet: Sheet) 
      */
     @JvmOverloads
     fun registerColumn(columnHead: String, vararg aliases: String, listener: ExcelColumnListener? = null): ExcelColumnDef {
-        val columnDef = ExcelColumnDef(columnHead, *aliases)
+        val columnDef = ExcelColumnDef(this, columnHead, *aliases)
         val existing = _getColumnDef(columnHead)
         if (existing != null) {
             columnDef.occurrenceNumber = existing.occurrenceNumber + 1
@@ -155,7 +154,6 @@ class ExcelSheet internal constructor(workbook: ExcelWorkbook, poiSheet: Sheet) 
         }
         if (listener != null) {
             columnDef.addColumnListener(listener)
-            listener.setSheet(this)
         }
         columnDefList.add(columnDef)
         return columnDef
@@ -166,6 +164,7 @@ class ExcelSheet internal constructor(workbook: ExcelWorkbook, poiSheet: Sheet) 
      * @param listener   The listener to use.
      * @return Created and registered ExcelColumnDef.
      */
+    @Suppress("unused")
     @JvmOverloads
     fun registerColumn(columnHead: ExcelColumnName, listener: ExcelColumnListener? = null): ExcelColumnDef {
         return registerColumn(columnHead.head, *columnHead.aliases, listener = listener)
@@ -176,11 +175,11 @@ class ExcelSheet internal constructor(workbook: ExcelWorkbook, poiSheet: Sheet) 
      * @param listener  The listener to use.
      * @return this for chaining.
      */
+    @Suppress("unused")
     @JvmOverloads
     fun registerColumn(columnDef: ExcelColumnDef, listener: ExcelColumnListener? = null): ExcelSheet {
         if (listener != null) {
             columnDef.addColumnListener(listener)
-            listener.setSheet(this)
         }
         return this
     }
@@ -238,10 +237,10 @@ class ExcelSheet internal constructor(workbook: ExcelWorkbook, poiSheet: Sheet) 
     }
 
     /**
-     * @param row      The row to get the cell value from.
-     * @param columnDef The column to get.
-     * @param nullAsEmpty    If true, null cell
-     * @param trimVal        If true, the returned value will be trimmed, default is [autotrimCellValues].
+     * @param row         The row to get the cell value from.
+     * @param columnDef   The column to get.
+     * @param nullAsEmpty If true, null cell
+     * @param trimValue   If true, the returned value will be trimmed, default is [autotrimCellValues].
      * @return The String value of the specified column cell.
      */
     fun getCellString(row: Row, columnDef: ExcelColumnDef?, nullAsEmpty: Boolean = true, trimValue: Boolean = autotrimCellValues): String? {
@@ -255,6 +254,7 @@ class ExcelSheet internal constructor(workbook: ExcelWorkbook, poiSheet: Sheet) 
      * @param columnName The name of the column to get.
      * @return The String value of the specified column cell.
      */
+    @Suppress("unused")
     fun getCellInt(row: Row, columnName: ExcelColumnName): Int? { // findAndReadHeadRow(); Will be called in getColumnDef
         return getCellInt(row, columnName.head)
     }
@@ -278,6 +278,7 @@ class ExcelSheet internal constructor(workbook: ExcelWorkbook, poiSheet: Sheet) 
      * @param columnName The name of the column to get.
      * @return The String value of the specified column cell.
      */
+    @Suppress("unused")
     fun getCellDouble(row: Row, columnName: ExcelColumnName): Double? { // findAndReadHeadRow(); Will be called in getColumnDef
         return getCellDouble(row, columnName.head)
     }
@@ -301,6 +302,7 @@ class ExcelSheet internal constructor(workbook: ExcelWorkbook, poiSheet: Sheet) 
      * @param columnName The name of the column to get.
      * @return The String value of the specified column cell.
      */
+    @Suppress("MemberVisibilityCanBePrivate")
     fun getCellDate(row: Row, columnName: ExcelColumnName): Date? { // findAndReadHeadRow(); Will be called in getColumnDef
         return getCellDate(row, columnName)
     }
@@ -310,6 +312,7 @@ class ExcelSheet internal constructor(workbook: ExcelWorkbook, poiSheet: Sheet) 
      * @param columnHeadname The name of the column to get.
      * @return The String value of the specified column cell.
      */
+    @Suppress("unused")
     fun getCellDate(row: Row, columnHeadname: String): Date? { // findAndReadHeadRow(); Will be called in getColumnDef
         val cell = getCell(row, columnHeadname) ?: return null
         if (cell.getCellType() != CellType.NUMERIC) {
@@ -432,6 +435,7 @@ class ExcelSheet internal constructor(workbook: ExcelWorkbook, poiSheet: Sheet) 
         }
     }
 
+    @Suppress("unused")
     fun getColumnDef(columnName: ExcelColumnName): ExcelColumnDef? {
         return getColumnDef(columnName.head)
     }
@@ -459,6 +463,7 @@ class ExcelSheet internal constructor(workbook: ExcelWorkbook, poiSheet: Sheet) 
         return null
     }
 
+    @Suppress("unused")
     fun getColumnDef(columnNumber: Int): ExcelColumnDef? {
         for (columnDef in columnDefList) {
             if (columnNumber == columnDef._columnNumber) {
@@ -514,7 +519,7 @@ class ExcelSheet internal constructor(workbook: ExcelWorkbook, poiSheet: Sheet) 
      */
     val allValidationErrors: Set<ExcelValidationErrorMessage>
         get() {
-            val allValidationErrors: MutableSet<ExcelValidationErrorMessage> = TreeSet()
+            val allValidationErrors = mutableSetOf<ExcelValidationErrorMessage>()
             if (validationErrors != null) {
                 allValidationErrors.addAll(validationErrors!!)
             }
@@ -597,6 +602,7 @@ class ExcelSheet internal constructor(workbook: ExcelWorkbook, poiSheet: Sheet) 
         return this
     }
 
+    @Suppress("unused")
     fun setBigDecimalValue(row: Int, columnHeader: String, value: BigDecimal?): Cell {
         return setBigDecimalValue(row, getColumnDef(columnHeader), value)
     }
@@ -618,6 +624,7 @@ class ExcelSheet internal constructor(workbook: ExcelWorkbook, poiSheet: Sheet) 
         return cell
     }
 
+    @Suppress("unused")
     fun setDoubleValue(row: Int, columnHeader: String, value: Double?): Cell {
         return setDoubleValue(row, getColumnDef(columnHeader), value)
     }
@@ -635,6 +642,7 @@ class ExcelSheet internal constructor(workbook: ExcelWorkbook, poiSheet: Sheet) 
         return cell
     }
 
+    @Suppress("unused")
     fun setIntValue(row: Int, columnHeader: String, value: Int?): Cell {
         return setIntValue(row, getColumnDef(columnHeader), value)
     }
@@ -652,6 +660,7 @@ class ExcelSheet internal constructor(workbook: ExcelWorkbook, poiSheet: Sheet) 
         return cell
     }
 
+    @Suppress("unused")
     fun setStringValue(row: Int, columnHeader: String, value: String?): Cell {
         return setStringValue(row, getColumnDef(columnHeader), value)
     }
@@ -666,6 +675,7 @@ class ExcelSheet internal constructor(workbook: ExcelWorkbook, poiSheet: Sheet) 
         return cell
     }
 
+    @Suppress("unused")
     fun setDateValue(row: Int, columnHeader: String, value: Date?, dateFormat: String?): Cell {
         return setDateValue(row, getColumnDef(columnHeader), value, dateFormat)
     }
@@ -690,6 +700,7 @@ class ExcelSheet internal constructor(workbook: ExcelWorkbook, poiSheet: Sheet) 
      * If set to -1 an unlimited number of errors will be marked.
      * @return This for chaining.
      */
+    @Suppress("unused")
     fun setMaxMarkedErrors(maxMarkedErrors: Int): ExcelSheet {
         this.maxMarkedErrors = maxMarkedErrors
         return this
@@ -716,10 +727,12 @@ class ExcelSheet internal constructor(workbook: ExcelWorkbook, poiSheet: Sheet) 
     /**
      * @return true If all specified cells of the row is empty, otherwise false.
      */
+    @Suppress("unused")
     fun isRowEmpty(row: Row, vararg columnHeadNames: String): Boolean {
         return isRowEmpty(row, columnHeadNames.toList())
     }
 
+    @Suppress("unused")
     fun isRowEmpty(row: Row, vararg columnNames: ExcelColumnName): Boolean {
         return isRowEmpty(row, columnNames.map { it.head })
     }
@@ -727,6 +740,7 @@ class ExcelSheet internal constructor(workbook: ExcelWorkbook, poiSheet: Sheet) 
     /**
      * @return true If all specified cells of the row is empty, otherwise false.
      */
+    @Suppress("MemberVisibilityCanBePrivate")
     fun isRowEmpty(row: Row, columnHeadNames: List<String>): Boolean {
         if (columnHeadNames.isNullOrEmpty()) {
             for (col in 0 until row.lastCellNum) { // lastCellNum is +1, so do not include it.
@@ -742,10 +756,12 @@ class ExcelSheet internal constructor(workbook: ExcelWorkbook, poiSheet: Sheet) 
         return true
     }
 
+    @Suppress("unused")
     fun isCellEmpty(row: Row, columnName: ExcelColumnName): Boolean {
         return isCellEmpty(row, columnName.head)
     }
 
+    @Suppress("MemberVisibilityCanBePrivate")
     fun isCellEmpty(row: Row, columnHeadname: String): Boolean {
         val cell = getCell(row, columnHeadname)
         return PoiHelper.isEmpty(cell)
@@ -807,6 +823,7 @@ class ExcelSheet internal constructor(workbook: ExcelWorkbook, poiSheet: Sheet) 
         }
     }
 
+    @Suppress("unused")
     fun autosize(columnIndex: Int) {
         poiSheet.autoSizeColumn(columnIndex)
     }
@@ -815,6 +832,7 @@ class ExcelSheet internal constructor(workbook: ExcelWorkbook, poiSheet: Sheet) 
         poiSheet.setColumnWidth(columnIndex, width)
     }
 
+    @Suppress("unused")
     fun addMergeRegion(range: CellRangeAddress?) {
         poiSheet.addMergedRegion(range)
     }
@@ -822,6 +840,7 @@ class ExcelSheet internal constructor(workbook: ExcelWorkbook, poiSheet: Sheet) 
     /**
      * Set auto-filter for the whole first row. Must be called after adding the first row with all heading cells.
      */
+    @Suppress("unused")
     fun setAutoFilter() {
         val headingRow = if (headRow != null) headRow!!.rowNum else 0
         val lastCol = getRow(headingRow)!!.lastCellNum.toInt()
@@ -829,6 +848,7 @@ class ExcelSheet internal constructor(workbook: ExcelWorkbook, poiSheet: Sheet) 
         poiSheet.setAutoFilter(range)
     }
 
+    @Suppress("MemberVisibilityCanBePrivate")
     val lastColumn: Int
         get() {
             var lastCol = 0
@@ -843,12 +863,6 @@ class ExcelSheet internal constructor(workbook: ExcelWorkbook, poiSheet: Sheet) 
     companion object {
         const val MESSAGE_MISSING_COLUMN_NUMBER = "merlin.excel.validation_error.missing_column_number"
         const val MESSAGE_MISSING_COLUMN_BY_NAME = "merlin.excel.validation_error.missing_column_by_name"
-    }
-
-    init {
-        log.debug("Reading sheet '" + poiSheet.sheetName + "'")
-        excelWorkbook = workbook
-        this.poiSheet = poiSheet
-        i18n = CoreI18n.getDefault()
+        private val log = LoggerFactory.getLogger(ExcelSheet::class.java)
     }
 }

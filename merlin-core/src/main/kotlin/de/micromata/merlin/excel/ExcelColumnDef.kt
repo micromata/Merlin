@@ -2,13 +2,21 @@ package de.micromata.merlin.excel
 
 import org.apache.poi.ss.util.CellReference
 import org.slf4j.LoggerFactory
-import java.util.*
 
 /**
  * You may define each column of a sheet via ExcelColumnDef. This is used as well for validating as well as for a more
  * convenient parsing of Excel values.
  */
-class ExcelColumnDef {
+class ExcelColumnDef
+constructor(val sheet: ExcelSheet,
+            var columnHeadname: String?,
+            vararg var columnAliases: String) {
+
+    internal constructor(sheet: ExcelSheet, columnNumber: Int, columnHeadname: String?) : this(sheet, columnHeadname) {
+        this._columnNumber = columnNumber
+        this.columnHeadname = columnHeadname ?: CellReference.convertNumToColString(columnNumber)
+    }
+
     /**
      * If multiple column heads are found (in the head row with same name), occurenceNumber defines the column to select.
      * The first occurence (occurenceNumber = 1) is the default.
@@ -18,7 +26,6 @@ class ExcelColumnDef {
     val normalizedHeaderName
         get() = normalizedHeaderName(columnHeadname)
 
-    private val log = LoggerFactory.getLogger(ExcelSheet::class.java)
     val columnNumber: Int
         get() {
             require(_columnNumber >= 0) { "Column '$columnHeadname' not found. Column number is invalid!" }
@@ -30,22 +37,7 @@ class ExcelColumnDef {
      */
     internal var _columnNumber = -1
 
-    /**
-     * @return Column head name (1st row) if given, otherwise [.getColumnNumberAsLetters].
-     */
-    var columnAliases: Array<out String>? = null
-    val columnHeadname: String
     private var columnListeners: MutableList<ExcelColumnListener>? = null
-
-    internal constructor(columnHeadname: String, vararg columnAliases: String) {
-        this.columnHeadname = columnHeadname
-        this.columnAliases = columnAliases
-    }
-
-    internal constructor(columnNumber: Int, columnHeadname: String?) {
-        this._columnNumber = columnNumber
-        this.columnHeadname = columnHeadname ?: CellReference.convertNumToColString(columnNumber)
-    }
 
     fun found(): Boolean {
         return _columnNumber >= 0
@@ -62,21 +54,21 @@ class ExcelColumnDef {
      * @return true, if the name (toLowerCase) matches column head or any alias (toLowerCase).
      */
     fun match(name: String): Boolean {
-        val normalizedName = normalizedHeaderName(name);
+        val normalizedName = normalizedHeaderName(name)
         if (normalizedHeaderName == normalizedName) {
             return true
         }
-        columnAliases?.forEach {
+        columnAliases.forEach {
             if (normalizedHeaderName(it) == normalizedName) {
                 log.debug("Column name '$name' matches the alias '$it'.")
                 return true
             }
         }
-        return false;
+        return false
     }
 
     fun hasColumnListeners(): Boolean {
-        return columnListeners != null && columnListeners!!.size > 0
+        return !columnListeners.isNullOrEmpty()
     }
 
     fun getColumnListeners(): List<ExcelColumnListener>? {
@@ -85,13 +77,15 @@ class ExcelColumnDef {
 
     fun addColumnListener(columnListener: ExcelColumnListener) {
         if (columnListeners == null) {
-            columnListeners = ArrayList()
+            columnListeners = mutableListOf()
         }
-        columnListeners!!.add(columnListener)
-        columnListener.setColumnDef(this)
+        val listener = columnListener.with(sheet, this)
+        columnListeners!!.add(listener)
     }
 
     companion object {
+        private val log = LoggerFactory.getLogger(ExcelColumnDef::class.java)
+
         fun normalizedHeaderName(header: String?): String {
             return header?.toLowerCase()?.trim { it <= ' ' } ?: ""
         }

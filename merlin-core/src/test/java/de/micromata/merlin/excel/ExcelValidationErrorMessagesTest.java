@@ -17,14 +17,11 @@ class ExcelValidationErrorMessagesTest {
         ExcelWorkbook excelWorkbook = new ExcelWorkbook(new File(Definitions.EXAMPLES_EXCEL_TEST_DIR, "Test.xlsx"));
         ExcelSheet sheet = excelWorkbook.getSheet("Config");
         ExcelColumnValidator val1 = new ExcelColumnValidator();
-        val1.setColumnDef(new ExcelColumnDef(0, "cell-head1"));
-        val1.setSheet(sheet);
+        new ExcelColumnDef(sheet,0, "cell-head1").addColumnListener(val1);
         ExcelColumnValidator val2 = new ExcelColumnValidator();
-        val2.setColumnDef(new ExcelColumnDef(303, "cell-head2"));
-        val2.setSheet(sheet);
+        new ExcelColumnDef(sheet,303, "cell-head2").addColumnListener(val2);
         ExcelColumnPatternValidator val3 = new ExcelColumnPatternValidator("yyyy-dd-mm");
-        val3.setColumnDef(new ExcelColumnDef(303, "cell-head3"));
-        val3.setSheet(sheet);
+        new ExcelColumnDef(sheet,303, "cell-head3").addColumnListener(val3);
         assertEquals("In sheet 'Config', column A:'cell-head1' and row #6: Cell value not given but required.",
                 val1.createValidationErrorRequired(5).getMessageWithAllDetails(coreI18N));
         assertEquals("In sheet 'Config', column KR:'cell-head2' and row #1: Cell value not given but required.",

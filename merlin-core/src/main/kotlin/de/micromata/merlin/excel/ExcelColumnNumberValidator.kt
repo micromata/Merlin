@@ -19,7 +19,14 @@ class ExcelColumnNumberValidator @JvmOverloads constructor(
          * @param maximum If given each number must be equals or lower than this given maximum value. Default is null.
          */
         var maximum: Double? = null) : ExcelColumnValidator() {
-    
+
+    override fun copyFrom(src: ExcelColumnValidator) {
+        super.copyFrom(src)
+        src as ExcelColumnNumberValidator
+        this.minimum = src.minimum
+        this.maximum = src.maximum
+    }
+
     /**
      * If true a string value of a cell will be converted by this validator to a string (if possible). Default is false.
      * @param tryToConvertStringToNumber The value to set.

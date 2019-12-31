@@ -43,6 +43,9 @@ constructor(excelSheet: ExcelSheet? = null,
              * Only used as prefix for standard logger (slf4j).
              */
             logPrefix: String? = null,
+            /**
+             * If given, this logger is used instead of the built-in.
+             */
             logger: Logger? = null)
     : Serializable {
     val logger = ImportLogger(excelSheet, logLevel, logPrefix, logger)

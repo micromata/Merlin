@@ -15,11 +15,18 @@ import java.time.format.DateTimeParseException
  */
 class ExcelColumnDateValidator(vararg dateFormats: String) : ExcelColumnValidator() {
     val dateTimeFormatters = mutableListOf<DateTimeFormatter>()
+    var dateFormats = dateFormats
 
     init {
         dateFormats.forEach {
             this.dateTimeFormatters.add(DateTimeFormatter.ofPattern(it))//.withZone(zoneId))
         }
+    }
+
+    override fun copyFrom(src: ExcelColumnValidator) {
+        super.copyFrom(src)
+        src as ExcelColumnDateValidator
+        this.dateFormats = src.dateFormats
     }
 
     fun convert(cell: Cell?): LocalDate? {
