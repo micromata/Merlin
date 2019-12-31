@@ -110,9 +110,10 @@ class ExcelSheet internal constructor(workbook: ExcelWorkbook, poiSheet: Sheet) 
      * @param columnHeads The column heads to register.
      * @return this for chaining.
      */
-    fun registerColumns(vararg columnHeads: ExcelColumnName): ExcelSheet {
+    @JvmOverloads
+    fun registerColumns(vararg columnHeads: ExcelColumnName, listener: ExcelColumnListener? = null): ExcelSheet {
         for (name in columnHeads) {
-            registerColumn(name.head, *name.aliases)
+            registerColumn(name.head, *name.aliases, listener = listener)
         }
         return this
     }
@@ -121,9 +122,10 @@ class ExcelSheet internal constructor(workbook: ExcelWorkbook, poiSheet: Sheet) 
      * @param columnHeads The column heads to register.
      * @return this for chaining.
      */
-    fun registerColumns(vararg columnHeads: String): ExcelSheet {
+    @JvmOverloads
+    fun registerColumns(vararg columnHeads: String, listener: ExcelColumnListener? = null): ExcelSheet {
         for (columnHead in columnHeads) {
-            registerColumn(columnHead)
+            registerColumn(columnHead, *emptyArray(), listener = listener)
         }
         return this
     }
@@ -133,12 +135,27 @@ class ExcelSheet internal constructor(workbook: ExcelWorkbook, poiSheet: Sheet) 
      * @param aliases Sometimes table heads changed for different imports. Register any used aliases for detecting the column by aliases too.
      * @return Created and registered ExcelColumnDef.
      */
-    fun registerColumn(columnHead: String, vararg aliases: String): ExcelColumnDef {
+    @JvmOverloads
+    fun registerColumn(columnHead: String, listener: ExcelColumnListener? = null): ExcelColumnDef {
+        return registerColumn(columnHead, *emptyArray(), listener = listener)
+    }
+
+    /**
+     * @param columnHead The column head to register.
+     * @param aliases Sometimes table heads changed for different imports. Register any used aliases for detecting the column by aliases too.
+     * @return Created and registered ExcelColumnDef.
+     */
+    @JvmOverloads
+    fun registerColumn(columnHead: String, vararg aliases: String, listener: ExcelColumnListener? = null): ExcelColumnDef {
         val columnDef = ExcelColumnDef(columnHead, *aliases)
         val existing = _getColumnDef(columnHead)
         if (existing != null) {
             columnDef.occurrenceNumber = existing.occurrenceNumber + 1
             log.info("Multiple registration of column head '$columnHead': #${columnDef.occurrenceNumber}")
+        }
+        if (listener != null) {
+            columnDef.addColumnListener(listener)
+            listener.setSheet(this)
         }
         columnDefList.add(columnDef)
         return columnDef
@@ -151,24 +168,7 @@ class ExcelSheet internal constructor(workbook: ExcelWorkbook, poiSheet: Sheet) 
      */
     @JvmOverloads
     fun registerColumn(columnHead: ExcelColumnName, listener: ExcelColumnListener? = null): ExcelColumnDef {
-        val columnDef = registerColumn(columnHead, listener)
-        columnDef.columnAliases = columnHead.aliases
-        return columnDef
-    }
-
-    /**
-     * @param columnHead The column head to register.
-     * @param listener   The listener to use.
-     * @return Created and registered ExcelColumnDef.
-     */
-    fun registerColumn(columnHead: String, listener: ExcelColumnListener): ExcelColumnDef {
-        var columnDef = _getColumnDef(columnHead)
-        if (columnDef == null) {
-            columnDef = ExcelColumnDef(columnHead)
-            columnDefList.add(columnDef)
-        }
-        registerColumn(columnDef, listener)
-        return columnDef
+        return registerColumn(columnHead.head, *columnHead.aliases, listener = listener)
     }
 
     /**
