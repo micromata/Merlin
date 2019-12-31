@@ -52,6 +52,8 @@ class ExcelSheet internal constructor(val excelWorkbook: ExcelWorkbook, val poiS
     private var maxMarkedErrors = 100
     private val excelRowMap: MutableMap<Int, ExcelRow> = HashMap()
 
+    private var rowEmptyColumns: IntArray? = null
+
     /**
      * Forces reloading of head row. This is useful if you get the head row, read it manually to add new
      * [ExcelColumnDef] objects and to restart.
@@ -727,33 +729,81 @@ class ExcelSheet internal constructor(val excelWorkbook: ExcelWorkbook, val poiS
     }
 
     /**
-     * @return true If all specified cells of the row is empty, otherwise false.
+     * @return true If all specified cells of the row are empty, otherwise false.
      */
     @Suppress("unused")
-    fun isRowEmptyByName(row: Row, vararg columnHeadNames: String): Boolean {
-        return isRowEmpty(row, columnHeadNames.toList())
+    fun cellsEmptyCheck(row: Row, vararg columnHeadNames: String): Boolean {
+        return cellsEmptyCheck(row, columnHeadNames.toList())
     }
 
     @Suppress("unused")
-    fun isRowEmpty(row: Row, vararg columnNames: ExcelColumnName): Boolean {
-        return isRowEmpty(row, columnNames.map { it.head })
+    fun cellsEmptyCheck(row: Row, vararg columnNames: ExcelColumnName): Boolean {
+        return cellsEmptyCheck(row, columnNames.map { it.head })
     }
 
     /**
-     * @return true If all specified cells of the row is empty, otherwise false.
+     * @return true If all specified cells of the row are empty, otherwise false.
      */
     @Suppress("MemberVisibilityCanBePrivate")
-    fun isRowEmpty(row: Row, columnHeadNames: List<String>): Boolean {
-        if (columnHeadNames.isNullOrEmpty()) {
+    fun cellsEmptyCheck(row: Row, columnHeadNames: List<String>): Boolean {
+        columnHeadNames.forEach {
+            if (isCellEmpty(row, it))
+                return false
+        }
+        return true
+    }
+
+    /**
+     * @param columnHeadNames Columns specified by head names to check of row emptiness.
+     * @see [isRowEmpty]
+     */
+    fun setColumnsForRowEmptyCheck(vararg columnHeadNames: String) {
+        this.rowEmptyColumns = columnHeadNames.map {
+            getColumnDef(it)?.columnNumber ?: -1
+        }.filter { it >= 0 }.toIntArray()
+    }
+
+    /**
+     * @param columnNames Columns specified by head names to check of row emptiness.
+     * @see [isRowEmpty]
+     */
+    fun setColumnsForRowEmptyCheck(vararg columnNames: ExcelColumnName) {
+        this.rowEmptyColumns = columnNames.map { getColumnDef(it)?.columnNumber ?: -1 }.filter { it >= 0 }.toIntArray()
+    }
+
+    /**
+     * @param columnNames Columns to check of row emptiness.
+     * @see [isRowEmpty]
+     */
+    fun setColumnsForRowEmptyCheck(vararg columnDefs: ExcelColumnDef) {
+        this.rowEmptyColumns = columnDefs.map { it.columnNumber }.filter { it >= 0 }.toIntArray()
+    }
+
+    /**
+     * @param columnNames Columns to check of row emptiness (0-based column indices).
+     * @see [isRowEmpty]
+     */
+    fun setColumnsForRowEmptyCheck(vararg columns: Int) {
+        this.rowEmptyColumns = columns
+    }
+
+    /**
+     * @param row Row to check for emptiness.
+     * @return true if all cell of the row are empty, or at least all cells of specified columns by [setColumnsForRowEmptyCheck] if given.
+     * At default, all columns of the given row will be checked for emptinexx.
+     */
+    fun isRowEmpty(row: Row): Boolean {
+        val columns = this.rowEmptyColumns
+        if (columns == null || columns.isEmpty()) {
             for (col in 0 until row.lastCellNum) { // lastCellNum is +1, so do not include it.
                 if (!PoiHelper.isEmpty(row.getCell(col)))
                     return false
             }
-        } else {
-            columnHeadNames.forEach {
-                if (isCellEmpty(row, it))
-                    return false
-            }
+            return true
+        }
+        columns.forEach {col ->
+            if (!PoiHelper.isEmpty(row.getCell(col)))
+                return false
         }
         return true
     }
