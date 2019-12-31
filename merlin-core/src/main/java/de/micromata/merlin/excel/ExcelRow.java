@@ -22,6 +22,11 @@ public class ExcelRow {
         this.row = row;
     }
 
+    /**
+     * Get row number this row represents
+     *
+     * @return the row number (0 based)
+     */
     public int getRowNum() {
         return row.getRowNum();
     }

@@ -20,6 +20,10 @@ import java.util.*
 class ExcelSheet internal constructor(val excelWorkbook: ExcelWorkbook, val poiSheet: Sheet) {
     private val columnDefList: MutableList<ExcelColumnDef> = ArrayList()
 
+    @Suppress("unused")
+    val columnDefinitions
+        get() = columnDefList.toList()
+
     init {
         log.debug("Reading sheet '" + poiSheet.sheetName + "'")
     }

@@ -39,6 +39,9 @@ constructor(val sheet: ExcelSheet,
 
     private var columnListeners: MutableList<ExcelColumnListener>? = null
 
+    val columnValidators
+        get() = columnListeners?.filter { it is ExcelColumnValidator }
+
     fun found(): Boolean {
         return _columnNumber >= 0
     }
@@ -81,6 +84,34 @@ constructor(val sheet: ExcelSheet,
         }
         val listener = columnListener.with(sheet, this)
         columnListeners!!.add(listener)
+    }
+
+    override fun toString(): String {
+        val sb = StringBuilder()
+        addFieldValue(sb, "head", this.columnHeadname)
+        if (this.columnAliases.isNotEmpty()) {
+            addFieldValue(sb, "alias", this.columnAliases.joinToString(", "))
+        }
+        if (this.occurrenceNumber > 1) {
+            addFieldValue(sb, "occurenceNumber", this.occurrenceNumber)
+        }
+        if (this._columnNumber >= 0) {
+            addFieldValue(sb, "col", CellReference.convertNumToColString(this._columnNumber))
+        }
+        val validators = this.columnValidators
+        if (!validators.isNullOrEmpty()) {
+            addFieldValue(sb, "validator", validators.joinToString(", ") { it.javaClass.simpleName })
+        }
+        return sb.toString()
+    }
+
+    private fun addFieldValue(sb: StringBuilder, field: String, value: Any?) {
+        if (value == null) return
+        sb.append(field).append("=")
+        if (value is String)
+            sb.append("\"").append(value).append("\"")
+        else
+            sb.append(value)
     }
 
     companion object {
