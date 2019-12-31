@@ -4,6 +4,7 @@ import de.micromata.merlin.excel.ExcelColumnName
 import de.micromata.merlin.excel.ExcelSheet
 import org.apache.poi.ss.usermodel.Row
 import org.apache.poi.ss.util.CellReference
+import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.io.Serializable
 
@@ -21,8 +22,9 @@ class ImportLogger
                           /**
                            * Only used as prefix for standard logger (slf4j).
                            */
-                          val logPrefix: String? = null)
-    : Serializable {
+                          val logPrefix: String? = null,
+                          val logger: Logger? = null
+) : Serializable {
     enum class Level { INFO, WARN, ERROR }
     data class Event(val message: String,
                      val level: Level = Level.INFO,
@@ -43,6 +45,11 @@ class ImportLogger
                 }
             }
     }
+
+    val usedLogger: Logger
+        get() {
+            return logger ?: log
+        }
 
     var successCounter = 0
         private set
@@ -80,7 +87,7 @@ class ImportLogger
     fun info(message: String, row: Int? = null, col: Int? = null) {
         val event = Event(message, Level.INFO, row, col)
         events.add(event)
-        logMessage(event, Level.INFO, log::info)
+        logMessage(event, Level.INFO, usedLogger::info)
     }
 
     @JvmOverloads
@@ -93,7 +100,7 @@ class ImportLogger
     fun warn(message: String, row: Int? = null, col: Int? = null, markInExcelSheet: Boolean = false) {
         val event = Event(message, Level.WARN, row, col)
         events.add(event)
-        logMessage(event, Level.WARN, log::info)
+        logMessage(event, Level.WARN, usedLogger::warn)
         if (markInExcelSheet && row != null && col != null)
             markError(message, row, col)
     }
@@ -107,7 +114,7 @@ class ImportLogger
     fun error(message: String, row: Int? = null, col: Int? = null, markInExcelSheet: Boolean = false) {
         val event = Event(message, Level.ERROR, row, col)
         events.add(event)
-        logMessage(event, Level.ERROR, log::info)
+        logMessage(event, Level.ERROR, usedLogger::error)
         if (markInExcelSheet && row != null && col != null)
             markError(message, row, col)
     }
