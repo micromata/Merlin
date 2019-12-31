@@ -59,7 +59,13 @@ constructor(var id: Any? = null,
         set(value) {
             field = value
             logger.excelWorkbook = value
+            if (filename == null)
+                filename = value?.filename
         }
+
+    init {
+        this.workbook = excelWorkbook
+    }
 
     private var sheets: MutableList<ImportedSheet<T>?>? = null
     /**
