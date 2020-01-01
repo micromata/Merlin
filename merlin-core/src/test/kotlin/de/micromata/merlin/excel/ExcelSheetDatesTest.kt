@@ -15,10 +15,8 @@ internal class ExcelSheetDatesTest {
     fun parseDatesTest() {
         val excelWorkbook = ExcelWorkbook(File(Definitions.EXAMPLES_EXCEL_TEST_DIR, "Workbook-Test.xlsx"))
         val sheet = excelWorkbook.getSheet("dates")!!
-        val dateVal = ExcelColumnDateValidator(*ExcelColumnDateValidator.GERMAN_DATE_FORMATS)
-        dateVal.locale = Locale.ENGLISH
-        val dateTimeVal = ExcelColumnDateValidator(*ExcelColumnDateValidator.GERMAN_DATETIME_FORMATS)
-        dateTimeVal.locale = Locale.ENGLISH
+        val dateVal = ExcelColumnDateValidator(Locale.ENGLISH, *ExcelColumnDateValidator.GERMAN_DATE_FORMATS)
+        val dateTimeVal = ExcelColumnDateValidator(Locale.ENGLISH, *ExcelColumnDateValidator.GERMAN_DATETIME_FORMATS)
         sheet.registerColumn("Date", dateVal)
         sheet.registerColumn("DateTime", dateVal)
 

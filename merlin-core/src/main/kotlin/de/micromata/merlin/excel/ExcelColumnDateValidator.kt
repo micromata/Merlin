@@ -16,6 +16,14 @@ import java.util.*
  * Validates each cell of a column: Each cell must be a valid Excel date format.
  */
 class ExcelColumnDateValidator(vararg dateFormats: String) : ExcelColumnValidator() {
+    /**
+     * For Java compability.
+     */
+    @Suppress("unused")
+    constructor(locale: Locale, vararg dateFormats: String) : this(*dateFormats) {
+        this.locale = locale
+    }
+
     private lateinit var dateTimeFormatters: List<DateTimeFormatter>
         private set
     var dateFormats: Array<out String>
