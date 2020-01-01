@@ -106,15 +106,22 @@ object BeanHelper {
         }
     }
 
-
-    fun setProperty(bean: Any, property: String, value: Any?) {
-        if (value == null)
+    /**
+     * Sets the property of the given bean, if a setter method is found and the given value is assignable to the bean variable.
+     */
+    @JvmStatic
+    fun setProperty(bean: Any, property: String, value: Any?, ignoreNullValue: Boolean = false) {
+        if (ignoreNullValue && value == null)
             return
         val setter = BeanHelper.determineSetter(bean::class.java, property) ?: return
-        val valueType = value::class.java
-        val type = setter.parameterTypes[0]
-        if (type.isAssignableFrom(valueType)) {
-         invoke(bean, setter, value)
+        if (value != null) {
+            val valueType = value::class.java
+            val type = setter.parameterTypes[0]
+            if (type.isAssignableFrom(valueType)) {
+                invoke(bean, setter, value)
+            }
+        } else {
+            invoke(bean, setter, null)
         }
     }
 

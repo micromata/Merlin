@@ -36,6 +36,11 @@ internal class BeanHelperTest {
         Assertions.assertEquals(42, objB.number)
         BeanHelper.setProperty(objB, "street", "Street")
         Assertions.assertEquals("Street", objB.street)
+
+        BeanHelper.setProperty(objB, "street", null, true)
+        Assertions.assertEquals("Street", objB.street)
+        BeanHelper.setProperty(objB, "street", null)
+        Assertions.assertNull(objB.street)
     }
 }
 
