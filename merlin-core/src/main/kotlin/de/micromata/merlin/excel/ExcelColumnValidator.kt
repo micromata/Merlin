@@ -7,18 +7,20 @@ import de.micromata.merlin.excel.PoiHelper.isEmpty
 import org.apache.poi.ss.usermodel.Cell
 import org.slf4j.LoggerFactory
 
-open class ExcelColumnValidator : ExcelColumnListener() {
-    private val log = LoggerFactory.getLogger(ExcelColumnValidator::class.java)
-    var isRequired = false
+open class ExcelColumnValidator
+@JvmOverloads constructor(required: Boolean = false,
+                          unique: Boolean = false)
+    : ExcelColumnListener() {
+    var isRequired = required
         private set
-    var isUnique = false
+    var isUnique = unique
         private set
 
     // Used for unique constraint.
     private var cellValueMap = mutableMapOf<String, Int>()
     val validationErrors = mutableSetOf<ExcelValidationErrorMessage>()
 
-    protected var i18n = CoreI18n.getDefault()
+    protected var i18n: CoreI18n = CoreI18n.getDefault()
 
     override fun clone(): ExcelColumnValidator {
         val clone = ExcelColumnValidator()
@@ -123,6 +125,7 @@ open class ExcelColumnValidator : ExcelColumnListener() {
     }
 
     companion object {
+        private val log = LoggerFactory.getLogger(ExcelColumnValidator::class.java)
         /**
          * Parameter: Sheet name, Column in letter format: (A, B, ..., AA, AB, ...), Column head name, Row number
          */
