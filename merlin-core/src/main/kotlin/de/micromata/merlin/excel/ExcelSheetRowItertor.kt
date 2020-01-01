@@ -2,7 +2,12 @@ package de.micromata.merlin.excel
 
 import org.apache.poi.ss.usermodel.Row
 
-internal class ExcelSheetRowIterator(private val sheet: ExcelSheet, private val it: Iterator<Row>) : Iterator<Row> {
+/**
+ * This row iterator skips empty rows.
+ *
+ * @see [ExcelSheet.isRowEmpty]
+ */
+class ExcelSheetRowIterator(private val sheet: ExcelSheet, private val it: Iterator<Row>) : Iterator<Row> {
     private var row: Row? = null
 
     override fun hasNext(): Boolean {

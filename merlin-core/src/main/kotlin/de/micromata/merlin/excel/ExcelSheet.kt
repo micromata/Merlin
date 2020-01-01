@@ -193,12 +193,12 @@ class ExcelSheet internal constructor(val excelWorkbook: ExcelWorkbook, val poiS
     /**
      * @return Iterator for rows. Iterator starts with data row (head row + 1).
      */
-    val dataRowIterator: Iterator<Row>
+    val dataRowIterator: ExcelSheetRowIterator
         get() {
             findAndReadHeadRow()
             val it = poiSheet.rowIterator()
             if (headRow == null)
-                return it
+                return ExcelSheetRowIterator(this, it)
             while (it.hasNext()) {
                 if (it.next() == headRow!!.row) {
                     break
