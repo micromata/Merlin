@@ -26,6 +26,7 @@ import de.micromata.merlin.importer.PropertyDelta
 import org.apache.commons.collections4.MapUtils
 import org.apache.commons.lang3.ArrayUtils
 import org.apache.commons.lang3.StringUtils
+import org.slf4j.LoggerFactory
 import java.io.Serializable
 import java.lang.reflect.Method
 import java.lang.reflect.Modifier
@@ -45,16 +46,27 @@ open class ImportedElement<T>
  * @param diffProperties List of property names which will be used for display property changes.
  */(
         val importedSheet: ImportedSheet<T>,
+        val row: Int,
         private val clazz: Class<T>,
         vararg val diffProperties: String) : Serializable {
 
     init {
         val excelSheet = importedSheet.excelSheet
         if (excelSheet != null) {
-            diffProperties.forEach {diffProperty ->
-               excelSheet.getColumnDef(diffProperty)?.columnValidators?.forEach {validator ->
-                   validator.hasValidationErrors()
-               }
+            diffProperties.forEach { diffProperty ->
+                excelSheet.getColumnDef(diffProperty)?.columnValidators?.filter { it.hasValidationErrors() }?.forEach { validator ->
+                    val columnDef = validator.columnDef
+                    if (columnDef != null) {
+                        val property = importedSheet.getPropertyMapping(columnDef)
+                        if (property == null) {
+                            log.warn("Can't find property mapping for column '${columnDef.columnHeadname}'. Please register it by calling ImportedSheet.addPropertyMapping(...).")
+                        } else {
+                            validator.getValidationErrors(row).forEach {
+                                putErrorProperty(property, it.getMessage())
+                            }
+                        }
+                    }
+                }
             }
         }
     }
@@ -216,6 +228,8 @@ open class ImportedElement<T>
 
     companion object {
         private const val serialVersionUID = -3405918702811291053L
+
+        private val log = LoggerFactory.getLogger(ImportedElement::class.java)
 
         private fun determineGetter(clazz: Class<*>, fieldname: String, onlyPublicGetter: Boolean = true): Method? {
             val cap = StringUtils.capitalize(fieldname)

@@ -18,7 +18,16 @@ open class ExcelColumnValidator
 
     // Used for unique constraint.
     private var cellValueMap = mutableMapOf<String, Int>()
+    //val validationErrorMap = mutableMapOf<Int, MutableSet<ExcelValidationErrorMessage>>()
     val validationErrors = mutableSetOf<ExcelValidationErrorMessage>()
+
+    /**
+     * Filters only validation message(s) from all the validation errors for the given row.
+     * @return Error messages for the given row or empty list, if no validation error is present for this row.
+     */
+    fun getValidationErrors(row: Int) : List<ExcelValidationErrorMessage> {
+        return validationErrors.filter { it.row == row }
+    }
 
     protected var i18n: CoreI18n = CoreI18n.getDefault()
 

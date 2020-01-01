@@ -531,11 +531,7 @@ class ExcelSheet internal constructor(val excelWorkbook: ExcelWorkbook, val poiS
                 if (!columnDef.hasColumnListeners()) {
                     continue
                 }
-                for (columnListener in columnDef.getColumnListeners()!!) {
-                    if (columnListener !is ExcelColumnValidator) {
-                        continue
-                    }
-                    val columnValidator = columnListener
+                columnDef.columnValidators?.forEach { columnValidator ->
                     if (columnValidator.hasValidationErrors()) {
                         allValidationErrors.addAll(columnValidator.validationErrors)
                     }
@@ -801,7 +797,7 @@ class ExcelSheet internal constructor(val excelWorkbook: ExcelWorkbook, val poiS
             }
             return true
         }
-        columns.forEach {col ->
+        columns.forEach { col ->
             if (!PoiHelper.isEmpty(row.getCell(col)))
                 return false
         }

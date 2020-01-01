@@ -13,7 +13,7 @@ internal class PropertyDeltaTest {
     @Test
     fun createPropertyDeltaTest() {
         val importedSheet = ImportedSheet<TestData>(ImportStorage())
-        val element = ImportedElement<TestData>(importedSheet, TestData::class.java, "str", "decimalValue", "intValue")
+        val element = ImportedElement<TestData>(importedSheet, 0, TestData::class.java, "str", "decimalValue", "intValue")
         element.value = TestData(null, null, null)
         element.oldValue = TestData(null, null, null)
         Assertions.assertTrue(element.propertyChanges.isNullOrEmpty())
