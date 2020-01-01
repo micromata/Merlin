@@ -8,14 +8,17 @@ import java.io.File
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.Month
+import java.util.*
 
 internal class ExcelSheetDatesTest {
     @Test
     fun parseDatesTest() {
         val excelWorkbook = ExcelWorkbook(File(Definitions.EXAMPLES_EXCEL_TEST_DIR, "Workbook-Test.xlsx"))
         val sheet = excelWorkbook.getSheet("dates")!!
-        val dateVal = ExcelColumnDateValidator("d.M.y", "d.L.y", "yyyy-MM-dd")
-        val dateTimeVal = ExcelColumnDateValidator("d.M.y H:m", "d.M.y H:m:s", "yyyy-MM-dd HH:mm", "yyyy-MM-dd HH:mm:ss")
+        val dateVal = ExcelColumnDateValidator(*ExcelColumnDateValidator.GERMAN_DATE_FORMATS)
+        dateVal.locale = Locale.ENGLISH
+        val dateTimeVal = ExcelColumnDateValidator(*ExcelColumnDateValidator.GERMAN_DATETIME_FORMATS)
+        dateTimeVal.locale = Locale.ENGLISH
         sheet.registerColumn("Date", dateVal)
         sheet.registerColumn("DateTime", dateVal)
 
@@ -29,12 +32,20 @@ internal class ExcelSheetDatesTest {
         checkDateTime(2020, Month.FEBRUARY, 29, 23, 59, 17,
                 dateTimeVal.getLocalDateTime(sheet.getCell(row, "DateTime")))
         row = it.next()
-        checkDate(20, Month.FEBRUARY, 2, dateVal.getLocalDate(sheet.getCell(row, "Date")))
-        checkDateTime(20, Month.FEBRUARY, 2, 0, 0, 17,
+        checkDate(2020, Month.FEBRUARY, 2, dateVal.getLocalDate(sheet.getCell(row, "Date")))
+        checkDateTime(2020, Month.FEBRUARY, 2, 0, 0, 17,
                 dateTimeVal.getLocalDateTime(sheet.getCell(row, "DateTime")))
         row = it.next()
         checkDate(2020, Month.FEBRUARY, 29, dateVal.getLocalDate(sheet.getCell(row, "Date")))
         checkDateTime(2020, Month.FEBRUARY, 29, 5, 23, 0,
+                dateTimeVal.getLocalDateTime(sheet.getCell(row, "DateTime")))
+        row = it.next()
+        checkDate(2020, Month.NOVEMBER, 21, dateVal.getLocalDate(sheet.getCell(row, "Date")))
+        checkDateTime(2020, Month.NOVEMBER, 21, 1, 2, 0,
+                dateTimeVal.getLocalDateTime(sheet.getCell(row, "DateTime")))
+        row = it.next()
+        checkDate(2020, Month.NOVEMBER, 21, dateVal.getLocalDate(sheet.getCell(row, "Date")))
+        checkDateTime(2020, Month.NOVEMBER, 21, 1, 2, 17,
                 dateTimeVal.getLocalDateTime(sheet.getCell(row, "DateTime")))
     }
 

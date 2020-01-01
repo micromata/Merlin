@@ -10,24 +10,44 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
+import java.util.*
 
 /**
  * Validates each cell of a column: Each cell must be a valid Excel date format.
  */
 class ExcelColumnDateValidator(vararg dateFormats: String) : ExcelColumnValidator() {
-    val dateTimeFormatters = mutableListOf<DateTimeFormatter>()
-    var dateFormats = dateFormats
+    private lateinit var dateTimeFormatters: List<DateTimeFormatter>
+        private set
+    var dateFormats: Array<out String>
+        private set
+
+    /**
+     * Locale for parsing month names, such as July, 16
+     */
+    var locale = Locale.getDefault()
+        set(value) {
+            field = value
+            initDateFormaters()
+        }
 
     init {
+        this.dateFormats = dateFormats
+        initDateFormaters()
+    }
+
+    private fun initDateFormaters() {
+        val formatters = mutableListOf<DateTimeFormatter>()
         dateFormats.forEach {
-            this.dateTimeFormatters.add(DateTimeFormatter.ofPattern(it))//.withZone(zoneId))
+            formatters.add(DateTimeFormatter.ofPattern(it).withLocale(locale))
         }
+        this.dateTimeFormatters = formatters
     }
 
     override fun copyFrom(src: ExcelColumnValidator) {
         super.copyFrom(src)
         src as ExcelColumnDateValidator
         this.dateFormats = src.dateFormats
+        initDateFormaters()
     }
 
     /**
@@ -39,7 +59,7 @@ class ExcelColumnDateValidator(vararg dateFormats: String) : ExcelColumnValidato
         val date = getLocalDateTimeCellValue(cell)
         if (date != null)
             return date
-        return parse(cell, LocalDateTime::parse)
+        return parse(cell, LocalDateTime::parse, "dateTime")
     }
 
     /**
@@ -52,7 +72,7 @@ class ExcelColumnDateValidator(vararg dateFormats: String) : ExcelColumnValidato
         val date = getLocalDateTimeCellValue(cell)
         if (date != null)
             return date.toLocalDate()
-        return parse(cell, LocalDate::parse)
+        return parse(cell, LocalDate::parse, "date")
     }
 
     private fun getLocalDateTimeCellValue(cell: Cell): LocalDateTime? {
@@ -69,18 +89,20 @@ class ExcelColumnDateValidator(vararg dateFormats: String) : ExcelColumnValidato
         return null
     }
 
-    private fun <T> parse(cell: Cell, parse: (String, DateTimeFormatter) -> T) : T? {
+    private fun <T> parse(cell: Cell, parse: (String, DateTimeFormatter) -> T, type: String): T? {
         if (cell.cellType == CellType.STRING) {
             val strVal = PoiHelper.getValueAsString(cell, true)
             if (strVal.isNullOrBlank()) {
                 return null
             }
-            this.dateTimeFormatters.forEach {
+            this.dateTimeFormatters.forEachIndexed { index, formatter ->
                 try {
-                    return parse(strVal, it)
+                    return parse(strVal, formatter)
                 } catch (ex: DateTimeParseException) {
                     // Date doesn't fit this format.
-                    log.debug("Couldn't parse LocalDateTime with pattern 'it': ${ex.message}")
+                    if (log.isDebugEnabled)
+                        log.debug("Couldn't parse '$strVal' ($type) with pattern '${dateFormats[index]}': ${ex.message}. $formatter, locale=${formatter.locale}")
+                    // println("Couldn't parse '$strVal' ($type) with pattern '${dateFormats[index]}': ${ex.message}. $formatter, locale=${formatter.locale}")
                 }
             }
         }
@@ -127,5 +149,17 @@ class ExcelColumnDateValidator(vararg dateFormats: String) : ExcelColumnValidato
          */
         const val MESSAGE_DATE_EXPECTED = "merlin.excel.validation_error.date_expected"
         private val log = LoggerFactory.getLogger(ExcelColumnDateValidator::class.java)
+
+        @JvmStatic
+        val GERMAN_DATE_FORMATS = arrayOf("d.M.yyyy", "d.M.yy", "d. MMMM yyyy", "d. MMMM yy", "yyyy-MM-dd")
+
+        @JvmStatic
+        val GERMAN_DATETIME_FORMATS = arrayOf("d.M.yyyy H:m[:s]", "d.M.yy H:m[:s]", "d. MMMM yyyy H:m[:s]", "yyyy-MM-dd H:m[:s]")
+
+        @JvmStatic
+        val ENGLISH_MONTH_FIRST_DATE_FORMATS = arrayOf("M/d/yyyy", "M/d/yy", "yyyy-MM-dd")
+
+        @JvmStatic
+        val ENGLISH_DAY_FIRST_DATE_FORMATS = arrayOf("d/M/yyyy", "d/M/yy", "yyyy-MM-dd")
     }
 }
