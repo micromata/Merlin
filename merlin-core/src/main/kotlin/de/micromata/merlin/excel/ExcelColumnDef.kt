@@ -40,8 +40,8 @@ constructor(val sheet: ExcelSheet,
     private var columnListeners: MutableList<ExcelColumnListener>? = null
 
     @Suppress("UNCHECKED_CAST")
-    val columnValidators: List<ExcelColumnValidator>
-        get() = columnListeners?.filter { it is ExcelColumnValidator } as List<ExcelColumnValidator>
+    val columnValidators: List<ExcelColumnValidator>?
+        get() = columnListeners?.filter { it is ExcelColumnValidator } as? List<ExcelColumnValidator>
 
     fun found(): Boolean {
         return _columnNumber >= 0

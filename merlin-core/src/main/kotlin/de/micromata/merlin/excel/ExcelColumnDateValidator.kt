@@ -34,31 +34,12 @@ class ExcelColumnDateValidator(vararg dateFormats: String) : ExcelColumnValidato
      * Representation without time zone information.
      */
     fun getLocalDateTime(cell: Cell?): LocalDateTime? {
-        if (cell == null) {
+        if (cell == null)
             return null
-        }
-        if (cell.cellType == CellType.NUMERIC) {
-            try {
-                return cell.localDateTimeCellValue
-            } catch (ex: Exception) {
-                if (log.isDebugEnabled) {
-                    log.debug(ex.message, ex)
-                }
-            }
-        } else if (cell.cellType == CellType.STRING) {
-            val strVal = PoiHelper.getValueAsString(cell, true)
-            if (strVal.isNullOrBlank()) {
-                return null
-            }
-            this.dateTimeFormatters.forEach {
-                try {
-                    return LocalDateTime.parse(strVal, it)
-                } catch (ex: DateTimeParseException) {
-                    // Date doesn't fit this format.
-                }
-            }
-        }
-        return null
+        val date = getLocalDateTimeCellValue(cell)
+        if (date != null)
+            return date
+        return parse(cell, LocalDateTime::parse)
     }
 
     /**
@@ -66,8 +47,44 @@ class ExcelColumnDateValidator(vararg dateFormats: String) : ExcelColumnValidato
      */
     @Suppress("unused")
     fun getLocalDate(cell: Cell?): LocalDate? {
-        val date = getLocalDateTime(cell) ?: return null
-        return date.toLocalDate()
+        if (cell == null)
+            return null
+        val date = getLocalDateTimeCellValue(cell)
+        if (date != null)
+            return date.toLocalDate()
+        return parse(cell, LocalDate::parse)
+    }
+
+    private fun getLocalDateTimeCellValue(cell: Cell): LocalDateTime? {
+        if (cell.cellType != CellType.NUMERIC) {
+            return null
+        }
+        try {
+            return cell.localDateTimeCellValue
+        } catch (ex: Exception) {
+            if (log.isDebugEnabled) {
+                log.debug(ex.message, ex)
+            }
+        }
+        return null
+    }
+
+    private fun <T> parse(cell: Cell, parse: (String, DateTimeFormatter) -> T) : T? {
+        if (cell.cellType == CellType.STRING) {
+            val strVal = PoiHelper.getValueAsString(cell, true)
+            if (strVal.isNullOrBlank()) {
+                return null
+            }
+            this.dateTimeFormatters.forEach {
+                try {
+                    return parse(strVal, it)
+                } catch (ex: DateTimeParseException) {
+                    // Date doesn't fit this format.
+                    log.debug("Couldn't parse LocalDateTime with pattern 'it': ${ex.message}")
+                }
+            }
+        }
+        return null
     }
 
     /**
