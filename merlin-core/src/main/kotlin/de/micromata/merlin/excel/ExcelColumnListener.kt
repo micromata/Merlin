@@ -24,7 +24,10 @@ abstract class ExcelColumnListener {
      * @return this, or, if a columnDef or sheet is already registered a clone of this with the given columnDef.
      */
     internal fun with(sheet: ExcelSheet, columnDef: ExcelColumnDef): ExcelColumnListener {
-        val result = if (this.columnDef != null ||this.sheet != null) clone() else this
+        val result = if (this.columnDef != null || this.sheet != null) clone() else this
+        if (this != result && !result.javaClass.isAssignableFrom(this.javaClass)) {
+            throw IllegalStateException("Error in clone method: ${this.javaClass}.clone() must not return different object class: ${result.javaClass}. Please implement clone() class correctly.")
+        }
         result.columnDef = columnDef
         result.sheet = sheet
         return result

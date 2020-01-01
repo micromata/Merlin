@@ -25,7 +25,7 @@ internal class ExcelSheetRowIteratorTest {
         row = it.next()
         Assertions.assertEquals("test", PoiHelper.getValueAsString(excelSheet.getCell(row.rowNum, 1)))
         row = it.next()
-        val date = ExcelColumnDateValidator().getLocalDateTime(excelSheet.getCell(row, "Date"))!!
+        val date = ExcelColumnDateValidator().getDate(excelSheet.getCell(row, "Date"))!!
         Assertions.assertEquals(1, date.dayOfMonth)
         Assertions.assertEquals(Month.JANUARY, date.month)
         Assertions.assertEquals(2020, date.year)

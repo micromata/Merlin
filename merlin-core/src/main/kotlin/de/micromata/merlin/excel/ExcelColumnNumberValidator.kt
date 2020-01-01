@@ -20,6 +20,12 @@ class ExcelColumnNumberValidator @JvmOverloads constructor(
          */
         var maximum: Double? = null) : ExcelColumnValidator() {
 
+    override fun clone(): ExcelColumnNumberValidator {
+        val clone = ExcelColumnNumberValidator()
+        clone.copyFrom(this)
+        return clone
+    }
+
     override fun copyFrom(src: ExcelColumnValidator) {
         super.copyFrom(src)
         src as ExcelColumnNumberValidator

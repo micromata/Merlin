@@ -15,36 +15,36 @@ internal class ExcelSheetDatesTest {
     fun parseDatesTest() {
         val excelWorkbook = ExcelWorkbook(File(Definitions.EXAMPLES_EXCEL_TEST_DIR, "Workbook-Test.xlsx"))
         val sheet = excelWorkbook.getSheet("dates")!!
-        val dateVal = ExcelColumnDateValidator(Locale.ENGLISH, *ExcelColumnDateValidator.GERMAN_DATE_FORMATS)
-        val dateTimeVal = ExcelColumnDateValidator(Locale.ENGLISH, *ExcelColumnDateValidator.GERMAN_DATETIME_FORMATS)
+        val dateVal = ExcelColumnDateValidator(ExcelColumnDateValidator.GERMAN_FORMATS, Locale.ENGLISH)
+        val dateTimeVal = ExcelColumnDateTimeValidator(ExcelColumnDateTimeValidator.GERMAN_DATETIME_FORMATS, Locale.ENGLISH)
         sheet.registerColumn("Date", dateVal)
         sheet.registerColumn("DateTime", dateVal)
 
         val it: Iterator<Row> = sheet.dataRowIterator
         var row = it.next()
-        checkDate(2020, Month.JANUARY, 1, dateVal.getLocalDate(sheet.getCell(row, "Date")))
+        checkDate(2020, Month.JANUARY, 1, dateVal.getDate(sheet.getCell(row, "Date")))
         checkDateTime(2020, Month.JANUARY, 1, 16, 25, 23,
-                dateTimeVal.getLocalDateTime(sheet.getCell(row, "DateTime")))
+                dateTimeVal.getDate(sheet.getCell(row, "DateTime")))
         row = it.next()
-        checkDate(2020, Month.FEBRUARY, 29, dateVal.getLocalDate(sheet.getCell(row, "Date")))
+        checkDate(2020, Month.FEBRUARY, 29, dateVal.getDate(sheet.getCell(row, "Date")))
         checkDateTime(2020, Month.FEBRUARY, 29, 23, 59, 17,
-                dateTimeVal.getLocalDateTime(sheet.getCell(row, "DateTime")))
+                dateTimeVal.getDate(sheet.getCell(row, "DateTime")))
         row = it.next()
-        checkDate(2020, Month.FEBRUARY, 2, dateVal.getLocalDate(sheet.getCell(row, "Date")))
+        checkDate(2020, Month.FEBRUARY, 2, dateVal.getDate(sheet.getCell(row, "Date")))
         checkDateTime(2020, Month.FEBRUARY, 2, 0, 0, 17,
-                dateTimeVal.getLocalDateTime(sheet.getCell(row, "DateTime")))
+                dateTimeVal.getDate(sheet.getCell(row, "DateTime")))
         row = it.next()
-        checkDate(2020, Month.FEBRUARY, 29, dateVal.getLocalDate(sheet.getCell(row, "Date")))
+        checkDate(2020, Month.FEBRUARY, 29, dateVal.getDate(sheet.getCell(row, "Date")))
         checkDateTime(2020, Month.FEBRUARY, 29, 5, 23, 0,
-                dateTimeVal.getLocalDateTime(sheet.getCell(row, "DateTime")))
+                dateTimeVal.getDate(sheet.getCell(row, "DateTime")))
         row = it.next()
-        checkDate(2020, Month.NOVEMBER, 21, dateVal.getLocalDate(sheet.getCell(row, "Date")))
+        checkDate(2020, Month.NOVEMBER, 21, dateVal.getDate(sheet.getCell(row, "Date")))
         checkDateTime(2020, Month.NOVEMBER, 21, 1, 2, 0,
-                dateTimeVal.getLocalDateTime(sheet.getCell(row, "DateTime")))
+                dateTimeVal.getDate(sheet.getCell(row, "DateTime")))
         row = it.next()
-        checkDate(2020, Month.NOVEMBER, 21, dateVal.getLocalDate(sheet.getCell(row, "Date")))
+        checkDate(2020, Month.NOVEMBER, 21, dateVal.getDate(sheet.getCell(row, "Date")))
         checkDateTime(2020, Month.NOVEMBER, 21, 1, 2, 17,
-                dateTimeVal.getLocalDateTime(sheet.getCell(row, "DateTime")))
+                dateTimeVal.getDate(sheet.getCell(row, "DateTime")))
     }
 
     private fun checkDateTime(expectedYear: Int, expectedMonth: Month, expectedDayOfMonth: Int, expectedHour: Int, expectedMinute: Int, expectedSecond: Int, date: LocalDateTime?) {
