@@ -38,10 +38,12 @@ object ImportHelper {
      */
     fun fillBean(bean: Any, sheet: ExcelSheet, row: Int) {
         sheet.columnDefinitions.forEach { columnDef ->
-            val targetProperty = columnDef.targetProperty
-            val cell = sheet.getCell(row, columnDef)
-            if (targetProperty != null && cell != null) {
-                BeanHelper.setProperty(bean, targetProperty, PoiHelper.getValue(cell), false)
+            if (columnDef.found()) {
+                val targetProperty = columnDef.targetProperty
+                val cell = sheet.getCell(row, columnDef)
+                if (targetProperty != null && cell != null) {
+                    BeanHelper.setProperty(bean, targetProperty, PoiHelper.getValue(cell), false)
+                }
             }
         }
     }

@@ -34,6 +34,7 @@ internal class ImportHelperTest {
         sheet.registerColumn("Money")
         sheet.registerColumn("Height")
         sheet.registerColumn("FloatValue")
+        sheet.registerColumn("unknown")
         val it: Iterator<Row> = sheet.dataRowIterator
         var row = it.next()
         var person = Person()
