@@ -22,6 +22,7 @@
 /////////////////////////////////////////////////////////////////////////////
 package de.micromata.merlin.excel.importer
 
+import de.micromata.merlin.excel.ExcelColumnDef
 import de.micromata.merlin.excel.ExcelSheet
 import org.slf4j.Logger
 import java.io.Serializable
@@ -54,25 +55,20 @@ constructor(val storage: ImportStorage<T>,
     private var elements: MutableList<ImportedElement<T>>? = null
 
     /**
+     * Map of column definitions to bean properties for assigning error messages to ImportedElements.
+     */
+    private var propertyMap = mutableMapOf<ExcelColumnDef, String>()
+
+    /**
      * Name of the sheet (e. g. name of the MS Excel sheet).
      *
      * @return The name of the sheet.
      */
     var name: String? = null
-        set(value) {
-            field = value
-            if (origName == null) {
-                origName = value
-            }
-        }
+        get() = if (field != null) field else origName
 
     var origName: String? = null
-        set(value) {
-            field = value
-            if (name == null) {
-                name = value
-            }
-        }
+        get() = if (field != null) field else name
 
     /**
      * Can be used for opening and closing this sheet in gui.
@@ -102,7 +98,7 @@ constructor(val storage: ImportStorage<T>,
      */
     var numberOfCommittedElements = -1
     private var properties: MutableMap<String, Any>? = null
-    private var errorProperties: MutableMap<String?, MutableSet<Any>>? = null
+    private var errorProperties: MutableMap<String, MutableSet<Any>>? = null
     private var status: ImportStatus? = ImportStatus.NOT_RECONCILED
     /**
      * List of imported elements (e. g. MS Excel rows as bean object).
@@ -262,7 +258,7 @@ constructor(val storage: ImportStorage<T>,
         } else properties!![key]
     }
 
-    fun getErrorProperties(): Map<String?, Set<Any?>?>? {
+    fun getErrorProperties(): Map<String, Set<Any>>? {
         if (!dirty && errorProperties != null) {
             return errorProperties
         }
@@ -288,5 +284,17 @@ constructor(val storage: ImportStorage<T>,
             }
         }
         return errorProperties
+    }
+
+    /**
+     * @return this for chaining.
+     */
+    fun putPropertyMapping(columnDef: ExcelColumnDef, property: String): ImportedSheet<T> {
+        propertyMap[columnDef] = property
+        return this
+    }
+
+    fun getPropertyMapping(columnDef: ExcelColumnDef): String? {
+        return propertyMap[columnDef]
     }
 }
