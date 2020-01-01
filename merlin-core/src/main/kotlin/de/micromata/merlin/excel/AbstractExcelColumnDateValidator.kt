@@ -122,11 +122,11 @@ abstract class AbstractExcelColumnDateValidator<T>
             return createValidationError(MESSAGE_DATE_EXPECTED, rowNumber, getValueAsString(cell))
         }
         val min = minimum
-        if (min != null && !isBefore(date, min)) {
+        if (min != null && isBefore(date, min)) {
             return createValidationError(ExcelColumnNumberValidator.MESSAGE_NUMBER_LESS_THAN_MINIMUM, rowNumber, asString(date), asString(minimum))
         }
         val max = maximum
-        return if (max != null && !isBefore(max, date)) {
+        return if (max != null && isBefore(max, date)) {
             createValidationError(ExcelColumnNumberValidator.MESSAGE_NUMBER_GREATER_THAN_MAXIMUM, rowNumber, asString(date), asString(maximum))
         } else null
     }

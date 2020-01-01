@@ -13,7 +13,7 @@ class ExcelColumnDateTimeValidator
                           locale: Locale = Locale.getDefault(),
                           minimum: LocalDateTime? = null,
                           maximum: LocalDateTime? = null)
-    : AbstractExcelColumnDateValidator<LocalDateTime>(dateFormats, locale) {
+    : AbstractExcelColumnDateValidator<LocalDateTime>(dateFormats, locale, minimum, maximum) {
 
     override fun clone(): ExcelColumnDateTimeValidator {
         val clone = ExcelColumnDateTimeValidator()
