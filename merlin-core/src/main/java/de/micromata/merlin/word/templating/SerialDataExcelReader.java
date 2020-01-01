@@ -104,7 +104,7 @@ public class SerialDataExcelReader {
                 Cell cell = sheet.getCell(row, columnDef);
                 String formattedCellValue = templateRunContext.getFormattedValue(cell);
                 variables.putFormatted(variableDefinition.getName(), formattedCellValue);
-                Object value = PoiHelper.getValue(cell);
+                Object value = PoiHelper.getValue(cell, false);
                 if (value == null) {
                     continue;
                 }

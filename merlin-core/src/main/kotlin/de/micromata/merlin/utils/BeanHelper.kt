@@ -28,6 +28,10 @@ import org.apache.commons.lang3.StringUtils
 import org.slf4j.LoggerFactory
 import java.lang.reflect.Method
 import java.lang.reflect.Modifier
+import java.math.BigDecimal
+import java.math.BigInteger
+import java.time.LocalDate
+import java.time.LocalDateTime
 
 /**
  * Stores one imported object (e. g. MS Excel row as bean object). It also contains information about the status: New object or modified
@@ -119,6 +123,22 @@ object BeanHelper {
             val type = setter.parameterTypes[0]
             if (type.isAssignableFrom(valueType)) {
                 invoke(bean, setter, value)
+            } else if (value is Number) {
+                if (type == java.lang.Integer::class.java || type == Integer::class.java) {
+                    invoke(bean, setter, value.toInt())
+                } else if (type == java.lang.Double::class.java || type == Double::class.java) {
+                    invoke(bean, setter, value.toDouble())
+                } else if (type == java.lang.Float::class.java || type == Float::class.java) {
+                    invoke(bean, setter, value.toFloat())
+                } else if (type == BigDecimal::class.java) {
+                    invoke(bean, setter, BigDecimal(value.toString()))
+                } else if (type == BigInteger::class.java) {
+                    invoke(bean, setter, BigInteger(value.toString()))
+                }
+            } else if (value is LocalDateTime) {
+                if (type.isAssignableFrom(LocalDate::class.java)) {
+                    invoke(bean, setter, value.toLocalDate())
+                }
             }
         } else {
             invoke(bean, setter, null)

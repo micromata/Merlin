@@ -142,9 +142,9 @@ public class TemplateDefinitionExcelReader {
             variable.setDescription(description);
             variable.setRequired(required);
             variable.setUnique(unique);
-            Object minimum = PoiHelper.getValue(sheet.getCell(row, minimumCol));
+            Object minimum = PoiHelper.getValue(sheet.getCell(row, minimumCol), false);
             variable.setMinimumValue(templateRunContext.convertValue(minimum, variable.getType()));
-            Object maximum = PoiHelper.getValue(sheet.getCell(row, maximumCol));
+            Object maximum = PoiHelper.getValue(sheet.getCell(row, maximumCol), false);
             variable.setMaximumValue(templateRunContext.convertValue(maximum, variable.getType()));
             String[] values = CSVStringUtils.parseStringList(valuesString);
             if (values != null) {

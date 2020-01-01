@@ -31,15 +31,22 @@ object PoiHelper {
         else result
     }
 
+    /**
+     * @param localDateTime If true, any dates will be returned as [LocalDateTime], otherwise as [java.util.Date]
+     */
     @JvmStatic
-    fun getValue(cell: Cell?): Any? {
+    @JvmOverloads
+    fun getValue(cell: Cell?, localDateTime: Boolean = true): Any? {
         return if (cell == null) {
             null
         } else when (cell.cellType) {
             CellType.BOOLEAN -> cell.booleanCellValue
             CellType.NUMERIC -> {
                 if (DateUtil.isCellDateFormatted(cell)) {
-                    cell.dateCellValue
+                    if (localDateTime)
+                        cell.localDateTimeCellValue
+                    else
+                        cell.dateCellValue
                 } else cell.numericCellValue
             }
             CellType.STRING -> cell.stringCellValue
