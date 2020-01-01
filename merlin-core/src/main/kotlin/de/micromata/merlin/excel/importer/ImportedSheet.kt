@@ -22,7 +22,6 @@
 /////////////////////////////////////////////////////////////////////////////
 package de.micromata.merlin.excel.importer
 
-import de.micromata.merlin.excel.ExcelColumnDef
 import de.micromata.merlin.excel.ExcelSheet
 import org.slf4j.Logger
 import java.io.Serializable
@@ -53,11 +52,6 @@ constructor(val storage: ImportStorage<T>,
     val logger = ImportLogger(excelSheet?.excelWorkbook, excelSheet, logLevel, logPrefix, logger)
 
     private var elements: MutableList<ImportedElement<T>>? = null
-
-    /**
-     * Map of column definitions to bean properties for assigning error messages to ImportedElements.
-     */
-    private var propertyMap = mutableMapOf<ExcelColumnDef, String>()
 
     /**
      * Name of the sheet (e. g. name of the MS Excel sheet).
@@ -284,17 +278,5 @@ constructor(val storage: ImportStorage<T>,
             }
         }
         return errorProperties
-    }
-
-    /**
-     * @return this for chaining.
-     */
-    fun putPropertyMapping(columnDef: ExcelColumnDef, property: String): ImportedSheet<T> {
-        propertyMap[columnDef] = property
-        return this
-    }
-
-    fun getPropertyMapping(columnDef: ExcelColumnDef): String? {
-        return propertyMap[columnDef]
     }
 }

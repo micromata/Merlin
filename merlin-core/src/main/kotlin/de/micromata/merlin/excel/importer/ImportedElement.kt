@@ -23,13 +23,10 @@
 package de.micromata.merlin.excel.importer
 
 import de.micromata.merlin.importer.PropertyDelta
+import de.micromata.merlin.utils.BeanHelper
 import org.apache.commons.collections4.MapUtils
-import org.apache.commons.lang3.ArrayUtils
-import org.apache.commons.lang3.StringUtils
 import org.slf4j.LoggerFactory
 import java.io.Serializable
-import java.lang.reflect.Method
-import java.lang.reflect.Modifier
 import java.math.BigDecimal
 
 /**
@@ -56,15 +53,13 @@ open class ImportedElement<T>
             diffProperties.forEach { diffProperty ->
                 excelSheet.getColumnDef(diffProperty)?.columnValidators?.filter { it.hasValidationErrors() }?.forEach { validator ->
                     val columnDef = validator.columnDef
-                    if (columnDef != null) {
-                        val property = importedSheet.getPropertyMapping(columnDef)
-                        if (property == null) {
-                            log.warn("Can't find property mapping for column '${columnDef.columnHeadname}'. Please register it by calling ImportedSheet.addPropertyMapping(...).")
-                        } else {
-                            validator.getValidationErrors(row).forEach {
-                                putErrorProperty(property, it.getMessage())
-                            }
+                    val targetProperty = columnDef?.targetProperty
+                    if (targetProperty != null) {
+                        validator.getValidationErrors(row).forEach {
+                            putErrorProperty(targetProperty, it.getMessage())
                         }
+                    } else {
+                        log.warn("Can't find target property for column '${columnDef?.columnHeadname}'.")
                     }
                 }
             }
@@ -101,7 +96,7 @@ open class ImportedElement<T>
 
             val deltas = mutableListOf<PropertyDelta>()
             diffProperties.forEach { fieldname ->
-                val method = determineGetter(clazz, fieldname)
+                val method = BeanHelper.determineGetter(clazz, fieldname)
                         ?: throw UnsupportedOperationException("Oups, no getter for property '$fieldname' found for (maybe typo in fieldname?): $value")
                 val newValue = method.invoke(value)
                 val origValue = method.invoke(oldValue)
@@ -230,39 +225,6 @@ open class ImportedElement<T>
         private const val serialVersionUID = -3405918702811291053L
 
         private val log = LoggerFactory.getLogger(ImportedElement::class.java)
-
-        private fun determineGetter(clazz: Class<*>, fieldname: String, onlyPublicGetter: Boolean = true): Method? {
-            val cap = StringUtils.capitalize(fieldname)
-            val methods: Array<Method> = getAllDeclaredMethods(clazz) ?: return null
-            for (method in methods) {
-                if (onlyPublicGetter && !Modifier.isPublic(method.modifiers)) {
-                    continue
-                }
-                val matches =
-                        if (Boolean::class.javaPrimitiveType!!.isAssignableFrom(method.returnType)) {
-                            "is$cap" == method.name || "has$cap" == method.name || "get$cap" == method.name
-                        } else {
-                            "get$cap" == method.name
-                        }
-                if (matches) {
-                    if (!method.isBridge) { // Don't return bridged methods (methods defined in interface or super class with different return type).
-                        return method
-                    }
-                }
-            }
-            return null
-
-        }
-
-        private fun getAllDeclaredMethods(clazz: Class<*>): Array<Method>? {
-            var cls = clazz
-            var methods = cls.declaredMethods
-            while (cls.superclass != null) {
-                cls = cls.superclass
-                methods = ArrayUtils.addAll(methods, *cls.declaredMethods) as Array<Method>
-            }
-            return methods
-        }
     }
 
 }

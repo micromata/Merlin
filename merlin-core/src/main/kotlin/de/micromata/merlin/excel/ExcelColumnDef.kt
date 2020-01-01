@@ -23,6 +23,23 @@ constructor(val sheet: ExcelSheet,
      */
     var occurrenceNumber = 1
 
+    /**
+     * If set, validation errors might be attached in [ImportedElement] and automatically assignment to beans is supported.
+     * If not given, [columnHeadname] in decapitalized form will be used.
+     */
+    var targetProperty: String? = null
+        get() = if (field != null) field else columnHeadname?.decapitalize()
+        private set
+
+    /**
+     * @return this for chaining.
+     * @see [targetProperty]
+     */
+    fun setTargetProperty(targetProperty: String): ExcelColumnDef {
+        this.targetProperty = targetProperty
+        return this
+    }
+
     val normalizedHeaderName
         get() = normalizedHeaderName(columnHeadname)
 
