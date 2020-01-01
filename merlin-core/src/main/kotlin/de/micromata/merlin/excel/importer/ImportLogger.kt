@@ -133,7 +133,7 @@ class ImportLogger(excelWorkbook: ExcelWorkbook? = null,
 
     fun addValidationErrors(sheet: ExcelSheet) {
         sheet.allValidationErrors.forEach {
-            error(it.message, it.row, it.columnDef.columnNumber)
+            error(it.getMessage(), it.row, it.columnDef?.columnNumber)
         }
     }
 

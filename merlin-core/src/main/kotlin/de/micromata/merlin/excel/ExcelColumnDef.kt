@@ -83,7 +83,7 @@ constructor(val sheet: ExcelSheet,
         if (columnListeners == null) {
             columnListeners = mutableListOf()
         }
-        val listener = columnListener.with(sheet, this)
+        val listener = columnListener.with(this)
         columnListeners!!.add(listener)
     }
 

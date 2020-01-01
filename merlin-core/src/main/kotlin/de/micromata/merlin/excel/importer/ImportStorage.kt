@@ -125,9 +125,10 @@ constructor(var id: Any? = null,
      *
      * @return next value.
      */
-    @Synchronized
     fun nextVal(): Int {
-        return lastVal++
+        synchronized(this) {
+            return lastVal++
+        }
     }
 
     companion object {

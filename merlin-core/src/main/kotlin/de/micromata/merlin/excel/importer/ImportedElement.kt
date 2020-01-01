@@ -44,12 +44,26 @@ open class ImportedElement<T>
  * @param clazz Needed for reflection.
  * @param diffProperties List of property names which will be used for display property changes.
  */(
-        /**
-         * Should be unique in the ImportedSheet and is use-able for indexed properties (e. g. check boxes).
-         * @return The index of this element.
-         */
-        val index: Int,
-        private val clazz: Class<T>, vararg val diffProperties: String) : Serializable {
+        val importedSheet: ImportedSheet<T>,
+        private val clazz: Class<T>,
+        vararg val diffProperties: String) : Serializable {
+
+    init {
+        val excelSheet = importedSheet.excelSheet
+        if (excelSheet != null) {
+            diffProperties.forEach {diffProperty ->
+               excelSheet.getColumnDef(diffProperty)?.columnValidators?.forEach {validator ->
+                   validator.hasValidationErrors()
+               }
+            }
+        }
+    }
+
+    /**
+     * Unique in the ImportedSheet and is use-able for indexed properties (e. g. check boxes).
+     * @see [ImportStorage.nextVal]
+     */
+    val index = importedSheet.storage.nextVal()
 
     var value: T? = null
         set(value) {
@@ -101,7 +115,7 @@ open class ImportedElement<T>
     var selected = false
         get() = !isFaulty && field
         set(selected) {
-            field = if (!isFaulty ) {
+            field = if (!isFaulty) {
                 selected
             } else {
                 false

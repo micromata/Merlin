@@ -116,9 +116,8 @@ open class ExcelColumnValidator
         return createValidationError(MESSAGE_VALUE_NOT_UNIQUE, rowNumber, cellValue, firstOccurrenceRowNumber + 1)
     }
 
-    protected fun createValidationError(messageId: String?, rowNumber: Int, cellValue: Any?, vararg params: Any?): ExcelValidationErrorMessage {
+    protected fun createValidationError(messageId: String, rowNumber: Int, cellValue: Any?, vararg params: Any?): ExcelValidationErrorMessage {
         return ExcelValidationErrorMessage(messageId, ResultMessageStatus.ERROR, *params)
-                .setSheet(sheet)
                 .setCellValue(cellValue)
                 .setColumnDef(columnDef)
                 .setRow(rowNumber)

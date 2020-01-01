@@ -1,6 +1,8 @@
 package de.micromata.merlin.importer
 
+import de.micromata.merlin.excel.importer.ImportStorage
 import de.micromata.merlin.excel.importer.ImportedElement
+import de.micromata.merlin.excel.importer.ImportedSheet
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import java.math.BigDecimal
@@ -10,7 +12,8 @@ internal class PropertyDeltaTest {
 
     @Test
     fun createPropertyDeltaTest() {
-        val element = ImportedElement<TestData>(1, TestData::class.java, "str", "decimalValue", "intValue")
+        val importedSheet = ImportedSheet<TestData>(ImportStorage())
+        val element = ImportedElement<TestData>(importedSheet, TestData::class.java, "str", "decimalValue", "intValue")
         element.value = TestData(null, null, null)
         element.oldValue = TestData(null, null, null)
         Assertions.assertTrue(element.propertyChanges.isNullOrEmpty())

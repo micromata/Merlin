@@ -34,7 +34,8 @@ import java.util.*
  */
 class ImportedSheet<T>
 @JvmOverloads
-constructor(excelSheet: ExcelSheet? = null,
+constructor(val storage: ImportStorage<T>,
+            val excelSheet: ExcelSheet? = null,
             /**
              * If given, all events of log level or higher will be logged to standard logger (slf4j).
              */
