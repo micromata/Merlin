@@ -7,6 +7,7 @@ import org.apache.poi.ss.usermodel.CellType
 import org.apache.poi.ss.usermodel.DateUtil
 import org.slf4j.LoggerFactory
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
 
@@ -29,16 +30,16 @@ class ExcelColumnDateValidator(vararg dateFormats: String) : ExcelColumnValidato
         this.dateFormats = src.dateFormats
     }
 
-    fun convert(cell: Cell?): LocalDate? {
+    /**
+     * Representation without time zone information.
+     */
+    fun getLocalDateTime(cell: Cell?): LocalDateTime? {
         if (cell == null) {
             return null
         }
         if (cell.cellType == CellType.NUMERIC) {
             try {
-                val date = cell.localDateTimeCellValue
-                if (date != null) {
-                    return date.toLocalDate()
-                }
+                return cell.localDateTimeCellValue
             } catch (ex: Exception) {
                 if (log.isDebugEnabled) {
                     log.debug(ex.message, ex)
@@ -51,13 +52,22 @@ class ExcelColumnDateValidator(vararg dateFormats: String) : ExcelColumnValidato
             }
             this.dateTimeFormatters.forEach {
                 try {
-                    return LocalDate.parse(strVal, it)
+                    return LocalDateTime.parse(strVal, it)
                 } catch (ex: DateTimeParseException) {
                     // Date doesn't fit this format.
                 }
             }
         }
         return null
+    }
+
+    /**
+     * Representation without time zone information.
+     */
+    @Suppress("unused")
+    fun getLocalDate(cell: Cell?): LocalDate? {
+        val date = getLocalDateTime(cell) ?: return null
+        return date.toLocalDate()
     }
 
     /**
@@ -86,7 +96,7 @@ class ExcelColumnDateValidator(vararg dateFormats: String) : ExcelColumnValidato
                 }
             }
         } else if (cell.cellType == CellType.STRING) {
-            isDateFormatted = convert(cell) != null
+            isDateFormatted = getLocalDateTime(cell) != null
         }
         return if (!isDateFormatted) {
             createValidationError(MESSAGE_DATE_EXPECTED, rowNumber, getValueAsString(cell))
