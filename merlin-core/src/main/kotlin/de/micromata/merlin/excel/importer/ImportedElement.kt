@@ -190,19 +190,17 @@ open class ImportedElement<T>
     /**
      * For properties which can't be mapped due to errors (e. g. referenced element not found).
      * @param key Key of the error property.
-     * @param value Value of the error property.
+     * @param value Value of the error property. If null, an empty string will be added.
      */
-    fun putErrorProperty(key: String, value: Any) {
+    fun putErrorProperty(key: String, value: Any?) {
         if (errorProperties == null) {
             errorProperties = mutableMapOf()
         }
-        errorProperties!![key] = value
+        errorProperties!![key] = value ?: ""
     }
 
-    fun removeErrorProperty(key: String?) {
-        if (errorProperties != null) {
-            errorProperties!!.remove(key)
-        }
+    fun removeErrorProperty(key: String) {
+        errorProperties?.remove(key)
     }
 
     fun getErrorProperties(): Map<String, Any>? {
@@ -213,12 +211,8 @@ open class ImportedElement<T>
      * @param key The key of the error property.
      * @return The error property if found, otherwise null.
      */
-    fun getErrorProperty(key: String?): Any? {
-        var obj: Any? = null
-        if (errorProperties != null) {
-            obj = errorProperties!![key]
-        }
-        return obj
+    fun getErrorProperty(key: String): Any {
+        return errorProperties?.get(key) ?: ""
     }
 
     companion object {
