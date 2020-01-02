@@ -42,7 +42,15 @@ object ImportHelper {
                 val targetProperty = columnDef.targetProperty
                 val cell = sheet.getCell(row, columnDef)
                 if (targetProperty != null && cell != null) {
-                    BeanHelper.setProperty(bean, targetProperty, PoiHelper.getValue(cell), false)
+                    val setter = BeanHelper.determineSetter(bean::class.java, targetProperty)
+                    if (setter != null) {
+                        val type = setter.parameterTypes[0]
+                        val cellValue = if (type?.isAssignableFrom(String::class.java) == true)
+                            PoiHelper.getValueAsString(cell, true)
+                        else
+                            PoiHelper.getValue(cell)
+                        BeanHelper.setProperty(bean, setter, type, cellValue, true)
+                    }
                 }
             }
         }

@@ -20,7 +20,8 @@ internal class ImportHelperTest {
                  var dateTime: LocalDateTime? = null,
                  var money: Double? = null,
                  var height: BigDecimal? = null,
-                 var floatValue: Float? = null)
+                 var floatValue: Float? = null,
+                 var text: String? = null)
 
     @Test
     fun fillBeanTest() {
@@ -34,6 +35,7 @@ internal class ImportHelperTest {
         sheet.registerColumn("Money")
         sheet.registerColumn("Height")
         sheet.registerColumn("FloatValue")
+        sheet.registerColumn("Text")
         sheet.registerColumn("unknown")
         val it: Iterator<Row> = sheet.dataRowIterator
         var row = it.next()
@@ -45,6 +47,7 @@ internal class ImportHelperTest {
         Assertions.assertEquals(37.25, person.money)
         Assertions.assertEquals("1.78", person.height!!.toString())
         Assertions.assertEquals("1.27", person.floatValue!!.toString())
+        Assertions.assertEquals("1,3", person.text)
 
         Assertions.assertEquals(2019, person.date!!.year)
         Assertions.assertEquals(28, person.date!!.dayOfMonth)
