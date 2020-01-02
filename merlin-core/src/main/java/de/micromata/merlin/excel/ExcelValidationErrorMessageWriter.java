@@ -1,9 +1,6 @@
 package de.micromata.merlin.excel;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellType;
-import org.apache.poi.ss.usermodel.Row;
 
 public class ExcelValidationErrorMessageWriter {
     private static final String COLUMN_HEAD_ID = "merlin.excel.validation_error.error_column_headname";

@@ -12,6 +12,8 @@ import org.apache.poi.ss.util.CellRangeAddress
 import org.apache.poi.ss.util.CellReference
 import org.slf4j.LoggerFactory
 import java.math.BigDecimal
+import java.time.LocalDate
+import java.time.LocalDateTime
 import java.util.*
 
 /**
@@ -19,6 +21,12 @@ import java.util.*
  */
 class ExcelSheet internal constructor(val excelWorkbook: ExcelWorkbook, val poiSheet: Sheet) {
     private val columnDefList: MutableList<ExcelColumnDef> = ArrayList()
+
+    /**
+     * If true, any requested cell will be created if not exists. Default is false.
+     * @see [getCell]
+     */
+    var writeMode: Boolean = false
 
     @Suppress("unused")
     val columnDefinitions
@@ -238,7 +246,7 @@ class ExcelSheet internal constructor(val excelWorkbook: ExcelWorkbook, val poiS
     @JvmOverloads
     fun getCellString(row: Row, columnHeadname: String, nullAsEmpty: Boolean = true, trimValue: Boolean = autotrimCellValues): String? {
         // findAndReadHeadRow(); Will be called in getColumnDef
-        val cell = getCell(row, columnHeadname) ?: return if (nullAsEmpty) "" else null
+        val cell = getCell(row, columnHeadname, false) ?: return if (nullAsEmpty) "" else null
         return PoiHelper.getValueAsString(cell, trimValue)
     }
 
@@ -251,7 +259,7 @@ class ExcelSheet internal constructor(val excelWorkbook: ExcelWorkbook, val poiS
      */
     fun getCellString(row: Row, columnDef: ExcelColumnDef?, nullAsEmpty: Boolean = true, trimValue: Boolean = autotrimCellValues): String? {
         // findAndReadHeadRow(); Will be called in getColumnDef
-        val cell = getCell(row, columnDef) ?: return if (nullAsEmpty) "" else null
+        val cell = getCell(row, columnDef, false) ?: return if (nullAsEmpty) "" else null
         return PoiHelper.getValueAsString(cell, trimValue)
     }
 
@@ -271,12 +279,7 @@ class ExcelSheet internal constructor(val excelWorkbook: ExcelWorkbook, val poiS
      * @return The String value of the specified column cell.
      */
     fun getCellInt(row: Row, columnHeadname: String): Int? { // findAndReadHeadRow(); Will be called in getColumnDef
-        val cell = getCell(row, columnHeadname) ?: return null
-        if (cell.getCellType() != CellType.NUMERIC) {
-            log.warn("Cell of column '$columnHeadname' in row ${row.rowNum} of sheet '$sheetName' isn't of type numeric: '${cell}'.")
-            return null
-        }
-        return cell.numericCellValue.toInt()
+        return getCellDouble(row, columnHeadname)?.toInt() ?: return null
     }
 
     /**
@@ -295,37 +298,16 @@ class ExcelSheet internal constructor(val excelWorkbook: ExcelWorkbook, val poiS
      * @return The String value of the specified column cell.
      */
     fun getCellDouble(row: Row, columnHeadname: String): Double? { // findAndReadHeadRow(); Will be called in getColumnDef
-        val cell = getCell(row, columnHeadname) ?: return null
-        if (cell.getCellType() != CellType.NUMERIC) {
+        return getNumericCell(row, columnHeadname)?.numericCellValue ?: return null
+    }
+
+    private fun getNumericCell(row: Row, columnHeadname: String): Cell? {
+        val cell = getCell(row, columnHeadname, false) ?: return null
+        if (cell.cellType != CellType.NUMERIC) {
             log.warn("Cell of column '$columnHeadname' in row ${row.rowNum} of sheet '$sheetName' isn't of type numeric: '${cell}'.")
             return null
         }
-        return cell.numericCellValue
-    }
-
-    /**
-     * @param row        The row to get the cell value from.
-     * @param columnName The name of the column to get.
-     * @return The String value of the specified column cell.
-     */
-    @Suppress("MemberVisibilityCanBePrivate")
-    fun getCellDate(row: Row, columnName: ExcelColumnName): Date? { // findAndReadHeadRow(); Will be called in getColumnDef
-        return getCellDate(row, columnName)
-    }
-
-    /**
-     * @param row            The row to get the cell value from.
-     * @param columnHeadname The name of the column to get.
-     * @return The String value of the specified column cell.
-     */
-    @Suppress("unused")
-    fun getCellDate(row: Row, columnHeadname: String): Date? { // findAndReadHeadRow(); Will be called in getColumnDef
-        val cell = getCell(row, columnHeadname) ?: return null
-        if (cell.getCellType() != CellType.NUMERIC) {
-            log.warn("Cell of column '$columnHeadname' in row ${row.rowNum} of sheet '$sheetName' isn't of type numeric: '${cell}'.")
-            return null
-        }
-        return cell.dateCellValue
+        return cell
     }
 
     /**
@@ -333,8 +315,9 @@ class ExcelSheet internal constructor(val excelWorkbook: ExcelWorkbook, val poiS
      * @param columnName The name of the column to get the cell from.
      * @return The cell of the specified column of the current row (uses internal interator).
      */
-    fun getCell(row: Row, columnName: ExcelColumnName): Cell? { // findAndReadHeadRow(); Will be called in getColumnDef
-        return getCell(row, columnName.head)
+    @JvmOverloads
+    fun getCell(row: Row, columnName: ExcelColumnName, ensureCell: Boolean = writeMode): Cell? { // findAndReadHeadRow(); Will be called in getColumnDef
+        return getCell(row, columnName.head, ensureCell)
     }
 
     /**
@@ -342,17 +325,20 @@ class ExcelSheet internal constructor(val excelWorkbook: ExcelWorkbook, val poiS
      * @param columnHeadname The name of the column to get the cell from.
      * @return The cell of the specified column of the current row (uses internal interator).
      */
-    fun getCell(row: Row, columnHeadname: String): Cell? { // findAndReadHeadRow(); Will be called in getColumnDef
+    @JvmOverloads
+    fun getCell(row: Row, columnHeadname: String, ensureCell: Boolean = writeMode): Cell? { // findAndReadHeadRow(); Will be called in getColumnDef
         val columnDef = getColumnDef(columnHeadname)
-        return getCell(row, columnDef)
+        return getCell(row, columnDef, ensureCell)
     }
 
     /**
      * @param row       The row to get the cell from.
      * @param columnDef The specified column to get the cell from.
+     * @param ensureCell If true, the cell will be created if not exist. True is default on [writeMode].
      * @return The cell of the specified column of the current row (uses internal interator).
      */
-    fun getCell(row: Row, columnDef: ExcelColumnDef?): Cell? {
+    @JvmOverloads
+    fun getCell(row: Row, columnDef: ExcelColumnDef?, ensureCell: Boolean = writeMode): Cell? {
         findAndReadHeadRow()
         if (columnDef == null) {
             return null
@@ -361,27 +347,34 @@ class ExcelSheet internal constructor(val excelWorkbook: ExcelWorkbook, val poiS
             log.debug("Column '" + columnDef.columnHeadname + "' not found in sheet '" + sheetName + "': can't run cell.")
             return null
         }
-        return row.getCell(columnDef._columnNumber)
+        return getCell(row.rowNum, columnDef._columnNumber, ensureCell)
     }
 
     /**
-     * @param row       Excel row number (starting with 0, POI row number).
-     * @param columnDef The specified column to get the cell from.
+     * @param row        Excel row number (starting with 0, POI row number).
+     * @param columnDef  The specified column to get the cell from.
+     * @param ensureCell If true, the cell will be created if not exist. True is default on [writeMode].
      * @return The specified cell.
      */
-    fun getCell(row: Int, columnDef: ExcelColumnDef): Cell {
+    @JvmOverloads
+    fun getCell(row: Int, columnDef: ExcelColumnDef, ensureCell: Boolean = writeMode): Cell? {
         findAndReadHeadRow()
-        return getCell(row, columnDef._columnNumber)
+        return getCell(row, columnDef._columnNumber, ensureCell)
     }
 
     /**
      * @param rowNum       Excel row number (starting with 0, POI row number).
      * @param columnNumber The specified column to get the cell from.
+     * @param ensureCell If true, the cell will be created if not exist. True is default on [writeMode].
      * @return The specified cell.
      */
-    fun getCell(rowNum: Int, columnNumber: Int): Cell {
+    @JvmOverloads
+    fun getCell(rowNum: Int, columnNumber: Int, ensureCell: Boolean = writeMode): Cell? {
         findAndReadHeadRow()
-        return getRow(rowNum)!!.getCell(columnNumber).cell
+        return if (ensureCell)
+            getRow(rowNum)!!.getCell(columnNumber)?.cell
+        else
+            poiSheet.getRow(rowNum)?.getCell(columnNumber)
     }
 
     private fun findAndReadHeadRow() {
@@ -571,10 +564,7 @@ class ExcelSheet internal constructor(val excelWorkbook: ExcelWorkbook, val poiS
                 isModified = true
             }
             if (columnDef != null) {
-                var cell = row!!.getCell(columnDef._columnNumber)
-                if (cell == null) {
-                    cell = row.getCell(columnDef._columnNumber, ExcelCellType.STRING)
-                }
+                var cell = row!!.getCell(columnDef._columnNumber, ExcelCellType.STRING)
                 if (excelWriterContext.isHighlightErrorCells) { // Cell validation error. Highlight cell.
                     excelWriterContext.cellHighlighter.highlightErrorCell(cell, excelWriterContext, this,
                             columnDef, row)
@@ -612,7 +602,7 @@ class ExcelSheet internal constructor(val excelWorkbook: ExcelWorkbook, val poiS
     }
 
     fun setBigDecimalValue(row: Int, col: Int, value: BigDecimal?): Cell {
-        val cell = getCell(row, col)
+        val cell = getCell(row, col, true)!!
         if (value == null) cell.setBlank() else {
             cell.setCellValue(value.toDouble())
             if (value.scale() == 0) {
@@ -634,7 +624,7 @@ class ExcelSheet internal constructor(val excelWorkbook: ExcelWorkbook, val poiS
     }
 
     fun setDoubleValue(row: Int, col: Int, value: Double?): Cell {
-        val cell = getCell(row, col)
+        val cell = getCell(row, col, true)!!
         if (value == null) cell.setBlank() else {
             cell.setCellValue(value)
             cell.cellStyle = excelWorkbook.ensureCellStyle(ExcelCellStandardFormat.FLOAT)
@@ -652,7 +642,7 @@ class ExcelSheet internal constructor(val excelWorkbook: ExcelWorkbook, val poiS
     }
 
     fun setIntValue(row: Int, col: Int, value: Int?): Cell {
-        val cell = getCell(row, col)
+        val cell = getCell(row, col, true)!!
         if (value == null) cell.setBlank() else {
             cell.setCellValue(value.toDouble())
             cell.cellStyle = excelWorkbook.ensureCellStyle(ExcelCellStandardFormat.INT)
@@ -670,7 +660,7 @@ class ExcelSheet internal constructor(val excelWorkbook: ExcelWorkbook, val poiS
     }
 
     fun setStringValue(row: Int, col: Int, value: String?): Cell {
-        val cell = getCell(row, col)
+        val cell = getCell(row, col, true)!!
         if (value == null) cell.setBlank() else cell.setCellValue(value)
         return cell
     }
@@ -685,7 +675,43 @@ class ExcelSheet internal constructor(val excelWorkbook: ExcelWorkbook, val poiS
     }
 
     fun setDateValue(row: Int, col: Int, value: Date?, dateFormat: String?): Cell {
-        val cell = getCell(row, col)
+        val cell = getCell(row, col, true)!!
+        if (value == null) cell.setBlank() else {
+            cell.setCellValue(value)
+            cell.cellStyle = excelWorkbook.ensureDateCellStyle(dateFormat!!)
+        }
+        return cell
+    }
+
+    @Suppress("unused")
+    fun setDateValue(row: Int, columnHeader: String, value: LocalDate?, dateFormat: String?): Cell {
+        return setDateValue(row, getColumnDef(columnHeader), value, dateFormat)
+    }
+
+    fun setDateValue(row: Int, col: ExcelColumnDef?, value: LocalDate?, dateFormat: String?): Cell {
+        return setDateValue(row, col!!._columnNumber, value, dateFormat)
+    }
+
+    fun setDateValue(row: Int, col: Int, value: LocalDate?, dateFormat: String?): Cell {
+        val cell = getCell(row, col, true)!!
+        if (value == null) cell.setBlank() else {
+            cell.setCellValue(value)
+            cell.cellStyle = excelWorkbook.ensureDateCellStyle(dateFormat!!)
+        }
+        return cell
+    }
+
+    @Suppress("unused")
+    fun setDateValue(row: Int, columnHeader: String, value: LocalDateTime?, dateFormat: String?): Cell {
+        return setDateValue(row, getColumnDef(columnHeader), value, dateFormat)
+    }
+
+    fun setDateValue(row: Int, col: ExcelColumnDef?, value: LocalDateTime?, dateFormat: String?): Cell {
+        return setDateValue(row, col!!._columnNumber, value, dateFormat)
+    }
+
+    fun setDateValue(row: Int, col: Int, value: LocalDateTime?, dateFormat: String?): Cell {
+        val cell = getCell(row, col, true)!!
         if (value == null) cell.setBlank() else {
             cell.setCellValue(value)
             cell.cellStyle = excelWorkbook.ensureDateCellStyle(dateFormat!!)
