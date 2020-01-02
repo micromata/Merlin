@@ -3,17 +3,15 @@ package de.micromata.merlin.excel
 import org.apache.poi.ss.usermodel.Cell
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import java.util.*
 
 /**
  * Validates each cell of a column: Each cell must be a valid Excel date format.
  */
 class ExcelColumnDateTimeValidator
 @JvmOverloads constructor(dateFormats: Array<String> = ENGLISH_MONTH_FIRST_DATETIME_FORMATS,
-                          locale: Locale = Locale.getDefault(),
                           minimum: LocalDateTime? = null,
                           maximum: LocalDateTime? = null)
-    : AbstractExcelColumnDateValidator<LocalDateTime>(dateFormats, locale, minimum, maximum) {
+    : AbstractExcelColumnDateValidator<LocalDateTime>(dateFormats, minimum, maximum) {
 
     override fun clone(): ExcelColumnDateTimeValidator {
         val clone = ExcelColumnDateTimeValidator()

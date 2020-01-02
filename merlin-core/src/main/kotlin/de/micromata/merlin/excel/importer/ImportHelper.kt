@@ -34,8 +34,10 @@ object ImportHelper {
      * Try to copy registered cell values of the given Excel row by name. This works for base data types.
      * Columns should be registered and have a targetProperty which fits the given bean.
      * Ignores null values.
+     * @param locale The locale is used to format numbers as Strings (if numbers will be written to string properties of beans).
      * @see de.micromata.merlin.excel.ExcelColumnDef.targetProperty
      */
+    @JvmOverloads
     fun fillBean(bean: Any, sheet: ExcelSheet, row: Int) {
         sheet.columnDefinitions.forEach { columnDef ->
             if (columnDef.found()) {
@@ -46,7 +48,7 @@ object ImportHelper {
                     if (setter != null) {
                         val type = setter.parameterTypes[0]
                         val cellValue = if (type?.isAssignableFrom(String::class.java) == true)
-                            PoiHelper.getValueAsString(cell, true)
+                            PoiHelper.getValueAsString(cell, sheet.locale, true)
                         else
                             PoiHelper.getValue(cell)
                         BeanHelper.setProperty(bean, setter, type, cellValue, true)

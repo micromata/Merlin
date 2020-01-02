@@ -11,6 +11,7 @@ import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.Month
+import java.util.*
 
 internal class ImportHelperTest {
     class Person(var email: String? = null,
@@ -25,7 +26,7 @@ internal class ImportHelperTest {
 
     @Test
     fun fillBeanTest() {
-        val excelWorkbook = ExcelWorkbook(File(Definitions.EXAMPLES_EXCEL_TEST_DIR, "Workbook-Test.xlsx"))
+        val excelWorkbook = ExcelWorkbook(File(Definitions.EXAMPLES_EXCEL_TEST_DIR, "Workbook-Test.xlsx"), Locale.GERMAN)
         val sheet = excelWorkbook.getSheet("fillBean")!!
         sheet.registerColumn("E-Mail").setTargetProperty("email")
         sheet.registerColumn("Name")

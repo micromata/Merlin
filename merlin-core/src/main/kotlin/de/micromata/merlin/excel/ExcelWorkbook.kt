@@ -16,7 +16,14 @@ import java.util.*
 /**
  * Wraps and enhances a POI workbook.
  */
-class ExcelWorkbook : AutoCloseable {
+class ExcelWorkbook
+@JvmOverloads constructor(
+        /**
+         * Is used e. g. for getting number cell values as String.
+         */
+        val locale: Locale = Locale.getDefault())
+    : AutoCloseable {
+
     lateinit var pOIWorkbook: Workbook
         private set
     private val sheetList = mutableListOf<ExcelSheet>()
@@ -25,7 +32,7 @@ class ExcelWorkbook : AutoCloseable {
     private val fontMap: MutableMap<String, Font?> = HashMap()
     private var inputStream: InputStream? = null
     var filename: String? = null
-    private set
+        private set
 
     var formulaEvaluator: FormulaEvaluator? = null
         get() {
@@ -36,12 +43,22 @@ class ExcelWorkbook : AutoCloseable {
         }
         private set
 
-    constructor(workbook: Workbook) {
+    @JvmOverloads
+    constructor(workbook: Workbook,
+                locale: Locale = Locale.getDefault())
+            : this(locale) {
         pOIWorkbook = workbook
     }
 
-    constructor(excelFilename: String) : this(File(excelFilename)) {}
-    constructor(excelFile: File) {
+    @JvmOverloads
+    constructor(excelFilename: String,
+                locale: Locale = Locale.getDefault())
+            : this(File(excelFilename), locale)
+
+    @JvmOverloads
+    constructor(excelFile: File,
+                locale: Locale = Locale.getDefault())
+            : this(locale) {
         try {
             val fis = FileInputStream(excelFile)
             open(fis, excelFile.name)
@@ -55,7 +72,11 @@ class ExcelWorkbook : AutoCloseable {
      * @param inputStream The input stream to read the Excel content from.
      * @param filename    Only for logging purposes if any error occurs.
      */
-    constructor(inputStream: InputStream, filename: String) {
+    @JvmOverloads
+    constructor(inputStream: InputStream,
+                filename: String,
+                locale: Locale = Locale.getDefault())
+            : this(locale) {
         open(inputStream, filename)
     }
 

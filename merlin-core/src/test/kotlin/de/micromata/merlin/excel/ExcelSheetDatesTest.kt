@@ -13,10 +13,10 @@ import java.util.*
 internal class ExcelSheetDatesTest {
     @Test
     fun parseDatesTest() {
-        val excelWorkbook = ExcelWorkbook(File(Definitions.EXAMPLES_EXCEL_TEST_DIR, "Workbook-Test.xlsx"))
+        val excelWorkbook = ExcelWorkbook(File(Definitions.EXAMPLES_EXCEL_TEST_DIR, "Workbook-Test.xlsx"), Locale.ENGLISH)
         val sheet = excelWorkbook.getSheet("dates")!!
-        val dateVal = ExcelColumnDateValidator(ExcelColumnDateValidator.GERMAN_FORMATS, Locale.ENGLISH)
-        val dateTimeVal = ExcelColumnDateTimeValidator(ExcelColumnDateTimeValidator.GERMAN_DATETIME_FORMATS, Locale.ENGLISH)
+        val dateVal = ExcelColumnDateValidator(ExcelColumnDateValidator.GERMAN_FORMATS)
+        val dateTimeVal = ExcelColumnDateTimeValidator(ExcelColumnDateTimeValidator.GERMAN_DATETIME_FORMATS)
         sheet.registerColumn("Date", dateVal)
         sheet.registerColumn("DateTime", dateVal)
 

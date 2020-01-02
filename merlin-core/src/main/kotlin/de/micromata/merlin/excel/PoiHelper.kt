@@ -5,6 +5,9 @@ import org.apache.poi.ss.usermodel.CellType
 import org.apache.poi.ss.usermodel.DataFormatter
 import org.apache.poi.ss.usermodel.DateUtil
 import org.slf4j.LoggerFactory
+import java.text.NumberFormat
+import java.time.LocalDateTime
+import java.util.*
 
 /**
  * Some helper classes.
@@ -16,19 +19,19 @@ object PoiHelper {
      */
     @JvmStatic
     @JvmOverloads
-    fun getValueAsString(cell: Cell?, trimValue: Boolean = false): String? {
+    fun getValueAsString(cell: Cell?, locale: Locale = Locale.getDefault(), trimValue: Boolean = false): String? {
         if (cell == null) {
             return null
         }
-        val result =
-                if (cell.cellType == CellType.STRING) {
-                    cell.stringCellValue
-                } else {
-                    val formatter = DataFormatter()
-                    formatter.formatCellValue(cell)
-                }
-        return if (trimValue) result?.trim { it <= ' ' }
-        else result
+        val value = getValue(cell)
+        if (value == null)
+            return null
+        return when (value) {
+            is String -> if (trimValue) value.trim { it <= ' ' } else value
+            is Number -> NumberFormat.getInstance(locale).format(value)
+            is LocalDateTime -> DataFormatter().formatCellValue(cell)
+            else -> value.toString()
+        }
     }
 
     /**

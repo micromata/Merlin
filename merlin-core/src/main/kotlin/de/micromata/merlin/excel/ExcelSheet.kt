@@ -28,6 +28,9 @@ class ExcelSheet internal constructor(val excelWorkbook: ExcelWorkbook, val poiS
      */
     var writeMode: Boolean = false
 
+    val locale: Locale
+        get() = excelWorkbook.locale
+
     @Suppress("unused")
     val columnDefinitions
         get() = columnDefList.toList()
@@ -247,7 +250,7 @@ class ExcelSheet internal constructor(val excelWorkbook: ExcelWorkbook, val poiS
     fun getCellString(row: Row, columnHeadname: String, nullAsEmpty: Boolean = true, trimValue: Boolean = autotrimCellValues): String? {
         // findAndReadHeadRow(); Will be called in getColumnDef
         val cell = getCell(row, columnHeadname, false) ?: return if (nullAsEmpty) "" else null
-        return PoiHelper.getValueAsString(cell, trimValue)
+        return PoiHelper.getValueAsString(cell, locale, trimValue)
     }
 
     /**
@@ -260,7 +263,7 @@ class ExcelSheet internal constructor(val excelWorkbook: ExcelWorkbook, val poiS
     fun getCellString(row: Row, columnDef: ExcelColumnDef?, nullAsEmpty: Boolean = true, trimValue: Boolean = autotrimCellValues): String? {
         // findAndReadHeadRow(); Will be called in getColumnDef
         val cell = getCell(row, columnDef, false) ?: return if (nullAsEmpty) "" else null
-        return PoiHelper.getValueAsString(cell, trimValue)
+        return PoiHelper.getValueAsString(cell, locale, trimValue)
     }
 
     /**

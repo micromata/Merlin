@@ -8,14 +8,12 @@ import org.slf4j.LoggerFactory
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
-import java.util.*
 
 /**
  * Validates each cell of a column: Each cell must be a valid Excel date format.
  */
 abstract class AbstractExcelColumnDateValidator<T>
 @JvmOverloads constructor(dateFormats: Array<String>,
-                          locale: Locale,
                           minimum: T? = null,
                           maximum: T? = null)
     : ExcelColumnValidator() {
@@ -24,15 +22,6 @@ abstract class AbstractExcelColumnDateValidator<T>
         private set
     var dateFormats: Array<out String>
         private set
-
-    /**
-     * Locale for parsing month names, such as July, 16
-     */
-    var locale = locale
-        set(value) {
-            field = value
-            initDateFormaters()
-        }
 
     /**
      * @param minimum If given each number must be equals or higher than this given minimum value. Default is null.
@@ -59,6 +48,7 @@ abstract class AbstractExcelColumnDateValidator<T>
 
     override fun copyFrom(src: ExcelColumnValidator) {
         super.copyFrom(src)
+        @Suppress("UNCHECKED_CAST")
         src as AbstractExcelColumnDateValidator<T>
         this.dateFormats = src.dateFormats
         initDateFormaters()
@@ -70,7 +60,7 @@ abstract class AbstractExcelColumnDateValidator<T>
 
     protected fun <T> parse(cell: Cell, parse: (String, DateTimeFormatter) -> T, type: String): T? {
         if (cell.cellType == CellType.STRING) {
-            val strVal = PoiHelper.getValueAsString(cell, true)
+            val strVal = PoiHelper.getValueAsString(cell, locale, true)
             if (strVal.isNullOrBlank()) {
                 return null
             }

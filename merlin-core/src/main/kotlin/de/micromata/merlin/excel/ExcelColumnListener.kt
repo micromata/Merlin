@@ -1,6 +1,7 @@
 package de.micromata.merlin.excel
 
 import org.apache.poi.ss.usermodel.Cell
+import java.util.*
 
 /**
  * A column listener assigned to a [ExcelColumnDef] listens to all read cell values of the specified column.
@@ -17,6 +18,9 @@ abstract class ExcelColumnListener {
      */
     val sheet: ExcelSheet?
         get() = columnDef?.sheet
+
+    val locale: Locale
+        get() = sheet?.locale ?: Locale.getDefault()
 
     abstract fun readCell(cell: Cell?, rowNumber: Int)
 

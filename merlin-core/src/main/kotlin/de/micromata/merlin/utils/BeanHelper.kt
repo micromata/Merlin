@@ -68,7 +68,6 @@ object BeanHelper {
     }
 
     @JvmStatic
-    @JvmOverloads
     fun getAllDeclaredMethods(clazz: Class<*>): Array<Method>? {
         var cls = clazz
         var methods = cls.declaredMethods
