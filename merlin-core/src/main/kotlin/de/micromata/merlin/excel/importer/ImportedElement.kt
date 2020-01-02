@@ -50,8 +50,8 @@ open class ImportedElement<T>
     init {
         val excelSheet = importedSheet.excelSheet
         if (excelSheet != null) {
-            diffProperties.forEach { diffProperty ->
-                excelSheet.getColumnDef(diffProperty)?.columnValidators?.filter { it.hasValidationErrors() }?.forEach { validator ->
+            excelSheet.columnDefinitions.forEach { columnDef ->
+                columnDef.columnValidators?.filter { it.hasValidationErrors() }?.forEach { validator ->
                     val columnDef = validator.columnDef
                     val targetProperty = columnDef?.targetProperty
                     if (targetProperty != null) {
