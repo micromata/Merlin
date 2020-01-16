@@ -37,7 +37,6 @@ object ImportHelper {
      * @param locale The locale is used to format numbers as Strings (if numbers will be written to string properties of beans).
      * @see de.micromata.merlin.excel.ExcelColumnDef.targetProperty
      */
-    @JvmOverloads
     fun fillBean(bean: Any, sheet: ExcelSheet, row: Int) {
         sheet.columnDefinitions.forEach { columnDef ->
             if (columnDef.found()) {

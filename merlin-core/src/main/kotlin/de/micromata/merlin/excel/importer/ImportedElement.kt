@@ -52,14 +52,14 @@ open class ImportedElement<T>
         if (excelSheet != null) {
             excelSheet.columnDefinitions.forEach { columnDef ->
                 columnDef.columnValidators?.filter { it.hasValidationErrors() }?.forEach { validator ->
-                    val columnDef = validator.columnDef
-                    val targetProperty = columnDef?.targetProperty
+                    val def = validator.columnDef
+                    val targetProperty = def?.targetProperty
                     if (targetProperty != null) {
                         validator.getValidationErrors(row).forEach {
                             putErrorProperty(targetProperty, it.getMessage())
                         }
                     } else {
-                        log.warn("Can't find target property for column '${columnDef?.columnHeadname}'.")
+                        log.warn("Can't find target property for column '${def?.columnHeadname}'.")
                     }
                 }
             }

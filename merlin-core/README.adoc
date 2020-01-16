@@ -232,3 +232,4 @@ Check:
 3. Check downloads
 4. Press Release button at the top.
 
+2019: Remark for recent Gradle 6.0 releases: https://issues.sonatype.org/browse/OSSRH-53860
