@@ -101,6 +101,7 @@ object ReplaceUtils {
      * @return The encoded filename.
      */
     @JvmStatic
+    @JvmOverloads
     fun encodeFilename(filename: String?, reducedCharsOnly: Boolean = true): String {
         var filename = filename
         if (StringUtils.isEmpty(filename)) {
@@ -139,8 +140,8 @@ object ReplaceUtils {
 
     @JvmStatic
     fun replaceGermanUmlauteAndAccents(text: String?): String? {
-        if (text == null) {
-            return null
+        if (text.isNullOrBlank()) {
+            return text
         }
         val sb = StringBuilder()
         val charArray = text.toCharArray()
