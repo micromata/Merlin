@@ -1,5 +1,6 @@
 package de.micromata.merlin.excel.i18n;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.*;
@@ -104,7 +105,7 @@ public class I18nConverterTest {
     }
 
     // Works only for me ;-)
-    @Test
+    @Disabled
     void realTest() throws IOException {
         String realTestDir = "/Users/kai/Documents/merlin-i18n";
         String baseoutFilename = "i18n-translations";

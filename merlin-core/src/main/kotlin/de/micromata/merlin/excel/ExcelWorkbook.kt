@@ -80,6 +80,18 @@ class ExcelWorkbook
         open(inputStream, filename)
     }
 
+    /**
+     * @param inputStream The input stream to read the Excel content from.
+     * @param filename    Only for logging purposes if any error occurs.
+     */
+    @JvmOverloads
+    constructor(byteArray: ByteArray,
+                filename: String,
+                locale: Locale = Locale.getDefault())
+            : this(locale) {
+        open(byteArray.inputStream(), filename)
+    }
+
     private fun open(inputStream: InputStream, filename: String) {
         this.filename = File(filename).name
         this.inputStream = inputStream
@@ -159,6 +171,34 @@ class ExcelWorkbook
             sheetList.clear()
         }
         return sheet
+    }
+
+    /**
+     * Clones the current sheet.
+     *
+     * @see Workbook.cloneSheet
+     */
+    fun cloneSheet(sheetNum: Int, name: String?): ExcelSheet? {
+        val originSheet = getSheet(sheetNum)
+        val index = pOIWorkbook.numberOfSheets
+        val poiSheet: Sheet = this.pOIWorkbook.cloneSheet(sheetNum)
+        this.pOIWorkbook.setSheetName(index, name)
+        val sheet = ExcelSheet(this, poiSheet)
+        synchronized(this) {
+            sheetListInitialized = false
+            sheetList.clear()
+        }
+        return sheet
+    }
+
+    /**
+     * Remove the sheet at the given position.
+     *
+     * @param index
+     * @return this for chaining.
+     */
+    fun removeSheetAt(idx: Int){
+        pOIWorkbook.removeSheetAt(idx)
     }
 
     private fun initializeSheetList() {
