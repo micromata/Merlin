@@ -119,12 +119,13 @@ class ExcelRow(val sheet: ExcelSheet, val row: Row) {
      * @return Duplicated ExcelRow
      */
     @JvmOverloads
-    fun copyAndInsert(insertPosition: Int = rowNum + 1): ExcelRow {
-        sheet.poiSheet.shiftRows(insertPosition, sheet.poiSheet.lastRowNum, 1)
-        val newPoiRow = sheet.poiSheet.createRow(insertPosition)
-        val newRow = ExcelRow(sheet, newPoiRow)
+    fun copyAndInsert(targetSheet: ExcelSheet? = null, insertPosition: Int = rowNum + 1): ExcelRow {
+        val target = targetSheet ?: sheet
+        target.shiftRows(insertPosition, n = 1)
+        val newPoiRow = target.poiSheet.createRow(insertPosition)
+        val newRow = ExcelRow(target, newPoiRow)
         newRow.copyCellsFrom(this)
-        sheet.clearRowMap()
+        target.clearRowMap()
         return newRow
     }
 

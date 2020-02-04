@@ -886,6 +886,18 @@ class ExcelSheet internal constructor(val excelWorkbook: ExcelWorkbook, val poiS
     }
 
     /**
+     * Shifts the rows..
+     * @param startRow First row to shift.
+     * @param endRow Last row to shift (last row of sheet as default).
+     * @param n Number of rows to shift (default is 0).
+     */
+    @JvmOverloads
+    fun shiftRows(startRow: Int, endRow: Int? = null, n: Int = 1) {
+        poiSheet.shiftRows(startRow, endRow ?: poiSheet.lastRowNum, 1)
+        clearRowMap()
+    }
+
+    /**
      * Should be called after shifting or inserting rows.
      */
     fun clearRowMap() {

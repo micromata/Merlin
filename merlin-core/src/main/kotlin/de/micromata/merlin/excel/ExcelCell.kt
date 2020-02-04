@@ -121,6 +121,9 @@ class ExcelCell @JvmOverloads internal constructor(private val row: ExcelRow, va
     val stringCellValue: String
         get() = cell.stringCellValue
 
+    val numericCellValue: Double
+        get() = cell.numericCellValue
+
     fun evaluateFormularCell() {
         row.sheet.excelWorkbook.formulaEvaluator!!.evaluateFormulaCell(cell)
     }

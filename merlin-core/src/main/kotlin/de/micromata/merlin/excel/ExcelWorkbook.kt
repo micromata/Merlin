@@ -6,10 +6,7 @@ import org.apache.commons.collections4.CollectionUtils
 import org.apache.commons.io.output.ByteArrayOutputStream
 import org.apache.poi.ss.usermodel.*
 import org.slf4j.LoggerFactory
-import java.io.File
-import java.io.FileInputStream
-import java.io.IOException
-import java.io.InputStream
+import java.io.*
 import java.nio.file.Path
 import java.util.*
 
@@ -304,6 +301,10 @@ class ExcelWorkbook
     fun setActiveSheet(sheetName: String) {
         val sheet = getSheet(sheetName) ?: return
         setActiveSheet(sheet.sheetIndex)
+    }
+
+    fun write(out: OutputStream) {
+        pOIWorkbook.write(out)
     }
 
     val asByteArrayOutputStream: ByteArrayOutputStream
