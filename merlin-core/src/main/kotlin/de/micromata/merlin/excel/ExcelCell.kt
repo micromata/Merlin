@@ -19,6 +19,11 @@ class ExcelCell @JvmOverloads internal constructor(private val row: ExcelRow, va
         }
     }
 
+    fun setBlank(): ExcelCell {
+        cell.setBlank()
+        return this
+    }
+
     fun setCellValue(str: String?): ExcelCell {
         cell.setCellValue(str)
         return this
@@ -116,6 +121,18 @@ class ExcelCell @JvmOverloads internal constructor(private val row: ExcelRow, va
     fun setCellStyle(style: CellStyle?): ExcelCell {
         cell.cellStyle = style
         return this
+    }
+
+    /**
+     * @param cellStyleId Id of the cell style for re-usage. If not given, cell style will not saved for re-usage.
+     */
+    fun cloneCellStyle(cellStyleId: String? = null): CellStyle {
+        val cellStyle = row.sheet.excelWorkbook.createOrGetCellStyle(cellStyleId)
+        val origCellStyle: CellStyle = this.cell.cellStyle
+        if (origCellStyle != null) {
+            cellStyle.cloneStyleFrom(origCellStyle)
+        }
+        return cellStyle
     }
 
     val stringCellValue: String

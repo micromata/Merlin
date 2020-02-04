@@ -31,6 +31,12 @@ class ExcelWorkbook
     var filename: String? = null
         private set
 
+    val filenameExtension: String?
+        get() = File(filename ?: "unkown.xlsx").extension
+
+    val filenameWithoutExtension: String?
+        get() = File(filename ?: "unkown.xlsx").nameWithoutExtension
+
     var formulaEvaluator: FormulaEvaluator? = null
         get() {
             if (field == null) {
@@ -194,7 +200,7 @@ class ExcelWorkbook
      * @param index
      * @return this for chaining.
      */
-    fun removeSheetAt(idx: Int){
+    fun removeSheetAt(idx: Int) {
         pOIWorkbook.removeSheetAt(idx)
     }
 
@@ -232,14 +238,16 @@ class ExcelWorkbook
     /**
      * Please re-use cell styles due to limitations of Excel.
      *
-     * @param id Id of the cell style.
+     * @param id Id of the cell style for re-usage. If not given, cell style will not saved for re-usage.
      * @return The CellStyle to use.
      */
-    fun createOrGetCellStyle(id: String): CellStyle? {
+    fun createOrGetCellStyle(id: String? = null): CellStyle {
         var cellStyle = cellStyleMap[id]
         if (cellStyle == null) {
-            cellStyle = pOIWorkbook.createCellStyle()
-            cellStyleMap[id] = cellStyle
+            cellStyle = pOIWorkbook.createCellStyle()!!
+            if (id != null) {
+                cellStyleMap[id] = cellStyle
+            }
         }
         return cellStyle
     }
@@ -249,9 +257,9 @@ class ExcelWorkbook
         val cellStyle = createOrGetCellStyle("DataFormat." + format.name)
         if (!exist) {
             if (format == ExcelCellStandardFormat.FLOAT) {
-                cellStyle!!.dataFormat = getDataFormat("#.#")
+                cellStyle.dataFormat = getDataFormat("#.#")
             } else if (format == ExcelCellStandardFormat.INT) {
-                cellStyle!!.dataFormat = BuiltinFormats.getBuiltinFormat("0").toShort()
+                cellStyle.dataFormat = BuiltinFormats.getBuiltinFormat("0").toShort()
             } else require(format != ExcelCellStandardFormat.DATE) { "Please call ensureDateCellStyle instead of ensureCellStyle." }
         }
         return cellStyle
@@ -261,7 +269,7 @@ class ExcelWorkbook
         val exist = doesCellStyleExist("DataFormat." + ExcelCellStandardFormat.DATE.name + "." + dateFormat)
         val cellStyle = createOrGetCellStyle("DataFormat." + ExcelCellStandardFormat.DATE.name + "." + dateFormat)
         if (!exist) {
-            cellStyle!!.dataFormat = getDataFormat(dateFormat)
+            cellStyle.dataFormat = getDataFormat(dateFormat)
         }
         return cellStyle
     }
