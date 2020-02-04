@@ -885,6 +885,13 @@ class ExcelSheet internal constructor(val excelWorkbook: ExcelWorkbook, val poiS
         return ensureRow(row)
     }
 
+    /**
+     * Should be called after shifting or inserting rows.
+     */
+    fun clearRowMap() {
+        excelRowMap.clear()
+    }
+
     private fun ensureRow(row: Row?): ExcelRow {
         var excelRow = excelRowMap[row!!.rowNum]
         if (excelRow == null) {

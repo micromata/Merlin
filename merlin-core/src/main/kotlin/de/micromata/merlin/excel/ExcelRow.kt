@@ -113,6 +113,31 @@ class ExcelRow(val sheet: ExcelSheet, val row: Row) {
         row.sheet.addMergedRegion(range)
     }
 
+    /**
+     * Duplicates the current row.
+     * @param insertPosition The row num where the copied row should be inserted to (default is after this row).
+     * @return Duplicated ExcelRow
+     */
+    @JvmOverloads
+    fun copyAndInsert(insertPosition: Int = rowNum + 1): ExcelRow {
+        sheet.poiSheet.shiftRows(insertPosition, sheet.poiSheet.lastRowNum, 1)
+        val newPoiRow = sheet.poiSheet.createRow(insertPosition)
+        val newRow = ExcelRow(sheet, newPoiRow)
+        newRow.copyCellsFrom(this)
+        sheet.clearRowMap()
+        return newRow
+    }
+
+    fun copyCellsFrom(srcRow: ExcelRow) {
+        for (colNum in 0..srcRow.lastCellNum) {
+            val srcCell = srcRow.row.getCell(colNum)
+            if (srcCell != null) {
+                val destCell = row.getCell(colNum) ?: row.createCell(colNum)
+                ExcelCell.copyCell(srcCell, destCell)
+            }
+        }
+    }
+
     var heightInPoints: Float
         get() = row.heightInPoints
         set(height) {
