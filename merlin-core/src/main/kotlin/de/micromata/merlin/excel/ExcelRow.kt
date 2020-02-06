@@ -20,6 +20,16 @@ class ExcelRow(val sheet: ExcelSheet, val row: Row) {
     val rowNum: Int
         get() = row.rowNum
 
+    /**
+     * @param columnName Registered column definition.
+     * @param type       Only used, if new cell will be created.
+     * @return The (created) cell. If column definition isn't known, an IllegalArgumentException will be thrown.
+     */
+    @JvmOverloads
+    fun getCell(columnName: String, type: ExcelCellType? = null): ExcelCell? {
+        val columnDef = sheet.getColumnDef(columnName) ?: return null
+        return getCell(columnDef.columnNumber, type)
+    }
 
     /**
      * @param columnDef  Registered column definition.
@@ -121,7 +131,9 @@ class ExcelRow(val sheet: ExcelSheet, val row: Row) {
     @JvmOverloads
     fun copyAndInsert(targetSheet: ExcelSheet? = null, insertPosition: Int = rowNum + 1): ExcelRow {
         val target = targetSheet ?: sheet
-        target.shiftRows(insertPosition, n = 1)
+        if (insertPosition <= sheet.poiSheet.lastRowNum) {
+            target.shiftRows(insertPosition, n = 1)
+        }
         val newPoiRow = target.poiSheet.createRow(insertPosition)
         val newRow = ExcelRow(target, newPoiRow)
         newRow.copyCellsFrom(this)

@@ -24,16 +24,16 @@ internal class ExcelRowActionsTest {
         Assertions.assertEquals(1.0, actionsSheet.getRow(3)!!.getCell(0)!!.numericCellValue)
         actionsSheet.shiftRows(3, n = 2)
         Assertions.assertEquals(0.0, actionsSheet.getRow(2)!!.getCell(0)!!.numericCellValue)
-        Assertions.assertEquals(1.0, actionsSheet.getRow(4)!!.getCell(0)!!.numericCellValue)
-
-
-        Assertions.assertEquals(1.0, actionsSheet.getRow(6)!!.getCell(0)!!.numericCellValue)
+        Assertions.assertEquals(1.0, actionsSheet.getRow(5)!!.getCell(0)!!.numericCellValue)
+        Assertions.assertEquals(2.0, actionsSheet.getRow(6)!!.getCell(0)!!.numericCellValue)
         Assertions.assertEquals(3.0, actionsSheet.getRow(7)!!.getCell(0)!!.numericCellValue)
-        val newRow = actionsSheet.getRow(6)!!.copyAndInsert()
-        newRow.getCell(0)!!.setCellValue(2)
-        Assertions.assertEquals(1.0, actionsSheet.getRow(6)!!.getCell(0)!!.numericCellValue)
+        Assertions.assertEquals(4.0, actionsSheet.getRow(8)!!.getCell(0)!!.numericCellValue)
+
+        val newRow = actionsSheet.getRow(5)!!.copyAndInsert()
+        newRow.getCell(0)!!.setCellValue(1.5)
+        Assertions.assertEquals(1.0, actionsSheet.getRow(5)!!.getCell(0)!!.numericCellValue)
+        Assertions.assertEquals(1.5, actionsSheet.getRow(6)!!.getCell(0)!!.numericCellValue)
         Assertions.assertEquals(2.0, actionsSheet.getRow(7)!!.getCell(0)!!.numericCellValue)
-        Assertions.assertEquals(3.0, actionsSheet.getRow(8)!!.getCell(0)!!.numericCellValue)
 
         val file = File(Definitions.OUTPUT_DIR, "RowActionsTest.xlsx")
         log.info("Writing checksum Excel file: " + file.getAbsolutePath())

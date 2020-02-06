@@ -848,10 +848,17 @@ class ExcelSheet internal constructor(val excelWorkbook: ExcelWorkbook, val poiS
         var excelRow = excelRowMap[rownum]
         if (excelRow == null) {
             var row: Row?
-            while (poiSheet.getRow(rownum).also { row = it } == null) {
-                excelRow = createRow()
+            if (rownum < poiSheet.lastRowNum) {
+                row = poiSheet.getRow(rownum)
+                if (row == null) {
+                    row = poiSheet.createRow(rownum)
+                }
+            } else {
+                while (poiSheet.getRow(rownum).also { row = it } == null) {
+                    excelRow = createRow()
+                }
             }
-            if (excelRow == null) { // Poi cell exists, but excel cell not yet:
+            if (excelRow == null) { // Poi row exists, but excel cell not yet:
                 excelRow = ensureRow(row)
             }
         }
@@ -881,7 +888,16 @@ class ExcelSheet internal constructor(val excelWorkbook: ExcelWorkbook, val poiS
         if (rowCount == 0 && poiSheet.getRow(0) == null) {
             rowCount = -1
         }
-        val row = poiSheet.createRow(rowCount + 1)
+        return createRow(rowCount + 1)
+    }
+
+    /**
+     * Appends the row.
+     *
+     * @return The created row.
+     */
+    private fun createRow(rowNum: Int): ExcelRow {
+        val row = poiSheet.createRow(rowNum)
         return ensureRow(row)
     }
 
@@ -889,11 +905,11 @@ class ExcelSheet internal constructor(val excelWorkbook: ExcelWorkbook, val poiS
      * Shifts the rows..
      * @param startRow First row to shift.
      * @param endRow Last row to shift (last row of sheet as default).
-     * @param n Number of rows to shift (default is 0).
+     * @param n Number of rows to shift (default is 1).
      */
     @JvmOverloads
     fun shiftRows(startRow: Int, endRow: Int? = null, n: Int = 1) {
-        poiSheet.shiftRows(startRow, endRow ?: poiSheet.lastRowNum, 1)
+        poiSheet.shiftRows(startRow, endRow ?: poiSheet.lastRowNum, n)
         clearRowMap()
     }
 
