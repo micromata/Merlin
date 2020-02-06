@@ -182,7 +182,6 @@ class ExcelWorkbook
      * @see Workbook.cloneSheet
      */
     fun cloneSheet(sheetNum: Int, name: String?): ExcelSheet? {
-        val originSheet = getSheet(sheetNum)
         val index = pOIWorkbook.numberOfSheets
         val poiSheet: Sheet = this.pOIWorkbook.cloneSheet(sheetNum)
         this.pOIWorkbook.setSheetName(index, name)

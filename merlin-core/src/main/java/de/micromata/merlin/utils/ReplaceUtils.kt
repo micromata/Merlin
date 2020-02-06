@@ -103,15 +103,15 @@ object ReplaceUtils {
     @JvmStatic
     @JvmOverloads
     fun encodeFilename(filename: String?, reducedCharsOnly: Boolean = true): String {
-        var filename = filename
-        if (StringUtils.isEmpty(filename)) {
+        var modifiedFilename = filename
+        if (StringUtils.isEmpty(modifiedFilename)) {
             return "file"
         }
         if (reducedCharsOnly) {
-            filename = replaceGermanUmlauteAndAccents(filename)
+            modifiedFilename = replaceGermanUmlauteAndAccents(modifiedFilename)
         }
         val sb = StringBuilder()
-        val charArray = filename!!.toCharArray()
+        val charArray = modifiedFilename!!.toCharArray()
         for (i in charArray.indices) {
             val ch = charArray[i]
             if (reducedCharsOnly) {

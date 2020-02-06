@@ -95,7 +95,7 @@ class ExcelCell @JvmOverloads internal constructor(private val row: ExcelRow, va
     }
 
     /**
-     * @param booleanValue The value to set.
+     * @param formula The value to set.
      * @return this for chaining.
      */
     fun setCellFormula(formula: String): ExcelCell {
@@ -128,7 +128,7 @@ class ExcelCell @JvmOverloads internal constructor(private val row: ExcelRow, va
      */
     fun cloneCellStyle(cellStyleId: String? = null): CellStyle {
         val cellStyle = row.sheet.excelWorkbook.createOrGetCellStyle(cellStyleId)
-        val origCellStyle: CellStyle = this.cell.cellStyle
+        val origCellStyle: CellStyle? = this.cell.cellStyle
         if (origCellStyle != null) {
             cellStyle.cloneStyleFrom(origCellStyle)
         }
@@ -181,10 +181,10 @@ class ExcelCell @JvmOverloads internal constructor(private val row: ExcelRow, va
             when (src.cellType) {
                 CellType.BLANK -> dest.setBlank()
                 CellType.FORMULA -> dest.cellFormula = src.cellFormula
-                CellType.STRING -> dest.setCellValue(src.richStringCellValue)
                 CellType.NUMERIC -> dest.setCellValue(src.numericCellValue)
                 CellType.BOOLEAN -> dest.setCellValue(src.booleanCellValue)
                 CellType.ERROR -> dest.setCellErrorValue(src.errorCellValue)
+                else -> dest.setCellValue(src.richStringCellValue)
             }
         }
     }
