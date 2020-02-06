@@ -131,7 +131,7 @@ class ExcelRow(val sheet: ExcelSheet, val row: Row) {
     @JvmOverloads
     fun copyAndInsert(targetSheet: ExcelSheet? = null, insertPosition: Int = rowNum + 1): ExcelRow {
         val target = targetSheet ?: sheet
-        if (insertPosition <= sheet.poiSheet.lastRowNum) {
+        if (insertPosition <= target.poiSheet.lastRowNum) {
             target.shiftRows(insertPosition, n = 1)
         }
         val newPoiRow = target.poiSheet.createRow(insertPosition)
@@ -142,11 +142,21 @@ class ExcelRow(val sheet: ExcelSheet, val row: Row) {
     }
 
     fun copyCellsFrom(srcRow: ExcelRow) {
+        val numMergedRegions = mutableListOf<CellRangeAddress>()
+        srcRow.sheet.poiSheet.mergedRegions?.forEach { address ->
+            // Only merge region in this single row are supported.
+            if (address.firstRow == srcRow.rowNum && address.lastRow == srcRow.rowNum) {
+                numMergedRegions.add(address)
+            }
+        }
         for (colNum in 0..srcRow.lastCellNum) {
             val srcCell = srcRow.row.getCell(colNum)
             if (srcCell != null) {
                 val destCell = row.getCell(colNum) ?: row.createCell(colNum)
                 ExcelCell.copyCell(srcCell, destCell)
+                numMergedRegions.filter { it.firstColumn == srcCell.columnIndex }.forEach {
+                    sheet.addMergeRegion(CellRangeAddress(this.rowNum, this.rowNum, it.firstColumn, it.lastColumn))
+                }
             }
         }
     }
