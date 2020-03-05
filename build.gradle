@@ -79,5 +79,6 @@ subprojects {
 }
 
 wrapper {
-    gradleVersion = '6.0.1'
+    // Should match the version in gradle/wrapper/gradle-wrapper.properties
+    gradleVersion = '6.2.2'
 }
