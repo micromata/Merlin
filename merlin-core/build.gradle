@@ -71,6 +71,7 @@ publishing {
             }
         }
     }
+    /* //  Uncomment this block for publishing.
     repositories {
         maven {
             credentials {
@@ -82,6 +83,7 @@ publishing {
             url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
         }
     }
+    */
 }
 
 signing {

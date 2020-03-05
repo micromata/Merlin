@@ -195,6 +195,9 @@ Examples for if-expressions:
 
 This section describes in general how to publish to maven central any artifact.
 
+Uncomment the repositories section in `build.gradle` to publish. Don't commit the uncommented version because
+users without maven user and especially Travis doesn't work.
+
 === Creating an account for Sonatype
 Create an account at https://oss.sonatype.org.
 
