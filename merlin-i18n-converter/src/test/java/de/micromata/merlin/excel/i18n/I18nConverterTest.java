@@ -1,9 +1,16 @@
 package de.micromata.merlin.excel.i18n;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -11,7 +18,13 @@ public class I18nConverterTest {
     private final String JSON_FILE = "i18n_messages.json";
     private final String I18N_FILE = "i18n_messages_de.properties";
     private final String TEST_DIR = "test-data";
-    private final String OUT_DIR = "out";
+    private static final String OUT_DIR = "out";
+
+    @BeforeAll
+    static void prepareOutDirectory() {
+        File outputDirectory = new File(OUT_DIR);
+        outputDirectory.mkdir();
+    }
 
     @Test
     void importPropertiesTest() throws IOException {
