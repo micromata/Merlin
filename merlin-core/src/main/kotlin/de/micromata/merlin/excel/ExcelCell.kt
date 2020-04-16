@@ -5,6 +5,7 @@ import org.apache.poi.ss.usermodel.Cell
 import org.apache.poi.ss.usermodel.CellStyle
 import org.apache.poi.ss.usermodel.CellType
 import org.apache.poi.ss.usermodel.RichTextString
+import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.*
@@ -26,6 +27,11 @@ class ExcelCell @JvmOverloads internal constructor(private val row: ExcelRow, va
 
     fun setCellValue(str: String?): ExcelCell {
         cell.setCellValue(str)
+        return this
+    }
+
+    fun setCellValue(value: BigDecimal): ExcelCell {
+        cell.setCellValue(value.toDouble())
         return this
     }
 
@@ -118,6 +124,16 @@ class ExcelCell @JvmOverloads internal constructor(private val row: ExcelRow, va
         return this
     }
 
+    /**
+     * @param workbook    Needed for creating int DataFormat.
+     * @param value The value to set.
+     * @return this for chaining.
+     */
+    fun setCellValue(workbook: ExcelWorkbook, value: BigDecimal): ExcelCell {
+        setCellValue(workbook, cell, value)
+        return this
+    }
+
     fun setCellStyle(style: CellStyle?): ExcelCell {
         cell.cellStyle = style
         return this
@@ -153,6 +169,12 @@ class ExcelCell @JvmOverloads internal constructor(private val row: ExcelRow, va
         }
 
         @JvmStatic
+        fun setCellValue(workbook: ExcelWorkbook, cell: Cell, value: BigDecimal) {
+            cell.setCellValue(value.toDouble())
+            cell.cellStyle = workbook.ensureCellStyle(ExcelCellStandardFormat.FLOAT)
+        }
+
+        @JvmStatic
         fun setCellValue(workbook: ExcelWorkbook, cell: Cell, intValue: Int) {
             cell.setCellValue(intValue.toDouble())
             cell.cellStyle = workbook.ensureCellStyle(ExcelCellStandardFormat.INT)
@@ -172,7 +194,7 @@ class ExcelCell @JvmOverloads internal constructor(private val row: ExcelRow, va
 
         @JvmStatic
         fun setCellFormula(cell: Cell, formula: String) {
-            cell.setCellFormula(formula)
+            cell.cellFormula = formula
         }
 
         @JvmStatic
