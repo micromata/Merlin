@@ -64,14 +64,3 @@ The full source code of Merlin is hosted by Github:
 [.text-center]
 https://github.com/micromata/Merlin/[Merlin on GitHub^] +
 [.text-left]
-
-=== Lombok required
-==== Installing Lombok in IntelliJ
-[.text-center]
-https://github.com/mplushnikov/lombok-intellij-plugin[Lombok Intellij plugin description^] +
-[.text-left]
-Or go to
-[.text-center]
-https://projectlombok.org/[Lombok home page^] +
-[.text-left]
-
