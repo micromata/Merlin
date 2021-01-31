@@ -27,7 +27,7 @@ public class VelocityHelper {
         ve.setProperty(RuntimeConstants.RESOURCE_LOADER, "file");
         ve.setProperty(RuntimeConstants.FILE_RESOURCE_LOADER_PATH, templateDir.getAbsolutePath());
 
-        File templateFile = new File(filename);
+        File templateFile = new File(templateDir, filename);
         String templatePath = templateFile.getAbsolutePath();
         logger.info("Processing template file: " + templatePath);
         try {
@@ -40,7 +40,7 @@ public class VelocityHelper {
         File out = new File(outSubDir, filename);
         String outPath = out.getAbsolutePath();
         try (Writer fileWriter = new PrintWriter(outPath)) {
-            logger.info("Writing config file: " + outPath);
+            logger.info("Writing file: " + outPath);
             template.merge(context, fileWriter);
         } catch (Exception ex) {
             logger.error("Can't open file '" + outPath + "': " + ex.getMessage(), ex);

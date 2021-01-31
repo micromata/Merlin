@@ -106,7 +106,12 @@ class ExcelWorkbook
         }
     }
 
-    fun getSheet(idx: Int): ExcelSheet? {
+    fun sheetIterator(): MutableIterator<ExcelSheet> {
+        initializeSheetList()
+        return sheetList.iterator()
+    }
+
+    fun getSheet(idx: Int): ExcelSheet {
         initializeSheetList()
         return sheetList[idx]
     }

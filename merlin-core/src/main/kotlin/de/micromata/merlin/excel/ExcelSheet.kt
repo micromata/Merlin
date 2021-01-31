@@ -221,9 +221,11 @@ class ExcelSheet internal constructor(val excelWorkbook: ExcelWorkbook, val poiS
     fun readRow(row: Row, data: Data) {
         findAndReadHeadRow()
         for (columnDef in columnDefList) {
-            val cell = row.getCell(columnDef._columnNumber)
-            val value = PoiHelper.getValueAsString(cell)
-            data.put(columnDef.columnHeadname, value)
+            if (row.lastCellNum > columnDef._columnNumber && columnDef._columnNumber >= 0) {
+                val cell = row.getCell(columnDef._columnNumber)
+                val value = PoiHelper.getValueAsString(cell)
+                data.put(columnDef.columnHeadname, value)
+            }
         }
     }
 
