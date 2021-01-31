@@ -1,6 +1,42 @@
 
 description = 'merlin-smarthome'
+
+apply plugin: 'kotlin'
+
 dependencies {
   compile project(':merlin-core')
   compile project(':merlin-velocity')
+  compile group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.25'
+  implementation 'io.github.microutils:kotlin-logging:1.12.0'
+}
+
+sourceSets {
+  main.java.srcDirs = []
+  main.kotlin.srcDirs = ['src/main/java', 'src/main/kotlin']
+  main.resources.srcDirs = ['src/main/resources']
+}
+
+buildscript {
+  ext.kotlin_version = '1.4.30-RC'
+  repositories {
+    maven { url 'https://dl.bintray.com/kotlin/kotlin-eap' }
+    mavenCentral()
+  }
+  dependencies {
+    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+  }
+}
+repositories {
+  maven { url 'https://dl.bintray.com/kotlin/kotlin-eap' }
+  mavenCentral()
+}
+compileKotlin {
+  kotlinOptions {
+    jvmTarget = "1.8"
+  }
+}
+compileTestKotlin {
+  kotlinOptions {
+    jvmTarget = "1.8"
+  }
 }

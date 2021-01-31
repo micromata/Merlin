@@ -1,3 +1,13 @@
+buildscript {
+    ext.kotlin_version = '1.4.30-RC'
+    repositories {
+        maven { url 'https://dl.bintray.com/kotlin/kotlin-eap' }
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
 plugins {
     id 'java'
 }
@@ -11,17 +21,30 @@ dependencies {
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.10.3'
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.9.10'
     compile group: 'commons-cli', name: 'commons-cli', version: '1.4'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 }
 
 repositories {
     mavenCentral()
     jcenter()
+    maven { url 'https://dl.bintray.com/kotlin/kotlin-eap' }
 }
 
 apply plugin: 'application'
+apply plugin: 'kotlin'
 mainClassName = "de.micromata.merlin.excel.i18n.Main"
 
 apply plugin: 'distribution'
 
 
 task(dist).dependsOn distZip
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
+compileTestKotlin {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}

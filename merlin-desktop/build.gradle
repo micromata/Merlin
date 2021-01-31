@@ -1,14 +1,18 @@
 description = 'merlin-desktop'
 
 buildscript {
+    ext.kotlin_version = '1.4.30-RC'
     repositories {
         mavenCentral()
+        maven { url 'https://dl.bintray.com/kotlin/kotlin-eap' }
     }
     dependencies {
         classpath 'com.google.gradle:osdetector-gradle-plugin:1.6.0'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
 apply plugin: 'com.google.osdetector'
+apply plugin: 'kotlin'
 ext.platform = osdetector.os == 'osx' ? 'mac' : osdetector.os == 'windows' ? 'win' : 'linux'
 
 dependencies {
@@ -19,6 +23,7 @@ dependencies {
     compile "org.openjfx:javafx-fxml:11.0.1-ea+1:$platform"
 
     compileOnly group: 'com.install4j', name: 'install4j-runtime', version: '7.0.8'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 }
 
 compileJava {
@@ -99,3 +104,17 @@ dist.dependsOn distZip
 distZip.dependsOn ':merlin-webapp:npmBuild'
 distZip.dependsOn ':merlin-docs:buildWebDoc'
 distZip.dependsOn getDependencies
+repositories {
+    maven { url 'https://dl.bintray.com/kotlin/kotlin-eap' }
+    mavenCentral()
+}
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
+compileTestKotlin {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
