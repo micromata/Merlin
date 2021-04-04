@@ -12,7 +12,17 @@ import kotlin.system.exitProcess
 
 private val log = KotlinLogging.logger {}
 
-class HomeAssistantBuilder {
+class HomeAssistantBuilder(val templateDir: File) {
+    private val outDir: File = File("out")
+
+    init {
+        if (!outDir.exists()) {
+            log.info("Creating output directory '${outDir.absolutePath}.")
+            outDir.mkdir()
+        }
+        log.info("Using output directory '${outDir.absolutePath}.")
+    }
+
     private fun run(xlsFile: String) {
         val excelWorkbook = ExcelWorkbook(xlsFile)
         KnxItemsReader().readKNXItems(excelWorkbook)
@@ -68,27 +78,37 @@ class HomeAssistantBuilder {
         val context = VelocityContext()
         context.put("data", DataStorage.instance)
         context.put("items", items)
-        val templateDir = File("merlin-smarthome/examples/homeassistant-knx/")
         log.info { "Processing ${items.size} items..." }
-        VelocityHelper.merge(File(templateDir, templateFile), File(".", outFile), context)
+        VelocityHelper.merge(File(templateDir, templateFile), File(outDir, outFile), context)
 
     }
 
     companion object {
         @JvmStatic
         fun main(args: Array<String>) {
-            if (args.size != 1) {
-                log.error("Please attach Excel-file to parse as single argument.")
+            if (args.size < 1 || args.size > 2) {
+                log.error("Please call with optional template dir as first argument and Excel-file to parse as seconde argument: gradle run --args=\"<template-dir> <xls-file>\"")
                 exitProcess(0)
             }
-            val filename = args[0]
+            val templateDir =
+                if (args.size == 1) {
+                    File("merlin-smarthome/examples/homeassistant-knx/")
+                } else {
+                    File(args[0])
+                }
+            if (!templateDir.exists()) {
+                log.error("Template directory '${templateDir.absolutePath}' doesn't exist.")
+                exitProcess(0)
+            }
+            log.info("Using template directory: ${templateDir.absolutePath}")
+            val filename = args[args.size - 1]
             val xlsFile = File(filename)
             if (!xlsFile.canRead()) {
                 log.error("Can't read xls file '${xlsFile.absoluteFile}'.")
                 exitProcess(0)
             }
             log.info { "Reading xls file: '${xlsFile.absoluteFile}'..." }
-            HomeAssistantBuilder().run(filename)
+            HomeAssistantBuilder(templateDir).run(filename)
         }
     }
 }
