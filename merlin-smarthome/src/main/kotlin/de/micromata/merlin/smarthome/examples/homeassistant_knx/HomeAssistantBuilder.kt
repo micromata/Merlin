@@ -2,6 +2,7 @@ package de.micromata.merlin.smarthome.examples.homeassistant_knx
 
 import de.micromata.merlin.excel.ExcelWorkbook
 import de.micromata.merlin.smarthome.examples.homeassistant_knx.data.DataStorage
+import de.micromata.merlin.smarthome.examples.homeassistant_knx.data.KnxItem
 import de.micromata.merlin.smarthome.examples.homeassistant_knx.data.KnxItemCategory
 import de.micromata.merlin.velocity.VelocityHelper
 import mu.KotlinLogging
@@ -12,19 +13,22 @@ import kotlin.system.exitProcess
 private val log = KotlinLogging.logger {}
 
 class HomeAssistantBuilder {
-    fun run(xlsFile: String) {
+    private fun run(xlsFile: String) {
         val excelWorkbook = ExcelWorkbook(xlsFile)
         KnxItemsReader().readKNXItems(excelWorkbook)
 
-        val category = KnxItemCategory.BINARY_SENSOR
-        val items = DataStorage.instance.filterItems(category)
-        val file = "knx_binary_sensor.yaml"
-        val context = VelocityContext()
-        context.put("data", DataStorage.instance)
-        context.put("items", items)
-        val templateDir = File("merlin-smarthome/examples/homeassistant-knx/")
-        log.info { "Processing ${items.size} items..." }
-        VelocityHelper.merge(templateDir, file, File("."), context)
+        createEntityYaml(KnxItemCategory.BINARY_SENSOR, "knx_binary_sensor.yaml")
+        createEntityYaml(KnxItemCategory.SENSOR, "knx_sensor.yaml")
+        createEntityYaml(KnxItemCategory.SWITCH, "knx_switch.yaml")
+        createEntityYaml(KnxItemCategory.LIGHT, "knx_light.yaml")
+
+        createLovelaceYaml("UG")
+        createLovelaceYaml("EG")
+        createLovelaceYaml("OG")
+        createLovelaceYaml("NB")
+        createLovelaceYaml("Garage")
+        createLovelaceYaml("UG", "EG", "OG", "NB", "Garage")
+        createLovelaceYaml("BWM")
 
         /*
         val templateDir = File("merlin-smarthome/examples/openhab-knx/")
@@ -39,6 +43,35 @@ class HomeAssistantBuilder {
         VelocityHelper.merge(templateDir, "zoneminder.things", thingsDir, context)
         VelocityHelper.merge(templateDir, "jdbc.persist", persistenceDir, context)
         VelocityHelper.merge(templateDir, "home.sitemap", sitemapsDir, context)*/
+    }
+
+    private fun createEntityYaml(category: KnxItemCategory, templateFile: String) {
+        val items = DataStorage.instance.filterItems(category)
+        write(items, templateFile, templateFile)
+    }
+
+    private fun createLovelaceYaml(vararg areas: String) {
+        val origItems = DataStorage.instance.filterItems(KnxItemCategory.BINARY_SENSOR)
+            .filter { it.stateFilter == true }
+        val items = mutableListOf<KnxItem>()
+        areas.forEach { area ->
+            origItems.forEach { item ->
+                if (item.area == area) {
+                    items.add(item)
+                }
+            }
+        }
+        write(items, "ui_lovelace_area_EMA.yaml", "ui_lovelace_${areas.joinToString("_")}_EMA.yaml")
+    }
+
+    private fun write(items: List<KnxItem>, templateFile: String, outFile: String) {
+        val context = VelocityContext()
+        context.put("data", DataStorage.instance)
+        context.put("items", items)
+        val templateDir = File("merlin-smarthome/examples/homeassistant-knx/")
+        log.info { "Processing ${items.size} items..." }
+        VelocityHelper.merge(File(templateDir, templateFile), File(".", outFile), context)
+
     }
 
     companion object {

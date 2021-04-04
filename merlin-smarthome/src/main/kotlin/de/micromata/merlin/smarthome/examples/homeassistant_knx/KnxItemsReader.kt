@@ -23,9 +23,13 @@ class KnxItemsReader {
             "Type",
             "Device class",
             "KNX-Address",
+            "KNX-State-Address",
             "Sync state",
             "Name",
-            "Name suffix"
+            "Name suffix",
+            "Invert",
+            "Area",
+            "State filter",
         )
         sheet.analyze(true)
         if (sheet.hasValidationErrors()) {

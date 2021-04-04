@@ -21,24 +21,26 @@ public class VelocityHelper {
     }
 
     public static void merge(File templateDir, String filename, File outSubDir, VelocityContext context) {
+        merge(new File(templateDir, filename), new File(outSubDir, filename), context);
+    }
+
+    public static void merge(File templateFile, File outFile, VelocityContext context) {
         Template template = null;
 
         VelocityEngine ve = new VelocityEngine();
         ve.setProperty(RuntimeConstants.RESOURCE_LOADER, "file");
-        ve.setProperty(RuntimeConstants.FILE_RESOURCE_LOADER_PATH, templateDir.getAbsolutePath());
+        ve.setProperty(RuntimeConstants.FILE_RESOURCE_LOADER_PATH, templateFile.getParentFile().getAbsolutePath());
 
-        File templateFile = new File(templateDir, filename);
         String templatePath = templateFile.getAbsolutePath();
         logger.info("Processing template file: " + templatePath);
         try {
-            template = ve.getTemplate(filename);
+            template = ve.getTemplate(templateFile.getName());
         } catch (Exception ex) {
             logger.error("Couldn't find template '" + templatePath + "': " + ex.getMessage(), ex);
             return;
         }
 
-        File out = new File(outSubDir, filename);
-        String outPath = out.getAbsolutePath();
+        String outPath = outFile.getAbsolutePath();
         try (Writer fileWriter = new PrintWriter(outPath)) {
             logger.info("Writing file: " + outPath);
             template.merge(context, fileWriter);
