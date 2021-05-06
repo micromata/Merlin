@@ -80,6 +80,26 @@ class ExcelCell @JvmOverloads internal constructor(private val row: ExcelRow, va
         return this
     }
 
+    fun setCellValue(value: Any?): ExcelCell {
+        value?.let {
+            when (it) {
+                is String -> setCellValue(it)
+                is BigDecimal -> setCellValue(it)
+                is Double -> setCellValue(it)
+                is Float -> setCellValue(it)
+                is Int -> setCellValue(it)
+                is Long -> setCellValue(it)
+                is RichTextString -> setCellValue(it)
+                is Date -> setCellValue(it)
+                is LocalDate -> setCellValue(it)
+                is LocalDateTime -> setCellValue(it)
+                is Calendar -> setCellValue(it)
+                else -> setCellValue(it.toString())
+            }
+        } ?: setBlank()
+        return this
+    }
+
     /**
      * @param workbook Needed for creating int DataFormat.
      * @param intValue The value to set.
@@ -187,9 +207,9 @@ class ExcelCell @JvmOverloads internal constructor(private val row: ExcelRow, va
         }
 
         @JvmStatic
-        fun setCellValue(workbook: ExcelWorkbook, cell: Cell, format: String?, dateValue: Date?) {
+        fun setCellValue(workbook: ExcelWorkbook, cell: Cell, format: String, dateValue: Date?) {
             cell.setCellValue(dateValue)
-            cell.cellStyle = workbook.ensureDateCellStyle(format!!)
+            cell.cellStyle = workbook.ensureDateCellStyle(format)
         }
 
         @JvmStatic

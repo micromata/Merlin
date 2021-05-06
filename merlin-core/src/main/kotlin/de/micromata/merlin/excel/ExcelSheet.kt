@@ -55,6 +55,7 @@ class ExcelSheet internal constructor(val excelWorkbook: ExcelWorkbook, val poiS
 
     private var columnWithValidationErrorMessages = -1
     private var validationErrors: MutableSet<ExcelValidationErrorMessage>? = null
+
     /**
      * @return true, if this sheet was modified (by calling [markErrors].
      */
@@ -162,7 +163,11 @@ class ExcelSheet internal constructor(val excelWorkbook: ExcelWorkbook, val poiS
      * @return Created and registered ExcelColumnDef.
      */
     @JvmOverloads
-    fun registerColumn(columnHead: String, vararg aliases: String, listener: ExcelColumnListener? = null): ExcelColumnDef {
+    fun registerColumn(
+        columnHead: String,
+        vararg aliases: String,
+        listener: ExcelColumnListener? = null
+    ): ExcelColumnDef {
         val columnDef = ExcelColumnDef(this, columnHead, *aliases)
         val existing = _getColumnDef(columnHead)
         if (existing != null) {
@@ -237,7 +242,12 @@ class ExcelSheet internal constructor(val excelWorkbook: ExcelWorkbook, val poiS
      * @return The String value of the specified column cell.
      */
     @JvmOverloads
-    fun getCellString(row: Row, columnName: ExcelColumnName, nullAsEmpty: Boolean = true, trimValue: Boolean = autotrimCellValues): String? {
+    fun getCellString(
+        row: Row,
+        columnName: ExcelColumnName,
+        nullAsEmpty: Boolean = true,
+        trimValue: Boolean = autotrimCellValues
+    ): String? {
         return getCellString(row, columnName.head, nullAsEmpty, trimValue)
     }
 
@@ -249,7 +259,12 @@ class ExcelSheet internal constructor(val excelWorkbook: ExcelWorkbook, val poiS
      * @return The String value of the specified column cell.
      */
     @JvmOverloads
-    fun getCellString(row: Row, columnHeadname: String, nullAsEmpty: Boolean = true, trimValue: Boolean = autotrimCellValues): String? {
+    fun getCellString(
+        row: Row,
+        columnHeadname: String,
+        nullAsEmpty: Boolean = true,
+        trimValue: Boolean = autotrimCellValues
+    ): String? {
         // findAndReadHeadRow(); Will be called in getColumnDef
         val cell = getCell(row, columnHeadname, false) ?: return if (nullAsEmpty) "" else null
         return PoiHelper.getValueAsString(cell, locale, trimValue)
@@ -262,7 +277,12 @@ class ExcelSheet internal constructor(val excelWorkbook: ExcelWorkbook, val poiS
      * @param trimValue   If true, the returned value will be trimmed, default is [autotrimCellValues].
      * @return The String value of the specified column cell.
      */
-    fun getCellString(row: Row, columnDef: ExcelColumnDef?, nullAsEmpty: Boolean = true, trimValue: Boolean = autotrimCellValues): String? {
+    fun getCellString(
+        row: Row,
+        columnDef: ExcelColumnDef?,
+        nullAsEmpty: Boolean = true,
+        trimValue: Boolean = autotrimCellValues
+    ): String? {
         // findAndReadHeadRow(); Will be called in getColumnDef
         val cell = getCell(row, columnDef, false) ?: return if (nullAsEmpty) "" else null
         return PoiHelper.getValueAsString(cell, locale, trimValue)
@@ -274,7 +294,10 @@ class ExcelSheet internal constructor(val excelWorkbook: ExcelWorkbook, val poiS
      * @return The String value of the specified column cell.
      */
     @Suppress("unused")
-    fun getCellInt(row: Row, columnName: ExcelColumnName): Int? { // findAndReadHeadRow(); Will be called in getColumnDef
+    fun getCellInt(
+        row: Row,
+        columnName: ExcelColumnName
+    ): Int? { // findAndReadHeadRow(); Will be called in getColumnDef
         return getCellInt(row, columnName.head)
     }
 
@@ -293,7 +316,10 @@ class ExcelSheet internal constructor(val excelWorkbook: ExcelWorkbook, val poiS
      * @return The String value of the specified column cell.
      */
     @Suppress("unused")
-    fun getCellDouble(row: Row, columnName: ExcelColumnName): Double? { // findAndReadHeadRow(); Will be called in getColumnDef
+    fun getCellDouble(
+        row: Row,
+        columnName: ExcelColumnName
+    ): Double? { // findAndReadHeadRow(); Will be called in getColumnDef
         return getCellDouble(row, columnName.head)
     }
 
@@ -302,7 +328,10 @@ class ExcelSheet internal constructor(val excelWorkbook: ExcelWorkbook, val poiS
      * @param columnHeadname The name of the column to get.
      * @return The String value of the specified column cell.
      */
-    fun getCellDouble(row: Row, columnHeadname: String): Double? { // findAndReadHeadRow(); Will be called in getColumnDef
+    fun getCellDouble(
+        row: Row,
+        columnHeadname: String
+    ): Double? { // findAndReadHeadRow(); Will be called in getColumnDef
         return getNumericCell(row, columnHeadname)?.numericCellValue ?: return null
     }
 
@@ -321,7 +350,11 @@ class ExcelSheet internal constructor(val excelWorkbook: ExcelWorkbook, val poiS
      * @return The cell of the specified column of the current row (uses internal interator).
      */
     @JvmOverloads
-    fun getCell(row: Row, columnName: ExcelColumnName, ensureCell: Boolean = writeMode): Cell? { // findAndReadHeadRow(); Will be called in getColumnDef
+    fun getCell(
+        row: Row,
+        columnName: ExcelColumnName,
+        ensureCell: Boolean = writeMode
+    ): Cell? { // findAndReadHeadRow(); Will be called in getColumnDef
         return getCell(row, columnName.head, ensureCell)
     }
 
@@ -331,7 +364,11 @@ class ExcelSheet internal constructor(val excelWorkbook: ExcelWorkbook, val poiS
      * @return The cell of the specified column of the current row (uses internal interator).
      */
     @JvmOverloads
-    fun getCell(row: Row, columnHeadname: String, ensureCell: Boolean = writeMode): Cell? { // findAndReadHeadRow(); Will be called in getColumnDef
+    fun getCell(
+        row: Row,
+        columnHeadname: String,
+        ensureCell: Boolean = writeMode
+    ): Cell? { // findAndReadHeadRow(); Will be called in getColumnDef
         val columnDef = getColumnDef(columnHeadname)
         return getCell(row, columnDef, ensureCell)
     }
@@ -377,7 +414,7 @@ class ExcelSheet internal constructor(val excelWorkbook: ExcelWorkbook, val poiS
     fun getCell(rowNum: Int, columnNumber: Int, ensureCell: Boolean = writeMode): Cell? {
         findAndReadHeadRow()
         return if (ensureCell)
-            getRow(rowNum)!!.getCell(columnNumber)?.cell
+            getRow(rowNum).getCell(columnNumber).cell
         else
             poiSheet.getRow(rowNum)?.getCell(columnNumber)
     }
@@ -543,7 +580,7 @@ class ExcelSheet internal constructor(val excelWorkbook: ExcelWorkbook, val poiS
      * Refer [isModified] for checking if any modification was done.
      * Please don't forget to call [analyze] first with parameter validate=true.
      *
-     * @param i18N               For localizing messages.
+     * @param i18n               For localizing messages.
      * @param excelWriterContext Defines the type of response (how to display and highlight validation errors).
      * @return this for chaining.
      */
@@ -564,15 +601,19 @@ class ExcelSheet internal constructor(val excelWorkbook: ExcelWorkbook, val poiS
             val columnDef = validationError.columnDef
             val row = getRow(validationError.row)
             if (excelWriterContext.isAddErrorColumn) {
-                excelWriterContext.errorMessageWriter.updateOrCreateCell(excelWriterContext, this,
-                        columnWithValidationErrorMessages, row, validationError)
+                excelWriterContext.errorMessageWriter.updateOrCreateCell(
+                    excelWriterContext, this,
+                    columnWithValidationErrorMessages, row, validationError
+                )
                 isModified = true
             }
             if (columnDef != null) {
-                var cell = row!!.getCell(columnDef._columnNumber, ExcelCellType.STRING)
+                val cell = row.getCell(columnDef._columnNumber, ExcelCellType.STRING)
                 if (excelWriterContext.isHighlightErrorCells) { // Cell validation error. Highlight cell.
-                    excelWriterContext.cellHighlighter.highlightErrorCell(cell, excelWriterContext, this,
-                            columnDef, row)
+                    excelWriterContext.cellHighlighter.highlightErrorCell(
+                        cell, excelWriterContext, this,
+                        columnDef, row
+                    )
                     isModified = true
                 }
                 if (excelWriterContext.isHighlightColumnHeadCells) {
@@ -580,8 +621,10 @@ class ExcelSheet internal constructor(val excelWorkbook: ExcelWorkbook, val poiS
                         highlightedColumnHeads.add(columnDef) // Don't highlight column heads twice.
                         // Cell validation error. Highlight column head cell.
                         val headCell = headRow!!.getCell(columnDef._columnNumber)
-                        excelWriterContext.cellHighlighter.highlightColumnHeadCell(headCell, excelWriterContext, this,
-                                columnDef, headRow)
+                        excelWriterContext.cellHighlighter.highlightColumnHeadCell(
+                            headCell, excelWriterContext, this,
+                            columnDef, headRow
+                        )
                         isModified = true
                     }
                 }
@@ -745,14 +788,16 @@ class ExcelSheet internal constructor(val excelWorkbook: ExcelWorkbook, val poiS
     }
 
     fun createValidationErrorMissingColumnNumber(columnNumber: Int): ExcelValidationErrorMessage {
-        return ExcelValidationErrorMessage(MESSAGE_MISSING_COLUMN_NUMBER, ResultMessageStatus.ERROR,
-                CellReference.convertNumToColString(columnNumber))
-                .setSheet(this).setRow(if (headRow != null) headRow!!.rowNum else 0)
+        return ExcelValidationErrorMessage(
+            MESSAGE_MISSING_COLUMN_NUMBER, ResultMessageStatus.ERROR,
+            CellReference.convertNumToColString(columnNumber)
+        )
+            .setSheet(this).setRow(if (headRow != null) headRow!!.rowNum else 0)
     }
 
     fun createValidationErrorMissingColumnByName(columnName: String?): ExcelValidationErrorMessage {
         return ExcelValidationErrorMessage(MESSAGE_MISSING_COLUMN_BY_NAME, ResultMessageStatus.ERROR, columnName)
-                .setSheet(this).setRow(if (headRow != null) headRow!!.rowNum else 0)
+            .setSheet(this).setRow(if (headRow != null) headRow!!.rowNum else 0)
     }
 
     /**
@@ -846,7 +891,7 @@ class ExcelSheet internal constructor(val excelWorkbook: ExcelWorkbook, val poiS
         return PoiHelper.isEmpty(cell)
     }
 
-    fun getRow(rownum: Int): ExcelRow? {
+    fun getRow(rownum: Int): ExcelRow {
         var excelRow = excelRowMap[rownum]
         if (excelRow == null) {
             var row: Row?
@@ -946,9 +991,68 @@ class ExcelSheet internal constructor(val excelWorkbook: ExcelWorkbook, val poiS
         poiSheet.setColumnWidth(columnIndex, width)
     }
 
+    /**
+     * @param column  Column as enum. The ordinal value will be used as column number.
+     */
+    fun setColumnWidth(column: Enum<*>, width: Int) {
+        setColumnWidth(column.ordinal, width)
+    }
+
     @Suppress("unused")
     fun addMergeRegion(range: CellRangeAddress?) {
         poiSheet.addMergedRegion(range)
+    }
+
+    /**
+     * Merges cells and sets the value.
+     *
+     * @param firstRow
+     * @param lastRow
+     * @param firstCol
+     * @param lastCol
+     * @param value
+     */
+    @Suppress("unused")
+    fun setMergedRegion(firstRow: Int, lastRow: Int, firstCol: Int, lastCol: Int, value: Any): ExcelCell {
+        val region = CellRangeAddress(firstRow, lastRow, firstCol, lastCol)
+        poiSheet.addMergedRegion(region)
+        val row = getRow(firstRow)
+        return row.getCell(firstCol).setCellValue(value)
+    }
+
+    /**
+     * Merges cells and sets the value.
+     *
+     * @param firstRow
+     * @param lastRow
+     * @param firstCol As enum (ordinal is used).
+     * @param lastCol As enum (ordinal is used).
+     * @param value
+     */
+    @Suppress("unused")
+    fun setMergedRegion(firstRow: Int, lastRow: Int, firstCol: Enum<*>, lastCol: Enum<*>, value: Any): ExcelCell {
+        return setMergedRegion(firstRow, lastRow, firstCol.ordinal, lastCol.ordinal, value)
+    }
+
+    /**
+     * Freezes the first toCol columns and the first toRow lines.
+     *
+     * @param toCol
+     * @param toRow
+     * @see Sheet.createFreezePane
+     */
+    @Suppress("unused")
+    fun createFreezePane(toCol: Int, toRow: Int) {
+        poiSheet.createFreezePane(toCol, toRow)
+    }
+
+    /**
+     * @param scale
+     * @see Sheet.setZoom
+     */
+    @Suppress("unused")
+    fun setZoom(scale: Int) {
+        poiSheet.setZoom(scale)
     }
 
     /**
@@ -957,7 +1061,7 @@ class ExcelSheet internal constructor(val excelWorkbook: ExcelWorkbook, val poiS
     @Suppress("unused")
     fun setAutoFilter() {
         val headingRow = if (headRow != null) headRow!!.rowNum else 0
-        val lastCol = getRow(headingRow)!!.lastCellNum.toInt()
+        val lastCol = getRow(headingRow).lastCellNum.toInt()
         val range = CellRangeAddress(headingRow, headingRow, 0, lastCol - 1)
         poiSheet.setAutoFilter(range)
     }

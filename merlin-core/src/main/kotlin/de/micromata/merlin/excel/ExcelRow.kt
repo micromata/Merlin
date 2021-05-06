@@ -37,8 +37,18 @@ class ExcelRow(val sheet: ExcelSheet, val row: Row) {
      * @return The (created) cell. If column definition isn't known, an IllegalArgumentException will be thrown.
      */
     @JvmOverloads
-    fun getCell(columnDef: ExcelColumnDef, type: ExcelCellType? = null): ExcelCell? {
+    fun getCell(columnDef: ExcelColumnDef, type: ExcelCellType? = null): ExcelCell {
         return getCell(columnDef.columnNumber, type)
+    }
+
+    /**
+     * @param column  Column as enum. The ordinal value will be used as column number.
+     * @param type       Only used, if new cell will be created.
+     * @return The (created) cell. If column definition isn't known, an IllegalArgumentException will be thrown.
+     */
+    @JvmOverloads
+    fun getCell(column: Enum<*>, type: ExcelCellType? = null): ExcelCell {
+        return getCell(column.ordinal, type)
     }
 
     /**
@@ -47,7 +57,7 @@ class ExcelRow(val sheet: ExcelSheet, val row: Row) {
      * @return The (created) cell, not null.
      */
     @JvmOverloads
-    fun getCell(columnNumber: Int, type: ExcelCellType? = null): ExcelCell? {
+    fun getCell(columnNumber: Int, type: ExcelCellType? = null): ExcelCell {
         var excelCell = cellMap[columnNumber]
         var lastCellNum = (row.lastCellNum - 1).toShort()
         if (lastCellNum < 0) {
@@ -61,7 +71,7 @@ class ExcelRow(val sheet: ExcelSheet, val row: Row) {
                 excelCell = ensureCell(colNum, type)
             }
         }
-        return excelCell
+        return excelCell!!
     }
 
     /**
@@ -70,7 +80,7 @@ class ExcelRow(val sheet: ExcelSheet, val row: Row) {
      * @return The created cell.
      */
     @JvmOverloads
-    fun createCell(type: ExcelCellType? = ExcelCellType.STRING): ExcelCell? {
+    fun createCell(type: ExcelCellType? = ExcelCellType.STRING): ExcelCell {
         var colCount = row.lastCellNum.toInt()
         if (colCount < 0) {
             colCount = 0
@@ -78,7 +88,7 @@ class ExcelRow(val sheet: ExcelSheet, val row: Row) {
         return ensureCell(colCount, type)
     }
 
-    private fun ensureCell(columnIndex: Int, type: ExcelCellType?): ExcelCell? {
+    private fun ensureCell(columnIndex: Int, type: ExcelCellType?): ExcelCell {
         var excelCell = cellMap[columnIndex]
         if (excelCell == null) {
             var cell = row.getCell(columnIndex)
@@ -106,7 +116,7 @@ class ExcelRow(val sheet: ExcelSheet, val row: Row) {
     fun createCells(cellStyle: CellStyle?, vararg cells: String?) {
         for (cellString in cells) {
             val cell = createCell(ExcelCellType.STRING)
-            cell!!.setCellValue(cellString)
+            cell.setCellValue(cellString)
             if (cellStyle != null) {
                 cell.setCellStyle(cellStyle)
             }
