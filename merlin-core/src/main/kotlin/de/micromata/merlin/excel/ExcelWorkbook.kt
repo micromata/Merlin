@@ -8,6 +8,8 @@ import org.apache.poi.ss.usermodel.*
 import org.slf4j.LoggerFactory
 import java.io.*
 import java.nio.file.Path
+import java.time.LocalDate
+import java.time.LocalDateTime
 import java.util.*
 
 /**
@@ -15,11 +17,11 @@ import java.util.*
  */
 class ExcelWorkbook
 @JvmOverloads constructor(
-        /**
-         * Is used e. g. for getting number cell values as String.
-         */
-        val locale: Locale = Locale.getDefault())
-    : AutoCloseable {
+    /**
+     * Is used e. g. for getting number cell values as String.
+     */
+    val locale: Locale = Locale.getDefault()
+) : AutoCloseable {
 
     lateinit var pOIWorkbook: Workbook
         private set
@@ -47,20 +49,26 @@ class ExcelWorkbook
         private set
 
     @JvmOverloads
-    constructor(workbook: Workbook,
-                locale: Locale = Locale.getDefault())
+    constructor(
+        workbook: Workbook,
+        locale: Locale = Locale.getDefault()
+    )
             : this(locale) {
         pOIWorkbook = workbook
     }
 
     @JvmOverloads
-    constructor(excelFilename: String,
-                locale: Locale = Locale.getDefault())
+    constructor(
+        excelFilename: String,
+        locale: Locale = Locale.getDefault()
+    )
             : this(File(excelFilename), locale)
 
     @JvmOverloads
-    constructor(excelFile: File,
-                locale: Locale = Locale.getDefault())
+    constructor(
+        excelFile: File,
+        locale: Locale = Locale.getDefault()
+    )
             : this(locale) {
         try {
             val fis = FileInputStream(excelFile)
@@ -76,9 +84,11 @@ class ExcelWorkbook
      * @param filename    Only for logging purposes if any error occurs.
      */
     @JvmOverloads
-    constructor(inputStream: InputStream,
-                filename: String,
-                locale: Locale = Locale.getDefault())
+    constructor(
+        inputStream: InputStream,
+        filename: String,
+        locale: Locale = Locale.getDefault()
+    )
             : this(locale) {
         open(inputStream, filename)
     }
@@ -88,9 +98,11 @@ class ExcelWorkbook
      * @param filename    Only for logging purposes if any error occurs.
      */
     @JvmOverloads
-    constructor(byteArray: ByteArray,
-                filename: String,
-                locale: Locale = Locale.getDefault())
+    constructor(
+        byteArray: ByteArray,
+        filename: String,
+        locale: Locale = Locale.getDefault()
+    )
             : this(locale) {
         open(byteArray.inputStream(), filename)
     }
@@ -256,7 +268,7 @@ class ExcelWorkbook
         return cellStyle
     }
 
-    fun ensureCellStyle(format: ExcelCellStandardFormat): CellStyle? {
+    fun ensureCellStyle(format: ExcelCellStandardFormat): CellStyle {
         val exist = doesCellStyleExist("DataFormat." + format.name)
         val cellStyle = createOrGetCellStyle("DataFormat." + format.name)
         if (!exist) {
@@ -269,7 +281,7 @@ class ExcelWorkbook
         return cellStyle
     }
 
-    fun ensureDateCellStyle(dateFormat: String): CellStyle? {
+    fun ensureDateCellStyle(dateFormat: String): CellStyle {
         val exist = doesCellStyleExist("DataFormat." + ExcelCellStandardFormat.DATE.name + "." + dateFormat)
         val cellStyle = createOrGetCellStyle("DataFormat." + ExcelCellStandardFormat.DATE.name + "." + dateFormat)
         if (!exist) {
@@ -280,6 +292,30 @@ class ExcelWorkbook
 
     fun createDataFormat(): DataFormat {
         return pOIWorkbook.creationHelper.createDataFormat()
+    }
+
+    /**
+     * Gets standard cell styles for dates (LocalDate, LocalDateTime, Calendar and Date) or creates them, if not exists.
+     * Uses the default date formats of #standardFormats.
+     */
+    fun ensureStandardCellStyle(value: Any?): CellStyle? {
+        value ?: return null
+        val exist = doesCellStyleExist("StandardDateFormat.${value.javaClass}")
+        val cellStyle = createOrGetCellStyle("StandardDateFormat.${value.javaClass}")
+        if (exist) {
+            when (value) {
+                is LocalDate -> {
+                    cellStyle.dataFormat = getDataFormat(standardFormats.dateFormat)
+                }
+                is Date, is LocalDateTime, is Calendar -> {
+                    cellStyle.dataFormat = getDataFormat(standardFormats.dateTimeFormat)
+                }
+                else -> {
+                    log.warn("createCellStyle does only support LocalDate, LocalDateTime, Calendar and Date, but received: ${value.javaClass}.")
+                }
+            }
+        }
+        return cellStyle
     }
 
     /**
@@ -334,6 +370,8 @@ class ExcelWorkbook
     val numberOfSheets
         get() = pOIWorkbook.numberOfSheets
 
+    val standardFormats = StandardFormats()
+
     override fun close() {
         try {
             if (inputStream != null) {
@@ -346,6 +384,7 @@ class ExcelWorkbook
 
     companion object {
         private val log = LoggerFactory.getLogger(ExcelWorkbook::class.java)
+
         @JvmStatic
         fun create(path: Path): ExcelWorkbook? {
             val inputStream = PersistencyRegistry.getDefault().getInputStream(path)

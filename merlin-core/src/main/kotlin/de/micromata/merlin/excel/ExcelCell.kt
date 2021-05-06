@@ -13,7 +13,12 @@ import java.util.*
 /**
  * Optional holder for POI cells. Useful for creating new cells.
  */
-class ExcelCell @JvmOverloads internal constructor(private val row: ExcelRow, val cell: Cell, private val type: ExcelCellType? = null, cellStyle: CellStyle? = null) {
+class ExcelCell @JvmOverloads internal constructor(
+    private val row: ExcelRow,
+    val cell: Cell,
+    private val type: ExcelCellType? = null,
+    cellStyle: CellStyle? = null
+) {
     init {
         if (cellStyle != null) {
             cell.cellStyle = cellStyle
@@ -121,6 +126,46 @@ class ExcelCell @JvmOverloads internal constructor(private val row: ExcelRow, va
     }
 
     /**
+     * @param workbook     Needed for creating int DataFormat.
+     * @param date The value to set.
+     * @return this for chaining.
+     */
+    fun setCellValue(workbook: ExcelWorkbook, date: Date?): ExcelCell {
+        setCellValue(workbook, cell, date)
+        return this
+    }
+
+    /**
+     * @param workbook     Needed for creating int DataFormat.
+     * @param date The value to set.
+     * @return this for chaining.
+     */
+    fun setCellValue(workbook: ExcelWorkbook, date: LocalDate?): ExcelCell {
+        setCellValue(workbook, cell, date)
+        return this
+    }
+
+    /**
+     * @param workbook     Needed for creating int DataFormat.
+     * @param datetime The value to set.
+     * @return this for chaining.
+     */
+    fun setCellValue(workbook: ExcelWorkbook, datetime: LocalDateTime?): ExcelCell {
+        setCellValue(workbook, cell, datetime)
+        return this
+    }
+
+    /**
+     * @param workbook     Needed for creating int DataFormat.
+     * @param cal The value to set.
+     * @return this for chaining.
+     */
+    fun setCellValue(workbook: ExcelWorkbook, cal: Calendar?): ExcelCell {
+        setCellValue(workbook, cell, cal)
+        return this
+    }
+
+    /**
      * @param formula The value to set.
      * @return this for chaining.
      */
@@ -210,6 +255,30 @@ class ExcelCell @JvmOverloads internal constructor(private val row: ExcelRow, va
         fun setCellValue(workbook: ExcelWorkbook, cell: Cell, format: String, dateValue: Date?) {
             cell.setCellValue(dateValue)
             cell.cellStyle = workbook.ensureDateCellStyle(format)
+        }
+
+        @JvmStatic
+        fun setCellValue(workbook: ExcelWorkbook, cell: Cell, date: Date?) {
+            cell.setCellValue(date)
+            cell.cellStyle = workbook.ensureStandardCellStyle(date)
+        }
+
+        @JvmStatic
+        fun setCellValue(workbook: ExcelWorkbook, cell: Cell, date: LocalDate?) {
+            cell.setCellValue(date)
+            cell.cellStyle = workbook.ensureStandardCellStyle(date)
+        }
+
+        @JvmStatic
+        fun setCellValue(workbook: ExcelWorkbook, cell: Cell, datetime: LocalDateTime?) {
+            cell.setCellValue(datetime)
+            cell.cellStyle = workbook.ensureStandardCellStyle(datetime)
+        }
+
+        @JvmStatic
+        fun setCellValue(workbook: ExcelWorkbook, cell: Cell, cal: Calendar?) {
+            cell.setCellValue(cal)
+            cell.cellStyle = workbook.ensureStandardCellStyle(cal)
         }
 
         @JvmStatic
