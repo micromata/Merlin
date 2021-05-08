@@ -12,28 +12,29 @@ buildscript {
 }
 
 dependencies {
-    compile project(':merlin-core')
+    implementation project(':merlin-core')
     // https://mvnrepository.com/artifact/org.apache.commons/commons-text
-    compile group: 'org.apache.commons', name: 'commons-text', version: '1.6'
-    compile group: 'org.eclipse.jetty', name: 'jetty-server', version: '9.4.18.v20190429'
-    compile group: 'org.eclipse.jetty', name: 'jetty-servlet', version: '9.4.18.v20190429'
-    compile group: 'org.eclipse.jetty', name: 'jetty-servlets', version: '9.4.18.v20190429'
-    compile group: 'org.glassfish.jaxb', name: 'jaxb-core', version: '2.3.0.1'
-    compile group: 'org.glassfish.jaxb', name: 'jaxb-runtime', version: '2.3.1'
-    compile group: 'org.glassfish.jersey.containers', name: 'jersey-container-servlet', version: '2.27'
-    compile group: 'org.glassfish.jersey.media', name: 'jersey-media-multipart', version: '2.27'
-    compile group: 'org.glassfish.jersey.media', name: 'jersey-media-json-jackson', version: '2.27'
-    compile group: 'org.glassfish.jersey.inject', name: 'jersey-hk2', version: '2.27'
-    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.10.1'
-    compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.10.1'
-    compile group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.1'
-    compile group: 'javax.xml.ws', name: 'jaxws-api', version: '2.3.1'
-    compile group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.25'
+    implementation group: 'org.apache.commons', name: 'commons-text', version: '1.6'
+    implementation group: 'org.eclipse.jetty', name: 'jetty-server', version: '9.4.18.v20190429'
+    implementation group: 'org.eclipse.jetty', name: 'jetty-servlet', version: '9.4.18.v20190429'
+    implementation group: 'org.eclipse.jetty', name: 'jetty-servlets', version: '9.4.18.v20190429'
+    implementation group: 'org.glassfish.jaxb', name: 'jaxb-core', version: '2.3.0.1'
+    implementation group: 'org.glassfish.jaxb', name: 'jaxb-runtime', version: '2.3.1'
+    implementation group: 'org.glassfish.jersey.containers', name: 'jersey-container-servlet', version: '2.27'
+    implementation group: 'org.glassfish.jersey.media', name: 'jersey-media-multipart', version: '2.27'
+    implementation group: 'org.glassfish.jersey.media', name: 'jersey-media-json-jackson', version: '2.27'
+    implementation group: 'org.glassfish.jersey.inject', name: 'jersey-hk2', version: '2.27'
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.10.1'
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.10.1'
+    implementation group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.1'
+    implementation group: 'javax.xml.ws', name: 'jaxws-api', version: '2.3.1'
+    implementation group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.25'
 
     // https://mvnrepository.com/artifact/commons-cli/commons-cli
-    compile group: 'commons-cli', name: 'commons-cli', version: '1.4'
-    testCompile group: 'org.mockito', name: 'mockito-core', version: '2.21.0'
+    implementation group: 'commons-cli', name: 'commons-cli', version: '1.4'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+
+    testImplementation group: 'org.mockito', name: 'mockito-core', version: '2.21.0'
 }
 
 apply plugin: 'application'

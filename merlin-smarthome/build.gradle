@@ -6,9 +6,9 @@ apply plugin: 'application'
 mainClassName = 'de.micromata.merlin.smarthome.examples.homeassistant_knx.HomeAssistantBuilder'
 
 dependencies {
-  compile project(':merlin-core')
-  compile project(':merlin-velocity')
-  compile group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.25'
+  implementation project(':merlin-core')
+  implementation project(':merlin-velocity')
+  implementation group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.25'
   implementation 'io.github.microutils:kotlin-logging:1.12.0'
 }
 
