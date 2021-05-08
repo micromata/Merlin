@@ -273,9 +273,14 @@ class ExcelWorkbook
         val cellStyle = createOrGetCellStyle("DataFormat." + format.name)
         if (!exist) {
             if (format == ExcelCellStandardFormat.FLOAT) {
-                cellStyle.dataFormat = getDataFormat("#.#")
+                cellStyle.dataFormat = getDataFormat(configuration.floatFormat)
             } else if (format == ExcelCellStandardFormat.INT) {
-                cellStyle.dataFormat = BuiltinFormats.getBuiltinFormat("0").toShort()
+                val builtinFormat = BuiltinFormats.getBuiltinFormat(configuration.intFormat)
+                cellStyle.dataFormat = if (builtinFormat >= 0) {
+                    builtinFormat.toShort()
+                } else {
+                    getDataFormat(configuration.intFormat)
+                }
             } else require(format != ExcelCellStandardFormat.DATE) { "Please call ensureDateCellStyle instead of ensureCellStyle." }
         }
         return cellStyle

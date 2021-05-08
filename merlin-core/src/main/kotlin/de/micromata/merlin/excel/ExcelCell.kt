@@ -16,7 +16,6 @@ import java.util.*
 class ExcelCell @JvmOverloads internal constructor(
     val row: ExcelRow,
     val cell: Cell,
-    private val type: ExcelCellType? = null,
     cellStyle: CellStyle? = null
 ) {
     init {
@@ -25,6 +24,7 @@ class ExcelCell @JvmOverloads internal constructor(
         }
     }
 
+    @Suppress("MemberVisibilityCanBePrivate")
     fun setBlank(): ExcelCell {
         cell.setBlank()
         return this
@@ -36,27 +36,27 @@ class ExcelCell @JvmOverloads internal constructor(
     }
 
     fun setCellValue(value: BigDecimal): ExcelCell {
-        cell.setCellValue(value.toDouble())
+        setCellValue(workbook, cell, value)
         return this
     }
 
     fun setCellValue(value: Double): ExcelCell {
-        cell.setCellValue(value)
+        setCellValue(workbook, cell, value)
         return this
     }
 
     fun setCellValue(value: Float): ExcelCell {
-        cell.setCellValue(value.toDouble())
+        setCellValue(workbook, cell, value.toDouble())
         return this
     }
 
     fun setCellValue(value: Int): ExcelCell {
-        cell.setCellValue(value.toDouble())
+        setCellValue(workbook, cell, value)
         return this
     }
 
     fun setCellValue(value: Long): ExcelCell {
-        cell.setCellValue(value.toDouble())
+        setCellValue(workbook, cell, value)
         return this
     }
 
@@ -214,6 +214,12 @@ class ExcelCell @JvmOverloads internal constructor(
         @JvmStatic
         fun setCellValue(workbook: ExcelWorkbook, cell: Cell, intValue: Int) {
             cell.setCellValue(intValue.toDouble())
+            cell.cellStyle = workbook.ensureCellStyle(ExcelCellStandardFormat.INT)
+        }
+
+        @JvmStatic
+        fun setCellValue(workbook: ExcelWorkbook, cell: Cell, longValue: Long) {
+            cell.setCellValue(longValue.toDouble())
             cell.cellStyle = workbook.ensureCellStyle(ExcelCellStandardFormat.INT)
         }
 

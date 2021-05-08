@@ -18,6 +18,10 @@ class Configuration {
         }
     lateinit var dateTimeFormat: String
 
+    var floatFormat = "#.#"
+
+    var intFormat = "0"
+
     init {
         val formatter = DateFormat.getDateInstance(DateFormat.SHORT, Locale.getDefault())
         if (formatter is SimpleDateFormat) {
@@ -30,6 +34,7 @@ class Configuration {
      * @param dayFormat
      * @param precision DateTimeFormat will extend given dayFormat with the given precision (default is hh:mm).
      */
+    @Suppress("unused")
     @JvmOverloads
     fun setDateFormats(dayFormat: String, precision: TimeStampPrecision = TimeStampPrecision.MINUTE) {
         this.dayFormat = dayFormat
