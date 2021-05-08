@@ -23,6 +23,11 @@ class ExcelSheet internal constructor(val excelWorkbook: ExcelWorkbook, val poiS
     private val columnDefList: MutableList<ExcelColumnDef> = ArrayList()
 
     /**
+     * You may prevent info logs about multiple registration of columns with same name.
+     */
+    var enableMultipleColumns = false
+
+    /**
      * If true, any requested cell will be created if not exists. Default is false.
      * @see [getCell]
      */
@@ -160,7 +165,7 @@ class ExcelSheet internal constructor(val excelWorkbook: ExcelWorkbook, val poiS
     /**
      * @param columnHead The column head to register.
      * @param aliases Sometimes table heads changed for different imports. Register any used aliases for detecting the column by aliases too.
-     * @return Created and registered ExcelColumnDef.
+     * @return Created and registered [ExcelColumnDef].
      */
     @JvmOverloads
     fun registerColumn(
@@ -172,7 +177,9 @@ class ExcelSheet internal constructor(val excelWorkbook: ExcelWorkbook, val poiS
         val existing = _getColumnDef(columnHead)
         if (existing != null) {
             columnDef.occurrenceNumber = existing.occurrenceNumber + 1
-            log.info("Multiple registration of column head '$columnHead': #${columnDef.occurrenceNumber}")
+            if (!enableMultipleColumns) {
+                log.info("Multiple registration of column head '$columnHead': #${columnDef.occurrenceNumber}")
+            }
         }
         if (listener != null) {
             columnDef.addColumnListener(listener)
@@ -184,7 +191,7 @@ class ExcelSheet internal constructor(val excelWorkbook: ExcelWorkbook, val poiS
     /**
      * @param columnHead The column head to register.
      * @param listener   The listener to use.
-     * @return Created and registered ExcelColumnDef.
+     * @return Created and registered [ExcelColumnDef].
      */
     @Suppress("unused")
     @JvmOverloads
@@ -419,7 +426,7 @@ class ExcelSheet internal constructor(val excelWorkbook: ExcelWorkbook, val poiS
             poiSheet.getRow(rowNum)?.getCell(columnNumber)
     }
 
-    private fun findAndReadHeadRow() {
+    internal fun findAndReadHeadRow() {
         if (_headRow != null) {
             return  // head row already run.
         }
@@ -468,6 +475,7 @@ class ExcelSheet internal constructor(val excelWorkbook: ExcelWorkbook, val poiS
             if (columnDef != null) {
                 log.debug("Head column found: '$strVal' in col #${cell.columnIndex}")
                 columnDef._columnNumber = cell.columnIndex
+                columnDef.width?.let { setColumnWidth(columnDef, it) }
             } else {
                 log.debug("Head column not registered: '$strVal'.")
             }
@@ -479,26 +487,35 @@ class ExcelSheet internal constructor(val excelWorkbook: ExcelWorkbook, val poiS
         return getColumnDef(columnName.head)
     }
 
-    fun getColumnDef(columnHeadname: String): ExcelColumnDef? {
+    /**
+     * @param identifier Name of head col or alias.
+     * @param occurrenceNumber For multiple heads (with name column name), specify the desired number. But it's recommended to use aliases instead.
+     */
+    @JvmOverloads
+    fun getColumnDef(identifier: String, occurrenceNumber: Int = 1): ExcelColumnDef? {
         findAndReadHeadRow()
-        return _getColumnDef(columnHeadname)
+        return _getColumnDef(identifier, occurrenceNumber)
     }
 
-    fun _getColumnDef(columnHeadname: String, occurrenceNumber: Int = 1): ExcelColumnDef? {
-        if (StringUtils.isEmpty(columnHeadname)) {
+    /**
+     * @param identifier Name of head col or alias.
+     * @param occurrenceNumber For multiple heads (with name column name), specify the desired number. But it's recommended to use aliases instead.
+     */
+    fun _getColumnDef(identifier: String, occurrenceNumber: Int = 1): ExcelColumnDef? {
+        if (StringUtils.isEmpty(identifier)) {
             return null
         }
         for (columnDef in columnDefList) {
-            if (columnDef.match(columnHeadname)) {
+            if (columnDef.match(identifier)) {
                 if (occurrenceNumber == columnDef.occurrenceNumber) {
-                    log.debug("Column '$columnHeadname' found.")
+                    log.debug("Column '$identifier' found.")
                     return columnDef
                 } else {
-                    log.debug("Skipping of '$columnHeadname' in col #${columnDef._columnNumber}. Looking further for occurence #$occurrenceNumber")
+                    log.debug("Skipping of '$identifier' in col #${columnDef._columnNumber}. Looking further for occurence #$occurrenceNumber")
                 }
             }
         }
-        log.debug("Column definition '$columnHeadname' not found.")
+        log.debug("Column definition '$identifier' not found.")
         return null
     }
 
@@ -510,6 +527,16 @@ class ExcelSheet internal constructor(val excelWorkbook: ExcelWorkbook, val poiS
             }
         }
         return null
+    }
+
+    /**
+     * @param identifier Name of head col or alias.
+     * @param occurrenceNumber For multiple heads (with name column name), specify the desired number. But it's recommended to use aliases instead.
+     */
+    @Suppress("unused")
+    @JvmOverloads
+    fun getColNumber(identifier: String, occurrenceNumber: Int = 1): Int? {
+        return getColumnDef(identifier, occurrenceNumber)?.columnNumber
     }
 
     val sheetName: String
@@ -987,6 +1014,10 @@ class ExcelSheet internal constructor(val excelWorkbook: ExcelWorkbook, val poiS
         poiSheet.autoSizeColumn(columnIndex)
     }
 
+    fun setColumnWidth(column: ExcelColumnDef, width: Int) {
+        poiSheet.setColumnWidth(column.columnNumber, width)
+    }
+
     fun setColumnWidth(columnIndex: Int, width: Int) {
         poiSheet.setColumnWidth(columnIndex, width)
     }
@@ -994,6 +1025,7 @@ class ExcelSheet internal constructor(val excelWorkbook: ExcelWorkbook, val poiS
     /**
      * @param column  Column as enum. The ordinal value will be used as column number.
      */
+    @Suppress("unused")
     fun setColumnWidth(column: Enum<*>, width: Int) {
         setColumnWidth(column.ordinal, width)
     }
@@ -1018,20 +1050,6 @@ class ExcelSheet internal constructor(val excelWorkbook: ExcelWorkbook, val poiS
         poiSheet.addMergedRegion(region)
         val row = getRow(firstRow)
         return row.getCell(firstCol).setCellValue(value)
-    }
-
-    /**
-     * Merges cells and sets the value.
-     *
-     * @param firstRow
-     * @param lastRow
-     * @param firstCol As enum (ordinal is used).
-     * @param lastCol As enum (ordinal is used).
-     * @param value
-     */
-    @Suppress("unused")
-    fun setMergedRegion(firstRow: Int, lastRow: Int, firstCol: Enum<*>, lastCol: Enum<*>, value: Any): ExcelCell {
-        return setMergedRegion(firstRow, lastRow, firstCol.ordinal, lastCol.ordinal, value)
     }
 
     /**

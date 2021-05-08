@@ -83,7 +83,7 @@ public class AbstractExcelWriter {
         row.createCell().setCellValue(variable);
         // Value
         if (value instanceof Boolean) {
-            row.createCell().setCellValue(workbook, (Boolean) value);
+            row.createCell().setCellValue(value);
         } else {
             row.createCell().setCellValue(value == null ? "" : String.valueOf(value));
         }
@@ -130,10 +130,10 @@ public class AbstractExcelWriter {
                 cell.setCellValue((String) targetValue);
                 break;
             case INT:
-                cell.setCellValue(workbook, (Integer) targetValue);
+                cell.setCellValue((Integer) targetValue);
                 break;
             case FLOAT:
-                cell.setCellValue(workbook, (Double) targetValue);
+                cell.setCellValue((Double) targetValue);
                 break;
             case DATE:
                 log.error("Date not yet implemented.");

@@ -5,13 +5,13 @@ import org.apache.poi.ss.usermodel.CellStyle
 import org.apache.poi.ss.usermodel.CellType
 import org.apache.poi.ss.usermodel.Row
 import org.apache.poi.ss.util.CellRangeAddress
-import java.util.*
 
 /**
  * A helper wrapper for creating rows in a more convenient way.
  */
 class ExcelRow(val sheet: ExcelSheet, val row: Row) {
     private val cellMap: MutableMap<Int, ExcelCell> = HashMap()
+
     /**
      * Get row number this row represents
      *
@@ -38,17 +38,8 @@ class ExcelRow(val sheet: ExcelSheet, val row: Row) {
      */
     @JvmOverloads
     fun getCell(columnDef: ExcelColumnDef, type: ExcelCellType? = null): ExcelCell {
+        sheet.findAndReadHeadRow()
         return getCell(columnDef.columnNumber, type)
-    }
-
-    /**
-     * @param column  Column as enum. The ordinal value will be used as column number.
-     * @param type       Only used, if new cell will be created.
-     * @return The (created) cell. If column definition isn't known, an IllegalArgumentException will be thrown.
-     */
-    @JvmOverloads
-    fun getCell(column: Enum<*>, type: ExcelCellType? = null): ExcelCell {
-        return getCell(column.ordinal, type)
     }
 
     /**
@@ -169,6 +160,36 @@ class ExcelRow(val sheet: ExcelSheet, val row: Row) {
                 }
             }
         }
+    }
+
+    /**
+     * Fills a row automatically by using properties of given obj, if matched by column head or any alias.
+     */
+    fun autoFillFromObject(obj: Any?, vararg ignoreProperties: String): Any? {
+        obj ?: return null
+        for (colDef in sheet.columnDefinitions) {
+            var value = getPropertyValue(obj, colDef.columnHeadname, ignoreProperties)
+            if (value != null) {
+                getCell(colDef).setCellValue(value)
+                continue
+            }
+            for (alias in colDef.columnAliases) {
+                value = getPropertyValue(obj, alias.decapitalize(), ignoreProperties)
+                if (value != null) {
+                    getCell(colDef).setCellValue(value)
+                    break
+                }
+            }
+        }
+        return null
+    }
+
+    private fun getPropertyValue(obj: Any, identifier: String?, ignoreProperties: Array<out String>): Any? {
+        identifier ?: return null
+        if (ignoreProperties.any { identifier.compareTo(it, ignoreCase = true) == 0 }) {
+            return null
+        }
+        return BeanUtils.getValue(obj, identifier.decapitalize())
     }
 
     var heightInPoints: Float

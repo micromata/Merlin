@@ -8,14 +8,18 @@ import org.slf4j.LoggerFactory
  * convenient parsing of Excel values.
  */
 class ExcelColumnDef
-constructor(val sheet: ExcelSheet,
-            var columnHeadname: String?,
-            vararg var columnAliases: String) {
+constructor(
+    val sheet: ExcelSheet,
+    var columnHeadname: String?,
+    vararg var columnAliases: String
+) {
 
     internal constructor(sheet: ExcelSheet, columnNumber: Int, columnHeadname: String?) : this(sheet, columnHeadname) {
         this._columnNumber = columnNumber
         this.columnHeadname = columnHeadname ?: CellReference.convertNumToColString(columnNumber)
     }
+
+    var width: Int? = null
 
     /**
      * If multiple column heads are found (in the head row with same name), occurenceNumber defines the column to select.
@@ -102,6 +106,16 @@ constructor(val sheet: ExcelSheet,
         }
         val listener = columnListener.with(this)
         columnListeners!!.add(listener)
+    }
+
+    /**
+     * Sets width of this cell as size * 256.
+     * @param size width / 256
+     * @return this for chaining.
+     */
+    fun withSize(size: Int): ExcelColumnDef {
+        width = size * 256
+        return this
     }
 
     override fun toString(): String {

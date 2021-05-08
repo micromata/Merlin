@@ -14,7 +14,7 @@ import java.util.*
  * Optional holder for POI cells. Useful for creating new cells.
  */
 class ExcelCell @JvmOverloads internal constructor(
-    private val row: ExcelRow,
+    val row: ExcelRow,
     val cell: Cell,
     private val type: ExcelCellType? = null,
     cellStyle: CellStyle? = null
@@ -67,21 +67,25 @@ class ExcelCell @JvmOverloads internal constructor(
 
     fun setCellValue(date: Date): ExcelCell {
         cell.setCellValue(date)
+        cell.cellStyle = workbook.ensureStandardCellStyle(date)
         return this
     }
 
     fun setCellValue(calendar: Calendar): ExcelCell {
         cell.setCellValue(calendar)
+        cell.cellStyle = workbook.ensureStandardCellStyle(calendar)
         return this
     }
 
-    fun setCellValue(date: LocalDateTime): ExcelCell {
-        cell.setCellValue(date)
+    fun setCellValue(dateTime: LocalDateTime): ExcelCell {
+        cell.setCellValue(dateTime)
+        cell.cellStyle = workbook.ensureStandardCellStyle(dateTime)
         return this
     }
 
     fun setCellValue(date: LocalDate): ExcelCell {
         cell.setCellValue(date)
+        cell.cellStyle = workbook.ensureStandardCellStyle(date)
         return this
     }
 
@@ -110,6 +114,7 @@ class ExcelCell @JvmOverloads internal constructor(
      * @param intValue The value to set.
      * @return this for chaining.
      */
+    @Deprecated("Use setCellValue(Boolean) instead.")
     fun setCellValue(workbook: ExcelWorkbook, intValue: Int): ExcelCell {
         setCellValue(workbook, cell, intValue)
         return this
@@ -120,48 +125,9 @@ class ExcelCell @JvmOverloads internal constructor(
      * @param booleanValue The value to set.
      * @return this for chaining.
      */
+    @Deprecated("Use setCellValue(Boolean) instead.")
     fun setCellValue(workbook: ExcelWorkbook, booleanValue: Boolean): ExcelCell {
         setCellValue(workbook, cell, booleanValue)
-        return this
-    }
-
-    /**
-     * @param workbook     Needed for creating int DataFormat.
-     * @param date The value to set.
-     * @return this for chaining.
-     */
-    fun setCellValue(workbook: ExcelWorkbook, date: Date?): ExcelCell {
-        setCellValue(workbook, cell, date)
-        return this
-    }
-
-    /**
-     * @param workbook     Needed for creating int DataFormat.
-     * @param date The value to set.
-     * @return this for chaining.
-     */
-    fun setCellValue(workbook: ExcelWorkbook, date: LocalDate?): ExcelCell {
-        setCellValue(workbook, cell, date)
-        return this
-    }
-
-    /**
-     * @param workbook     Needed for creating int DataFormat.
-     * @param datetime The value to set.
-     * @return this for chaining.
-     */
-    fun setCellValue(workbook: ExcelWorkbook, datetime: LocalDateTime?): ExcelCell {
-        setCellValue(workbook, cell, datetime)
-        return this
-    }
-
-    /**
-     * @param workbook     Needed for creating int DataFormat.
-     * @param cal The value to set.
-     * @return this for chaining.
-     */
-    fun setCellValue(workbook: ExcelWorkbook, cal: Calendar?): ExcelCell {
-        setCellValue(workbook, cell, cal)
         return this
     }
 
@@ -184,6 +150,7 @@ class ExcelCell @JvmOverloads internal constructor(
      * @param doubleValue The value to set.
      * @return this for chaining.
      */
+    @Deprecated("Use setCellValue(Boolean) instead.")
     fun setCellValue(workbook: ExcelWorkbook, doubleValue: Double): ExcelCell {
         setCellValue(workbook, cell, doubleValue)
         return this
@@ -194,6 +161,7 @@ class ExcelCell @JvmOverloads internal constructor(
      * @param value The value to set.
      * @return this for chaining.
      */
+    @Deprecated("Use setCellValue(Boolean) instead.")
     fun setCellValue(workbook: ExcelWorkbook, value: BigDecimal): ExcelCell {
         setCellValue(workbook, cell, value)
         return this
@@ -226,6 +194,10 @@ class ExcelCell @JvmOverloads internal constructor(
         row.sheet.excelWorkbook.formulaEvaluator!!.evaluateFormulaCell(cell)
     }
 
+    val sheet = row.sheet
+
+    val workbook = sheet.excelWorkbook
+
     companion object {
         @JvmStatic
         fun setCellValue(workbook: ExcelWorkbook, cell: Cell, doubleValue: Double) {
@@ -246,39 +218,15 @@ class ExcelCell @JvmOverloads internal constructor(
         }
 
         @JvmStatic
-        fun setCellValue(workbook: ExcelWorkbook, cell: Cell, booleanValue: Boolean) {
-            cell.setCellValue(TemplateRunContext.getBooleanAsString(booleanValue))
-            cell.cellStyle = workbook.ensureCellStyle(ExcelCellStandardFormat.INT)
-        }
-
-        @JvmStatic
         fun setCellValue(workbook: ExcelWorkbook, cell: Cell, format: String, dateValue: Date?) {
             cell.setCellValue(dateValue)
             cell.cellStyle = workbook.ensureDateCellStyle(format)
         }
 
         @JvmStatic
-        fun setCellValue(workbook: ExcelWorkbook, cell: Cell, date: Date?) {
-            cell.setCellValue(date)
-            cell.cellStyle = workbook.ensureStandardCellStyle(date)
-        }
-
-        @JvmStatic
-        fun setCellValue(workbook: ExcelWorkbook, cell: Cell, date: LocalDate?) {
-            cell.setCellValue(date)
-            cell.cellStyle = workbook.ensureStandardCellStyle(date)
-        }
-
-        @JvmStatic
-        fun setCellValue(workbook: ExcelWorkbook, cell: Cell, datetime: LocalDateTime?) {
-            cell.setCellValue(datetime)
-            cell.cellStyle = workbook.ensureStandardCellStyle(datetime)
-        }
-
-        @JvmStatic
-        fun setCellValue(workbook: ExcelWorkbook, cell: Cell, cal: Calendar?) {
-            cell.setCellValue(cal)
-            cell.cellStyle = workbook.ensureStandardCellStyle(cal)
+        fun setCellValue(workbook: ExcelWorkbook, cell: Cell, booleanValue: Boolean) {
+            cell.setCellValue(TemplateRunContext.getBooleanAsString(booleanValue))
+            cell.cellStyle = workbook.ensureCellStyle(ExcelCellStandardFormat.INT)
         }
 
         @JvmStatic

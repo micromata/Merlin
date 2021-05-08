@@ -305,10 +305,10 @@ class ExcelWorkbook
         if (exist) {
             when (value) {
                 is LocalDate -> {
-                    cellStyle.dataFormat = getDataFormat(standardFormats.dateFormat)
+                    cellStyle.dataFormat = getDataFormat(configuration.dayFormat)
                 }
                 is Date, is LocalDateTime, is Calendar -> {
-                    cellStyle.dataFormat = getDataFormat(standardFormats.dateTimeFormat)
+                    cellStyle.dataFormat = getDataFormat(configuration.dateTimeFormat)
                 }
                 else -> {
                     log.warn("createCellStyle does only support LocalDate, LocalDateTime, Calendar and Date, but received: ${value.javaClass}.")
@@ -370,7 +370,7 @@ class ExcelWorkbook
     val numberOfSheets
         get() = pOIWorkbook.numberOfSheets
 
-    val standardFormats = StandardFormats()
+    val configuration = Configuration()
 
     override fun close() {
         try {
