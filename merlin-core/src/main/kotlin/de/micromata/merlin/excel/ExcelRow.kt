@@ -165,23 +165,47 @@ class ExcelRow(val sheet: ExcelSheet, val row: Row) {
     /**
      * Fills a row automatically by using properties of given obj, if matched by column head or any alias.
      */
-    fun autoFillFromObject(obj: Any?, vararg ignoreProperties: String): Any? {
-        obj ?: return null
+    @Suppress("unused")
+    fun autoFillFromObject(obj: Any?, vararg ignoreProperties: String) {
+        autoFillFromObject(obj, { _, _, _, _ -> false }, *ignoreProperties)
+    }
+
+    /**
+     * Fills a row automatically by using properties of given obj, if matched by column head or any alias.
+     */
+    @Suppress("MemberVisibilityCanBePrivate")
+    fun autoFillFromObject(
+        obj: Any?,
+        process: (Any, Any, ExcelCell, ExcelColumnDef) -> Boolean,
+        vararg ignoreProperties: String
+    ) {
+        obj ?: return
         for (colDef in sheet.columnDefinitions) {
             var value = getPropertyValue(obj, colDef.columnHeadname, ignoreProperties)
             if (value != null) {
-                getCell(colDef).setCellValue(value)
+                processPropertyValue(obj, value, colDef, process)
                 continue
             }
             for (alias in colDef.columnAliases) {
                 value = getPropertyValue(obj, alias.decapitalize(), ignoreProperties)
                 if (value != null) {
-                    getCell(colDef).setCellValue(value)
+                    processPropertyValue(obj, value, colDef, process)
                     break
                 }
             }
         }
-        return null
+    }
+
+    private fun processPropertyValue(
+        obj: Any,
+        value: Any,
+        colDef: ExcelColumnDef,
+        process: (Any, Any, ExcelCell, ExcelColumnDef) -> Boolean
+    ) {
+        val cell = getCell(colDef)
+        if (!process(obj, value, cell, colDef)) {
+            cell.setCellValue(value)
+        }
     }
 
     private fun getPropertyValue(obj: Any, identifier: String?, ignoreProperties: Array<out String>): Any? {
