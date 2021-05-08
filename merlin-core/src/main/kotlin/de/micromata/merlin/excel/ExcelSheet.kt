@@ -3,7 +3,6 @@ package de.micromata.merlin.excel
 import de.micromata.merlin.CoreI18n
 import de.micromata.merlin.ResultMessageStatus
 import de.micromata.merlin.data.Data
-import org.apache.commons.lang3.StringUtils
 import org.apache.poi.ss.usermodel.Cell
 import org.apache.poi.ss.usermodel.CellType
 import org.apache.poi.ss.usermodel.Row
@@ -174,9 +173,9 @@ class ExcelSheet internal constructor(val excelWorkbook: ExcelWorkbook, val poiS
         listener: ExcelColumnListener? = null
     ): ExcelColumnDef {
         val columnDef = ExcelColumnDef(this, columnHead, *aliases)
-        val existing = _getColumnDef(columnHead)
-        if (existing != null) {
-            columnDef.occurrenceNumber = existing.occurrenceNumber + 1
+        val existing = getColumnDefs(columnHead)
+        if (!existing.isEmpty()) {
+            columnDef.occurrenceNumber = existing.last().occurrenceNumber + 1
             if (!enableMultipleColumns) {
                 log.info("Multiple registration of column head '$columnHead': #${columnDef.occurrenceNumber}")
             }
@@ -492,7 +491,7 @@ class ExcelSheet internal constructor(val excelWorkbook: ExcelWorkbook, val poiS
      * @param occurrenceNumber For multiple heads (with name column name), specify the desired number. But it's recommended to use aliases instead.
      */
     @JvmOverloads
-    fun getColumnDef(identifier: String, occurrenceNumber: Int = 1): ExcelColumnDef? {
+    fun getColumnDef(identifier: String, occurrenceNumber: Int = -1): ExcelColumnDef? {
         findAndReadHeadRow()
         return _getColumnDef(identifier, occurrenceNumber)
     }
@@ -501,13 +500,13 @@ class ExcelSheet internal constructor(val excelWorkbook: ExcelWorkbook, val poiS
      * @param identifier Name of head col or alias.
      * @param occurrenceNumber For multiple heads (with name column name), specify the desired number. But it's recommended to use aliases instead.
      */
-    fun _getColumnDef(identifier: String, occurrenceNumber: Int = 1): ExcelColumnDef? {
-        if (StringUtils.isEmpty(identifier)) {
+    fun _getColumnDef(identifier: String, occurrenceNumber: Int = -1): ExcelColumnDef? {
+        if (identifier.isEmpty()) {
             return null
         }
         for (columnDef in columnDefList) {
             if (columnDef.match(identifier)) {
-                if (occurrenceNumber == columnDef.occurrenceNumber) {
+                if (occurrenceNumber < 0 || occurrenceNumber == columnDef.occurrenceNumber) {
                     log.debug("Column '$identifier' found.")
                     return columnDef
                 } else {
@@ -517,6 +516,16 @@ class ExcelSheet internal constructor(val excelWorkbook: ExcelWorkbook, val poiS
         }
         log.debug("Column definition '$identifier' not found.")
         return null
+    }
+
+    /**
+     * @return list of column defs matching the given identifier.
+     */
+    fun getColumnDefs(identifier: String): List<ExcelColumnDef> {
+        if (identifier.isEmpty()) {
+            return emptyList()
+        }
+        return columnDefList.filter { it.match(identifier) }
     }
 
     @Suppress("unused")
@@ -535,7 +544,7 @@ class ExcelSheet internal constructor(val excelWorkbook: ExcelWorkbook, val poiS
      */
     @Suppress("unused")
     @JvmOverloads
-    fun getColNumber(identifier: String, occurrenceNumber: Int = 1): Int? {
+    fun getColNumber(identifier: String, occurrenceNumber: Int = -1): Int? {
         return getColumnDef(identifier, occurrenceNumber)?.columnNumber
     }
 
