@@ -16,6 +16,10 @@ installer for a desktop frontend for the server.
 
 Some more modules for different use-cases.
 
+### Start with maven/gradle
+Refer https://mvnrepository.com/artifact/de.micromata.merlin/merlin-core for `pom.xml`/`gradle.build`.
+
+
 ## Excel validation (xls and xlsx)
 * Supports validation of columns, such as cell type, flags like required, unique and pattern (e. g. E-Mail-Format)
 * Supports visualization and highlighing inside the original Excel document:
