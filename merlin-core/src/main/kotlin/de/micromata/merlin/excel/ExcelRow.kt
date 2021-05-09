@@ -233,10 +233,7 @@ class ExcelRow(val sheet: ExcelSheet, val row: Row) {
         sheet.cache.autoFillCache.foundFieldsMap[colDef]?.let {
             return Pair(true, BeanUtils.getValue(obj, it))
         }
-        val field = BeanUtils.getDeclaredField(obj::class.java, identifier.decapitalize())
-        if (field == null) {
-            return null
-        }
+        val field = BeanUtils.getDeclaredField(obj::class.java, identifier.decapitalize()) ?: return null
         sheet.cache.autoFillCache.foundFieldsMap[colDef] = field
         return Pair(true, BeanUtils.getValue(obj, field))
     }
