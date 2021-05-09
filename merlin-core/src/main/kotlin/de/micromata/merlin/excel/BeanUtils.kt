@@ -7,8 +7,12 @@ object BeanUtils {
     fun getValue(src: Any, property: String): Any? {
         val srcClazz = src.javaClass
         val srcField = getDeclaredField(srcClazz, property) ?: return null
-        srcField.isAccessible = true
-        return srcField.get(src)
+        return getValue(src, srcField)
+    }
+
+    fun getValue(src: Any, field: Field): Any? {
+        field.isAccessible = true
+        return field.get(src)
     }
 
     /**
@@ -35,7 +39,7 @@ object BeanUtils {
      * @param fieldnames
      * @return the field or null
      */
-    private fun getDeclaredField(clazz: Class<*>, fieldname: String): Field? {
+    fun getDeclaredField(clazz: Class<*>, fieldname: String): Field? {
         val fields: Array<Field> = getAllDeclaredFields(clazz)
         for (f in fields) {
             if (f.name == fieldname) {

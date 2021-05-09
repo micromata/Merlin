@@ -39,6 +39,8 @@ class ExcelSheet internal constructor(val excelWorkbook: ExcelWorkbook, val poiS
     val columnDefinitions
         get() = columnDefList.toList()
 
+    internal val cache = WorkingCache()
+
     init {
         log.debug("Reading sheet '" + poiSheet.sheetName + "'")
     }

@@ -1,5 +1,4 @@
-Merlin technical documentation
-==============================
+= Merlin technical documentation
 Micromata GmbH, Kai Reinhard, Version {version}
 :toc:
 :toclevels: 4
@@ -12,11 +11,11 @@ link:index{outfilesuffix}[Top]
 :sectnums:
 
 
-= Merlin Core library
+== Merlin Core library
 
 This is Merlin's core library used by all other modules of Merlin.
 
-== Functionality
+=== Functionality
 Merlin core contains the base library supporting:
 
 - Reading Excel files with validation of the data (xls and xlsx).
@@ -29,8 +28,8 @@ Merlin core contains the base library supporting:
   substitution is as well supported as conditionals (equals, greater-less etc.)
   for having dynamic content in the result word file. Support of serial letters.
 
-== Excel validation
-=== Reading and validating Excel files
+=== Excel validation
+==== Reading and validating Excel files
 
 Refer e. g. TemplateDefinitionExcelReader as a full example of
 reading and validating an excel file:
@@ -61,7 +60,7 @@ reading and validating an excel file:
   }
 ----
 
-=== Mark validation errors
+==== Mark validation errors
 Refer e. g. ExcelWorkbookTest for returning Excel files with marked validation
 errors:
 
@@ -89,8 +88,8 @@ errors:
   sheet.markErrors(ctx);
 ----
 
-== Templating
-=== Glossar
+=== Templating
+==== Glossar
 
 - Templates (or template files) are Word files containing variables and conditionals such as
 ====
@@ -137,8 +136,8 @@ Here is my text.
 - Please note: Comments containing hyperlinks aren't supported.
 
 
-=== Running a template
-==== Single run
+==== Running a template
+===== Single run
 You may run a template with the following settings:
 
 - Customized variables (gender, name of receiver, etc.)
@@ -155,7 +154,7 @@ You may run a template with the following settings:
     * Checking the correct type of the user's input: texts, selections, boolean, numbers (including optional min an max values), etc.
     * Flags such as required variables or unique flag (useful for the serial letter functionality).
 
-==== Serial letter run
+===== Serial letter run
 You may run a template with the following settings:
 - Serial definition file containg variables. The template and template definition file may be specified
   inside this definition file (Excel), each set of variables per row.
@@ -166,7 +165,7 @@ You may run a template with the following settings:
   * in the template file itself.
 - Please notice: A template definition file is optional (see above).
 
-=== Template files
+==== Template files
 Template files (docx) may contain following expressions supported by Merlin:
 
 [%autowidth, frame="topbot",options="header"]
@@ -222,7 +221,8 @@ http://pool.sks-keyservers.net:11371 and http://keys.gnupg.net:11371/
 
 === Building
 
-Simply run `gradle clean publish`.
+* Simply run `gradle clean publish` for publishing to Sonatype (uncomment block in `gradle.build` before).
+* For local publishing use `gradle publishToMavenLocal`.
 
 === Staging a release
 

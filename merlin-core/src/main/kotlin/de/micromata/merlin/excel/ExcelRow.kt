@@ -181,17 +181,29 @@ class ExcelRow(val sheet: ExcelSheet, val row: Row) {
     ) {
         obj ?: return
         for (colDef in sheet.columnDefinitions) {
-            var value = getPropertyValue(obj, colDef.columnHeadname, ignoreProperties)
-            if (value != null) {
-                processPropertyValue(obj, value, colDef, process)
+            if (sheet.cache.autoFillCache.notFoundFieldsSet.contains(colDef)) {
+                // Don't search multiple times, if no method was found.
+                continue
+            }
+            var pair = getPropertyValue(obj, colDef, colDef.columnHeadname, ignoreProperties)
+            if (pair != null) {
+                pair.second?.let { value ->
+                    processPropertyValue(obj, value, colDef, process)
+                }
                 continue
             }
             for (alias in colDef.columnAliases) {
-                value = getPropertyValue(obj, alias.decapitalize(), ignoreProperties)
-                if (value != null) {
-                    processPropertyValue(obj, value, colDef, process)
+                pair = getPropertyValue(obj, colDef, alias.decapitalize(), ignoreProperties)
+                if (pair != null) {
+                    pair.second?.let { value ->
+                        processPropertyValue(obj, value, colDef, process)
+                    }
                     break
                 }
+            }
+            if (pair == null) {
+                // No bean property found for this column definition.
+                sheet.cache.autoFillCache.notFoundFieldsSet.add(colDef)
             }
         }
     }
@@ -208,12 +220,25 @@ class ExcelRow(val sheet: ExcelSheet, val row: Row) {
         }
     }
 
-    private fun getPropertyValue(obj: Any, identifier: String?, ignoreProperties: Array<out String>): Any? {
+    private fun getPropertyValue(
+        obj: Any,
+        colDef: ExcelColumnDef,
+        identifier: String?,
+        ignoreProperties: Array<out String>
+    ): Pair<Boolean, Any?>? {
         identifier ?: return null
         if (ignoreProperties.any { identifier.compareTo(it, ignoreCase = true) == 0 }) {
             return null
         }
-        return BeanUtils.getValue(obj, identifier.decapitalize())
+        sheet.cache.autoFillCache.foundFieldsMap[colDef]?.let {
+            return Pair(true, BeanUtils.getValue(obj, it))
+        }
+        val field = BeanUtils.getDeclaredField(obj::class.java, identifier.decapitalize())
+        if (field == null) {
+            return null
+        }
+        sheet.cache.autoFillCache.foundFieldsMap[colDef] = field
+        return Pair(true, BeanUtils.getValue(obj, field))
     }
 
     var heightInPoints: Float
