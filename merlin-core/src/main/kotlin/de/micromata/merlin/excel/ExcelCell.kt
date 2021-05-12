@@ -16,14 +16,8 @@ import java.util.*
 class ExcelCell @JvmOverloads internal constructor(
     val row: ExcelRow,
     val cell: Cell,
-    cellStyle: CellStyle? = null
+    val existingPoiCell: Boolean
 ) {
-    init {
-        if (cellStyle != null) {
-            cell.cellStyle = cellStyle
-        }
-    }
-
     @Suppress("MemberVisibilityCanBePrivate")
     fun setBlank(): ExcelCell {
         cell.setBlank()
@@ -31,78 +25,169 @@ class ExcelCell @JvmOverloads internal constructor(
     }
 
     fun setCellValue(str: String?): ExcelCell {
-        cell.setCellValue(str)
+        if (str == null) {
+            cell.setBlank()
+        } else {
+            cell.setCellValue(str)
+        }
         return this
     }
 
-    fun setCellValue(value: BigDecimal): ExcelCell {
-        setCellValue(workbook, cell, value)
+    /**
+     * @param protectCellStyle If true, the cell style will not be set fot this value type.
+     * Default is true for already existing poi cells (if existing excel workbooks are used).
+     */
+    @JvmOverloads
+    fun setCellValue(value: BigDecimal, protectCellStyle: Boolean = existingPoiCell): ExcelCell {
+        if (protectCellStyle) {
+            cell.setCellValue(value.toDouble())
+        } else {
+            // Set cell value and auto style:
+            setCellValue(workbook, cell, value)
+        }
         return this
     }
 
-    fun setCellValue(value: Double): ExcelCell {
-        setCellValue(workbook, cell, value)
+    /**
+     * @param protectCellStyle If true, the cell style will not be set fot this value type.
+     * Default is true for already existing poi cells (if existing excel workbooks are used).
+     */
+    @JvmOverloads
+    fun setCellValue(value: Double, protectCellStyle: Boolean = existingPoiCell): ExcelCell {
+        if (protectCellStyle) {
+            cell.setCellValue(value)
+        } else {
+            // Set cell value and auto style:
+            setCellValue(workbook, cell, value)
+        }
         return this
     }
 
-    fun setCellValue(value: Float): ExcelCell {
-        setCellValue(workbook, cell, value.toDouble())
+    /**
+     * @param protectCellStyle If true, the cell style will not be set fot this value type.
+     * Default is true for already existing poi cells (if existing excel workbooks are used).
+     */
+    @JvmOverloads
+    fun setCellValue(value: Float, protectCellStyle: Boolean = existingPoiCell): ExcelCell {
+        if (protectCellStyle) {
+            cell.setCellValue(value.toDouble())
+        } else {
+            // Set cell value and auto style:
+            setCellValue(workbook, cell, value.toDouble())
+        }
         return this
     }
 
-    fun setCellValue(value: Int): ExcelCell {
-        setCellValue(workbook, cell, value)
+    /**
+     * @param protectCellStyle If true, the cell style will not be set fot this value type.
+     * Default is true for already existing poi cells (if existing excel workbooks are used).
+     */
+    @JvmOverloads
+    fun setCellValue(value: Int, protectCellStyle: Boolean = existingPoiCell): ExcelCell {
+        if (protectCellStyle) {
+            cell.setCellValue(value.toDouble())
+        } else {
+            // Set cell value and auto style:
+            setCellValue(workbook, cell, value)
+        }
         return this
     }
 
-    fun setCellValue(value: Long): ExcelCell {
-        setCellValue(workbook, cell, value)
+    /**
+     * @param protectCellStyle If true, the cell style will not be set fot this value type.
+     * Default is true for already existing poi cells (if existing excel workbooks are used).
+     */
+    @JvmOverloads
+    fun setCellValue(value: Long, protectCellStyle: Boolean = existingPoiCell): ExcelCell {
+        if (protectCellStyle) {
+            cell.setCellValue(value.toDouble())
+        } else {
+            // Set cell value and auto style:
+            setCellValue(workbook, cell, value)
+        }
         return this
     }
 
     fun setCellValue(str: RichTextString?): ExcelCell {
-        cell.setCellValue(str)
+        if (str == null) {
+            setBlank()
+        } else {
+            cell.setCellValue(str)
+        }
         return this
     }
 
-    fun setCellValue(date: Date): ExcelCell {
+    /**
+     * @param protectCellStyle If true, the cell style will not be set fot this value type.
+     * Default is true for already existing poi cells (if existing excel workbooks are used).
+     */
+    @JvmOverloads
+    fun setCellValue(date: Date, protectCellStyle: Boolean = existingPoiCell): ExcelCell {
         cell.setCellValue(date)
-        cell.cellStyle = workbook.ensureStandardCellStyle(date)
+        if (!protectCellStyle) {
+            cell.cellStyle = workbook.ensureStandardCellStyle(date)
+        }
         return this
     }
 
-    fun setCellValue(calendar: Calendar): ExcelCell {
+    /**
+     * @param protectCellStyle If true, the cell style will not be set fot this value type.
+     * Default is true for already existing poi cells (if existing excel workbooks are used).
+     */
+    @JvmOverloads
+    fun setCellValue(calendar: Calendar, protectCellStyle: Boolean = existingPoiCell): ExcelCell {
         cell.setCellValue(calendar)
-        cell.cellStyle = workbook.ensureStandardCellStyle(calendar)
+        if (!protectCellStyle) {
+            cell.cellStyle = workbook.ensureStandardCellStyle(calendar)
+        }
         return this
     }
 
-    fun setCellValue(dateTime: LocalDateTime): ExcelCell {
+    /**
+     * @param protectCellStyle If true, the cell style will not be set fot this value type.
+     * Default is true for already existing poi cells (if existing excel workbooks are used).
+     */
+    @JvmOverloads
+    fun setCellValue(dateTime: LocalDateTime, protectCellStyle: Boolean = existingPoiCell): ExcelCell {
         cell.setCellValue(dateTime)
-        cell.cellStyle = workbook.ensureStandardCellStyle(dateTime)
+        if (!protectCellStyle) {
+            cell.cellStyle = workbook.ensureStandardCellStyle(dateTime)
+        }
         return this
     }
 
-    fun setCellValue(date: LocalDate): ExcelCell {
+    /**
+     * @param protectCellStyle If true, the cell style will not be set fot this value type.
+     * Default is true for already existing poi cells (if existing excel workbooks are used).
+     */
+    @JvmOverloads
+    fun setCellValue(date: LocalDate, protectCellStyle: Boolean = existingPoiCell): ExcelCell {
         cell.setCellValue(date)
-        cell.cellStyle = workbook.ensureStandardCellStyle(date)
+        if (!protectCellStyle) {
+            cell.cellStyle = workbook.ensureStandardCellStyle(date)
+        }
         return this
     }
 
-    fun setCellValue(value: Any?): ExcelCell {
+    /**
+     * @param protectCellStyle If true, the cell style will not be set fot this value type.
+     * Default is true for already existing poi cells (if existing excel workbooks are used).
+     */
+    @JvmOverloads
+    fun setCellValue(value: Any?, protectCellStyle: Boolean = existingPoiCell): ExcelCell {
         value?.let {
             when (it) {
                 is String -> setCellValue(it)
-                is BigDecimal -> setCellValue(it)
-                is Double -> setCellValue(it)
-                is Float -> setCellValue(it)
-                is Int -> setCellValue(it)
-                is Long -> setCellValue(it)
+                is BigDecimal -> setCellValue(it, protectCellStyle)
+                is Double -> setCellValue(it, protectCellStyle)
+                is Float -> setCellValue(it, protectCellStyle)
+                is Int -> setCellValue(it, protectCellStyle)
+                is Long -> setCellValue(it, protectCellStyle)
                 is RichTextString -> setCellValue(it)
-                is Date -> setCellValue(it)
-                is LocalDate -> setCellValue(it)
-                is LocalDateTime -> setCellValue(it)
-                is Calendar -> setCellValue(it)
+                is Date -> setCellValue(it, protectCellStyle)
+                is LocalDate -> setCellValue(it, protectCellStyle)
+                is LocalDateTime -> setCellValue(it, protectCellStyle)
+                is Calendar -> setCellValue(it, protectCellStyle)
                 else -> setCellValue(it.toString())
             }
         } ?: setBlank()
@@ -199,36 +284,54 @@ class ExcelCell @JvmOverloads internal constructor(
     val workbook = sheet.excelWorkbook
 
     companion object {
+        /**
+         * Sets automatically the cell style.
+         */
         @JvmStatic
         fun setCellValue(workbook: ExcelWorkbook, cell: Cell, doubleValue: Double) {
             cell.setCellValue(doubleValue)
             cell.cellStyle = workbook.ensureCellStyle(ExcelCellStandardFormat.FLOAT)
         }
 
+        /**
+         * Sets automatically the cell style.
+         */
         @JvmStatic
         fun setCellValue(workbook: ExcelWorkbook, cell: Cell, value: BigDecimal) {
             cell.setCellValue(value.toDouble())
             cell.cellStyle = workbook.ensureCellStyle(ExcelCellStandardFormat.FLOAT)
         }
 
+        /**
+         * Sets automatically the cell style.
+         */
         @JvmStatic
         fun setCellValue(workbook: ExcelWorkbook, cell: Cell, intValue: Int) {
             cell.setCellValue(intValue.toDouble())
             cell.cellStyle = workbook.ensureCellStyle(ExcelCellStandardFormat.INT)
         }
 
+        /**
+         * Sets automatically the cell style.
+         */
         @JvmStatic
         fun setCellValue(workbook: ExcelWorkbook, cell: Cell, longValue: Long) {
             cell.setCellValue(longValue.toDouble())
             cell.cellStyle = workbook.ensureCellStyle(ExcelCellStandardFormat.INT)
         }
 
+        /**
+         * Sets automatically the cell style.
+         */
         @JvmStatic
         fun setCellValue(workbook: ExcelWorkbook, cell: Cell, format: String, dateValue: Date?) {
             cell.setCellValue(dateValue)
             cell.cellStyle = workbook.ensureDateCellStyle(format)
         }
 
+        /**
+         * Sets automatically the cell style.
+         */
         @JvmStatic
         fun setCellValue(workbook: ExcelWorkbook, cell: Cell, booleanValue: Boolean) {
             cell.setCellValue(TemplateRunContext.getBooleanAsString(booleanValue))

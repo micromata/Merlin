@@ -85,16 +85,18 @@ class ExcelRow(val sheet: ExcelSheet, val row: Row) {
             var cell = row.getCell(columnIndex)
             if (cell == null) {
                 cell = row.createCell(columnIndex, if (type != null) type.cellType else CellType.STRING)
+                excelCell = ensureCell(cell, false)
+            } else {
+                excelCell = ensureCell(cell, true)
             }
-            excelCell = ensureCell(cell)
         }
         return excelCell
     }
 
-    private fun ensureCell(cell: Cell?): ExcelCell {
-        var excelCell = cellMap[cell!!.columnIndex]
+    private fun ensureCell(cell: Cell, existingPoiCell: Boolean): ExcelCell {
+        var excelCell = cellMap[cell.columnIndex]
         if (excelCell == null) {
-            excelCell = ExcelCell(this, cell)
+            excelCell = ExcelCell(this, cell, existingPoiCell)
             cellMap[cell.columnIndex] = excelCell
         }
         return excelCell
