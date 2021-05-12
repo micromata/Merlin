@@ -13,10 +13,10 @@ import java.util.*
 /**
  * Optional holder for POI cells. Useful for creating new cells.
  */
-class ExcelCell @JvmOverloads internal constructor(
+class ExcelCell internal constructor(
     val row: ExcelRow,
     val cell: Cell,
-    val existingPoiCell: Boolean
+    private val existingPoiCell: Boolean
 ) {
     @Suppress("MemberVisibilityCanBePrivate")
     fun setBlank(): ExcelCell {
@@ -220,11 +220,13 @@ class ExcelCell @JvmOverloads internal constructor(
      * @param formula The value to set.
      * @return this for chaining.
      */
+    @Suppress("unused")
     fun setCellFormula(formula: String): ExcelCell {
         setCellFormula(cell, formula)
         return this
     }
 
+    @Suppress("unused")
     fun removeFormula(): ExcelCell {
         cell.removeFormula()
         return this
@@ -260,6 +262,7 @@ class ExcelCell @JvmOverloads internal constructor(
     /**
      * @param cellStyleId Id of the cell style for re-usage. If not given, cell style will not saved for re-usage.
      */
+    @Suppress("unused")
     fun cloneCellStyle(cellStyleId: String? = null): CellStyle {
         val cellStyle = row.sheet.excelWorkbook.createOrGetCellStyle(cellStyleId)
         val origCellStyle: CellStyle? = this.cell.cellStyle
@@ -275,6 +278,7 @@ class ExcelCell @JvmOverloads internal constructor(
     val numericCellValue: Double
         get() = cell.numericCellValue
 
+    @Suppress("unused")
     fun evaluateFormularCell() {
         row.sheet.excelWorkbook.formulaEvaluator!!.evaluateFormulaCell(cell)
     }
