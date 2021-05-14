@@ -14,18 +14,16 @@ import java.util.*
  */
 object PoiHelper {
     private val log = LoggerFactory.getLogger(PoiHelper::class.java)
+
     /**
+     * @param locale Used for number format.
      * @param trimValue If true, the result string will be trimmed. Default is false.
      */
     @JvmStatic
     @JvmOverloads
     fun getValueAsString(cell: Cell?, locale: Locale = Locale.getDefault(), trimValue: Boolean = false): String? {
-        if (cell == null) {
-            return null
-        }
-        val value = getValue(cell)
-        if (value == null)
-            return null
+        cell ?: return null
+        val value = getValue(cell) ?: return null
         return when (value) {
             is String -> if (trimValue) value.trim { it <= ' ' } else value
             is Number -> NumberFormat.getInstance(locale).format(value)
@@ -99,7 +97,7 @@ object PoiHelper {
         val str = factory.createRichTextString(message)
         comment.string = str
         if (!author.isNullOrBlank())
-            comment.setAuthor(author);
+            comment.author = author
         // Assign the comment to the cell
         cell.cellComment = comment
     }

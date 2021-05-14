@@ -43,7 +43,7 @@ class ExcelRow(val sheet: ExcelSheet, val row: Row) {
     }
 
     /**
-     * @param columnNumber The column number.
+     * @param columnNumber The column number (0-based).
      * @param type         Only used, if new cell will be created.
      * @return The (created) cell, not null.
      */
@@ -187,57 +187,70 @@ class ExcelRow(val sheet: ExcelSheet, val row: Row) {
                 // Don't search multiple times, if no method was found.
                 continue
             }
-            var pair = getPropertyValue(obj, colDef, colDef.columnHeadname, ignoreProperties)
-            if (pair != null) {
-                pair.second?.let { value ->
-                    processPropertyValue(obj, value, colDef, process)
-                }
+            var searchResult = getPropertyValue(obj, colDef, colDef.columnHeadname, ignoreProperties)
+            if (searchResult != null) {
+                processPropertyValue(obj, searchResult, colDef, process)
                 continue
             }
             for (alias in colDef.columnAliases) {
-                pair = getPropertyValue(obj, colDef, alias.decapitalize(), ignoreProperties)
-                if (pair != null) {
-                    pair.second?.let { value ->
-                        processPropertyValue(obj, value, colDef, process)
-                    }
+                searchResult = getPropertyValue(obj, colDef, alias.decapitalize(), ignoreProperties)
+                if (searchResult != null) {
+                    processPropertyValue(obj, searchResult, colDef, process)
                     break
                 }
             }
-            if (pair == null) {
+            if (searchResult == null) {
                 // No bean property found for this column definition.
                 sheet.cache.autoFillCache.notFoundFieldsSet.add(colDef)
             }
         }
     }
 
+    /**
+     * Creates row from all registered [ExcelColumnDef].
+     * @return this for chaining.
+     */
+    fun fillHeadRow(): ExcelRow {
+        sheet.columnDefinitions.forEachIndexed { idx, def ->
+            ensureCell(idx, ExcelCellType.STRING).setCellValue(def.columnHeadname)
+        }
+        return this
+    }
+
     private fun processPropertyValue(
         obj: Any,
-        value: Any,
+        searchResult: PropertySearchResult,
         colDef: ExcelColumnDef,
         process: (Any, Any, ExcelCell, ExcelColumnDef) -> Boolean
     ) {
+        if (searchResult.propertyIgnored || searchResult.value == null) {
+            return
+        }
         val cell = getCell(colDef)
-        if (!process(obj, value, cell, colDef)) {
-            cell.setCellValue(value)
+        if (!process(obj, searchResult.value, cell, colDef)) {
+            cell.setCellValue(searchResult.value)
         }
     }
 
+    /**
+     * @return null, if property not found, Pair with first = false if property is ignored, otherwise Pair: first=true, second property-value
+     */
     private fun getPropertyValue(
         obj: Any,
         colDef: ExcelColumnDef,
         identifier: String?,
         ignoreProperties: Array<out String>
-    ): Pair<Boolean, Any?>? {
+    ): PropertySearchResult? {
         identifier ?: return null
         if (ignoreProperties.any { identifier.compareTo(it, ignoreCase = true) == 0 }) {
-            return null
+            return PropertySearchResult(true, null)
         }
         sheet.cache.autoFillCache.foundFieldsMap[colDef]?.let {
-            return Pair(true, BeanUtils.getValue(obj, it))
+            return PropertySearchResult(false, BeanUtils.getValue(obj, it))
         }
         val field = BeanUtils.getDeclaredField(obj::class.java, identifier.decapitalize()) ?: return null
         sheet.cache.autoFillCache.foundFieldsMap[colDef] = field
-        return Pair(true, BeanUtils.getValue(obj, field))
+        return PropertySearchResult(false, BeanUtils.getValue(obj, field))
     }
 
     var heightInPoints: Float
@@ -249,4 +262,5 @@ class ExcelRow(val sheet: ExcelSheet, val row: Row) {
     val lastCellNum: Short
         get() = row.lastCellNum
 
+    private class PropertySearchResult(val propertyIgnored: Boolean, val value: Any?)
 }

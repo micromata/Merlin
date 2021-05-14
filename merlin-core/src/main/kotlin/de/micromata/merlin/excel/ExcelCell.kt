@@ -272,11 +272,35 @@ class ExcelCell internal constructor(
         return cellStyle
     }
 
-    val stringCellValue: String
-        get() = cell.stringCellValue
+    val stringCellValue: String?
+        get() = PoiHelper.getValueAsString(cell)
 
+    /**
+     * Throws exception if the celltype contains no numeric value.
+     */
     val numericCellValue: Double
         get() = cell.numericCellValue
+
+    val intCellValue: Int
+        get() = cell.numericCellValue.toInt()
+
+    /**
+     * @param localDateTime If true, any dates will be returned as [LocalDateTime], otherwise as [java.util.Date]
+     */
+    @JvmOverloads
+    fun getValue(localDateTime: Boolean = true): Any? {
+        return PoiHelper.getValue(cell, localDateTime)
+    }
+
+    /**
+     * @param locale Used for number format.
+     * @param trimValue If true, the result string will be trimmed. Default is false.
+     * @see PoiHelper.getValueAsString
+     */
+    @JvmOverloads
+    fun getValueAsString(locale: Locale = Locale.getDefault(), trimValue: Boolean = false): String? {
+        return PoiHelper.getValueAsString(cell, locale)
+    }
 
     @Suppress("unused")
     fun evaluateFormularCell() {

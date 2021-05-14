@@ -37,6 +37,7 @@ subprojects {
 
     dependencies {
         implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
+        implementation 'io.github.microutils:kotlin-logging-jvm:2.0.6'
         testImplementation group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.25'
         testImplementation(
                 'org.junit.jupiter:junit-jupiter-api:5.3.0'

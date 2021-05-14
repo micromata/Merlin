@@ -2,15 +2,18 @@ package de.micromata.merlin.excel
 
 import de.micromata.merlin.CoreI18n
 import de.micromata.merlin.persistency.PersistencyRegistry
+import mu.KotlinLogging
 import org.apache.commons.collections4.CollectionUtils
 import org.apache.commons.io.output.ByteArrayOutputStream
 import org.apache.poi.ss.usermodel.*
-import org.slf4j.LoggerFactory
+import org.apache.poi.ss.util.CellReference
 import java.io.*
 import java.nio.file.Path
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.*
+
+private val log = KotlinLogging.logger {}
 
 /**
  * Wraps and enhances a POI workbook.
@@ -31,7 +34,6 @@ class ExcelWorkbook
     private val fontMap: MutableMap<String, Font?> = HashMap()
     private var inputStream: InputStream? = null
     var filename: String? = null
-        private set
 
     val filenameExtension: String?
         get() = File(filename ?: "unkown.xlsx").extension
@@ -174,12 +176,8 @@ class ExcelWorkbook
         return null
     }
 
-    fun createOrGetSheet(sheetName: String?): ExcelSheet? {
+    fun createOrGetSheet(sheetName: String): ExcelSheet {
         initializeSheetList()
-        if (sheetName == null) {
-            log.error("Can't get sheet by name without given name. Name parameter is null.")
-            return null
-        }
         var sheet = getSheet(sheetName)
         if (sheet != null) {
             return sheet
@@ -305,19 +303,16 @@ class ExcelWorkbook
      */
     fun ensureStandardCellStyle(value: Any?): CellStyle? {
         value ?: return null
-        val exist = doesCellStyleExist("StandardDateFormat.${value.javaClass}")
         val cellStyle = createOrGetCellStyle("StandardDateFormat.${value.javaClass}")
-        if (exist) {
-            when (value) {
-                is LocalDate -> {
-                    cellStyle.dataFormat = getDataFormat(configuration.dayFormat)
-                }
-                is Date, is LocalDateTime, is Calendar -> {
-                    cellStyle.dataFormat = getDataFormat(configuration.dateTimeFormat)
-                }
-                else -> {
-                    log.warn("createCellStyle does only support LocalDate, LocalDateTime, Calendar and Date, but received: ${value.javaClass}.")
-                }
+        when (value) {
+            is LocalDate -> {
+                cellStyle.dataFormat = getDataFormat(configuration.dayFormat)
+            }
+            is Date, is LocalDateTime, is Calendar -> {
+                cellStyle.dataFormat = getDataFormat(configuration.dateTimeFormat)
+            }
+            else -> {
+                log.warn("createCellStyle does only support LocalDate, LocalDateTime, Calendar and Date, but received: ${value.javaClass}.")
             }
         }
         return cellStyle
@@ -375,6 +370,18 @@ class ExcelWorkbook
     val numberOfSheets
         get() = pOIWorkbook.numberOfSheets
 
+    /**
+     * Please note: if no sheet is specified, the first sheet is assumed.
+     * @param reference Cell as Excel String: A1, A2, ... (also values such as "Sheet1!A1" and "$B$72)
+     * @param type      Only used, if new cell will be created.
+     * @return The (created) cell, not null.
+     * @see [CellReference]
+     */
+    @JvmOverloads
+    fun getCell(reference: String, type: ExcelCellType? = null): ExcelCell {
+        return getSheet(0).getCell(reference, type)
+    }
+
     val configuration = Configuration()
 
     override fun close() {
@@ -388,8 +395,6 @@ class ExcelWorkbook
     }
 
     companion object {
-        private val log = LoggerFactory.getLogger(ExcelWorkbook::class.java)
-
         @JvmStatic
         fun create(path: Path): ExcelWorkbook? {
             val inputStream = PersistencyRegistry.getDefault().getInputStream(path)

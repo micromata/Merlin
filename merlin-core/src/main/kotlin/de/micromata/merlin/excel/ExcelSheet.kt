@@ -1,5 +1,6 @@
 package de.micromata.merlin.excel
 
+import mu.KotlinLogging
 import de.micromata.merlin.CoreI18n
 import de.micromata.merlin.ResultMessageStatus
 import de.micromata.merlin.data.Data
@@ -9,11 +10,12 @@ import org.apache.poi.ss.usermodel.Row
 import org.apache.poi.ss.usermodel.Sheet
 import org.apache.poi.ss.util.CellRangeAddress
 import org.apache.poi.ss.util.CellReference
-import org.slf4j.LoggerFactory
 import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.*
+
+private val log = KotlinLogging.logger {}
 
 /**
  * Wraps and enhances a POI sheet.
@@ -425,6 +427,25 @@ class ExcelSheet internal constructor(val excelWorkbook: ExcelWorkbook, val poiS
             getRow(rowNum).getCell(columnNumber).cell
         else
             poiSheet.getRow(rowNum)?.getCell(columnNumber)
+    }
+
+    /**
+     * Please note: if you specify another sheet, the cell of another sheet will be returned.
+     * @param reference Cell as Excel String: A1, A2, ... (also values such as "Sheet1!A1" and "$B$72)
+     * @param type      Only used, if new cell will be created.
+     * @return The (created) cell, not null.
+     * @see [CellReference]
+     */
+    @JvmOverloads
+    fun getCell(reference: String, type: ExcelCellType? = null): ExcelCell {
+        val ref = CellReference(reference)
+        var sheet = this
+        ref.sheetName?.let {
+            val refSheet = excelWorkbook.getSheet(it)
+                ?: throw IllegalArgumentException("Sheet '${ref.sheetName}' not found, specified as reference: $reference")
+            sheet = refSheet
+        }
+        return sheet.getRow(ref.row).getCell(ref.col.toInt(), type)
     }
 
     internal fun findAndReadHeadRow() {
@@ -929,6 +950,9 @@ class ExcelSheet internal constructor(val excelWorkbook: ExcelWorkbook, val poiS
         return PoiHelper.isEmpty(cell)
     }
 
+    /**
+     * Gets existing row or creates row (and any previous not existing row) if not yet exists.
+     */
     fun getRow(rownum: Int): ExcelRow {
         var excelRow = excelRowMap[rownum]
         if (excelRow == null) {
@@ -1110,6 +1134,5 @@ class ExcelSheet internal constructor(val excelWorkbook: ExcelWorkbook, val poiS
     companion object {
         const val MESSAGE_MISSING_COLUMN_NUMBER = "merlin.excel.validation_error.missing_column_number"
         const val MESSAGE_MISSING_COLUMN_BY_NAME = "merlin.excel.validation_error.missing_column_by_name"
-        private val log = LoggerFactory.getLogger(ExcelSheet::class.java)
     }
 }
