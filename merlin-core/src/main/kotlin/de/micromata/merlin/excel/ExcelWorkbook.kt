@@ -125,6 +125,9 @@ class ExcelWorkbook
         return sheetList.iterator()
     }
 
+    /**
+     * @param idx 0 - based.
+     */
     fun getSheet(idx: Int): ExcelSheet {
         initializeSheetList()
         return sheetList[idx]
