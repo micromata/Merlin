@@ -299,7 +299,7 @@ class ExcelCell internal constructor(
      */
     @JvmOverloads
     fun getValueAsString(locale: Locale = Locale.getDefault(), trimValue: Boolean = false): String? {
-        return PoiHelper.getValueAsString(cell, locale)
+        return PoiHelper.getValueAsString(cell, locale, trimValue)
     }
 
     @Suppress("unused")
