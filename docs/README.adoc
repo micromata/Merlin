@@ -1,5 +1,4 @@
-Merlin Runner documentation
-===========================
+= Merlin Runner documentation
 Micromata GmbH, Kai Reinhard, Version {version}
 :toc:
 :toclevels: 4

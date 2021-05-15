@@ -28,6 +28,26 @@ Merlin core contains the base library supporting:
   substitution is as well supported as conditionals (equals, greater-less etc.)
   for having dynamic content in the result word file. Support of serial letters.
 
+
+=== Usage
+merlin-core is published under: // https://mvnrepository.com/artifact/de.micromata.merlin/merlin-core
+
+==== Maven
+[source,xml]
+----
+<dependency>
+  <groupId>de.micromata.merlin</groupId>
+  <artifactId>merlin-core</artifactId>
+  <version>1.1.11</version>
+</dependency>
+----
+
+==== Gradle
+----
+// https://mvnrepository.com/artifact/de.micromata.merlin/merlin-core
+implementation group: 'de.micromata.merlin', name: 'merlin-core', version: '1.1.11'
+----
+
 === Excel validation
 ==== Reading and validating Excel files
 
