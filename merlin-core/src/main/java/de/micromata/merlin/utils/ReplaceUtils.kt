@@ -132,7 +132,7 @@ object ReplaceUtils {
                 }
             }
         }
-        val result = sb.toString()
+        val result = sb.toString().replace("_+".toRegex(), "_")
         return if (result.length > 255) {
             result.substring(0, 255)
         } else result
