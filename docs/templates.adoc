@@ -13,6 +13,22 @@ link:index{outfilesuffix}[Top]
 
 == Templates
 
+=== Example
+
+Let's start with an example first on how to get a first impression:
+
+====
++{if WeeklyHours < 40}${Mr_Mrs} ${Employee}+ will work part-time. +
++{if NumberOfLeaveDays < 25}${He_She}+ will get only +${ NumberOfLeaveDays }+ leave days per year.+{endif}+ +
++{endif}+ +
++{if WeeklyHours >= 40}${Mr_Mrs} ${Employee}+ will work full-time.+{endif}+
+====
+
+.Word template and its result.
+[caption="Figure 2: "]
+image::images/WordTemplate-and-Result.png[Template_before_after]
+
+
 === Template files
 A template file (.docx) is a normal Word document which may contain Merlin specific elements, such as variables to be replaced by their values
 or conditional expressions.+
@@ -46,20 +62,6 @@ Template files (.docx) may contain following expressions supported by Merlin:
 |+if{!variable > 5}+|With the not-operator (before variable name) you may negate all expressions.
 |+if{not variable > 5}+|With the not-operator (before variable name) you may negate all expressions.
 |=======
-
-==== Example
-
-====
-+{if WeeklyHours < 40}${Mr_Mrs} ${Employee}+ will work part-time. +
-  +{if NumberOfLeaveDays < 25}${He_She}+ will get only +${ NumberOfLeaveDays }+ leave days per year.+{endif}+ +
-+{endif}+ +
-+{if WeeklyHours >= 40}${Mr_Mrs} ${Employee}+ will work full-time.+{endif}+
-====
-
-.Word template and its result.
-[caption="Figure 2: "]
-image::images/WordTemplate-and-Result.png[Template_before_after]
-
 
 === Template definitions
 ==== Variable types
