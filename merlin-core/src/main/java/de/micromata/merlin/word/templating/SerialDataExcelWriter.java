@@ -24,21 +24,27 @@ public class SerialDataExcelWriter extends AbstractExcelWriter {
     }
 
     public ExcelWorkbook writeToWorkbook() {
+        return writeToWorkbook(true);
+    }
+
+    public ExcelWorkbook writeToWorkbook(boolean writePrimaryKey) {
         super.init();
         Validate.notNull(serialData.getTemplate());
         TemplateDefinition templateDefinition = serialData.getTemplateDefinition();
         createVariablesSheet();
         createConfigurationSheet();
-        if (serialData.getTemplate() != null) {
-            addConfigRow("Template", serialData.getTemplate().getPrimaryKey(), serialData.getTemplate().getFileDescriptor().getFilename());
-        } else {
-            addConfigRow("Template", "", "merlin.word.templating.reference.template.primaryKey");
-        }
-        if (templateDefinition != null) {
-            addConfigRow("TemplateDefinition", templateDefinition.getPrimaryKey(),
-                    templateDefinition.getFileDescriptor().getFilename() + ": " + templateDefinition.getId());
-        } else {
-            addConfigRow("TemplateDefinition", "", "merlin.word.templating.reference.templateDefinition.primaryKey");
+        if (writePrimaryKey) {
+            if (serialData.getTemplate() != null) {
+                addConfigRow("Template", serialData.getTemplate().getPrimaryKey(), serialData.getTemplate().getFileDescriptor().getFilename());
+            } else {
+                addConfigRow("Template", "", "merlin.word.templating.reference.template.primaryKey");
+            }
+            if (templateDefinition != null) {
+                addConfigRow("TemplateDefinition", templateDefinition.getPrimaryKey(),
+                        templateDefinition.getFileDescriptor().getFilename() + ": " + templateDefinition.getId());
+            } else {
+                addConfigRow("TemplateDefinition", "", "merlin.word.templating.reference.templateDefinition.primaryKey");
+            }
         }
         serialData.createFilenamePattern();
         addConfigRow("FilenamePattern", serialData.getFilenamePattern(), "merlin.word.templating.serial.config.filenamePattern");

@@ -111,14 +111,14 @@ public class TemplateDefinitionExcelReader {
         ExcelColumnDef variableCol = sheet.registerColumn("Variable",
                 new ExcelColumnPatternValidator(ReplaceUtils.IDENTIFIER_REGEXP).setRequired().setUnique());
         ExcelColumnDef descriptionCol = sheet.registerColumn("Description");
-        ExcelColumnDef requiredCol = sheet.registerColumn("required");
-        ExcelColumnDef uniqueCol = sheet.registerColumn("unique");
-        ExcelColumnDef typeCol = sheet.registerColumn("Type");
-        ExcelColumnDef valuesCol = sheet.registerColumn("Values");
+        ExcelColumnDef requiredCol = sheet.registerColumn("Required", "required");
+        ExcelColumnDef uniqueCol = sheet.registerColumn("Unique", "unique");
+        ExcelColumnDef typeCol = sheet.registerColumn("Type", "type");
+        ExcelColumnDef valuesCol = sheet.registerColumn("Values", "values");
 
-        ExcelColumnDef minimumCol = sheet.registerColumn("Minimum");
-        ExcelColumnDef maximumCol = sheet.registerColumn("Maximum");
-        sheet.registerColumn("type", new ExcelColumnOptionsValidator("string", "int", "float", "date"));
+        ExcelColumnDef minimumCol = sheet.registerColumn("Minimum", "minimum");
+        ExcelColumnDef maximumCol = sheet.registerColumn("Maximum", "maximum");
+        sheet.getColumnDef("Type").addColumnListener(new ExcelColumnOptionsValidator("string", "int", "float", "date"));
         sheet.analyze(true);
         for (ExcelValidationErrorMessage msg : sheet.getAllValidationErrors()) {
             log.error(msg.getMessageWithAllDetails(i18n));

@@ -14,6 +14,8 @@ buildscript {
 dependencies {
     implementation project(':merlin-core')
     // https://mvnrepository.com/artifact/org.apache.commons/commons-text
+    implementation group: 'org.apache.commons', name: 'commons-collections4', version: '4.4'
+    implementation group: 'commons-io', name: 'commons-io', version: '2.10.0'
     implementation group: 'org.apache.commons', name: 'commons-text', version: '1.6'
     implementation group: 'org.eclipse.jetty', name: 'jetty-server', version: '9.4.18.v20190429'
     implementation group: 'org.eclipse.jetty', name: 'jetty-servlet', version: '9.4.18.v20190429'

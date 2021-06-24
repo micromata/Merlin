@@ -8,6 +8,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 /**
  * Runs a template.
  */
@@ -99,7 +102,8 @@ public class WordTemplateRunner {
             pattern = FilenameUtils.getBaseName(templateDefinition.getFilenamePattern());
         }
         if (StringUtils.isNotBlank(pattern)) {
-            String filename = ReplaceUtils.replace(pattern, variables);
+            String filename = ReplaceUtils.replace(pattern, variables)
+                    .replace("${date}", DateTimeFormatter.ISO_DATE.format(LocalDate.now()));
             boolean stronglyRestrictedFilenames = templateDefinition != null ? templateDefinition.isStronglyRestrictedFilenames() : true;
             return ReplaceUtils.encodeFilename(filename, stronglyRestrictedFilenames) + ".docx";
         }
