@@ -103,7 +103,7 @@ class ExcelSheet internal constructor(val excelWorkbook: ExcelWorkbook, val poiS
                 }
                 for (listener in columnDef.getColumnListeners()!!) {
                     if (listener is ExcelColumnValidator) {
-                        if (columnDef._columnNumber < 0) {
+                        if (columnDef._columnNumber < 0 && listener.isRequired) {
                             addValidationError(createValidationErrorMissingColumnByName(columnDef.columnHeadname))
                         }
                     }

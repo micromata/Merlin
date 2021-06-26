@@ -33,7 +33,7 @@ constructor(
      * If not given, [columnHeadname] in decapitalized form will be used.
      */
     var targetProperty: String? = null
-        get() = if (field != null) field else columnHeadname?.decapitalize()
+        get() = if (field != null) field else columnHeadname?.replaceFirstChar { it.lowercase() }
         private set
 
     /**

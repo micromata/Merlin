@@ -193,7 +193,7 @@ class ExcelRow(val sheet: ExcelSheet, val row: Row) {
                 continue
             }
             for (alias in colDef.columnAliases) {
-                searchResult = getPropertyValue(obj, colDef, alias.decapitalize(), ignoreProperties)
+                searchResult = getPropertyValue(obj, colDef, alias.replaceFirstChar { it.lowercase() }, ignoreProperties)
                 if (searchResult != null) {
                     processPropertyValue(obj, searchResult, colDef, process)
                     break
@@ -253,7 +253,7 @@ class ExcelRow(val sheet: ExcelSheet, val row: Row) {
                 return PropertySearchResult(false, BeanUtils.getValue(obj, getter))
             }
         }
-        val field = BeanUtils.getDeclaredField(obj::class.java, identifier.decapitalize())
+        val field = BeanUtils.getDeclaredField(obj::class.java, identifier.replaceFirstChar { it.lowercase() })
         if (field != null) {
             sheet.cache.autoFillCache.foundPropertiesMap[colDef] = WorkingCache.Property(field)
             return PropertySearchResult(false, BeanUtils.getValue(obj, field))

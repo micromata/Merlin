@@ -81,7 +81,7 @@ object BeanUtils {
     fun getGetterMethod(clazz: Class<*>, fieldname: String): Method? {
         val methods: Array<Method> = getAllDeclaredGetters(clazz)
         for (m in methods) {
-            if (m.name == "get${fieldname.capitalize()}") {
+            if (m.name == "get${fieldname.replaceFirstChar { it.uppercase() }}") {
                 return m
             }
         }

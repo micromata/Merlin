@@ -23,8 +23,6 @@
 package de.micromata.merlin.utils
 
 import de.micromata.merlin.excel.importer.ImportLogger
-import org.apache.commons.lang3.ArrayUtils
-import org.apache.commons.lang3.StringUtils
 import org.slf4j.LoggerFactory
 import java.lang.reflect.Method
 import java.lang.reflect.Modifier
@@ -32,6 +30,7 @@ import java.math.BigDecimal
 import java.math.BigInteger
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.util.*
 
 /**
  * Stores one imported object (e. g. MS Excel row as bean object). It also contains information about the status: New object or modified
@@ -40,23 +39,21 @@ import java.time.LocalDateTime
  * @author Kai Reinhard (k.reinhard@micromata.de)
  */
 object BeanHelper {
-    //private val log = LoggerFactory.getLogger(BeanHelper::class.java)
-
     @JvmStatic
     @JvmOverloads
     fun determineGetter(clazz: Class<*>, fieldname: String, onlyPublicGetter: Boolean = true): Method? {
-        val cap = StringUtils.capitalize(fieldname)
+        val cap = fieldname.replaceFirstChar { it.uppercase() }
         val methods: Array<Method> = getAllDeclaredMethods(clazz) ?: return null
         for (method in methods) {
             if (onlyPublicGetter && !Modifier.isPublic(method.modifiers)) {
                 continue
             }
             val matches =
-                    if (Boolean::class.javaPrimitiveType!!.isAssignableFrom(method.returnType)) {
-                        "is$cap" == method.name || "has$cap" == method.name || "get$cap" == method.name
-                    } else {
-                        "get$cap" == method.name
-                    }
+                if (Boolean::class.javaPrimitiveType!!.isAssignableFrom(method.returnType)) {
+                    "is$cap" == method.name || "has$cap" == method.name || "get$cap" == method.name
+                } else {
+                    "get$cap" == method.name
+                }
             if (matches) {
                 if (!method.isBridge) { // Don't return bridged methods (methods defined in interface or super class with different return type).
                     return method
@@ -73,7 +70,7 @@ object BeanHelper {
         var methods = cls.declaredMethods
         while (cls.superclass != null) {
             cls = cls.superclass
-            methods = ArrayUtils.addAll(methods, *cls.declaredMethods) as Array<Method>
+            methods += cls.declaredMethods
         }
         return methods
     }
@@ -88,7 +85,7 @@ object BeanHelper {
      */
     @JvmStatic
     fun determineSetter(clazz: Class<*>, fieldname: String): Method? {
-        val cap = fieldname.capitalize()
+        val cap = fieldname.replaceFirstChar { it.uppercaseChar() }
         val methods: Array<Method> = getAllDeclaredMethods(clazz) ?: return null
         for (method in methods) {
             if ("set$cap" == method.name && method.parameterTypes.size == 1) {

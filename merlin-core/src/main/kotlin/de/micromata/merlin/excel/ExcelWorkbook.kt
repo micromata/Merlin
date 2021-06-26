@@ -20,12 +20,15 @@ private val log = KotlinLogging.logger {}
 /**
  * Wraps and enhances a POI workbook.
  */
+@Suppress("unused", "MemberVisibilityCanBePrivate")
 class ExcelWorkbook
-@JvmOverloads constructor(
+@JvmOverloads
+constructor(
     /**
      * Is used e. g. for getting number cell values as String.
      */
-    val locale: Locale = Locale.getDefault()
+    val locale: Locale = Locale.getDefault(),
+    workbook: Workbook? = XSSFWorkbook(),
 ) : AutoCloseable {
 
     lateinit var pOIWorkbook: Workbook
@@ -37,10 +40,10 @@ class ExcelWorkbook
     private var inputStream: InputStream? = null
     var filename: String? = null
 
-    val filenameExtension: String?
+    val filenameExtension: String
         get() = File(filename ?: "unkown.xlsx").extension
 
-    val filenameWithoutExtension: String?
+    val filenameWithoutExtension: String
         get() = File(filename ?: "unkown.xlsx").nameWithoutExtension
 
     var formulaEvaluator: FormulaEvaluator? = null
@@ -57,7 +60,7 @@ class ExcelWorkbook
         workbook: Workbook,
         locale: Locale = Locale.getDefault()
     )
-            : this(locale) {
+            : this(locale, null) {
         pOIWorkbook = workbook
     }
 
@@ -73,7 +76,7 @@ class ExcelWorkbook
         excelFile: File,
         locale: Locale = Locale.getDefault()
     )
-            : this(locale) {
+            : this(locale, null) {
         try {
             val fis = FileInputStream(excelFile)
             open(fis, excelFile.name)
@@ -93,12 +96,12 @@ class ExcelWorkbook
         filename: String,
         locale: Locale = Locale.getDefault()
     )
-            : this(locale) {
+            : this(locale, null) {
         open(inputStream, filename)
     }
 
     /**
-     * @param inputStream The input stream to read the Excel content from.
+     * @param byteArray Byte array to read the Excel content from.
      * @param filename    Only for logging purposes if any error occurs.
      */
     @JvmOverloads
@@ -107,8 +110,14 @@ class ExcelWorkbook
         filename: String,
         locale: Locale = Locale.getDefault()
     )
-            : this(locale) {
+            : this(locale, null) {
         open(byteArray.inputStream(), filename)
+    }
+
+    init {
+        if (workbook != null) {
+            pOIWorkbook = workbook
+        }
     }
 
     private fun open(inputStream: InputStream, filename: String) {
@@ -201,7 +210,7 @@ class ExcelWorkbook
      *
      * @see Workbook.cloneSheet
      */
-    fun cloneSheet(sheetNum: Int, name: String?): ExcelSheet? {
+    fun cloneSheet(sheetNum: Int, name: String?): ExcelSheet {
         val index = pOIWorkbook.numberOfSheets
         val poiSheet: Sheet = this.pOIWorkbook.cloneSheet(sheetNum)
         this.pOIWorkbook.setSheetName(index, name)
@@ -216,7 +225,7 @@ class ExcelWorkbook
     /**
      * Remove the sheet at the given position.
      *
-     * @param index
+     * @param idx
      * @return this for chaining.
      */
     fun removeSheetAt(idx: Int) {
