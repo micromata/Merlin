@@ -5,8 +5,10 @@ import de.micromata.merlin.persistency.PersistencyRegistry
 import mu.KotlinLogging
 import org.apache.commons.collections4.CollectionUtils
 import org.apache.commons.io.output.ByteArrayOutputStream
+import org.apache.poi.hssf.usermodel.HSSFWorkbook
 import org.apache.poi.ss.usermodel.*
 import org.apache.poi.ss.util.CellReference
+import org.apache.poi.xssf.usermodel.XSSFWorkbook
 import java.io.*
 import java.nio.file.Path
 import java.time.LocalDate
@@ -255,16 +257,22 @@ class ExcelWorkbook
     /**
      * Please re-use cell styles due to limitations of Excel.
      *
+     * If you set any property (font etc.) of the CellStyle, it will be changed for all other usages as well.
+     *
      * @param id Id of the cell style for re-usage. If not given, cell style will not saved for re-usage.
      * @return The CellStyle to use.
      */
-    fun createOrGetCellStyle(id: String? = null): CellStyle {
+    @JvmOverloads
+    fun createOrGetCellStyle(id: String? = null, font: Font? = null): CellStyle {
         var cellStyle = cellStyleMap[id]
         if (cellStyle == null) {
             cellStyle = pOIWorkbook.createCellStyle()!!
             if (id != null) {
                 cellStyleMap[id] = cellStyle
             }
+        }
+        font?.let {
+            cellStyle.setFont(it)
         }
         return cellStyle
     }
@@ -333,14 +341,26 @@ class ExcelWorkbook
     /**
      * Please re-use cell styles due to limitations of Excel.
      *
+     * If you set any property of the Font, it will be changed for all other usages as well.
+     *
      * @param id The font id to re-use or create.
      * @return The font to use.
      */
-    fun createOrGetFont(id: String): Font? {
+    @JvmOverloads
+    fun createOrGetFont(id: String, bold: Boolean = false, heightInPoints: Short? = null, color: Short? = null): Font? {
         var font = fontMap[id]
         if (font == null) {
             font = pOIWorkbook.createFont()
             fontMap[id] = font
+        }
+        font?.let { f ->
+            f.bold = bold
+            color?.let {
+                f.color = it
+            }
+            heightInPoints?.let {
+                f.fontHeightInPoints = it
+            }
         }
         return font
     }
@@ -407,6 +427,22 @@ class ExcelWorkbook
             }
             val filename = path.fileName.toString()
             return ExcelWorkbook(inputStream, filename)
+        }
+
+        /**
+         * Newer xlsx format.
+         */
+        @JvmStatic
+        fun createEmptyXSSFWorkbook(locale: Locale = Locale.getDefault()): ExcelWorkbook? {
+            return ExcelWorkbook(XSSFWorkbook(), locale)
+        }
+
+        /**
+         * Older xls format.
+         */
+        @JvmStatic
+        fun createEmptyHSSFWorkbook(locale: Locale = Locale.getDefault()): ExcelWorkbook? {
+            return ExcelWorkbook(HSSFWorkbook(), locale)
         }
     }
 }
