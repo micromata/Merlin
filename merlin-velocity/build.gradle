@@ -3,8 +3,8 @@ description = 'merlin-velocity'
 apply plugin: 'kotlin'
 
 dependencies {
-    implementation group: 'org.apache.velocity', name: 'velocity-engine-core', version:'2.0'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+    compile group: 'org.apache.velocity', name: 'velocity-engine-core', version:'2.0'
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 }
 repositories {
     maven { url 'https://dl.bintray.com/kotlin/kotlin-eap' }

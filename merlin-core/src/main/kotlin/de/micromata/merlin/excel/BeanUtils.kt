@@ -2,6 +2,7 @@ package de.micromata.merlin.excel
 
 import org.apache.commons.lang3.ArrayUtils
 import java.lang.reflect.Field
+import java.lang.reflect.Method
 
 object BeanUtils {
     fun getValue(src: Any, property: String): Any? {
@@ -13,6 +14,11 @@ object BeanUtils {
     fun getValue(src: Any, field: Field): Any? {
         field.isAccessible = true
         return field.get(src)
+    }
+
+    fun getValue(src: Any, getter: Method): Any? {
+        getter.isAccessible = true
+        return getter.invoke(src)
     }
 
     /**
@@ -36,7 +42,7 @@ object BeanUtils {
      * Return the matching field declared by the given class or any super class.
      *
      * @param clazz
-     * @param fieldnames
+     * @param fieldname
      * @return the field or null
      */
     fun getDeclaredField(clazz: Class<*>, fieldname: String): Field? {
@@ -47,5 +53,16 @@ object BeanUtils {
             }
         }
         return null
+    }
+
+    /**
+     * Return the matching field declared by the given class or any super class.
+     *
+     * @param clazz
+     * @param fieldname
+     * @return the field or null
+     */
+    fun getGetterMethod(clazz: Class<*>, fieldname: String): Method? {
+        return clazz.getMethod("get${fieldname.capitalize()}")
     }
 }
