@@ -121,7 +121,7 @@ object ReplaceUtils {
                     sb.append(FILENAME_REPLACE_CHAR)
                 }
             } else {
-                if (ch.toInt() <= 31 || ch.toInt() == 127) { // Not 0x00-0x1F and not 0x7F
+                if (ch.code <= 31 || ch.code == 127) { // Not 0x00-0x1F and not 0x7F
                     sb.append(FILENAME_REPLACE_CHAR)
                 } else if (PRESERVED_FILENAME_CHARS.indexOf(ch) >= 0) {
                     sb.append(FILENAME_REPLACE_CHAR)

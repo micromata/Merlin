@@ -1,7 +1,7 @@
 package de.micromata.merlin.data
 
 import org.apache.commons.lang3.StringUtils
-import java.util.HashMap
+import java.util.*
 
 open class Data(private val type: String) {
     private val properties: MutableMap<String, Any?> = HashMap()
@@ -59,7 +59,7 @@ open class Data(private val type: String) {
 
     fun getBoolean(property: String): Boolean? {
         val value = getString(property) ?: return null
-        return value.toLowerCase() in arrayOf("1", "y", "yes", "t", "true", "ja", "j")
+        return value.lowercase() in arrayOf("1", "y", "yes", "t", "true", "ja", "j")
     }
 
     companion object {

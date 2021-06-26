@@ -2,6 +2,7 @@ package de.micromata.merlin.excel
 
 import org.apache.poi.ss.util.CellReference
 import org.slf4j.LoggerFactory
+import java.util.*
 
 /**
  * You may define each column of a sheet via ExcelColumnDef. This is used as well for validating as well as for a more
@@ -152,7 +153,7 @@ constructor(
         private val log = LoggerFactory.getLogger(ExcelColumnDef::class.java)
 
         fun normalizedHeaderName(header: String?): String {
-            return header?.toLowerCase()?.trim { it <= ' ' } ?: ""
+            return header?.lowercase()?.trim { it <= ' ' } ?: ""
         }
     }
 }
