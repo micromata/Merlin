@@ -347,20 +347,18 @@ class ExcelWorkbook
      * @return The font to use.
      */
     @JvmOverloads
-    fun createOrGetFont(id: String, bold: Boolean = false, heightInPoints: Short? = null, color: Short? = null): Font? {
+    fun createOrGetFont(id: String, bold: Boolean = false, heightInPoints: Short? = null, color: Short? = null): Font {
         var font = fontMap[id]
         if (font == null) {
             font = pOIWorkbook.createFont()
             fontMap[id] = font
         }
-        font?.let { f ->
-            f.bold = bold
-            color?.let {
-                f.color = it
-            }
-            heightInPoints?.let {
-                f.fontHeightInPoints = it
-            }
+        font!!.bold = bold
+        color?.let {
+            font.color = it
+        }
+        heightInPoints?.let {
+            font.fontHeightInPoints = it
         }
         return font
     }
@@ -430,10 +428,10 @@ class ExcelWorkbook
         }
 
         /**
-         * Newer xlsx format.
+         * Newer xlsx format (XSSFWorkbook).
          */
         @JvmStatic
-        fun createEmptyXSSFWorkbook(locale: Locale = Locale.getDefault()): ExcelWorkbook? {
+        fun createEmptyWorkbook(locale: Locale = Locale.getDefault()): ExcelWorkbook {
             return ExcelWorkbook(XSSFWorkbook(), locale)
         }
 
@@ -441,7 +439,7 @@ class ExcelWorkbook
          * Older xls format.
          */
         @JvmStatic
-        fun createEmptyHSSFWorkbook(locale: Locale = Locale.getDefault()): ExcelWorkbook? {
+        fun createEmptyHSSFWorkbook(locale: Locale = Locale.getDefault()): ExcelWorkbook {
             return ExcelWorkbook(HSSFWorkbook(), locale)
         }
     }
