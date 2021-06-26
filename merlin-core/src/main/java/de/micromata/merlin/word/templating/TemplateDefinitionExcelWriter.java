@@ -22,18 +22,16 @@ public class TemplateDefinitionExcelWriter extends AbstractExcelWriter {
     }
 
     public ExcelWorkbook writeToWorkbook(TemplateDefinition template) {
-        return writeToWorkbook(template, true);
+        return writeToWorkbook(template, null);
     }
 
-    public ExcelWorkbook writeToWorkbook(TemplateDefinition template, boolean writeConfigId) {
+    public ExcelWorkbook writeToWorkbook(TemplateDefinition template, String templateId) {
         this.template = template;
         super.init();
         createVariablesSheet();
         createDependentVariablesSheet();
         createConfigurationSheet();
-        if (writeConfigId) {
-            addConfigRow("Id", template.getId(), "merlin.word.templating.definition.config.id");
-        }
+        addConfigRow("Id", templateId != null ? templateId : template.getId(), "merlin.word.templating.definition.config.id");
         addConfigRow("Description", template.getDescription(), "merlin.word.templating.definition.config.description");
         addConfigRow("FilenamePattern", template.getFilenamePattern(), "merlin.word.templating.definition.config.filenamePattern");
         addConfigRow("StronglyRestrictedFilenames", template.isStronglyRestrictedFilenames(), "merlin.word.templating.definition.config.stronglyRestrictedFilenames");

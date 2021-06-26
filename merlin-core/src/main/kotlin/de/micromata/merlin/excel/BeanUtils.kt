@@ -39,6 +39,22 @@ object BeanUtils {
     }
 
     /**
+     * Return all fields declared by the given class and all super classes.
+     *
+     * @param clazz
+     * @return
+     */
+    private fun getAllDeclaredGetters(clazz: Class<*>): Array<Method> {
+        var currentClazz = clazz
+        var methods = currentClazz.declaredMethods
+        while (currentClazz.superclass != null) {
+            currentClazz = currentClazz.superclass
+            methods = ArrayUtils.addAll(methods, *currentClazz.declaredMethods) as Array<Method>
+        }
+        return methods
+    }
+
+    /**
      * Return the matching field declared by the given class or any super class.
      *
      * @param clazz
@@ -63,6 +79,12 @@ object BeanUtils {
      * @return the field or null
      */
     fun getGetterMethod(clazz: Class<*>, fieldname: String): Method? {
-        return clazz.getMethod("get${fieldname.capitalize()}")
+        val methods: Array<Method> = getAllDeclaredGetters(clazz)
+        for (m in methods) {
+            if (m.name == "get${fieldname.capitalize()}") {
+                return m
+            }
+        }
+        return null
     }
 }

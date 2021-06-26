@@ -3,6 +3,7 @@
 # Word temporary files #
 ~$*.docx
 
+build
 merlin-core/build
 merlin-core/out/
 merlin-core/target/

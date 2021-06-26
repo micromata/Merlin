@@ -183,7 +183,7 @@ class ExcelRow(val sheet: ExcelSheet, val row: Row) {
     ) {
         obj ?: return
         for (colDef in sheet.columnDefinitions) {
-            if (sheet.cache.autoFillCache.notFoundFieldsSet.contains(colDef)) {
+            if (sheet.cache.autoFillCache.notFoundPropertiesSet.contains(colDef)) {
                 // Don't search multiple times, if no method was found.
                 continue
             }
@@ -201,7 +201,7 @@ class ExcelRow(val sheet: ExcelSheet, val row: Row) {
             }
             if (searchResult == null) {
                 // No bean property found for this column definition.
-                sheet.cache.autoFillCache.notFoundFieldsSet.add(colDef)
+                sheet.cache.autoFillCache.notFoundPropertiesSet.add(colDef)
             }
         }
     }
@@ -245,12 +245,26 @@ class ExcelRow(val sheet: ExcelSheet, val row: Row) {
         if (ignoreProperties.any { identifier.compareTo(it, ignoreCase = true) == 0 }) {
             return PropertySearchResult(true, null)
         }
-        sheet.cache.autoFillCache.foundFieldsMap[colDef]?.let {
-            return PropertySearchResult(false, BeanUtils.getValue(obj, it))
+        sheet.cache.autoFillCache.foundPropertiesMap[colDef]?.let { prop ->
+            prop.field?.let { field ->
+                return PropertySearchResult(false, BeanUtils.getValue(obj, field))
+            }
+            prop.getter?.let { getter ->
+                return PropertySearchResult(false, BeanUtils.getValue(obj, getter))
+            }
         }
-        val field = BeanUtils.getDeclaredField(obj::class.java, identifier.decapitalize()) ?: return null
-        sheet.cache.autoFillCache.foundFieldsMap[colDef] = field
-        return PropertySearchResult(false, BeanUtils.getValue(obj, field))
+        val field = BeanUtils.getDeclaredField(obj::class.java, identifier.decapitalize())
+        if (field != null) {
+            sheet.cache.autoFillCache.foundPropertiesMap[colDef] = WorkingCache.Property(field)
+            return PropertySearchResult(false, BeanUtils.getValue(obj, field))
+        } else {
+            val getter = BeanUtils.getGetterMethod(obj::class.java, identifier)
+            if (getter != null) {
+                sheet.cache.autoFillCache.foundPropertiesMap[colDef] = WorkingCache.Property(getter = getter)
+                return PropertySearchResult(false, BeanUtils.getValue(obj, getter))
+            }
+        }
+        return null
     }
 
     var heightInPoints: Float
