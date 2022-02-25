@@ -10,6 +10,7 @@ import org.apache.poi.xwpf.usermodel.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,7 +19,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class WordDocument implements AutoCloseable {
+public class WordDocument implements Closeable {
     private static Logger log = LoggerFactory.getLogger(WordDocument.class);
     private XWPFDocument document;
     private String filename;

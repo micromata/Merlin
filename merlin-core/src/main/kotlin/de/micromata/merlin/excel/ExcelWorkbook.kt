@@ -29,7 +29,7 @@ constructor(
      */
     val locale: Locale = Locale.getDefault(),
     workbook: Workbook? = XSSFWorkbook(),
-) : AutoCloseable {
+) : Closeable {
 
     lateinit var pOIWorkbook: Workbook
         private set
