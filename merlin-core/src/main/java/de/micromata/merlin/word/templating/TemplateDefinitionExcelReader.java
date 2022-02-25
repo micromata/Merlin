@@ -196,12 +196,10 @@ public class TemplateDefinitionExcelReader {
             return false;
         }
         String lower = value.toLowerCase();
-        if (lower.startsWith("x") ||
+        // ja - German yes.
+        return lower.startsWith("x") ||
                 lower.startsWith("y") || // yes
-                lower.startsWith("j")) { // ja - German yes.
-            return true;
-        }
-        return false;
+                lower.startsWith("j");
     }
 
     /**
