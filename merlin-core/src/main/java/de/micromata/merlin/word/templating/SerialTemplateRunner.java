@@ -41,6 +41,7 @@ public class SerialTemplateRunner {
             WordDocument result = runner.run(variables);
             variables.getVariables().put("counter", Converter.formatNumber(++counter, maxEntries));
             String zipEntryFilename = runner.createFilename(serialData.getFilenamePattern(), variables, false);
+            variables.setFilename(zipEntryFilename);
             zipUtil.addZipEntry(zipEntryFilename, result.getAsByteArrayOutputStream().toByteArray());
             log.info("Generating serial template entry: " + zipEntryFilename);
         }

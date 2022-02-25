@@ -13,6 +13,8 @@ public class Variables {
 
     private Map<String, String> formattedVariables = new HashMap<>();
 
+    private String filename;
+
     public Variables() {
     }
 
@@ -71,5 +73,13 @@ public class Variables {
 
     public void setVariables(Map<String, Object> variables) {
         this.variables = variables;
+    }
+
+    public String getFilename() {
+        return filename;
+    }
+
+    public void setFilename(String filename) {
+        this.filename = filename;
     }
 }
