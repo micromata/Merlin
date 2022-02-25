@@ -98,6 +98,9 @@ class ExcelRow(val sheet: ExcelSheet, val row: Row) {
         if (excelCell == null) {
             excelCell = ExcelCell(this, cell, existingPoiCell)
             cellMap[cell.columnIndex] = excelCell
+            sheet.getCellStyle(cell.columnIndex)?.let {
+                excelCell.setCellStyle(it)
+            }
         }
         return excelCell
     }

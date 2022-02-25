@@ -1,13 +1,10 @@
 package de.micromata.merlin.excel
 
-import mu.KotlinLogging
 import de.micromata.merlin.CoreI18n
 import de.micromata.merlin.ResultMessageStatus
 import de.micromata.merlin.data.Data
-import org.apache.poi.ss.usermodel.Cell
-import org.apache.poi.ss.usermodel.CellType
-import org.apache.poi.ss.usermodel.Row
-import org.apache.poi.ss.usermodel.Sheet
+import mu.KotlinLogging
+import org.apache.poi.ss.usermodel.*
 import org.apache.poi.ss.util.CellRangeAddress
 import org.apache.poi.ss.util.CellReference
 import java.math.BigDecimal
@@ -40,6 +37,8 @@ class ExcelSheet internal constructor(val excelWorkbook: ExcelWorkbook, val poiS
     @Suppress("unused")
     val columnDefinitions
         get() = columnDefList.toList()
+
+    private val columnStyles = mutableMapOf<ExcelColumnDef, CellStyle>()
 
     internal val cache = WorkingCache()
 
@@ -214,6 +213,61 @@ class ExcelSheet internal constructor(val excelWorkbook: ExcelWorkbook, val poiS
             columnDef.addColumnListener(listener)
         }
         return this
+    }
+
+    /**
+     * If registered before creating cells, this default cell style is used for each cell of the given column.
+     * @param charWidth of column in characters (will be converted to POI width: 1/256th of a character width)
+     * @param columnDef The column to define.
+     * @return this for chaining.
+     */
+    @JvmOverloads
+    fun setColumnStyle(columnDef: ExcelColumnDef, charWidth: Int? = null, cellStyle: CellStyle? = null): ExcelSheet {
+        cellStyle?.let {
+            this.columnStyles[columnDef] = it
+        }
+        charWidth?.let {
+            setColumnWidth(columnDef.columnNumber, it * 256)
+        }
+        return this
+    }
+
+    /**
+     * If registered before creating cells, this default cell style is used for each cell of the given column.
+     * @param columnDef The column to define.
+     * @return this for chaining.
+     */
+    @Suppress("unused")
+    fun setColumnStyle(columnDef: ExcelColumnDef, cellStyle: CellStyle? = null): ExcelSheet {
+        return setColumnStyle(columnDef, charWidth = null, cellStyle = cellStyle)
+    }
+
+    /**
+     * If registered before creating cells, this default cell style is used for each cell of the given column.
+     * @param charWidth of column
+     * @param column The name of the column (head or alias).
+     * @return this for chaining.
+     */
+    @Suppress("unused")
+    @JvmOverloads
+    fun setColumnStyle(column: String, charWidth: Int? = null, cellStyle: CellStyle? = null): ExcelSheet {
+        val columnDef = getColumnDef(column)!!
+        return setColumnStyle(columnDef, charWidth, cellStyle)
+    }
+
+    /**
+     * If registered before creating cells, this default cell style is used for each cell of the given column.
+     * @param column The name of the column (head or alias).
+     * @return this for chaining.
+     */
+    @Suppress("unused")
+    fun setColumnStyle(column: String, cellStyle: CellStyle?): ExcelSheet {
+        return setColumnStyle(column, charWidth = null, cellStyle = cellStyle)
+    }
+
+    internal fun getCellStyle(columnNo: Int): CellStyle? {
+        val columnDef = getColumnDef(columnNo) ?: return null
+        return this.columnStyles[columnDef]
     }
 
     /**
@@ -1049,16 +1103,23 @@ class ExcelSheet internal constructor(val excelWorkbook: ExcelWorkbook, val poiS
         poiSheet.autoSizeColumn(columnIndex)
     }
 
+    /**
+     * @param width: 1/256th of a character width
+     */
     fun setColumnWidth(column: ExcelColumnDef, width: Int) {
         poiSheet.setColumnWidth(column.columnNumber, width)
     }
 
+    /**
+     * @param width: 1/256th of a character width
+     */
     fun setColumnWidth(columnIndex: Int, width: Int) {
         poiSheet.setColumnWidth(columnIndex, width)
     }
 
     /**
      * @param column  Column as enum. The ordinal value will be used as column number.
+     * @param width: 1/256th of a character width
      */
     @Suppress("unused")
     fun setColumnWidth(column: Enum<*>, width: Int) {

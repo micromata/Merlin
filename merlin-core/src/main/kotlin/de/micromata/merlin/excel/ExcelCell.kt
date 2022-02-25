@@ -16,8 +16,13 @@ import java.util.*
 class ExcelCell internal constructor(
     val row: ExcelRow,
     val cell: Cell,
-    private val existingPoiCell: Boolean
+    private val existingPoiCell: Boolean,
 ) {
+    private var cellStyleSet: Boolean = false
+
+    private val hasCellStyle
+        get() = existingPoiCell || cellStyleSet
+
     @Suppress("MemberVisibilityCanBePrivate")
     fun setBlank(): ExcelCell {
         cell.setBlank()
@@ -38,7 +43,7 @@ class ExcelCell internal constructor(
      * Default is true for already existing poi cells (if existing excel workbooks are used).
      */
     @JvmOverloads
-    fun setCellValue(value: BigDecimal, protectCellStyle: Boolean = existingPoiCell): ExcelCell {
+    fun setCellValue(value: BigDecimal, protectCellStyle: Boolean = hasCellStyle): ExcelCell {
         if (protectCellStyle) {
             cell.setCellValue(value.toDouble())
         } else {
@@ -53,7 +58,7 @@ class ExcelCell internal constructor(
      * Default is true for already existing poi cells (if existing excel workbooks are used).
      */
     @JvmOverloads
-    fun setCellValue(value: Double, protectCellStyle: Boolean = existingPoiCell): ExcelCell {
+    fun setCellValue(value: Double, protectCellStyle: Boolean = hasCellStyle): ExcelCell {
         if (protectCellStyle) {
             cell.setCellValue(value)
         } else {
@@ -68,7 +73,7 @@ class ExcelCell internal constructor(
      * Default is true for already existing poi cells (if existing excel workbooks are used).
      */
     @JvmOverloads
-    fun setCellValue(value: Float, protectCellStyle: Boolean = existingPoiCell): ExcelCell {
+    fun setCellValue(value: Float, protectCellStyle: Boolean = hasCellStyle): ExcelCell {
         if (protectCellStyle) {
             cell.setCellValue(value.toDouble())
         } else {
@@ -83,7 +88,7 @@ class ExcelCell internal constructor(
      * Default is true for already existing poi cells (if existing excel workbooks are used).
      */
     @JvmOverloads
-    fun setCellValue(value: Int, protectCellStyle: Boolean = existingPoiCell): ExcelCell {
+    fun setCellValue(value: Int, protectCellStyle: Boolean = hasCellStyle): ExcelCell {
         if (protectCellStyle) {
             cell.setCellValue(value.toDouble())
         } else {
@@ -98,7 +103,7 @@ class ExcelCell internal constructor(
      * Default is true for already existing poi cells (if existing excel workbooks are used).
      */
     @JvmOverloads
-    fun setCellValue(value: Long, protectCellStyle: Boolean = existingPoiCell): ExcelCell {
+    fun setCellValue(value: Long, protectCellStyle: Boolean = hasCellStyle): ExcelCell {
         if (protectCellStyle) {
             cell.setCellValue(value.toDouble())
         } else {
@@ -122,7 +127,7 @@ class ExcelCell internal constructor(
      * Default is true for already existing poi cells (if existing excel workbooks are used).
      */
     @JvmOverloads
-    fun setCellValue(date: Date, protectCellStyle: Boolean = existingPoiCell): ExcelCell {
+    fun setCellValue(date: Date, protectCellStyle: Boolean = hasCellStyle): ExcelCell {
         cell.setCellValue(date)
         if (!protectCellStyle) {
             cell.cellStyle = workbook.ensureStandardCellStyle(date)
@@ -135,7 +140,7 @@ class ExcelCell internal constructor(
      * Default is true for already existing poi cells (if existing excel workbooks are used).
      */
     @JvmOverloads
-    fun setCellValue(calendar: Calendar, protectCellStyle: Boolean = existingPoiCell): ExcelCell {
+    fun setCellValue(calendar: Calendar, protectCellStyle: Boolean = hasCellStyle): ExcelCell {
         cell.setCellValue(calendar)
         if (!protectCellStyle) {
             cell.cellStyle = workbook.ensureStandardCellStyle(calendar)
@@ -148,7 +153,7 @@ class ExcelCell internal constructor(
      * Default is true for already existing poi cells (if existing excel workbooks are used).
      */
     @JvmOverloads
-    fun setCellValue(dateTime: LocalDateTime, protectCellStyle: Boolean = existingPoiCell): ExcelCell {
+    fun setCellValue(dateTime: LocalDateTime, protectCellStyle: Boolean = hasCellStyle): ExcelCell {
         cell.setCellValue(dateTime)
         if (!protectCellStyle) {
             cell.cellStyle = workbook.ensureStandardCellStyle(dateTime)
@@ -161,7 +166,7 @@ class ExcelCell internal constructor(
      * Default is true for already existing poi cells (if existing excel workbooks are used).
      */
     @JvmOverloads
-    fun setCellValue(date: LocalDate, protectCellStyle: Boolean = existingPoiCell): ExcelCell {
+    fun setCellValue(date: LocalDate, protectCellStyle: Boolean = hasCellStyle): ExcelCell {
         cell.setCellValue(date)
         if (!protectCellStyle) {
             cell.cellStyle = workbook.ensureStandardCellStyle(date)
@@ -174,7 +179,7 @@ class ExcelCell internal constructor(
      * Default is true for already existing poi cells (if existing excel workbooks are used).
      */
     @JvmOverloads
-    fun setCellValue(value: Any?, protectCellStyle: Boolean = existingPoiCell): ExcelCell {
+    fun setCellValue(value: Any?, protectCellStyle: Boolean = hasCellStyle): ExcelCell {
         value?.let {
             when (it) {
                 is String -> setCellValue(it)
@@ -256,6 +261,7 @@ class ExcelCell internal constructor(
 
     fun setCellStyle(style: CellStyle?): ExcelCell {
         cell.cellStyle = style
+        this.cellStyleSet = true
         return this
     }
 
