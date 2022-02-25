@@ -21,13 +21,13 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 dependencies {
-    compile group: 'commons-io', name: 'commons-io', version: '2.6'
-    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.8.1'
-    compile group: 'commons-beanutils', name: 'commons-beanutils', version: '1.9.3'
-    compile group: 'org.apache.poi', name: 'poi', version: '4.1.1'
-    compile group: 'org.apache.poi', name: 'poi-ooxml', version: '4.1.1'
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-    testCompile group: 'org.mockito', name: 'mockito-core', version: '2.21.0'
+    implementation group: 'commons-io', name: 'commons-io', version: '2.11.0'
+    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
+    implementation group: 'commons-beanutils', name: 'commons-beanutils', version: '1.9.4'
+    implementation group: 'org.apache.poi', name: 'poi', version: '5.2.0'
+    implementation group: 'org.apache.poi', name: 'poi-ooxml', version: '5.2.0'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    testImplementation group: 'org.mockito', name: 'mockito-core', version: '2.28.2'
 }
 
 repositories {
@@ -64,7 +64,7 @@ publishing {
                 scm {
                     connection = 'scm:git:git://example.com/my-library.git'
                     developerConnection = 'scm:git:ssh://example.com/my-library.git'
-                    url = 'http://example.com/my-library/'
+                    url = 'https://example.com/my-library/'
                 }
             }
         }

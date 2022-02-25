@@ -1,7 +1,7 @@
 description = 'merlin-desktop'
 
 buildscript {
-    ext.kotlin_version = '1.4.30-RC'
+    ext.kotlin_version = '1.6.10'
     repositories {
         mavenCentral()
         maven { url 'https://dl.bintray.com/kotlin/kotlin-eap' }
@@ -16,14 +16,14 @@ apply plugin: 'kotlin'
 ext.platform = osdetector.os == 'osx' ? 'mac' : osdetector.os == 'windows' ? 'win' : 'linux'
 
 dependencies {
-    compile project(':merlin-server')
-    compile "org.openjfx:javafx-base:11.0.1-ea+1:$platform"
-    compile "org.openjfx:javafx-graphics:11.0.1-ea+1:$platform"
-    compile "org.openjfx:javafx-controls:11.0.1-ea+1:$platform"
-    compile "org.openjfx:javafx-fxml:11.0.1-ea+1:$platform"
+    implementation project(':merlin-server')
+    implementation "org.openjfx:javafx-base:11.0.1-ea+1:$platform"
+    implementation "org.openjfx:javafx-graphics:11.0.1-ea+1:$platform"
+    implementation "org.openjfx:javafx-controls:11.0.1-ea+1:$platform"
+    implementation "org.openjfx:javafx-fxml:11.0.1-ea+1:$platform"
 
     compileOnly group: 'com.install4j', name: 'install4j-runtime', version: '7.0.8'
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 }
 
 compileJava {
@@ -55,7 +55,7 @@ run.dependsOn ':merlin-docs:buildWebDoc'
 // ******* Distribution
 task getDependencies(type: Copy) {
     into "${buildDir}/lib"
-    from project(':merlin-desktop').configurations.runtime {
+    from project(':merlin-desktop').configurations.runtimeClasspath {
         exclude "javafx-*.jar" // Ignore platform specific javafx files.
     }
 }
