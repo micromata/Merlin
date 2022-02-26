@@ -263,6 +263,10 @@ constructor(
         return cellStyleMap.containsKey(id)
     }
 
+    internal fun getCellStyleIfExists(id: String): CellStyle? {
+        return cellStyleMap[id]
+    }
+
     /**
      * Please re-use cell styles due to limitations of Excel.
      *

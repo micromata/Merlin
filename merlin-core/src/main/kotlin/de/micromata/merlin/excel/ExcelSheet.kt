@@ -165,7 +165,8 @@ class ExcelSheet internal constructor(val excelWorkbook: ExcelWorkbook, val poiS
     }
 
     /**
-     * @param columnHead The column head to register.
+     * @param columnHead The column head to register. The column head supports also aliases as well as style settings, e. g. Name|firstName|50|:myStyle
+     * uses firstName as alias, a column size of 50 chars and uses the style for all cells registered under the name 'myStyle' via method [ExcelWorkbook.createOrGetCellStyle].
      * @param aliases Sometimes table heads changed for different imports. Register any used aliases for detecting the column by aliases too.
      * @return Created and registered [ExcelColumnDef].
      */
@@ -175,12 +176,45 @@ class ExcelSheet internal constructor(val excelWorkbook: ExcelWorkbook, val poiS
         vararg aliases: String,
         listener: ExcelColumnListener? = null
     ): ExcelColumnDef {
-        val columnDef = ExcelColumnDef(this, columnHead, *aliases)
-        val existing = getColumnDefs(columnHead)
+        val parts = columnHead.split("|")
+        val headName = parts[0]
+        val columnDef = ExcelColumnDef(this, headName, *aliases)
+        val columnAliases = mutableListOf<String>()
+        if (parts.size > 1) {
+            for (i in 1 until parts.size) {
+                val str = parts[i]
+                if (str.isBlank()) {
+                    continue
+                }
+                val charWidth = str.toIntOrNull()
+                if (charWidth != null) {
+                    // Integer value is given, so set width of column:
+                    columnDef.width = charWidth * 256
+                    continue
+                }
+                if (str.startsWith(":") && str.length > 1) {
+                    // Style is requested to use:
+                    val styleName = str.substring(1)
+                    val cellStyle = excelWorkbook.getCellStyleIfExists(styleName)
+                    if (cellStyle == null) {
+                        log.error("Cell style '$cellStyle' not found, but requested in column '$columnHead'.")
+                    } else {
+                        setColumnStyle(columnDef, cellStyle)
+                    }
+                } else {
+                    // Assume alias:
+                    columnAliases.add(str)
+                }
+            }
+            if (columnAliases.isNotEmpty()) {
+                columnDef.columnAliases = columnAliases.toTypedArray()
+            }
+        }
+        val existing = getColumnDefs(headName)
         if (!existing.isEmpty()) {
             columnDef.occurrenceNumber = existing.last().occurrenceNumber + 1
             if (!enableMultipleColumns) {
-                log.info("Multiple registration of column head '$columnHead': #${columnDef.occurrenceNumber}")
+                log.info("Multiple registration of column head '$headName': #${columnDef.occurrenceNumber}")
             }
         }
         if (listener != null) {
