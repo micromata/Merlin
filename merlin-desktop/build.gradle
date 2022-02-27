@@ -16,7 +16,14 @@ apply plugin: 'kotlin'
 ext.platform = osdetector.os == 'osx' ? 'mac' : osdetector.os == 'windows' ? 'win' : 'linux'
 
 dependencies {
+    implementation project(':merlin-core')
     implementation project(':merlin-server')
+
+    implementation (libs.commons.lang3)
+    implementation (libs.slf4j.log4j12)
+    implementation (libs.jersey.container.servlet)
+    implementation (libs.jetty.servlet)
+
     implementation "org.openjfx:javafx-base:11.0.1-ea+1:$platform"
     implementation "org.openjfx:javafx-graphics:11.0.1-ea+1:$platform"
     implementation "org.openjfx:javafx-controls:11.0.1-ea+1:$platform"
@@ -50,7 +57,7 @@ run() {
 }
 
 run.dependsOn ':merlin-webapp:npmBuild'
-run.dependsOn ':merlin-docs:buildWebDoc'
+//run.dependsOn ':merlin-docs:buildWebDoc'
 
 // ******* Distribution
 task getDependencies(type: Copy) {
@@ -102,7 +109,7 @@ distributions {
 
 dist.dependsOn distZip
 distZip.dependsOn ':merlin-webapp:npmBuild'
-distZip.dependsOn ':merlin-docs:buildWebDoc'
+//distZip.dependsOn ':merlin-docs:buildWebDoc'
 distZip.dependsOn getDependencies
 repositories {
     maven { url 'https://dl.bintray.com/kotlin/kotlin-eap' }

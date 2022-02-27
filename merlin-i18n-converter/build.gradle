@@ -16,11 +16,15 @@ description = 'merlin-i18n-converter'
 
 dependencies {
     implementation project(':merlin-core')
-    implementation group: 'org.apache.commons', name: 'commons-text', version: '1.6'
-    implementation group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.25'
-    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.10.3'
-    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.9.10'
-    implementation group: 'commons-cli', name: 'commons-cli', version: '1.4'
+    implementation (libs.commons.cli)
+    implementation (libs.commons.io)
+    implementation (libs.commons.text)
+    implementation (libs.jackson.databind)
+    implementation (libs.jackson.annotations)
+    implementation (libs.poi)
+    implementation (libs.poi.ooxml)
+    implementation (libs.slf4j.log4j12)
+
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 }
 
