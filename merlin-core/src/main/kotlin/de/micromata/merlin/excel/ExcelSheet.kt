@@ -1214,6 +1214,18 @@ class ExcelSheet internal constructor(val excelWorkbook: ExcelWorkbook, val poiS
         poiSheet.setAutoFilter(range)
     }
 
+    /**
+     * Canvenient method calls [ExcelWorkbook.createOrGetCellStyle]
+     *
+     * @param id Id of the cell style for re-usage. If not given, cell style will not saved for re-usage.
+     * @return The CellStyle to use.
+     * @see ExcelWorkbook.createOrGetCellStyle
+     */
+    @JvmOverloads
+    fun createOrGetCellStyle(id: String? = null, font: Font? = null): CellStyle {
+        return excelWorkbook.createOrGetCellStyle(id, font)
+    }
+
     @Suppress("MemberVisibilityCanBePrivate")
     val lastColumn: Int
         get() {

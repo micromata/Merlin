@@ -35,7 +35,7 @@ constructor(
         private set
     private val sheetList = mutableListOf<ExcelSheet>()
     private var sheetListInitialized = false
-    private val cellStyleMap: MutableMap<String, CellStyle?> = HashMap()
+    private val cellStyleMap = mutableMapOf<String, CellStyle>()
     private val fontMap: MutableMap<String, Font?> = HashMap()
     private var inputStream: InputStream? = null
     var filename: String? = null

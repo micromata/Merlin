@@ -32,6 +32,15 @@ class ExcelRow(val sheet: ExcelSheet, val row: Row) {
     }
 
     /**
+     * @param columnName Registered column definition.
+     * @return The 0-based column number of the cell, if found.
+     */
+    fun getColNumber(columnName: String): Int? {
+        val columnDef = sheet.getColumnDef(columnName) ?: return null
+        return columnDef.columnNumber
+    }
+
+    /**
      * @param columnDef  Registered column definition.
      * @param type       Only used, if new cell will be created.
      * @return The (created) cell. If column definition isn't known, an IllegalArgumentException will be thrown.
@@ -168,6 +177,17 @@ class ExcelRow(val sheet: ExcelSheet, val row: Row) {
     }
 
     /**
+     * Sets the given style for all existing cells of this row.
+     */
+    fun setCellStyle(style: CellStyle) {
+        for (colNum in 0..lastCellNum) {
+            row.getCell(colNum)?.let { cell ->
+                cell.cellStyle = style
+            }
+        }
+    }
+
+    /**
      * Fills a row automatically by using properties of given obj, if matched by column head or any alias.
      */
     @Suppress("unused")
@@ -196,7 +216,8 @@ class ExcelRow(val sheet: ExcelSheet, val row: Row) {
                 continue
             }
             for (alias in colDef.columnAliases) {
-                searchResult = getPropertyValue(obj, colDef, alias.replaceFirstChar { it.lowercase() }, ignoreProperties)
+                searchResult =
+                    getPropertyValue(obj, colDef, alias.replaceFirstChar { it.lowercase() }, ignoreProperties)
                 if (searchResult != null) {
                     processPropertyValue(obj, searchResult, colDef, process)
                     break
@@ -213,9 +234,13 @@ class ExcelRow(val sheet: ExcelSheet, val row: Row) {
      * Creates row from all registered [ExcelColumnDef].
      * @return this for chaining.
      */
-    fun fillHeadRow(): ExcelRow {
+    @JvmOverloads
+    fun fillHeadRow(cellStyle: CellStyle? = null): ExcelRow {
         sheet.columnDefinitions.forEachIndexed { idx, def ->
             ensureCell(idx, ExcelCellType.STRING).setCellValue(def.columnHeadname)
+        }
+        cellStyle?.let {
+            setCellStyle(cellStyle)
         }
         return this
     }

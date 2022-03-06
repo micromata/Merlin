@@ -48,6 +48,9 @@ constructor(
     val normalizedHeaderName
         get() = normalizedHeaderName(columnHeadname)
 
+    /**
+     * 0-based col index.
+     */
     val columnNumber: Int
         get() {
             require(_columnNumber >= 0) { "Column '$columnHeadname' not found. Column number is invalid!" }

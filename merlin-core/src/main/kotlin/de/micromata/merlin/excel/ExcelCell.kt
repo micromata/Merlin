@@ -23,6 +23,11 @@ class ExcelCell internal constructor(
     private val hasCellStyle
         get() = existingPoiCell || cellStyleSet
 
+    /**
+     * 0-based column number of a column in a sheet.
+     */
+    val colNumber = cell.columnIndex
+
     @Suppress("MemberVisibilityCanBePrivate")
     fun setBlank(): ExcelCell {
         cell.setBlank()
