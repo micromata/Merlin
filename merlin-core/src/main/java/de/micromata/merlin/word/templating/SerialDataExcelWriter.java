@@ -3,7 +3,6 @@ package de.micromata.merlin.word.templating;
 import de.micromata.merlin.excel.ExcelCell;
 import de.micromata.merlin.excel.ExcelRow;
 import de.micromata.merlin.excel.ExcelWorkbook;
-import org.apache.commons.lang3.Validate;
 import org.apache.poi.ss.util.CellAddress;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +28,6 @@ public class SerialDataExcelWriter extends AbstractExcelWriter {
 
     public ExcelWorkbook writeToWorkbook(boolean writePrimaryKey) {
         super.init();
-        Validate.notNull(serialData.getTemplate());
         TemplateDefinition templateDefinition = serialData.getTemplateDefinition();
         createVariablesSheet();
         createConfigurationSheet();
